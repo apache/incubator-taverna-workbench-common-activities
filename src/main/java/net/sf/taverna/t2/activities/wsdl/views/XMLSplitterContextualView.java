@@ -49,7 +49,7 @@ public class XMLSplitterContextualView extends
 	 * adds buttons to it allowing XML splitters to be added
 	 */
 	@Override
-	protected JComponent getMainFrame() {
+	public JComponent getMainFrame() {
 		final JComponent mainFrame = super.getMainFrame();
 		JPanel flowPanel = new JPanel(new FlowLayout());
 
@@ -60,7 +60,7 @@ public class XMLSplitterContextualView extends
 	}
 
 	@Override
-	protected String getViewTitle() {
+	public String getViewTitle() {
 		return "XML splitter";
 	}
 
