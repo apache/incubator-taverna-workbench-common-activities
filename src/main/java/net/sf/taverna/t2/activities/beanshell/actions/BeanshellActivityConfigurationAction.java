@@ -24,27 +24,28 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JDialog;
-
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.beanshell.views.BeanshellConfigView;
-import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
 import net.sf.taverna.t2.workbench.helper.HelpEnabledDialog;
+import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
 
 @SuppressWarnings("serial")
 public class BeanshellActivityConfigurationAction extends ActivityConfigurationAction<BeanshellActivity, BeanshellActivityConfigurationBean>{
 
+	private static final String BEANSHELL_ACTIVITY_CONFIGURATION = "Beanshell Activity Configuration";
+	private static final String CONFIGURE_BEANSHELL_SCRIPT = "Configure beanshell script";
 	private final Frame owner;
 
 	public BeanshellActivityConfigurationAction(BeanshellActivity activity, Frame owner) {
 		super(activity);
+		putValue(NAME, CONFIGURE_BEANSHELL_SCRIPT);		
 		this.owner = owner;
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		final BeanshellConfigView beanshellConfigView = new BeanshellConfigView((BeanshellActivity)getActivity());
-		final HelpEnabledDialog dialog = new HelpEnabledDialog(owner, "Beanshell Activity Configuration", true, null);
+		final HelpEnabledDialog dialog = new HelpEnabledDialog(owner, BEANSHELL_ACTIVITY_CONFIGURATION, true, null);
 		dialog.add(beanshellConfigView);
 		dialog.setSize(500, 600);
 		beanshellConfigView.setButtonClickedListener(new ActionListener() {
