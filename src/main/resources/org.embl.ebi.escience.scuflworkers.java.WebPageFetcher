@@ -1,0 +1,75 @@
+<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.beanshell.BeanshellActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns="">
+  <script>URL inputURL = null;
+if (base != void) {
+  inputURL = new URL(new URL(base), url);
+}
+else {
+  inputURL = new URL(url);
+}
+URLConnection con = inputURL.openConnection();
+InputStream in = con.getInputStream();
+
+InputStreamReader isr = new InputStreamReader(in);
+Reader inReader = new BufferedReader(isr);
+
+StringBuffer buf = new StringBuffer();
+int ch;
+while ((ch = inReader.read()) &gt; -1) {
+  buf.append((char)ch);
+}
+inReader.close();
+contents = buf.toString();
+
+
+//String NEWLINE = System.getProperty("line.separator");
+//
+//URL inputURL = null;
+//if (base != void) {
+//	inputURL = new URL(new URL(base), url);
+//} else {
+//	inputURL = new URL(url);
+//}
+//StringBuffer result = new StringBuffer();
+//BufferedReader reader = new BufferedReader(new InputStreamReader(inputURL.openStream()));
+//String line = null;
+//while ((line = reader.readLine()) != null) {
+//	result.append(line);
+//	result.append(NEWLINE);
+//}
+//
+//contents = result.toString();
+</script>
+  <dependencies />
+  <inputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <handledReferenceSchemes />
+      <translatedElementType>java.lang.String</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+      <name>url</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/x-taverna-web-url'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <handledReferenceSchemes />
+      <translatedElementType>java.lang.String</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+      <name>base</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/x-taverna-web-url'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+  </inputs>
+  <outputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+      <granularDepth>0</granularDepth>
+      <name>contents</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/plain,text/html'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+  </outputs>
+</net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean></configBean></activity>

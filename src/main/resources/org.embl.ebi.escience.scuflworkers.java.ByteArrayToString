@@ -1,0 +1,27 @@
+<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.beanshell.BeanshellActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns="">
+  <script>string = new String(bytes);
+</script>
+  <dependencies />
+  <inputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <handledReferenceSchemes />
+      <translatedElementType>[B</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+      <name>bytes</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'application/octet-stream'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+  </inputs>
+  <outputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+      <granularDepth>0</granularDepth>
+      <name>string</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/plain'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+  </outputs>
+</net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean></configBean></activity>
