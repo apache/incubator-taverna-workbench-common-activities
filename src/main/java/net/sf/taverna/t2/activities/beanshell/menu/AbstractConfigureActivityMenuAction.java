@@ -1,9 +1,11 @@
 package net.sf.taverna.t2.activities.beanshell.menu;
 
 import java.awt.Frame;
+import java.net.URI;
+
+import javax.swing.Action;
 
 import net.sf.taverna.t2.ui.menu.AbstractContextualMenuAction;
-import net.sf.taverna.t2.ui.menu.DefaultContextualMenu;
 import net.sf.taverna.t2.workbench.ui.Utils;
 import net.sf.taverna.t2.workflowmodel.Processor;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
@@ -11,11 +13,14 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 public abstract class AbstractConfigureActivityMenuAction<ActivityClass extends Activity<?>>
 		extends AbstractContextualMenuAction {
 
+	private static final URI configureSection = URI
+			.create("http://taverna.sf.net/2009/contextMenu/configureSection");
+	
 	protected final Class<ActivityClass> activityClass;
 
 	public AbstractConfigureActivityMenuAction(
 			Class<ActivityClass> activityClass) {
-		super(DefaultContextualMenu.DEFAULT_CONTEXT_MENU, 40);
+		super(configureSection, 10);
 		this.activityClass = activityClass;
 	}
 
@@ -46,6 +51,13 @@ public abstract class AbstractConfigureActivityMenuAction<ActivityClass extends 
 	protected Frame getParentFrame() {
 		return Utils.getParentFrame(getContextualSelection()
 				.getRelativeToComponent());
+	}
+	
+	protected void addMenuDots(Action configAction) {
+		String oldName = (String) configAction.getValue(Action.NAME);
+		if (!oldName.endsWith("..")) {
+			configAction.putValue(Action.NAME, oldName + "...");
+		}
 	}
 
 }

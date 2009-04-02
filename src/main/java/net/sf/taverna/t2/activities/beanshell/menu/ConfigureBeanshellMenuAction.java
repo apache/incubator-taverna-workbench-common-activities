@@ -14,10 +14,11 @@ public class ConfigureBeanshellMenuAction extends
 
 	@Override
 	protected Action createAction() {
-		BeanshellActivityConfigurationAction configAction = new BeanshellActivityConfigurationAction(findActivity(),
-				getParentFrame());
-		configAction.putValue(Action.NAME, configAction.getValue(Action.NAME) + "...");
+		BeanshellActivityConfigurationAction configAction = new BeanshellActivityConfigurationAction(
+				findActivity(), getParentFrame());
+		addMenuDots(configAction);
 		return configAction;
 	}
+
 
 }

@@ -46,18 +46,21 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityConfigurationE
 import net.sf.taverna.t2.workflowmodel.utils.Tools;
 
 /**
- * An action to add a beanshell activity + a wrapping processor to the workflow. 
+ * An action to add a beanshell activity + a wrapping processor to the workflow.
  * 
  * @author Alex Nenadic
- *
+ * 
  */
 @SuppressWarnings("serial")
 public class AddBeanshellTemplateAction extends AbstractContextualMenuAction {
 
+	private static final String ADD_BEANSHELL = "Add beanshell";
+
 	private static final URI serviceTemplatesSection = URI
-	.create("http://taverna.sf.net/2009/contextMenu/serviceTemplates");
-	
-	private static Logger logger = Logger.getLogger(AddBeanshellTemplateAction.class);
+			.create("http://taverna.sf.net/2009/contextMenu/serviceTemplates");
+
+	private static Logger logger = Logger
+			.getLogger(AddBeanshellTemplateAction.class);
 
 	public AddBeanshellTemplateAction() {
 		super(serviceTemplatesSection, 20);
@@ -72,40 +75,53 @@ public class AddBeanshellTemplateAction extends AbstractContextualMenuAction {
 	@Override
 	protected Action createAction() {
 
-		AbstractAction action = new AbstractAction("Add beanshell", ActivityIconManager.getInstance()
-				.iconForActivity(new BeanshellActivity())){
+		AbstractAction action = new AbstractAction(ADD_BEANSHELL,
+				ActivityIconManager.getInstance().iconForActivity(
+						new BeanshellActivity())) {
 
 			public void actionPerformed(ActionEvent e) {
-				Dataflow workflow = FileManager.getInstance().getCurrentDataflow();
+				Dataflow workflow = FileManager.getInstance()
+						.getCurrentDataflow();
 
-				// Create a processor placeholder for a beanshell activity 
+				// Create a processor placeholder for a beanshell activity
 				// and check for duplicate processor names
 				String suggestedProcessorName = "Beanshell";
-				suggestedProcessorName = Tools.uniqueProcessorName(suggestedProcessorName, workflow);
-				Processor processor = EditsRegistry.getEdits().createProcessor(suggestedProcessorName);				
+				suggestedProcessorName = Tools.uniqueProcessorName(
+						suggestedProcessorName, workflow);
+				Processor processor = EditsRegistry.getEdits().createProcessor(
+						suggestedProcessorName);
 				// Create the beanshell activity and configure it
 				BeanshellActivity beanshellActivity = new BeanshellActivity();
 				try {
-					beanshellActivity.configure(new BeanshellActivityConfigurationBean());
+					beanshellActivity
+							.configure(new BeanshellActivityConfigurationBean());
 				} catch (ActivityConfigurationException ex) {
-					logger.error("Configuring beanshell activity failed when trying to add it to the workflow model", ex);
+					logger
+							.error(
+									"Configuring beanshell activity failed when trying to add it to the workflow model",
+									ex);
 					return;
 				}
 				// List of all edits to be done to the workflow
 				List<Edit<?>> editList = new ArrayList<Edit<?>>();
-				editList.add(EditsRegistry.getEdits().getAddActivityEdit(processor, beanshellActivity));
-				editList.add(EditsRegistry.getEdits().getAddProcessorEdit(workflow, processor));
+				editList.add(EditsRegistry.getEdits().getAddActivityEdit(
+						processor, beanshellActivity));
+				editList.add(EditsRegistry.getEdits().getAddProcessorEdit(
+						workflow, processor));
 				try {
-					EditManager.getInstance().doDataflowEdit(workflow, new CompoundEdit(editList));
+					EditManager.getInstance().doDataflowEdit(workflow,
+							new CompoundEdit(editList));
 				} catch (EditException ex) {
-					logger.error("Adding beanshell activity to the workflow model failed", ex);
-				}						
+					logger
+							.error(
+									"Adding beanshell activity to the workflow model failed",
+									ex);
+				}
 			}
-			
+
 		};
-		
+
 		return action;
 	}
 
 }
-
