@@ -12,13 +12,13 @@
 	<name>Taverna 2 Beanshell Activity UI</name>
 	<dependencies>
 		<dependency>
-			<groupId>net.sf.taverna.t2.ui-components</groupId>
-			<artifactId>activity-icons</artifactId>
-			<version>${t2.ui.components.version}</version>
+			<groupId>net.sf.taverna.t2.ui-api</groupId>
+			<artifactId>activity-palette-api</artifactId>
+			<version>${t2.ui.api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.taverna.t2.ui-api</groupId>
-			<artifactId>activity-palette-api</artifactId>
+			<artifactId>activity-icons-api</artifactId>
 			<version>${t2.ui.api.version}</version>
 		</dependency>
 		<dependency>
@@ -31,7 +31,6 @@
 			<artifactId>beanshell-activity</artifactId>
 			<version>${t2.activities.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>net.sf.taverna.t2.ui-impl</groupId>
 			<artifactId>contextual-views-impl</artifactId>
@@ -42,35 +41,33 @@
 			<artifactId>menu-api</artifactId>
 			<version>${t2.ui.api.version}</version>
 		</dependency>
-		<!--  <dependency>
-			<groupId>net.sf.taverna.t2.workbench</groupId>
-			<artifactId>contextual-views-api</artifactId>
-			<version>0.1</version>
-		</dependency> -->
 		<dependency>
 			<groupId>javax.help</groupId>
 			<artifactId>javahelp</artifactId>
 			<version>2.0.02</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>net.sf.taverna.jedit</groupId>
 			<artifactId>jedit-syntax</artifactId>
 			<version>2.2.2-taverna-2008-11-28</version>
 		</dependency>
-
-		<!--  testing dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>net.sf.taverna.t2.ui-impl</groupId>
 			<artifactId>helper</artifactId>
 			<version>${t2.ui.impl.version}</version>
 		</dependency>
+		<!--
+			<dependency> <groupId>net.sf.taverna.t2.workbench</groupId>
+			<artifactId>contextual-views-api</artifactId> <version>0.1</version>
+			</dependency>
+		-->
+
+		<!--  testing dependencies -->
 	</dependencies>
 </project>
 
