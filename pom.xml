@@ -38,7 +38,7 @@
 		</dependency>
 		<dependency>
 			<groupId>net.sf.taverna.t2.activities</groupId>
-			<artifactId>beanshhell-activity</artifactId>
+			<artifactId>beanshell-activity</artifactId>
 			<version>${t2.activities.version}</version>
 		</dependency>
 		<dependency>
