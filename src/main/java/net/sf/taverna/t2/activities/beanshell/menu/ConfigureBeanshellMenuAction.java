@@ -1,5 +1,7 @@
 package net.sf.taverna.t2.activities.beanshell.menu;
 
+import net.sf.taverna.t2.workbench.activitytools.AbstractConfigureActivityMenuAction;
+
 import javax.swing.Action;
 
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;

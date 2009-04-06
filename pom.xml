@@ -22,14 +22,9 @@
 			<version>${t2.ui.api.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.taverna.t2.activities</groupId>
-			<artifactId>dependency-activity</artifactId>
-			<version>${t2.activities.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.taverna.t2.activities</groupId>
-			<artifactId>beanshell-activity</artifactId>
-			<version>${t2.activities.version}</version>
+			<groupId>net.sf.taverna.t2.ui-api</groupId>
+			<artifactId>menu-api</artifactId>
+			<version>${t2.ui.api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.taverna.t2.ui-impl</groupId>
@@ -37,9 +32,19 @@
 			<version>${t2.ui.impl.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.taverna.t2.ui-api</groupId>
-			<artifactId>menu-api</artifactId>
-			<version>${t2.ui.api.version}</version>
+			<groupId>net.sf.taverna.t2.ui-impl</groupId>
+			<artifactId>activity-tools</artifactId>
+			<version>${t2.ui.impl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.activities</groupId>
+			<artifactId>beanshhell-activity</artifactId>
+			<version>${t2.activities.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.activities</groupId>
+			<artifactId>dependency-activity</artifactId>
+			<version>${t2.activities.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.help</groupId>
@@ -61,12 +66,6 @@
 			<artifactId>helper</artifactId>
 			<version>${t2.ui.impl.version}</version>
 		</dependency>
-		<!--
-			<dependency> <groupId>net.sf.taverna.t2.workbench</groupId>
-			<artifactId>contextual-views-api</artifactId> <version>0.1</version>
-			</dependency>
-		-->
-
 		<!--  testing dependencies -->
 	</dependencies>
 </project>
