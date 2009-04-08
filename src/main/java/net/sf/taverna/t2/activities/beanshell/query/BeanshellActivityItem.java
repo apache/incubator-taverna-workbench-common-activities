@@ -51,6 +51,10 @@ public class BeanshellActivityItem extends AbstractActivityItem {
 
 	@Override
 	public Icon getIcon() {
+		return getBeanshellIcon();
+	}
+
+	public static Icon getBeanshellIcon() {
 		return new ImageIcon(BeanshellActivityItem.class.getResource("/beanshell.png"));
 	}
 

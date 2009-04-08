@@ -41,7 +41,7 @@ public class BeanshellActivityIcon implements ActivityIconSPI{
 	}
 
 	public Icon getIcon(Activity<?> activity) {
-		return new BeanshellActivityItem().getIcon();
+		return BeanshellActivityItem.getBeanshellIcon();
 	}
 
 }
