@@ -38,7 +38,7 @@ public class BeanshellServiceDescriptions implements ServiceDescriptionProvider 
 
 		public boolean isTemplateService() {
 			return true;
-		}
+		}	
 
 		public Class<BeanshellActivity> getActivityClass() {
 			return BeanshellActivity.class;
