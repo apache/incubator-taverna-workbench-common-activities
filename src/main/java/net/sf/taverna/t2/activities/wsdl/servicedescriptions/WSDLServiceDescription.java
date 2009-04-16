@@ -21,6 +21,7 @@
 package net.sf.taverna.t2.activities.wsdl.servicedescriptions;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,10 +33,11 @@ import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
-public class WSDLServiceDescription implements ServiceDescription<WSDLActivityConfigurationBean> {
+public class WSDLServiceDescription extends
+		ServiceDescription<WSDLActivityConfigurationBean> {
 
 	private static final String WSDL = "WSDL @ ";
-	
+
 	private String use;
 	private URI uri;
 	private String style;
@@ -82,11 +84,9 @@ public class WSDLServiceDescription implements ServiceDescription<WSDLActivityCo
 		this.operation = operation;
 	}
 
-	
 	public Icon getIcon() {
 		return new ImageIcon(getClass().getResource("/wsdl.png"));
 	}
-	
 
 	public Class<? extends Activity<WSDLActivityConfigurationBean>> getActivityClass() {
 		return WSDLActivity.class;
@@ -96,19 +96,38 @@ public class WSDLServiceDescription implements ServiceDescription<WSDLActivityCo
 		WSDLActivityConfigurationBean bean = new WSDLActivityConfigurationBean();
 		bean.setWsdl(getURI().toASCIIString());
 		bean.setOperation(getOperation());
-		return bean;	}
+		return bean;
+	}
 
 	public String getName() {
 		return getOperation();
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<? extends Comparable> getPath() {
 		return Collections.singletonList(WSDL + getURI());
 	}
 
-	public boolean isTemplateService() {		
+	public boolean isTemplateService() {
 		return false;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof WSDLServiceDescription)) {
+			return false;
+		}
+		WSDLServiceDescription other = (WSDLServiceDescription) obj;
+		return getIdentifyingData().equals(other.getIdentifyingData());
+	}
+
+	@Override
+	public int hashCode() {
+		return getIdentifyingData().hashCode();
+	}
+
+	protected List<Object> getIdentifyingData() {
+		return Arrays.<Object> asList(getURI(), getOperation());
 	}
 
 }
