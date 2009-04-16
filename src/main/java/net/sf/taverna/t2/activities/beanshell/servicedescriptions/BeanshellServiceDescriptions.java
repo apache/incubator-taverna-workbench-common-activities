@@ -21,7 +21,7 @@ public class BeanshellServiceDescriptions implements ServiceDescriptionProvider 
 		return Collections.singleton(beanshellConfiguration);
 	}
 
-	public class BeanshellDescription implements
+	public static class BeanshellDescription extends
 			ServiceDescription<BeanshellActivityConfigurationBean> {
 
 		public Icon getIcon() {
@@ -38,7 +38,7 @@ public class BeanshellServiceDescriptions implements ServiceDescriptionProvider 
 
 		public boolean isTemplateService() {
 			return true;
-		}	
+		}
 
 		public Class<BeanshellActivity> getActivityClass() {
 			return BeanshellActivity.class;
@@ -46,6 +46,16 @@ public class BeanshellServiceDescriptions implements ServiceDescriptionProvider 
 
 		public BeanshellActivityConfigurationBean getActivityConfiguration() {
 			return new BeanshellActivityConfigurationBean();
+		}
+
+		@Override
+		public boolean equals(Object other) {
+			return this == other;
+		}
+
+		@Override
+		public int hashCode() {
+			return getName().hashCode();
 		}
 	}
 }
