@@ -21,6 +21,7 @@
 package net.sf.taverna.t2.activities.beanshell.query;
 
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI;
@@ -29,19 +30,25 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 /**
  * 
  * @author Alex Nenadic
- *
+ * 
  */
-public class BeanshellActivityIcon implements ActivityIconSPI{
+public class BeanshellActivityIcon implements ActivityIconSPI {
 
 	public int canProvideIconScore(Activity<?> activity) {
-		if (activity.getClass().getName().equals(BeanshellActivity.class.getName()))
+		if (activity.getClass().getName().equals(
+				BeanshellActivity.class.getName()))
 			return DEFAULT_ICON + 1;
 		else
 			return NO_ICON;
 	}
 
 	public Icon getIcon(Activity<?> activity) {
-		return BeanshellActivityItem.getBeanshellIcon();
+		return getBeanshellIcon();
+	}
+
+	public static Icon getBeanshellIcon() {
+		return new ImageIcon(BeanshellActivityIcon.class
+				.getResource("/beanshell.png"));
 	}
 
 }

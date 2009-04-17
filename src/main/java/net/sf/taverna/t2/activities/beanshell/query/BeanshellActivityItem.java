@@ -21,7 +21,6 @@
 package net.sf.taverna.t2.activities.beanshell.query;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
@@ -51,12 +50,10 @@ public class BeanshellActivityItem extends AbstractActivityItem {
 
 	@Override
 	public Icon getIcon() {
-		return getBeanshellIcon();
+		return BeanshellActivityIcon.getBeanshellIcon();
 	}
 
-	public static Icon getBeanshellIcon() {
-		return new ImageIcon(BeanshellActivityItem.class.getResource("/beanshell.png"));
-	}
+
 
 	@Override
 	public Activity<?> getUnconfiguredActivity() {
