@@ -3,10 +3,10 @@ package net.sf.taverna.t2.activities.wsdl.servicedescriptions;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.wsdl.Operation;
 import javax.wsdl.WSDLException;
@@ -27,6 +27,8 @@ public class WSDLServiceProvider extends
 	private static final String WSDL_SERVICE = "WSDL service";
 	private static Logger logger = Logger.getLogger(WSDLServiceProvider.class);
 
+	public static final Icon wsdlIcon = new ImageIcon(WSDLServiceDescription.class.getResource("/wsdl.png"));
+	
 	public WSDLServiceProvider() {
 		super(new WSDLServiceProviderConfig("http://somehost/service?wsdl"));
 	}
@@ -102,6 +104,10 @@ public class WSDLServiceProvider extends
 	@Override
 	public String toString() {
 		return getName() + " " + getConfiguration().getURI();
+	}
+	
+	public Icon getIcon() {
+		return wsdlIcon;
 	}
 
 }
