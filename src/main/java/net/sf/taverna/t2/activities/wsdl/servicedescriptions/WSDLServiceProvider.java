@@ -59,12 +59,12 @@ public class WSDLServiceProvider extends
 			FindServiceDescriptionsCallBack callBack) {
 		List<ServiceDescription<WSDLActivityConfigurationBean>> descriptions = new ArrayList<ServiceDescription<WSDLActivityConfigurationBean>>();
 		URI wsdl = serviceProviderConfig.getURI();
-		callBack.status("About to parse wsdl:" + wsdl);
+		callBack.status("Parsing wsdl:" + wsdl);
 		WSDLParser parser = null;
 		try {
 			parser = new WSDLParser(wsdl.toASCIIString());
 			List<Operation> operations = parser.getOperations();
-			callBack.status("Finding WSDL operations:" + wsdl);
+			callBack.status("Found " + operations.size() + " WSDL operations:" + wsdl);
 			List<ServiceDescription> items = new ArrayList<ServiceDescription>();
 			for (Operation op : operations) {
 				WSDLServiceDescription item = new WSDLServiceDescription();
