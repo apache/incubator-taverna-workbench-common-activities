@@ -14,7 +14,7 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 public class SoaplabServiceDescription extends ServiceDescription<SoaplabActivityConfigurationBean>{
 	
-	private final static String SOAPLAB = "SOAPLAB @ ";
+	private final static String SOAPLAB = "Soaplab @ ";
 
 	private String category;
 	private String operation;
