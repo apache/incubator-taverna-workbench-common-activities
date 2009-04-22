@@ -28,7 +28,7 @@ public class SoaplabServiceProvider extends AbstractConfigurableServiceProvider<
 			FindServiceDescriptionsCallBack callBack) {
 		List<ServiceDescription<SoaplabActivityConfigurationBean>> descriptions = new ArrayList<ServiceDescription<SoaplabActivityConfigurationBean>>();
 		String soaplab = serviceProviderConfig.getUrl();
-		callBack.status("About to parse soaplab:" + soaplab);
+		callBack.status("Connecting to Soaplab:" + soaplab);
 		try {
 			List<SoaplabCategory> categories = SoaplabScavengerAgent.load(soaplab);
 			for (SoaplabCategory cat : categories) {
