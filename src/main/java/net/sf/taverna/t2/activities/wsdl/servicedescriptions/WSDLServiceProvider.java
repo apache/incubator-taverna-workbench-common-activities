@@ -14,7 +14,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
 import net.sf.taverna.t2.servicedescriptions.AbstractConfigurableServiceProvider;
-import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.wsdl.parser.UnknownOperationException;
 import net.sf.taverna.wsdl.parser.WSDLParser;
 
@@ -54,10 +53,8 @@ public class WSDLServiceProvider extends
 		return defaults;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void findServiceDescriptionsAsync(
 			FindServiceDescriptionsCallBack callBack) {
-		List<ServiceDescription<WSDLActivityConfigurationBean>> descriptions = new ArrayList<ServiceDescription<WSDLActivityConfigurationBean>>();
 		URI wsdl = serviceProviderConfig.getURI();
 		callBack.status("Parsing wsdl:" + wsdl);
 		WSDLParser parser = null;
@@ -65,13 +62,13 @@ public class WSDLServiceProvider extends
 			parser = new WSDLParser(wsdl.toASCIIString());
 			List<Operation> operations = parser.getOperations();
 			callBack.status("Found " + operations.size() + " WSDL operations:" + wsdl);
-			List<ServiceDescription> items = new ArrayList<ServiceDescription>();
+			List<WSDLServiceDescription> items = new ArrayList<WSDLServiceDescription>();
 			for (Operation op : operations) {
 				WSDLServiceDescription item = new WSDLServiceDescription();
 				try {
 					item.setOperation(op.getName());
-					item.setUse(parser.getUse(item.getOperation()));
-					item.setStyle(parser.getStyle());
+					item.setUse(parser.getUse(op.getName()));
+					item.setStyle(parser.getStyle());					
 					item.setURI(wsdl);
 					items.add(item);
 				} catch (UnknownOperationException e) {
