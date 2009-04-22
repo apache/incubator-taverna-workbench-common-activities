@@ -15,6 +15,7 @@ import javax.swing.Icon;
 import net.sf.taverna.raven.repository.BasicArtifact;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
+import net.sf.taverna.t2.activities.beanshell.query.BeanshellActivityIcon;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider.FindServiceDescriptionsCallBack;
@@ -400,8 +401,12 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 	}
 
 	public Icon getIcon() {
-		// TODO Auto-generated method stub
-		return null;
+		return BeanshellActivityIcon.getBeanshellIcon();
+	}
+	
+	@Override
+	public String toString() {
+		return "Local workers provider";
 	}
 
 }
