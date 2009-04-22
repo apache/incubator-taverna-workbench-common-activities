@@ -27,8 +27,9 @@ public class WSDLServiceProvider extends
 	private static final String WSDL_SERVICE = "WSDL service";
 	private static Logger logger = Logger.getLogger(WSDLServiceProvider.class);
 
-	public static final Icon wsdlIcon = new ImageIcon(WSDLServiceDescription.class.getResource("/wsdl.png"));
-	
+	public static final Icon wsdlIcon = new ImageIcon(
+			WSDLServiceDescription.class.getResource("/wsdl.png"));
+
 	public WSDLServiceProvider() {
 		super(new WSDLServiceProviderConfig("http://somehost/service?wsdl"));
 	}
@@ -41,9 +42,15 @@ public class WSDLServiceProvider extends
 		List<WSDLServiceProviderConfig> defaults = new ArrayList<WSDLServiceProviderConfig>();
 		// TODO: Defaults should come from a config/resource file
 		defaults.add(new WSDLServiceProviderConfig(
+				"http://www.ebi.ac.uk/xembl/XEMBL.wsdl"));
+		defaults.add(new WSDLServiceProviderConfig(
 				"http://soap.genome.jp/KEGG.wsdl"));
 		defaults.add(new WSDLServiceProviderConfig(
 				"http://soap.bind.ca/wsdl/bind.wsdl"));
+		defaults.add(new WSDLServiceProviderConfig(
+						"http://eutils.ncbi.nlm.nih.gov/entrez/eutils/soap/eutils.wsdl"));
+		defaults.add(new WSDLServiceProviderConfig(
+				"http://www.ebi.ac.uk/ws/services/urn:Dbfetch?wsdl"));
 		return defaults;
 	}
 
@@ -105,7 +112,7 @@ public class WSDLServiceProvider extends
 	public String toString() {
 		return getName() + " " + getConfiguration().getURI();
 	}
-	
+
 	public Icon getIcon() {
 		return wsdlIcon;
 	}
