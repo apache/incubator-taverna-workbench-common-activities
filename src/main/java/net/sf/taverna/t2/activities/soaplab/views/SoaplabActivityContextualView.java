@@ -36,15 +36,19 @@ import javax.xml.transform.stream.StreamSource;
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivity;
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivityConfigurationBean;
 import net.sf.taverna.t2.activities.soaplab.actions.SoaplabActivityConfigurationAction;
+import net.sf.taverna.t2.activities.soaplab.query.SoaplabScavengerAgent;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 import org.apache.axis.client.Call;
 import org.apache.axis.client.Service;
+import org.apache.log4j.Logger;
 
 public class SoaplabActivityContextualView extends
 		HTMLBasedActivityContextualView<SoaplabActivityConfigurationBean> {
 
+	private static Logger logger = Logger.getLogger(SoaplabActivityContextualView.class);
+	
 	private static final long serialVersionUID = -6470801873448104509L;
 
 	public SoaplabActivityContextualView(Activity<?> activity) {
@@ -67,8 +71,8 @@ public class SoaplabActivityContextualView extends
 				+ "</td></tr>";
 		html += "<tr><td>Polling interval max</td><td>"
 				+ bean.getPollingIntervalMax() + "</td></tr>";
-		html += "<tr><td>SOAPLAB Metadata</td><td>" + getMetadata()
-				+ "</td></tr>";
+//		html += "<tr><td>SOAPLAB Metadata</td><td>" + getMetadata()
+//				+ "</td></tr>";
 		return html;
 	}
 
@@ -88,13 +92,14 @@ public class SoaplabActivityContextualView extends
 			call.setTargetEndpointAddress(endpoint);
 			call.setOperationName(new QName("describe"));
 			String metadata = (String) call.invoke(new Object[0]);
-
+			logger.info(metadata);
 			// Old impl, returns a tree of the XML
 			// ColXMLTree tree = new ColXMLTree(metadata);
 			URL sheetURL = SoaplabActivityContextualView.class
 					.getResource("/analysis_metadata_2_html.xsl");
 			TransformerFactory transformerFactory = TransformerFactory
 					.newInstance();
+			logger.info(sheetURL.toString());
 			Templates stylesheet = transformerFactory
 					.newTemplates(new StreamSource(sheetURL.openStream()));
 			Transformer transformer = stylesheet.newTransformer();
