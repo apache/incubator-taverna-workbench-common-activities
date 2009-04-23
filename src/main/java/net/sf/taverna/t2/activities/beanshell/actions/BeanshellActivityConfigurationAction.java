@@ -33,13 +33,13 @@ import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationActi
 @SuppressWarnings("serial")
 public class BeanshellActivityConfigurationAction extends ActivityConfigurationAction<BeanshellActivity, BeanshellActivityConfigurationBean>{
 
+	private static final String CONFIGURE = "Configure";
 	private static final String BEANSHELL_ACTIVITY_CONFIGURATION = "Beanshell Activity Configuration";
-	private static final String CONFIGURE_BEANSHELL_SCRIPT = "Configure beanshell script";
 	private final Frame owner;
 
 	public BeanshellActivityConfigurationAction(BeanshellActivity activity, Frame owner) {
 		super(activity);
-		putValue(NAME, CONFIGURE_BEANSHELL_SCRIPT);		
+		putValue(NAME, CONFIGURE);		
 		this.owner = owner;
 	}
 
