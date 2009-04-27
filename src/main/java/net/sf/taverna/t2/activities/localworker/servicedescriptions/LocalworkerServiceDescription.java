@@ -52,12 +52,6 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public Class<? extends Activity<BeanshellActivityConfigurationBean>> getActivityClass() {
 		return LocalworkerActivity.class;
 	}
@@ -97,18 +91,6 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 		List<String> result =
 		Arrays.asList (LOCALWORKER, category);
 		return result;
-	}
-
-	@Override
-	public int hashCode() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public boolean isTemplateService() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	public String getScript() {
@@ -178,7 +160,8 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 	}
 
 	@Override
-	public String toString() {
-		return operation;
-	}	
+	protected List<Object> getIdentifyingData() {
+		return Arrays.<Object>asList(getScript());
+	}
+
 }
