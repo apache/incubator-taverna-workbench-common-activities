@@ -55,21 +55,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableModel;
 
 import net.sf.taverna.raven.repository.BasicArtifact;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity;
-import net.sf.taverna.t2.activities.dependencyactivity.NewArtifactDialog;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity.ClassLoaderSharing;
 import net.sf.taverna.t2.reference.ExternalReferenceSPI;
 import net.sf.taverna.t2.workflowmodel.OutputPort;
@@ -90,6 +86,7 @@ import org.syntax.jedit.tokenmarker.JavaTokenMarker;
  * 
  * @author Ian Dunlop
  * @author Alex Nenadic
+ * @author Alan R Williams
  * 
  */
 @SuppressWarnings("serial")
@@ -118,14 +115,6 @@ public class BeanshellConfigView extends JPanel {
 	/** A list of local dependencies (JAR files) this activity depends on */ 
 	private LinkedHashSet<String> localDependencies = new LinkedHashSet<String>();
 	
-	/** A list of artifact dependencies */
-	private LinkedHashSet<BasicArtifact> artifactDependencies = new LinkedHashSet<BasicArtifact>();
-	
-	/** Table model for artifact dependencies */
-	private DefaultTableModel artTableModel;
-	
-	/** Table holding artifact dependencies */
-	private JTable artTable;
 	///////// End of beanshell properties that can be configured //
 	
 	/**
@@ -212,7 +201,6 @@ public class BeanshellConfigView extends JPanel {
 		outputViewList = new ArrayList<BeanshellOutputViewer>();
 		classLoaderSharing = configuration.getClassLoaderSharing();
 		localDependencies.addAll(configuration.getLocalDependencies());
-		artifactDependencies.addAll(configuration.getArtifactDependencies());
 		setBorder(javax.swing.BorderFactory.createTitledBorder(null, null,
 				javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 				javax.swing.border.TitledBorder.DEFAULT_POSITION,
@@ -278,8 +266,6 @@ public class BeanshellConfigView extends JPanel {
 		
 		// Create panel with classloading options
 		JPanel classloadingPanel = new ClassloadingPanel();
-		// Create panel for setting artifacts
-		JPanel artifactsPanel = new ArtifactsPanel();
 		// Create panel for selecting jar files
 		JPanel jarFilesPanel = new JarFilesPanel();
         
@@ -287,7 +273,6 @@ public class BeanshellConfigView extends JPanel {
 		dependenciesPanel.add(Box.createRigidArea(new Dimension(0,10)));
 		dependenciesPanel.add(jarFilesPanel);
 		dependenciesPanel.add(Box.createRigidArea(new Dimension(0,10)));
-		dependenciesPanel.add(artifactsPanel);
 
 		return dependenciesPanel;
 	}
@@ -466,79 +451,7 @@ public class BeanshellConfigView extends JPanel {
 		}
 	}
 	
-	// Panel for users to add artifact dependencies
-	private class ArtifactsPanel extends JPanel{
-		
-		private ArtifactsPanel() {
-			super();
-			setBorder(new EmptyBorder(0,10,0,10));
-			setLayout(new BorderLayout());
-			setMinimumSize(new Dimension(400, 150));
-			
-			add(new JLabel("Maven Artifacts"), BorderLayout.NORTH);
-			add(artifacts(),BorderLayout.CENTER);
-		}
-		
-		public JPanel artifacts() {
-			final JPanel panel = new JPanel(new BorderLayout());
-			panel.setBorder(new EtchedBorder());
 
-			artTableModel = new DefaultTableModel(){
-				 public boolean isCellEditable(int row, int column)
-				 {
-				     return false;
-				 }
-			};
-
-			artTableModel.addColumn("Group ID");
-			artTableModel.addColumn("Artifact ID");
-			artTableModel.addColumn("Version");
-			for (BasicArtifact basicArt : configuration.getArtifactDependencies()){
-				String[] artifactStrings = new String[]{basicArt.getGroupId(), basicArt.getArtifactId(), basicArt.getVersion()}; 
-				artTableModel.addRow(artifactStrings);
-			}
-			artTable = new JTable(artTableModel);
-			artTable.setShowGrid(true);
-			artTable.setGridColor(Color.GRAY);
-			panel.add(new JScrollPane(artTable,
-					JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-					JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
-			
-			JButton addButton = new JButton("Add");
-			addButton.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e) {
-					NewArtifactDialog newArtifactDialog = new NewArtifactDialog("Enter New Artifact", true);
-					newArtifactDialog.setVisible(true);
-
-					String groupID = newArtifactDialog.getGroupID();
-					String artifactID = newArtifactDialog.getArtifatcID();
-					String version = newArtifactDialog.getVersion();
-
-					if (groupID == null) { // user cancelled-any of the above three is null
-						// Do nothing
-					}
-					else{
-						artTableModel.addRow(new String[]{groupID,artifactID,version});
-					}
-				}
-			});
-			JButton removeButton = new JButton("Remove");
-			removeButton.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e) {
-					if (artTable.getSelectedRow() >=0){
-						artTableModel.removeRow(artTable.getSelectedRow());
-					}
-				}
-			});
-			JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-			buttonsPanel.add(addButton);
-			buttonsPanel.add(removeButton);
-			panel.add(buttonsPanel, BorderLayout.SOUTH);
-			
-			return panel;
-		}
-	}
-	
 	/**
 	 * Creates a {@link JTabbedPane} with the Output and Input ports
 	 * 
@@ -1057,22 +970,10 @@ public class BeanshellConfigView extends JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 				
-				// Collect the artifact dependencies (from non-empty table rows)
-				LinkedHashSet<BasicArtifact> artDeps = new LinkedHashSet<BasicArtifact>();
-				for (int i = 0; i< artTableModel.getRowCount(); i++){
-						BasicArtifact basicArt = new BasicArtifact(
-							(String) artTableModel.getValueAt(i, 0),
-							(String) artTableModel.getValueAt(i, 1),
-							(String) artTableModel.getValueAt(i, 2));
-						artDeps.add(basicArt);
-				}
-				artifactDependencies = artDeps;
-				
 				// Check if anything has actually changed from the previous configuration
 				if (! ((!inputsChanged)
 						&& (!outputsChanged)
 						&& scriptText.getText().equals(configuration.getScript()) 
-						&& artifactDependencies.equals(configuration.getArtifactDependencies())
 						&& classLoaderSharing.equals(configuration.getClassLoaderSharing())
 						&& localDependencies.equals(configuration.getLocalDependencies()))) {
 					configChanged = true;
@@ -1147,7 +1048,7 @@ public class BeanshellConfigView extends JPanel {
 				
 				beanshellActivityConfigurationBean.setClassLoaderSharing(classLoaderSharing);
 				beanshellActivityConfigurationBean.setLocalDependencies(localDependencies);
-				beanshellActivityConfigurationBean.setArtifactDependencies(artifactDependencies);
+				beanshellActivityConfigurationBean.setArtifactDependencies(new LinkedHashSet<BasicArtifact>());
 				
 				configuration = beanshellActivityConfigurationBean;				
 				
