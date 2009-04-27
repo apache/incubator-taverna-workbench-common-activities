@@ -107,24 +107,6 @@ public class WSDLServiceDescription extends
 		return Collections.singletonList(WSDL + getURI());
 	}
 
-	public boolean isTemplateService() {
-		return false;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof WSDLServiceDescription)) {
-			return false;
-		}
-		WSDLServiceDescription other = (WSDLServiceDescription) obj;
-		return getIdentifyingData().equals(other.getIdentifyingData());
-	}
-
-	@Override
-	public int hashCode() {
-		return getIdentifyingData().hashCode();
-	}
-
 	protected List<Object> getIdentifyingData() {
 		return Arrays.<Object> asList(getURI(), getOperation());
 	}

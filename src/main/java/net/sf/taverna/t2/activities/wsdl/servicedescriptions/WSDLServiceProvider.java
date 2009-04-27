@@ -7,12 +7,10 @@ import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.wsdl.Operation;
 import javax.wsdl.WSDLException;
 import javax.xml.parsers.ParserConfigurationException;
 
-import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
 import net.sf.taverna.t2.servicedescriptions.AbstractConfigurableServiceProvider;
 import net.sf.taverna.wsdl.parser.UnknownOperationException;
 import net.sf.taverna.wsdl.parser.WSDLParser;
@@ -24,6 +22,8 @@ public class WSDLServiceProvider extends
 		AbstractConfigurableServiceProvider<WSDLServiceProviderConfig> {
 
 	private static final String WSDL_SERVICE = "WSDL service";
+	
+	@SuppressWarnings("unused")
 	private static Logger logger = Logger.getLogger(WSDLServiceProvider.class);
 
 	public static final Icon wsdlIcon = new ImageIcon(
@@ -70,7 +70,7 @@ public class WSDLServiceProvider extends
 					item.setUse(parser.getUse(op.getName()));
 					item.setStyle(parser.getStyle());					
 					item.setURI(wsdl);
-					item.setTextualDescription(parser.getOperationDocumentation(op.getName()));
+					item.setDescription(parser.getOperationDocumentation(op.getName()));
 					items.add(item);
 				} catch (UnknownOperationException e) {
 					String message = "Encountered an unexpected operation name:"
@@ -93,9 +93,7 @@ public class WSDLServiceProvider extends
 		} catch (SAXException e) {
 			String message = "There was an error with the XML in the wsdl: "
 					+ wsdl;
-			logger.error(message, e);
-			JOptionPane.showMessageDialog(null, message, "ERROR",
-					JOptionPane.ERROR_MESSAGE);
+			callBack.fail(message, e);
 		} catch (IllegalArgumentException e) { // a problem with the wsdl url
 			String message = "There was an error with the wsdl: " + wsdl + " "
 					+ "Possible reason: the wsdl location was incorrect.";
