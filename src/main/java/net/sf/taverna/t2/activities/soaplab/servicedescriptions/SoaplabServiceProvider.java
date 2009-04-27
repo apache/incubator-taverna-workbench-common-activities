@@ -1,12 +1,18 @@
 package net.sf.taverna.t2.activities.soaplab.servicedescriptions;
 
+import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.xml.rpc.ServiceException;
 
+import net.sf.taverna.t2.activities.soaplab.Soap;
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivityConfigurationBean;
+import net.sf.taverna.t2.activities.soaplab.query.MissingSoaplabException;
 import net.sf.taverna.t2.activities.soaplab.query.SoaplabActivityItem;
 import net.sf.taverna.t2.activities.soaplab.query.SoaplabCategory;
 import net.sf.taverna.t2.activities.soaplab.query.SoaplabScavengerAgent;
@@ -38,11 +44,25 @@ public class SoaplabServiceProvider extends AbstractConfigurableServiceProvider<
 					item.setOperation(service);
 					item.setUrl(soaplab);
 					descriptions.add(item);
+
+					Map info;
+					try {
+						info = (Map) Soap.callWebService(soaplab + "/" + service, "getAnalysisType");
+						// Get the description element from the map
+						String description = (String) info.get("description");
+						if (description != null) {
+							item.setTextualDescription(description);
+						}
+					} catch (ServiceException e) {
+						callBack.warning(e.getMessage());
+					} catch (RemoteException e) {
+						callBack.warning(e.getMessage());
+					}
 				}
 			}
 			callBack.partialResults(descriptions);
 			callBack.finished();
-		} catch (Exception e) { // anything else we did not expect
+		} catch (MissingSoaplabException e) {
 			String message = "There was an error with the soaplab: " + soaplab;
 			callBack.fail(message, e);
 		}

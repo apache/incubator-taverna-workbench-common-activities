@@ -19,7 +19,15 @@ public class SoaplabServiceDescription extends ServiceDescription<SoaplabActivit
 	private String category;
 	private String operation;
 	private String url;
+	private String name;
 	
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	/**
 	 * @return the category
 	 */
@@ -46,6 +54,15 @@ public class SoaplabServiceDescription extends ServiceDescription<SoaplabActivit
 	 */
 	public void setOperation(String operation) {
 		this.operation = operation;
+		int finalColon = operation.lastIndexOf(":");
+		if (finalColon != -1) {
+			operation = operation.substring(finalColon + 1);
+		}
+		int finalDot = operation.lastIndexOf(".");
+		if (finalDot != -1) {
+			operation = operation.substring(finalDot + 1);
+		}
+		setName(operation);
 	}
 
 	/**
@@ -88,7 +105,7 @@ public class SoaplabServiceDescription extends ServiceDescription<SoaplabActivit
 
 	@Override
 	public String getName() {
-		return getOperation();
+		return this.name;
 	}
 
 	@Override
