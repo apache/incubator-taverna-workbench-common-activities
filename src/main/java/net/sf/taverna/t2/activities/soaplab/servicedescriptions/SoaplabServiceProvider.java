@@ -1,81 +1,58 @@
 package net.sf.taverna.t2.activities.soaplab.servicedescriptions;
 
-import java.io.IOException;
+import java.net.URI;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.xml.rpc.ServiceException;
 
 import net.sf.taverna.t2.activities.soaplab.Soap;
-import net.sf.taverna.t2.activities.soaplab.SoaplabActivityConfigurationBean;
 import net.sf.taverna.t2.activities.soaplab.query.MissingSoaplabException;
-import net.sf.taverna.t2.activities.soaplab.query.SoaplabActivityItem;
+import net.sf.taverna.t2.activities.soaplab.query.SoaplabActivityIcon;
 import net.sf.taverna.t2.activities.soaplab.query.SoaplabCategory;
 import net.sf.taverna.t2.activities.soaplab.query.SoaplabScavengerAgent;
 import net.sf.taverna.t2.servicedescriptions.AbstractConfigurableServiceProvider;
-import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 
 import org.apache.log4j.Logger;
 
-public class SoaplabServiceProvider extends AbstractConfigurableServiceProvider<SoaplabServiceProviderConfig>{
+public class SoaplabServiceProvider extends
+		AbstractConfigurableServiceProvider<SoaplabServiceProviderConfig> {
 
-	public SoaplabServiceProvider() {
-		super(new SoaplabServiceProviderConfig("http://somehost/soaplab/services/"));
-	}
+	// To avoid hammering the soaplab service
+	private static final int DELAY_MS = 100;
+	private static final int DESCRIPTION_UPDATE_INTERVAL_MS = 2000;
+
+	private static Logger logger = Logger
+			.getLogger(SoaplabServiceProvider.class);
 
 	private static final String SOAPLAB_SERVICE = "Soaplab service";
-	private static Logger logger = Logger.getLogger(SoaplabServiceProvider.class);
+	private static final boolean FIND_DETAILS = false;
+
+	public SoaplabServiceProvider() {
+		super(new SoaplabServiceProviderConfig(
+				"http://somehost/soaplab/services/"));
+	}
 
 	public void findServiceDescriptionsAsync(
 			FindServiceDescriptionsCallBack callBack) {
-		List<ServiceDescription<SoaplabActivityConfigurationBean>> descriptions = new ArrayList<ServiceDescription<SoaplabActivityConfigurationBean>>();
-		String soaplab = serviceProviderConfig.getUrl();
-		callBack.status("Connecting to Soaplab:" + soaplab);
-		try {
-			List<SoaplabCategory> categories = SoaplabScavengerAgent.load(soaplab);
-			for (SoaplabCategory cat : categories) {
-				for (String service : cat.getServices()) {
-					SoaplabServiceDescription item = new SoaplabServiceDescription();
-					item.setCategory(cat.getCategory());
-					item.setOperation(service);
-					item.setUrl(soaplab);
-					descriptions.add(item);
-
-					Map info;
-					try {
-						info = (Map) Soap.callWebService(soaplab + "/" + service, "getAnalysisType");
-						// Get the description element from the map
-						String description = (String) info.get("description");
-						if (description != null) {
-							item.setTextualDescription(description);
-						}
-					} catch (ServiceException e) {
-						callBack.warning(e.getMessage());
-					} catch (RemoteException e) {
-						callBack.warning(e.getMessage());
-					}
-				}
-			}
-			callBack.partialResults(descriptions);
-			callBack.finished();
-		} catch (MissingSoaplabException e) {
-			String message = "There was an error with the soaplab: " + soaplab;
-			callBack.fail(message, e);
+		List<SoaplabServiceDescription> descriptions = findSoaplabServices(callBack);
+		if (descriptions == null) {
+			return;
 		}
+		callBack.partialResults(descriptions);
 		
-	}
-
-	public Icon getIcon() {
-		return new ImageIcon(SoaplabActivityItem.class
-				.getResource("/soaplab.png"));
-	}
-
-	public String getName() {
-		return SOAPLAB_SERVICE;
+		if (FIND_DETAILS) {
+			if (findSoaplabDetails(descriptions, callBack)) {
+				callBack.finished();
+			}
+		} else {
+			callBack.finished();
+		}
 	}
 
 	public List<SoaplabServiceProviderConfig> getDefaultConfigurations() {
@@ -86,6 +63,99 @@ public class SoaplabServiceProvider extends AbstractConfigurableServiceProvider<
 		return defaults;
 	}
 
+	public Icon getIcon() {
+		return SoaplabActivityIcon.getSoaplabIcon();
+	}
 
+	public String getName() {
+		return SOAPLAB_SERVICE;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected boolean findSoaplabDetails(
+			List<SoaplabServiceDescription> descriptions,
+			FindServiceDescriptionsCallBack callBack) {
+		Date lastUpdate = new Date();
+		// We'll fetch more details and update the descriptions in the
+		// background
+		List<SoaplabServiceDescription> updatedDescriptions = new ArrayList<SoaplabServiceDescription>();
+		for (SoaplabServiceDescription serviceDescription : descriptions) {
+			try {
+				Date now = new Date();
+				if (now.getTime() - lastUpdate.getTime() > DESCRIPTION_UPDATE_INTERVAL_MS) {
+					if (!updatedDescriptions.isEmpty()) {
+						callBack.partialResults(updatedDescriptions);
+						updatedDescriptions = new ArrayList<SoaplabServiceDescription>();
+					}
+					lastUpdate = now;
+				}
+				Thread.sleep(DELAY_MS);
+				URI soaplabEndpoint = serviceProviderConfig.getEndpoint();
+				Map info = (Map) Soap.callWebService(soaplabEndpoint
+						.toASCIIString()
+						+ "/" + serviceDescription.getOperation(),
+						"getAnalysisType"); // Get the description element from
+				// the map
+				String description = (String) info.get("description");
+				if (description != null) {
+					serviceDescription.setDescription(description);
+				}
+				updatedDescriptions.add(serviceDescription);
+				String type = (String) info.get("type");
+				if (type != null) {
+					serviceDescription.setTypes(Arrays.asList(type.split(",")));
+				}
+			} catch (ClassCastException e) {
+				logger.warn("Can't read descriptions for soaplab service "
+						+ serviceDescription, e);
+				callBack.warning("Can't read descriptions for soaplab service "
+						+ serviceDescription.getOperation());
+			} catch (ServiceException e) {
+				logger.warn("Can't read descriptions for soaplab service "
+						+ serviceDescription, e);
+				callBack.warning("Can't read descriptions for soaplab service "
+						+ serviceDescription.getOperation());
+			} catch (RemoteException e) {
+				logger.warn("Can't read descriptions for soaplab service "
+						+ serviceDescription, e);
+				callBack.warning("Can't read descriptions for soaplab service "
+						+ serviceDescription.getOperation());
+			} catch (InterruptedException ex) {
+				callBack.fail("Thread was interrupted", ex);
+				return false;
+			}
+		}
+		if (!updatedDescriptions.isEmpty()) {
+			callBack.partialResults(updatedDescriptions);
+		}
+		return true;
+	}
+
+	protected List<SoaplabServiceDescription> findSoaplabServices(
+			FindServiceDescriptionsCallBack callBack) {
+		List<SoaplabServiceDescription> descriptions = new ArrayList<SoaplabServiceDescription>();
+		URI soaplabEndpoint = serviceProviderConfig.getEndpoint();
+		callBack.status("Connecting to Soaplab:" + soaplabEndpoint);
+		List<SoaplabCategory> categories;
+		try {
+			categories = SoaplabScavengerAgent.load(soaplabEndpoint
+					.toASCIIString());
+		} catch (MissingSoaplabException ex) {
+			String message = "There was an error with the soaplab: "
+					+ soaplabEndpoint;
+			callBack.fail(message, ex);
+			return null;
+		}
+		for (SoaplabCategory cat : categories) {
+			for (String service : cat.getServices()) {
+				SoaplabServiceDescription item = new SoaplabServiceDescription();
+				item.setCategory(cat.getCategory());
+				item.setOperation(service);
+				item.setEndpoint(soaplabEndpoint);
+				descriptions.add(item);
+			}
+		}
+		return descriptions;
+	}
 
 }

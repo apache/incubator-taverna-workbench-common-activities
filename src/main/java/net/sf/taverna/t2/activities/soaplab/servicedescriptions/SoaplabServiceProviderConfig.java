@@ -7,26 +7,26 @@ import net.sf.taverna.t2.lang.beans.PropertyAnnotation;
 
 public class SoaplabServiceProviderConfig extends PropertyAnnotated {
 
-	private String url;
+	private URI endpoint;
 	
 	public SoaplabServiceProviderConfig() {
 	}
 
-	public SoaplabServiceProviderConfig(String url) {
-		this.url = url;
+	public SoaplabServiceProviderConfig(String endpointURI) {
+		this.setEndpoint(URI.create(endpointURI));
 	}
 
 	@PropertyAnnotation(displayName = "Soaplab location", preferred = true)
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
+	public URI getEndpoint() {
+		return endpoint;
 	}
 
 	public String toString() {
-		return getUrl();
+		return getEndpoint().toString();
+	}
+
+	public void setEndpoint(URI endpoint) {
+		this.endpoint = endpoint;
 	}
 	
 }

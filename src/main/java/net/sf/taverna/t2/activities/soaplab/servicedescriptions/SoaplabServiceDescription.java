@@ -1,5 +1,7 @@
 package net.sf.taverna.t2.activities.soaplab.servicedescriptions;
 
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,22 +14,22 @@ import net.sf.taverna.t2.activities.soaplab.query.SoaplabActivityItem;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
-public class SoaplabServiceDescription extends ServiceDescription<SoaplabActivityConfigurationBean>{
-	
+public class SoaplabServiceDescription extends
+		ServiceDescription<SoaplabActivityConfigurationBean> {
+
 	private final static String SOAPLAB = "Soaplab @ ";
 
 	private String category;
 	private String operation;
-	private String url;
-	private String name;
-	
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+	private URI endpoint;
+	private List<String> types;
 
+	private String name;
+
+	public List<String> getTypes() {
+		return types;
+	}
+	
 	/**
 	 * @return the category
 	 */
@@ -36,7 +38,8 @@ public class SoaplabServiceDescription extends ServiceDescription<SoaplabActivit
 	}
 
 	/**
-	 * @param category the category to set
+	 * @param category
+	 *            the category to set
 	 */
 	public void setCategory(String category) {
 		this.category = category;
@@ -50,40 +53,28 @@ public class SoaplabServiceDescription extends ServiceDescription<SoaplabActivit
 	}
 
 	/**
-	 * @param operation the operation to set
+	 * @param operation
+	 *            the operation to set
 	 */
-	public void setOperation(String operation) {
+	public void setOperation(final String operation) {
 		this.operation = operation;
+		
+		String name = operation;
 		int finalColon = operation.lastIndexOf(":");
 		if (finalColon != -1) {
-			operation = operation.substring(finalColon + 1);
+			name = operation.substring(finalColon + 1);
 		}
 		int finalDot = operation.lastIndexOf(".");
 		if (finalDot != -1) {
-			operation = operation.substring(finalDot + 1);
+			name = operation.substring(finalDot + 1);
 		}
-		setName(operation);
+		setName(name);
 	}
 
-	/**
-	 * @return the url
-	 */
-	public String getUrl() {
-		return url;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	/**
-	 * @param url the url to set
-	 */
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public Class<? extends Activity<SoaplabActivityConfigurationBean>> getActivityClass() {
@@ -93,7 +84,7 @@ public class SoaplabServiceDescription extends ServiceDescription<SoaplabActivit
 	@Override
 	public SoaplabActivityConfigurationBean getActivityConfiguration() {
 		SoaplabActivityConfigurationBean bean = new SoaplabActivityConfigurationBean();
-		bean.setEndpoint(getUrl() + getOperation());
+		bean.setEndpoint(getEndpoint().toASCIIString() + getOperation());
 		return bean;
 	}
 
@@ -105,25 +96,34 @@ public class SoaplabServiceDescription extends ServiceDescription<SoaplabActivit
 
 	@Override
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	@Override
-	public List<? extends Comparable> getPath() {
-		List<String> result;
-		result = Arrays.asList(SOAPLAB + getUrl(), getCategory());
-		return result;
+	public List<String> getPath() {
+		List<String> path = new ArrayList<String>();
+		path.add(SOAPLAB + getEndpoint());
+		path.add(getCategory());
+		// Don't use getTypes() - as we end up
+		// with double entries.. 
+		return path;
+	}
+
+	public void setTypes(List<String> types) {
+		this.types = types;
+	}
+
+	public void setEndpoint(URI endpoint) {
+		this.endpoint = endpoint;
+	}
+
+	public URI getEndpoint() {
+		return endpoint;
 	}
 
 	@Override
-	public int hashCode() {
-		return getPath().hashCode();
-	}
-
-	@Override
-	public boolean isTemplateService() {
-		// TODO Auto-generated method stub
-		return false;
+	protected List<Object> getIdentifyingData() {
+		return Arrays.<Object>asList(getEndpoint(), getOperation());
 	}
 
 }

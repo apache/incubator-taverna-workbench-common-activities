@@ -67,8 +67,7 @@ public class SoaplabActivityItem extends AbstractActivityItem {
 	}
 
 	public Icon getIcon() {
-		return new ImageIcon(SoaplabActivityItem.class
-				.getResource("/soaplab.png"));
+		return SoaplabActivityIcon.getSoaplabIcon();
 	}
 	
 	@Override

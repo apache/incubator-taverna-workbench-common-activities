@@ -21,6 +21,7 @@
 package net.sf.taverna.t2.activities.soaplab.query;
 
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivity;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI;
@@ -41,7 +42,12 @@ public class SoaplabActivityIcon implements ActivityIconSPI{
 	}
 
 	public Icon getIcon(Activity<?> activity) {
-		return new SoaplabActivityItem().getIcon();
+		return getSoaplabIcon();
+	}
+
+	public static Icon getSoaplabIcon() {
+		return new ImageIcon(SoaplabActivityItem.class
+				.getResource("/soaplab.png"));
 	}
 
 }
