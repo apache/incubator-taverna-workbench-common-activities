@@ -30,4 +30,9 @@ public class BeanshellTemplateService extends
 	public Icon getIcon() {
 		return BeanshellActivityIcon.getBeanshellIcon();
 	}
+	
+	@Override
+	public String getTextualDescription() {
+		return "A service that allows Beanshell scripts, with dependencies on libraries";	
+	}
 }
