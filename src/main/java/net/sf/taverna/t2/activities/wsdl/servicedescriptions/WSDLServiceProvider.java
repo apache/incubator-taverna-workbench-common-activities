@@ -41,13 +41,13 @@ public class WSDLServiceProvider extends
 		List<WSDLServiceProviderConfig> defaults = new ArrayList<WSDLServiceProviderConfig>();
 		// TODO: Defaults should come from a config/resource file
 		defaults.add(new WSDLServiceProviderConfig(
-				"http://www.ebi.ac.uk/xembl/XEMBL.wsdl"));
+		"http://www.ebi.ac.uk/xembl/XEMBL.wsdl"));
 		defaults.add(new WSDLServiceProviderConfig(
-				"http://soap.genome.jp/KEGG.wsdl"));
+		"http://soap.genome.jp/KEGG.wsdl"));
+		defaults.add(new WSDLServiceProviderConfig(
+				"http://eutils.ncbi.nlm.nih.gov/entrez/eutils/soap/eutils.wsdl"));
 		defaults.add(new WSDLServiceProviderConfig(
 				"http://soap.bind.ca/wsdl/bind.wsdl"));
-		defaults.add(new WSDLServiceProviderConfig(
-						"http://eutils.ncbi.nlm.nih.gov/entrez/eutils/soap/eutils.wsdl"));
 		defaults.add(new WSDLServiceProviderConfig(
 				"http://www.ebi.ac.uk/ws/services/urn:Dbfetch?wsdl"));
 		return defaults;
@@ -70,6 +70,7 @@ public class WSDLServiceProvider extends
 					item.setUse(parser.getUse(op.getName()));
 					item.setStyle(parser.getStyle());					
 					item.setURI(wsdl);
+					item.setTextualDescription(parser.getOperationDocumentation(op.getName()));
 					items.add(item);
 				} catch (UnknownOperationException e) {
 					String message = "Encountered an unexpected operation name:"
