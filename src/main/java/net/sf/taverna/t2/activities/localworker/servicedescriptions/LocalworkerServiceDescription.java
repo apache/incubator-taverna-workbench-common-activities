@@ -19,7 +19,7 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputP
 
 public class LocalworkerServiceDescription extends ServiceDescription<BeanshellActivityConfigurationBean>{
 	
-	private static final String LOCALWORKER = "Local services";
+	private static final String LOCALWORKER = ServiceDescription.LOCAL_SERVICES;
 
 	private String script;
 	private List<ActivityOutputPortDefinitionBean> outputPorts;
