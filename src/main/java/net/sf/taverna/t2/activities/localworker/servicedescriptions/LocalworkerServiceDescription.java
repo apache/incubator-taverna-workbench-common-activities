@@ -12,6 +12,7 @@ import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
 import net.sf.taverna.t2.activities.localworker.query.LocalworkerActivityItem;
+import net.sf.taverna.t2.lang.beans.PropertyAnnotation;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
@@ -93,6 +94,8 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 		return result;
 	}
 
+	
+	@PropertyAnnotation(hidden=true)
 	public String getScript() {
 		return script;
 	}
