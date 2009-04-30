@@ -1,10 +1,12 @@
 package net.sf.taverna.t2.activities.beanshell.menu;
 
 import net.sf.taverna.t2.workbench.activitytools.AbstractConfigureActivityMenuAction;
+import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 import javax.swing.Action;
 
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
+import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
 import net.sf.taverna.t2.activities.beanshell.actions.BeanshellActivityConfigurationAction;
 
 public class ConfigureBeanshellMenuAction extends
@@ -18,11 +20,15 @@ public class ConfigureBeanshellMenuAction extends
 	
 	@Override
 	protected Action createAction() {
-		BeanshellActivityConfigurationAction configAction = new BeanshellActivityConfigurationAction(
+		Activity a = findActivity();
+		Action result = null;
+		if (! (a instanceof LocalworkerActivity)) {
+		result = new BeanshellActivityConfigurationAction(
 				findActivity(), getParentFrame());
-		configAction.putValue(Action.NAME, EDIT_BEANSHELL_SCRIPT);
-		addMenuDots(configAction);
-		return configAction;
+		result.putValue(Action.NAME, EDIT_BEANSHELL_SCRIPT);
+		addMenuDots(result);
+		}
+		return result;
 	}
 
 
