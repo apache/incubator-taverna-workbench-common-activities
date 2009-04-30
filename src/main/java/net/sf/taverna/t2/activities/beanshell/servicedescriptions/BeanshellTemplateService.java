@@ -32,7 +32,7 @@ public class BeanshellTemplateService extends
 	}
 	
 	@Override
-	public String getTextualDescription() {
+	public String getDescription() {
 		return "A service that allows Beanshell scripts, with dependencies on libraries";	
 	}
 }
