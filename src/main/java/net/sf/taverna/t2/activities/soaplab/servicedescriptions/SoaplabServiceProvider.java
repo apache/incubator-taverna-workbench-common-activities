@@ -158,4 +158,11 @@ public class SoaplabServiceProvider extends
 		return descriptions;
 	}
 
+	@Override
+	protected List<? extends Object> getIdentifyingData() {
+		List<String> result;
+		result = Arrays.asList(getConfiguration().getEndpoint().toString());
+		return result;
+	}
+
 }
