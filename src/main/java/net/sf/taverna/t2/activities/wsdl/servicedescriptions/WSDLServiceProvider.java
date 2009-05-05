@@ -3,6 +3,7 @@ package net.sf.taverna.t2.activities.wsdl.servicedescriptions;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -111,6 +112,13 @@ public class WSDLServiceProvider extends
 
 	public Icon getIcon() {
 		return wsdlIcon;
+	}
+
+	@Override
+	protected List<? extends Object> getIdentifyingData() {
+		List<String> result;
+		result = Arrays.asList(getConfiguration().getURI().toString());
+		return result;
 	}
 
 }
