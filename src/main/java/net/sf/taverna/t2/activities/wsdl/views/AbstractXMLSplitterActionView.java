@@ -142,7 +142,7 @@ public abstract class AbstractXMLSplitterActionView<BeanType> extends
 
 	
 	private String describePort(Port port, TypeDescriptor descriptor) {
-		String html = "<tr><tr>"+port.getName()+"</td></td>";
+		String html = "<tr><td>"+port.getName()+"</td><td>";
 		if (descriptor!=null && descriptor.isOptional()) {
 			html += "<em>optional</em><br>";
 		}
@@ -153,7 +153,7 @@ public abstract class AbstractXMLSplitterActionView<BeanType> extends
 	}
 	
 	private String describePort(Port port) {
-		String html = "<tr><tr>"+port.getName()+"</td></td>";
+		String html = "<tr><td>"+port.getName()+"</td><td>";
 		html+="Depth:"+port.getDepth()+"<br>";
 		html+="</td></tr>";
 		return html;

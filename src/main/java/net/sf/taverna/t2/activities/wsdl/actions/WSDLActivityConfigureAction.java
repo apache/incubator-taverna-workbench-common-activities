@@ -23,7 +23,6 @@ package net.sf.taverna.t2.activities.wsdl.actions;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 
-import net.sf.taverna.t2.activities.wsdl.InputPortTypeDescriptorActivity;
 import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
 import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
