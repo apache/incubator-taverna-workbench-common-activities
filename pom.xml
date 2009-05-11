@@ -37,6 +37,12 @@
 			<version>${t2.ui.impl.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>net.sf.taverna.t2.ui-components</groupId>
+			<artifactId>workflow-view</artifactId>
+			<version>${t2.ui.api.version}</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>net.sf.taverna.t2.activities</groupId>
 			<artifactId>beanshell-activity</artifactId>
 			<version>${t2.activities.version}</version>

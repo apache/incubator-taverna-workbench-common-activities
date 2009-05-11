@@ -6,6 +6,7 @@ import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.beanshell.query.BeanshellActivityIcon;
 import net.sf.taverna.t2.servicedescriptions.AbstractTemplateService;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 
 public class BeanshellTemplateService extends
 		AbstractTemplateService<BeanshellActivityConfigurationBean> {
@@ -34,5 +35,10 @@ public class BeanshellTemplateService extends
 	@Override
 	public String getDescription() {
 		return "A service that allows Beanshell scripts, with dependencies on libraries";	
+	}
+	
+	public static ServiceDescription getServiceDescription() {
+		BeanshellTemplateService bts = new BeanshellTemplateService();
+		return bts.templateService;
 	}
 }
