@@ -225,6 +225,13 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 		localWorkerToScript.put(
 				"net.sourceforge.taverna.scuflworkers.ncbi.PubMedEFetchWorker",
 				"Get PubMed XML By PMID");
+		
+		localWorkerToScript.put(
+				"net.sourceforge.taverna.scuflworkers.jdbc.SQLQueryWorker",
+				"Execute SQL Query");
+		localWorkerToScript.put(
+				"net.sourceforge.taverna.scuflworkers.jdbc.SQLUpdateWorker",
+				"Execute SQL Update");
 	}
 
 	public String getName() {

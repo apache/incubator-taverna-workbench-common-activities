@@ -58,3 +58,6 @@ net.sourceforge.taverna.scuflworkers.ncbi.ProteinGBSeqWorker
 net.sourceforge.taverna.scuflworkers.ncbi.ProteinTinySeqXMLWorker
 net.sourceforge.taverna.scuflworkers.ncbi.PubMedESearchWorker
 net.sourceforge.taverna.scuflworkers.ncbi.PubMedEFetchWorker
+category:jdbc
+net.sourceforge.taverna.scuflworkers.jdbc.SQLQueryWorker
+net.sourceforge.taverna.scuflworkers.jdbc.SQLUpdateWorker
