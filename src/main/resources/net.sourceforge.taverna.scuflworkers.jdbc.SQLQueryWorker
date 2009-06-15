@@ -1,186 +1,109 @@
 <activity  xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.beanshell.BeanshellActivity</class><inputMap><map from="password" to="password" /><map from="userid" to="userid" /><map from="params" to="params" /><map from="url" to="url" /><map from="provideXml" to="provideXml" /><map from="driver" to="driver" /><map from="sql" to="sql" /></inputMap><outputMap><map from="resultList" to="resultList" /><map from="xmlresults" to="xmlresults" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns="">
 
   <script>import java.sql.Driver;
-
 import java.sql.DriverManager;
-
 import java.sql.Connection;
-
 import java.sql.PreparedStatement;
-
 import java.sql.ResultSet;
-
 import java.sql.ResultSetMetaData;
 
-
-
 import javax.sql.rowset.WebRowSet;
-
-
 
 import com.sun.rowset.WebRowSetImpl;
 
 
 
 if ((driver == void) || (driver == null) || driver.equals("")) {
-
 	throw new RuntimeException("The drivermust be specified");
-
 }
-
-
 
 if ((url == void) || (url == null) || url.equals("")) {
-
 	throw new RuntimeException("The url must be specified");
-
 }
-
-
 
 if ((userid == void) || (userid == null) || userid.equals("")) {
-
 	throw new RuntimeException("The userid must be specified");
-
 }
-
-
 
 boolean provideXmlBoolean = ((provideXml != void) &amp;&amp; (provideXml != null) &amp;&amp; Boolean.valueOf(provideXml));
 
-
-
 if ((params == void) || (params == null)) {
-
    params = new ArrayList();
-
 }
-
-
 
 if ((sql == void) || (sql == null) || sql.equals("")) {
-
 	throw new RuntimeException("The sql must be specified");
-
 }
-
-
 
 Class c = Thread.currentThread().getContextClassLoader().loadClass(driver);
 
 if (c == null) {
-
 	throw new RuntimeExcecption("Class " + driver + " not found");
-
 }
 
-
-
 Driver d = c.newInstance();
-
-
 
 Properties p = new Properties();
 
 p.setProperty("user", userid);
 
 if ((password == void) || (passsword == null)) {
-
 	password = "";
-
 }
 
 p.setProperty("password", password);
 
-
-
-Connection con = d.connect(url, p);
-
-
-
-PreparedStatement ps = con.prepareStatement(sql);
-
-
-
-for (int i = 0; i &lt; params.size(); i++) {
-
-	ps.setObject(i + 1, params.get(i));
-
-}
-
-
-
-ResultSet rs = ps.executeQuery();
-
-
-
-if (provideXmlBoolean) {
-
-	WebRowSet webrs = new WebRowSetImpl();
-
-
-
-	StringWriter sw = new StringWriter();
-
-	webrs.writeXml(rs, sw);
-
-	xmlresults = sw.toString();
-
-} else {
-
-	xmlresults = "";
-
-}
-
-
-
-
-
-
-
 try {
+	Connection con = d.connect(url, p);
+	PreparedStatement ps = con.prepareStatement(sql);
 
-	rs.beforeFirst();
-
-} catch (SQLException e) {
-
-	// redo the query
-
-	rs = ps.executeQuery();
-
-}
-
-
-
-ResultSetMetaData rsmd = rs.getMetaData();
-
-
-
-int numCols = rsmd.getColumnCount();
-
-resultList = new ArrayList();
-
-// put the results into the results list.
-
-while (rs.next()) {
-
-	List row = new ArrayList(numCols);
-
-	for (int i = 0; i &lt; numCols; i++) {
-
-		row.add(rs.getString(i + 1));
-
+	for (int i = 0; i &lt; params.size(); i++) {
+		ps.setObject(i + 1, params.get(i));
 	}
 
-	resultList.add(row);
+	ResultSet rs = ps.executeQuery();
 
+	if (provideXmlBoolean) {
+		WebRowSet webrs = new WebRowSetImpl();
+		StringWriter sw = new StringWriter();
+		webrs.writeXml(rs, sw);
+		xmlresults = sw.toString();
+	} else {
+		xmlresults = "";
+	}
+
+	try {
+		rs.beforeFirst();
+	} catch (SQLException e) {
+		// redo the query
+		rs = ps.executeQuery();
+	}
+
+	ResultSetMetaData rsmd = rs.getMetaData();
+	int numCols = rsmd.getColumnCount();
+	resultList = new ArrayList();
+	
+	// put the results into the results list.
+	while (rs.next()) {
+		List row = new ArrayList(numCols);
+		for (int i = 0; i &lt; numCols; i++) {
+			row.add(rs.getString(i + 1));
+		}
+		resultList.add(row);
+	}
 }
-
-
-rs.close();
-ps.close();
-con.close();
-
+finally {
+	if (rs != null) {
+		rs.close();
+	}
+	if (ps != null) {
+		ps.close();
+	}
+	if (con != null) }
+		con.close();
+	}
+}
+  
 </script>
 
   <dependencies />
