@@ -84,7 +84,7 @@ public class WSDLServiceDescription extends
 	}
 
 	public Icon getIcon() {
-		return WSDLServiceProvider.wsdlIcon;
+		return WSDLActivityIcon.getWSDLIcon();
 	}
 
 	public Class<? extends Activity<WSDLActivityConfigurationBean>> getActivityClass() {
