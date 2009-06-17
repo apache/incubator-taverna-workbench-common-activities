@@ -12,10 +12,7 @@ import javax.swing.Icon;
 import javax.xml.rpc.ServiceException;
 
 import net.sf.taverna.t2.activities.soaplab.Soap;
-import net.sf.taverna.t2.activities.soaplab.query.MissingSoaplabException;
-import net.sf.taverna.t2.activities.soaplab.query.SoaplabActivityIcon;
-import net.sf.taverna.t2.activities.soaplab.query.SoaplabCategory;
-import net.sf.taverna.t2.activities.soaplab.query.SoaplabScavengerAgent;
+// import net.sf.taverna.t2.activities.soaplab.query.MissingSoaplabException;
 import net.sf.taverna.t2.servicedescriptions.AbstractConfigurableServiceProvider;
 
 import org.apache.log4j.Logger;

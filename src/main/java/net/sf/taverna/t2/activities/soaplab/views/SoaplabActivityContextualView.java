@@ -36,7 +36,7 @@ import javax.xml.transform.stream.StreamSource;
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivity;
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivityConfigurationBean;
 import net.sf.taverna.t2.activities.soaplab.actions.SoaplabActivityConfigurationAction;
-import net.sf.taverna.t2.activities.soaplab.query.SoaplabScavengerAgent;
+import net.sf.taverna.t2.activities.soaplab.servicedescriptions.SoaplabScavengerAgent;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 

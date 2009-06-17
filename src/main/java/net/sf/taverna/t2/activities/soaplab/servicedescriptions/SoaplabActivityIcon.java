@@ -18,7 +18,7 @@
  *  License along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  ******************************************************************************/
-package net.sf.taverna.t2.activities.soaplab.query;
+package net.sf.taverna.t2.activities.soaplab.servicedescriptions;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -33,6 +33,8 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
  *
  */
 public class SoaplabActivityIcon implements ActivityIconSPI{
+	
+	private static Icon icon;
 
 	public int canProvideIconScore(Activity<?> activity) {
 		if (activity.getClass().getName().equals(SoaplabActivity.class.getName()))
@@ -46,8 +48,11 @@ public class SoaplabActivityIcon implements ActivityIconSPI{
 	}
 
 	public static Icon getSoaplabIcon() {
-		return new ImageIcon(SoaplabActivityItem.class
-				.getResource("/soaplab.png"));
+		if (icon == null) {
+			icon = new ImageIcon(SoaplabActivityIcon.class
+					.getResource("/soaplab.png"));
+		}
+		return icon;
 	}
 
 }

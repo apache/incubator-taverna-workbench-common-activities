@@ -44,37 +44,20 @@
  ****************************************************************
  * Source code information
  * -----------------------
- * Filename           $RCSfile: SoaplabCategory.java,v $
- * Revision           $Revision: 1.2 $
+ * Filename           $RCSfile: MissingSoaplabException.java,v $
+ * Revision           $Revision: 1.3 $
  * Release status     $State: Exp $
- * Last modified on   $Date: 2008/09/04 13:40:38 $
- *               by   $Author: sowen70 $
+ * Last modified on   $Date: 2008/11/19 17:33:04 $
+ *               by   $Author: anenadic $
  * Created on 4 Sep 2006
  *****************************************************************/
-package net.sf.taverna.t2.activities.soaplab.query;
+package net.sf.taverna.t2.activities.soaplab.servicedescriptions;
 
-import java.util.ArrayList;
-import java.util.List;
+@SuppressWarnings("serial")
+public class MissingSoaplabException extends Exception {
 
-public class SoaplabCategory {
-	
-	private String category;
-	private List<String> services = new ArrayList<String>();
-	
-	public SoaplabCategory(String category) {
-		this.category=category;
-	}		
-	
-	public boolean addService(String service) {
-		return services.add(service);
-	}
-
-	public String getCategory() {
-		return category;
-	}
-
-	public List<String> getServices() {
-		return services;
+	public MissingSoaplabException(String msg) {
+		super(msg);
 	}
 	
 }

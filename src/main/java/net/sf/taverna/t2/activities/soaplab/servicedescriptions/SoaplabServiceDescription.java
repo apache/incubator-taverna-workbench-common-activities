@@ -6,11 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivity;
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivityConfigurationBean;
-import net.sf.taverna.t2.activities.soaplab.query.SoaplabActivityItem;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
@@ -90,8 +88,7 @@ public class SoaplabServiceDescription extends
 
 	@Override
 	public Icon getIcon() {
-		return new ImageIcon(SoaplabActivityItem.class
-				.getResource("/soaplab.png"));
+		return SoaplabActivityIcon.getSoaplabIcon();
 	}
 
 	@Override
