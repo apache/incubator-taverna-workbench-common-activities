@@ -18,35 +18,45 @@
  *  License along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  ******************************************************************************/
-package net.sf.taverna.t2.activities.wsdl.query;
+package net.sf.taverna.t2.activities.wsdl.servicedescriptions;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import net.sf.taverna.t2.activities.wsdl.xmlsplitter.XMLOutputSplitterActivity;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI;
+import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
-public class WSDLQueryTest {
+/**
+ * 
+ * @author Alex Nenadic
+ *
+ */
+public class XMLOutputSplitterActivityIcon implements ActivityIconSPI{
+	
+	private static Icon icon = null;
 
-	private static String wsdlUrl;
-	@BeforeClass
-	public static void setup() {
-		wsdlUrl=WSDLQueryTest.class.getResource("/kegg.wsdl").toExternalForm();
+	public int canProvideIconScore(Activity<?> activity) {
+		if (activity.getClass().getName().equals(XMLOutputSplitterActivity.class.getName()))
+			return DEFAULT_ICON + 1;
+		else
+			return NO_ICON;
 	}
-	
-	
-	@Test
-	public void testDoQuery() {
-		WSDLQuery q = new WSDLQuery(wsdlUrl);
-		q.doQuery();
-		assertEquals("The query should be 69 items",69,q.size());
-		WSDLActivityItem i = (WSDLActivityItem)q.toArray()[0];
-		assertEquals("The type shoudl be WSDL","WSDL",i.getType());
-		assertEquals("The use should be encoded","encoded",i.getUse());
-		assertEquals("The style should be RPC","rpc",i.getStyle());
-		assertNotNull("The operation should be set",i.getOperation());
-		assertTrue("The operation should be have some content",i.getOperation().length()>2);
+
+	public Icon getIcon(Activity<?> activity) {
+		return getXMLOutputSplitterIcon();
 	}
-	
+
+	public static Icon getXMLOutputSplitterIcon() {
+		if (icon == null) {
+			icon = new ImageIcon(XMLOutputSplitterActivityIcon.class.getResource("/xml-splitter.png"));
+		}
+		return icon;
+	}
+
 }
+
+
+
+
+

@@ -27,9 +27,6 @@ public class WSDLServiceProvider extends
 	@SuppressWarnings("unused")
 	private static Logger logger = Logger.getLogger(WSDLServiceProvider.class);
 
-	public static final Icon wsdlIcon = new ImageIcon(
-			WSDLServiceDescription.class.getResource("/wsdl.png"));
-
 	public WSDLServiceProvider() {
 		super(new WSDLServiceProviderConfig("http://somehost/service?wsdl"));
 	}
@@ -111,7 +108,7 @@ public class WSDLServiceProvider extends
 	}
 
 	public Icon getIcon() {
-		return wsdlIcon;
+		return WSDLActivityIcon.getWSDLIcon();
 	}
 
 	@Override

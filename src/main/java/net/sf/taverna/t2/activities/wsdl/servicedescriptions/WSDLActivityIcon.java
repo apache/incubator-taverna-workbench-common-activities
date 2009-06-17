@@ -18,16 +18,43 @@
  *  License along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  ******************************************************************************/
-package net.sf.taverna.t2.activities.wsdl.query;
+package net.sf.taverna.t2.activities.wsdl.servicedescriptions;
 
-import static org.junit.Assert.assertNotNull;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
-import org.junit.Test;
+import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI;
+import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
-public class WSDLActivityItemTest {
+/**
+ * 
+ * @author Alex Nenadic
+ * @author alanrw
+ *
+ */
+public class WSDLActivityIcon implements ActivityIconSPI{
+	
+	private static Icon icon;
 
-	@Test
-	public void testIcon() {
-		assertNotNull(new WSDLActivityItem().getIcon());
+	public int canProvideIconScore(Activity<?> activity) {
+		if (activity.getClass().getName().equals(WSDLActivity.class.getName()))
+			return DEFAULT_ICON + 1;
+		else
+			return NO_ICON;
+	}
+
+	public Icon getIcon(Activity<?> activity) {
+		return getWSDLIcon();
+	}
+
+	public static Icon getWSDLIcon() {
+		if (icon == null) {
+			icon = new ImageIcon(WSDLActivityIcon.class.getResource("/wsdl.png"));
+		}
+		return icon;
 	}
 }
+
+
+

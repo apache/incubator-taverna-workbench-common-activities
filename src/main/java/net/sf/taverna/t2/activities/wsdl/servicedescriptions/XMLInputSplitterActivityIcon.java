@@ -18,37 +18,36 @@
  *  License along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  ******************************************************************************/
-package net.sf.taverna.t2.activities.wsdl.query;
-
-import java.awt.event.ActionEvent;
+package net.sf.taverna.t2.activities.wsdl.servicedescriptions;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 
-import net.sf.taverna.t2.partition.AddQueryActionHandler;
+import net.sf.taverna.t2.activities.wsdl.xmlsplitter.XMLInputSplitterActivity;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI;
+import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
-@SuppressWarnings("serial")
-public class WSDLAddQueryActionHandler extends AddQueryActionHandler {
-	
+/**
+ * 
+ * @author Alex Nenadic
+ *
+ */
+public class XMLInputSplitterActivityIcon implements ActivityIconSPI{
 
-	@Override
-	public void actionPerformed(ActionEvent actionEvent) {
-		String wsdl = JOptionPane.showInputDialog(null,"Address of the WSDL document","WSDL location",JOptionPane.INFORMATION_MESSAGE);
-		if (wsdl!=null) {
-			WSDLQuery query = new WSDLQuery(wsdl);
-			addQuery(query);
-		}
+	public int canProvideIconScore(Activity<?> activity) {
+		if (activity.getClass().getName().equals(XMLInputSplitterActivity.class.getName()))
+			return DEFAULT_ICON + 1;
+		else
+			return NO_ICON;
 	}
 
-	@Override
-	protected Icon getIcon() {
-		return new ImageIcon(WSDLAddQueryActionHandler.class.getResource("/wsdl.png"));
-	}
-
-	@Override
-	protected String getText() {
-		return "WSDL...";
+	public Icon getIcon(Activity<?> activity) {
+		// As we do not have the XMLInputSplitterActivityItem we just get the icon directly
+		return new ImageIcon(XMLInputSplitterActivityIcon.class.getResource("/xml-splitter.png"));
 	}
 
 }
+
+
+
+
