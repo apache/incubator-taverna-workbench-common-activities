@@ -18,28 +18,41 @@
  *  License along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  ******************************************************************************/
-package net.sf.taverna.t2.activities.localworker.query;
+package net.sf.taverna.t2.activities.localworker.servicedescriptions;
 
-import net.sf.taverna.t2.partition.ActivityQuery;
-import net.sf.taverna.t2.partition.ActivityQueryFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
+import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI;
+import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 /**
- * Factory method used to get a {@link LocalworkerQuery}
  * 
- * @author Ian Dunlop
- * 
+ * @author Alex Nenadic
+ *
  */
-public class LocalworkerQueryFactory extends ActivityQueryFactory {
+public class LocalworkerActivityIcon implements ActivityIconSPI{
+	
+	private static Icon icon;
 
-	@Override
-	protected ActivityQuery createQuery(String property) {
-		return new LocalworkerQuery(property);
+	public int canProvideIconScore(Activity<?> activity) {
+		if (activity.getClass().getName().equals(LocalworkerActivity.class.getName()))
+			return DEFAULT_ICON + 1;
+		else
+			return NO_ICON;
 	}
 
-	@Override
-	protected String getPropertyKey() {
-		// TODO Auto-generated method stub
-		return null;
+	public Icon getIcon(Activity<?> activity) {
+		return getLocalworkerIcon();
 	}
-
+	
+	public static Icon getLocalworkerIcon() {
+		if (icon == null) {
+			icon = new ImageIcon(LocalworkerActivityIcon.class
+					.getResource("/localworker.png"));
+		}
+		return icon;
+	}
 }
+

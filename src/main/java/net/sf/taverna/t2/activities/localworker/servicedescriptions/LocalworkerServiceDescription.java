@@ -5,13 +5,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
-
 import net.sf.taverna.raven.repository.BasicArtifact;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
-import net.sf.taverna.t2.activities.localworker.query.LocalworkerActivityItem;
 import net.sf.taverna.t2.lang.beans.PropertyAnnotation;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
@@ -78,8 +75,7 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 
 	@Override
 	public Icon getIcon() {
-		return new ImageIcon(LocalworkerActivityItem.class
-				.getResource("/localworker.png"));
+		return LocalworkerActivityIcon.getLocalworkerIcon();
 	}
 
 	@Override

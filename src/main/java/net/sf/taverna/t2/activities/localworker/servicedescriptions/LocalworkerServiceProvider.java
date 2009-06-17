@@ -15,10 +15,8 @@ import javax.swing.Icon;
 import net.sf.taverna.raven.repository.BasicArtifact;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
-import net.sf.taverna.t2.activities.beanshell.query.BeanshellActivityIcon;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider;
-import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider.FindServiceDescriptionsCallBack;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
@@ -408,7 +406,7 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 	}
 
 	public Icon getIcon() {
-		return BeanshellActivityIcon.getBeanshellIcon();
+		return LocalworkerActivityIcon.getLocalworkerIcon();
 	}
 	
 	@Override
