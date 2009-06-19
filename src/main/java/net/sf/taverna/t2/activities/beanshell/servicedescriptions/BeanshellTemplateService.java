@@ -4,7 +4,6 @@ import javax.swing.Icon;
 
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
-import net.sf.taverna.t2.activities.beanshell.query.BeanshellActivityIcon;
 import net.sf.taverna.t2.servicedescriptions.AbstractTemplateService;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 

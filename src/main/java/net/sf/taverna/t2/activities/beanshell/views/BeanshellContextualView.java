@@ -71,7 +71,7 @@ public class BeanshellContextualView extends
 				+"</tr>";
 		for (ActivityOutputPortDefinitionBean bean : getConfigBean()
 				.getOutputPortDefinitions()) {
-			html = html + "<tr></td>" + bean.getName() + "</td><td>"
+			html = html + "<tr><td>" + bean.getName() + "</td><td>"
 					+ bean.getDepth() + "</td>" 
 //							+ "<td>" + bean.getGranularDepth()
 //					+ "</td>"

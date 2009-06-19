@@ -18,23 +18,40 @@
  *  License along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  ******************************************************************************/
-package net.sf.taverna.t2.activities.beanshell.partition;
+package net.sf.taverna.t2.activities.beanshell.servicedescriptions;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
-import net.sf.taverna.t2.activities.beanshell.query.BeanshellActivityItem;
-import net.sf.taverna.t2.partition.PropertyExtractorSPI;
+import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI;
+import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
-public class BeanshellPropertyExtractorSPI implements PropertyExtractorSPI {
+/**
+ * 
+ * @author Alex Nenadic
+ * 
+ */
+public class BeanshellActivityIcon implements ActivityIconSPI {
 
-	public Map<String, Object> extractProperties(Object target) {
-		Map<String,Object> map = new HashMap<String, Object>();
-		if (target instanceof BeanshellActivityItem) {
-			BeanshellActivityItem item = (BeanshellActivityItem)target;
-			map.put("type", item.getType());
-		}
-		return map;
+	static Icon icon = null;
+
+	public int canProvideIconScore(Activity<?> activity) {
+		if (activity.getClass().getName().equals(
+				BeanshellActivity.class.getName()))
+			return DEFAULT_ICON + 1;
+		else
+			return NO_ICON;
 	}
 
+	public Icon getIcon(Activity<?> activity) {
+		return getBeanshellIcon();
+	}
+	
+	public static Icon getBeanshellIcon() {
+		if (icon == null) {
+			icon = new ImageIcon(BeanshellActivityIcon.class.getResource("/beanshell.png"));
+		}
+		return icon;
+	}
 }
