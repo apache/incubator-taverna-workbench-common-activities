@@ -1,0 +1,124 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>taverna-workbench</artifactId>
+		<groupId>net.sf.taverna.t2</groupId>
+		<version>2.1-beta-2</version>
+	</parent>
+	<groupId>net.sf.taverna.t2.ui-activities
+	</groupId>
+	<artifactId>spreadsheet-import-activity-ui</artifactId>
+	<version>0.1</version>
+	<name>Taverna 2 Spreadsheet Import Activity UI</name>
+
+	<repositories>
+		<repository>
+			<id>mygrid-repository</id>
+			<name>myGrid Repository</name>
+			<url>http://www.mygrid.org.uk/maven/repository</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<properties>
+		<spreadsheet.import.version>0.1</spreadsheet.import.version>
+		<t2.lang.version>0.5</t2.lang.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>net.sf.taverna.t2.activities</groupId>
+			<artifactId>spreadsheet-import-activity</artifactId>
+			<version>${spreadsheet.import.version}</version>
+		</dependency>
+
+		<!-- taverna core -->
+		<dependency>
+			<groupId>net.sf.taverna.t2.core</groupId>
+			<artifactId>workflowmodel-api</artifactId>
+			<version>${t2.core.version}</version>
+		</dependency>
+		<!-- taverna lang -->
+		<dependency>
+			<groupId>net.sf.taverna.t2.lang</groupId>
+			<artifactId>ui</artifactId>
+			<version>${t2.lang.version}</version>
+		</dependency>
+		<!-- taverna ui-api -->
+		<dependency>
+			<groupId>net.sf.taverna.t2.ui-api</groupId>
+			<artifactId>activity-icons-api</artifactId>
+			<version>${t2.ui.api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.ui-api</groupId>
+			<artifactId>activity-palette-api</artifactId>
+			<version>${t2.ui.api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.ui-api</groupId>
+			<artifactId>contextual-views-api</artifactId>
+			<version>${t2.ui.api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.ui-api</groupId>
+			<artifactId>file-api</artifactId>
+			<version>${t2.ui.api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.ui-api</groupId>
+			<artifactId>menu-api</artifactId>
+			<version>${t2.ui.api.version}</version>
+		</dependency>
+		<!-- taverna ui-impl -->
+		<dependency>
+			<groupId>net.sf.taverna.t2.ui-impl</groupId>
+			<artifactId>activity-tools</artifactId>
+			<version>${t2.ui.impl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.ui-impl</groupId>
+			<artifactId>contextual-views-impl</artifactId>
+			<version>${t2.ui.impl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.ui-impl</groupId>
+			<artifactId>helper</artifactId>
+			<version>${t2.ui.impl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.ui-impl</groupId>
+			<artifactId>configuration-impl</artifactId>
+			<version>${t2.ui.impl.version}</version>
+		</dependency>
+		<!-- taverna ui-components -->
+		<dependency>
+			<groupId>net.sf.taverna.t2.ui-components</groupId>
+			<artifactId>workflow-view</artifactId>
+			<version>${t2.ui.components.version}
+			</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.help</groupId>
+			<artifactId>javahelp</artifactId>
+			<version>2.0.02</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.13</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>
