@@ -9,7 +9,7 @@
 	<groupId>net.sf.taverna.t2.ui-activities
 	</groupId>
 	<artifactId>spreadsheet-import-activity-ui</artifactId>
-	<version>0.1</version>
+	<version>0.2</version>
 	<name>Taverna 2 Spreadsheet Import Activity UI</name>
 
 	<repositories>
@@ -24,7 +24,7 @@
 	</repositories>
 
 	<properties>
-		<spreadsheet.import.version>0.1</spreadsheet.import.version>
+		<spreadsheet.import.version>0.2</spreadsheet.import.version>
 		<t2.lang.version>0.5</t2.lang.version>
 	</properties>
 
