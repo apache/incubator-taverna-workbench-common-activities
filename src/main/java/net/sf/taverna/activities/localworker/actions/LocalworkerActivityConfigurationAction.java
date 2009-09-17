@@ -24,6 +24,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
@@ -58,12 +59,15 @@ public class LocalworkerActivityConfigurationAction extends
 		ActivityConfigurationAction<LocalworkerActivity, BeanshellActivityConfigurationBean> {
 
 	private static Logger logger = Logger.getLogger(LocalworkerActivityConfigurationAction.class);
+	
+	public static final String EDIT_LOCALWORKER_SCRIPT = "Edit beanshell script";
 
 	private final Frame owner;
 
 	public LocalworkerActivityConfigurationAction(LocalworkerActivity activity,
 			Frame owner) {
 		super(activity);
+		putValue(Action.NAME, EDIT_LOCALWORKER_SCRIPT);
 		this.owner = owner;
 	}
 
