@@ -24,6 +24,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Action;
 import javax.swing.JDialog;
 
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivity;
@@ -37,9 +38,11 @@ public class SoaplabActivityConfigurationAction extends
 
 	private static final long serialVersionUID = 5076721332542691094L;
 	private final Frame owner;
+	public static final String CONFIGURE_SOAPLAB_ACTIVITY = "Configure Soaplab";
 
 	public SoaplabActivityConfigurationAction(SoaplabActivity activity,Frame owner) {
 		super(activity);
+		putValue(Action.NAME, CONFIGURE_SOAPLAB_ACTIVITY);
 		this.owner = owner;
 	}
 

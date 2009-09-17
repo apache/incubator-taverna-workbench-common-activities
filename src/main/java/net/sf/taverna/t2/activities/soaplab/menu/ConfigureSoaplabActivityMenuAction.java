@@ -9,8 +9,6 @@ import net.sf.taverna.t2.workbench.activitytools.AbstractConfigureActivityMenuAc
 public class ConfigureSoaplabActivityMenuAction extends
 		AbstractConfigureActivityMenuAction<SoaplabActivity> {
 
-	private static final String CONFIGURE_SOAPLAB_ACTIVITY = "Configure Soaplab";
-
 	public ConfigureSoaplabActivityMenuAction() {
 		super(SoaplabActivity.class);
 	}
@@ -19,7 +17,7 @@ public class ConfigureSoaplabActivityMenuAction extends
 	protected Action createAction() {
 		SoaplabActivityConfigurationAction configAction = new SoaplabActivityConfigurationAction(
 				findActivity(), getParentFrame());
-		configAction.putValue(Action.NAME, CONFIGURE_SOAPLAB_ACTIVITY);
+		configAction.putValue(Action.NAME, SoaplabActivityConfigurationAction.CONFIGURE_SOAPLAB_ACTIVITY);
 		addMenuDots(configAction);
 		return configAction;
 	}
