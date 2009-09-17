@@ -25,17 +25,18 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.net.URI;
 
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.servicedescriptions.BeanshellTemplateService;
-import net.sf.taverna.t2.ui.menu.AbstractContextualMenuAction;
+import net.sf.taverna.t2.ui.menu.AbstractMenuAction;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.workflowview.WorkflowView;
+import net.sf.taverna.t2.workbench.views.graph.actions.DesignOnlyAction;
+import net.sf.taverna.t2.workbench.views.graph.menu.GraphEditMenuSection;
 import net.sf.taverna.t2.workflowmodel.Dataflow;
 
 import org.apache.log4j.Logger;
@@ -44,39 +45,37 @@ import org.apache.log4j.Logger;
  * An action to add a beanshell activity + a wrapping processor to the workflow.
  * 
  * @author Alex Nenadic
+ * @author alanrw
  * 
  */
 @SuppressWarnings("serial")
-public class AddBeanshellTemplateAction extends AbstractContextualMenuAction {
+public class AddBeanshellTemplateMenuAction extends AbstractMenuAction {
 
 	private static final String ADD_BEANSHELL = "Add beanshell";
 
-	private static final URI serviceTemplatesSection = URI
-			.create("http://taverna.sf.net/2009/contextMenu/serviceTemplates");
+	private static final URI ADD_BEANSHELL_URI = URI
+	.create("http://taverna.sf.net/2008/t2workbench/menu#graphMenuAddBeanshell");
 
 	private static Logger logger = Logger
-			.getLogger(AddBeanshellTemplateAction.class);
+			.getLogger(AddBeanshellTemplateMenuAction.class);
 
-	public AddBeanshellTemplateAction() {
-		super(serviceTemplatesSection, 20);
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return super.isEnabled()
-				&& getContextualSelection().getSelection() instanceof Dataflow;
+	public AddBeanshellTemplateMenuAction() {
+		super(GraphEditMenuSection.GRAPH_EDIT_MENU_SECTION, 21, ADD_BEANSHELL_URI);
 	}
 
 	@Override
 	protected Action createAction() {
 
-		return new AddBeanshellAction();
+		return new AddBeanshellMenuAction();
 	}
 	
-	protected class AddBeanshellAction extends AbstractAction {
-		AddBeanshellAction () {
-			super (ADD_BEANSHELL, ActivityIconManager.getInstance().iconForActivity(
-						new BeanshellActivity()));
+	protected class AddBeanshellMenuAction extends DesignOnlyAction {
+		AddBeanshellMenuAction () {
+			super ();
+			putValue(SMALL_ICON, ActivityIconManager.getInstance().iconForActivity(
+					new BeanshellActivity()));
+			putValue(NAME, ADD_BEANSHELL);	
+			putValue(SHORT_DESCRIPTION, "Add Beanshell service");	
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_DOWN_MASK));
 		}
