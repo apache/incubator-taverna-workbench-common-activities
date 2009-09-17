@@ -12,8 +12,6 @@ import net.sf.taverna.t2.activities.beanshell.actions.BeanshellActivityConfigura
 public class ConfigureBeanshellMenuAction extends
 		AbstractConfigureActivityMenuAction<BeanshellActivity> {
 
-	private static final String EDIT_BEANSHELL_SCRIPT = "Edit beanshell script";
-
 	public ConfigureBeanshellMenuAction() {
 		super(BeanshellActivity.class);
 	}
@@ -25,7 +23,7 @@ public class ConfigureBeanshellMenuAction extends
 		if (! (a instanceof LocalworkerActivity)) {
 		result = new BeanshellActivityConfigurationAction(
 				findActivity(), getParentFrame());
-		result.putValue(Action.NAME, EDIT_BEANSHELL_SCRIPT);
+		result.putValue(Action.NAME, BeanshellActivityConfigurationAction.EDIT_BEANSHELL_SCRIPT);
 		addMenuDots(result);
 		}
 		return result;
