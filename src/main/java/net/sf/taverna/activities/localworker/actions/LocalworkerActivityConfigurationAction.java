@@ -82,7 +82,8 @@ public class LocalworkerActivityConfigurationAction extends
 		// to be careful
 		final LocalworkerActivityConfigView localworkerConfigView = new LocalworkerActivityConfigView(
 				(LocalworkerActivity) getActivity());
-		final HelpEnabledDialog frame = new HelpEnabledDialog(owner, "LocalWorker Activity Configuration", true, null);
+		final HelpEnabledDialog frame =
+			new HelpEnabledDialog(owner, getRelativeName(), true, null);
 		frame.add(localworkerConfigView);
 		frame.setSize(500, 600);
 
