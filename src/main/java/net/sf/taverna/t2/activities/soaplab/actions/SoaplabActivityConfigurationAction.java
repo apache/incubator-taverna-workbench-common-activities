@@ -50,7 +50,8 @@ public class SoaplabActivityConfigurationAction extends
 
 		final SoaplabConfigurationPanel panel = new SoaplabConfigurationPanel(
 				getActivity().getConfiguration());
-		final HelpEnabledDialog frame = new HelpEnabledDialog(owner,"Soaplab Activity Configuration", true, null);
+		final HelpEnabledDialog frame =
+			new HelpEnabledDialog(owner,getRelativeName(), true, null);
 		frame.getContentPane().add(panel);
 		panel.setOKClickedListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
