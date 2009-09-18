@@ -27,8 +27,11 @@ import java.awt.event.ActionListener;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.beanshell.views.BeanshellConfigView;
+import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.helper.HelpEnabledDialog;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
+import net.sf.taverna.t2.workflowmodel.Dataflow;
+import net.sf.taverna.t2.workflowmodel.Processor;
 
 @SuppressWarnings("serial")
 public class BeanshellActivityConfigurationAction extends ActivityConfigurationAction<BeanshellActivity, BeanshellActivityConfigurationBean>{
@@ -45,7 +48,8 @@ public class BeanshellActivityConfigurationAction extends ActivityConfigurationA
 
 	public void actionPerformed(ActionEvent e) {
 		final BeanshellConfigView beanshellConfigView = new BeanshellConfigView((BeanshellActivity)getActivity());
-		final HelpEnabledDialog dialog = new HelpEnabledDialog(owner, BEANSHELL_ACTIVITY_CONFIGURATION, true, null);
+		final HelpEnabledDialog dialog =
+			new HelpEnabledDialog(owner, getRelativeName(), true, null);
 		dialog.add(beanshellConfigView);
 		dialog.setSize(500, 600);
 		beanshellConfigView.setButtonClickedListener(new ActionListener() {
