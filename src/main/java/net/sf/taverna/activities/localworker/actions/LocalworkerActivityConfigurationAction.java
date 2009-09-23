@@ -38,6 +38,7 @@ import net.sf.taverna.t2.annotation.AnnotationChain;
 import net.sf.taverna.t2.annotation.annotationbeans.HostInstitution;
 import net.sf.taverna.t2.lang.ui.ModelMap;
 import net.sf.taverna.t2.workbench.ModelMapConstants;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.helper.HelpEnabledDialog;
 import net.sf.taverna.t2.workbench.helper.Helper;
@@ -80,8 +81,9 @@ public class LocalworkerActivityConfigurationAction extends
 		// TODO Auto-generated method stub
 		// tell the use that this is a local worker and if they change it then
 		// to be careful
-		final LocalworkerActivityConfigView localworkerConfigView = new LocalworkerActivityConfigView(
-				(LocalworkerActivity) getActivity());
+		final LocalworkerActivity activity = (LocalworkerActivity) getActivity();
+		final LocalworkerActivityConfigView localworkerConfigView =
+			new LocalworkerActivityConfigView(activity);
 		final HelpEnabledDialog frame =
 			new HelpEnabledDialog(owner, getRelativeName(), true, null);
 		frame.add(localworkerConfigView);
@@ -102,7 +104,7 @@ public class LocalworkerActivityConfigurationAction extends
 		});
 
 		Object[] options = { "Continue", "Cancel" };
-		if (!checkAnnotations()) {
+		if (!activity.isAltered()) {
 			int n = JOptionPane
 					.showOptionDialog(
 							frame,
@@ -144,30 +146,11 @@ public class LocalworkerActivityConfigurationAction extends
 							ModelMapConstants.CURRENT_DATAFLOW),
 					EditsRegistry.getEdits().getAddAnnotationChainEdit(
 							getActivity(), hostInstitutionAnnotation));
-			logger.info("Check Annotations gave " + checkAnnotations());
+			ActivityIconManager.getInstance().resetIcon(getActivity());
 		} catch (EditException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Checks if the user has altered the local worker ie. an annotation has
-	 * been added to it
-	 * 
-	 * @return
-	 */
-	private boolean checkAnnotations() {
-		for (AnnotationChain chain : getActivity().getAnnotations()) {
-			for (AnnotationAssertion<?> assertion : chain.getAssertions()) {
-				Object detail = assertion.getDetail();
-				System.out.println(detail.getClass().getName());
-				if (detail instanceof HostInstitution) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 }
