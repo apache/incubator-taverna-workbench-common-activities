@@ -37,10 +37,13 @@ public class LocalworkerActivityIcon implements ActivityIconSPI{
 	private static Icon icon;
 
 	public int canProvideIconScore(Activity<?> activity) {
-		if (activity.getClass().getName().equals(LocalworkerActivity.class.getName()))
-			return DEFAULT_ICON + 1;
-		else
-			return NO_ICON;
+		if (activity.getClass().getName().equals(LocalworkerActivity.class.getName())) {
+			LocalworkerActivity localActivity = (LocalworkerActivity) activity;
+			if (!localActivity.isAltered()) {
+				return DEFAULT_ICON + 2;
+			}
+		}
+		return NO_ICON;
 	}
 
 	public Icon getIcon(Activity<?> activity) {
