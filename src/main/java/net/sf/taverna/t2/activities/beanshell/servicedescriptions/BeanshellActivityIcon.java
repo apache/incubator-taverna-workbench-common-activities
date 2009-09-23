@@ -37,8 +37,7 @@ public class BeanshellActivityIcon implements ActivityIconSPI {
 	static Icon icon = null;
 
 	public int canProvideIconScore(Activity<?> activity) {
-		if (activity.getClass().getName().equals(
-				BeanshellActivity.class.getName()))
+		if (activity instanceof BeanshellActivity)
 			return DEFAULT_ICON + 1;
 		else
 			return NO_ICON;
