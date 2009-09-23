@@ -15,6 +15,8 @@ import javax.swing.Icon;
 import net.sf.taverna.raven.repository.BasicArtifact;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
+import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
+import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
@@ -341,9 +343,9 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 			throw new ItemCreationException("Could not read resource "
 					+ resource, e);
 		}
-		Activity<?> activity = null;
+		LocalworkerActivity activity = null;
 		try {
-			activity = deserializer
+			activity = (LocalworkerActivity) deserializer
 					.deserializeActivity(detachRootElement,
 							new HashMap<String, Element>(), getClass()
 									.getClassLoader());
@@ -352,7 +354,7 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 			throw new ItemCreationException(e);
 		}
 		List<ActivityInputPortDefinitionBean> inputPortBeans = new ArrayList<ActivityInputPortDefinitionBean>();
-		BeanshellActivityConfigurationBean configuration = (BeanshellActivityConfigurationBean) activity
+		LocalworkerActivityConfigurationBean configuration = (LocalworkerActivityConfigurationBean) activity
 				.getConfiguration();
 		
 		// Translate the old dependencies field into artifactDependencies field
@@ -393,6 +395,7 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 		item.setScript(script);
 		item.setOutputPorts(outputPortBeans);
 		item.setInputPorts(inputPortBeans);
+		item.setLocalworkerName(line);
 		// name is last part of the class name that was split
 		//String operation = split[split.length - 1];
 		String operationName = localWorkerToScript.get(line);
@@ -412,6 +415,11 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 	@Override
 	public String toString() {
 		return "Local workers provider";
+	}
+	
+	public static String getServiceNameFromClassname(String classname) {
+		String result = null;
+		return (localWorkerToScript.get(classname));
 	}
 
 }

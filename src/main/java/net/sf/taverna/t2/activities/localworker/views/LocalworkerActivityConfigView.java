@@ -20,13 +20,13 @@
  ******************************************************************************/
 package net.sf.taverna.t2.activities.localworker.views;
 
-import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.views.BeanshellConfigView;
+import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
 
 @SuppressWarnings("serial")
 public class LocalworkerActivityConfigView extends BeanshellConfigView{
 
-	public LocalworkerActivityConfigView(BeanshellActivity activity) {
+	public LocalworkerActivityConfigView(LocalworkerActivity activity) {
 		super(activity);
 		initLocalworker();
 	}

@@ -27,6 +27,8 @@ import javax.swing.Action;
 import net.sf.taverna.activities.localworker.actions.LocalworkerActivityConfigurationAction;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
+import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
+import net.sf.taverna.t2.activities.localworker.servicedescriptions.LocalworkerServiceProvider;
 import net.sf.taverna.t2.annotation.AnnotationAssertion;
 import net.sf.taverna.t2.annotation.AnnotationChain;
 import net.sf.taverna.t2.annotation.annotationbeans.HostInstitution;
@@ -37,7 +39,7 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputP
 
 @SuppressWarnings("serial")
 public class LocalworkerActivityContextualView extends
-		HTMLBasedActivityContextualView<BeanshellActivityConfigurationBean> {
+		HTMLBasedActivityContextualView<LocalworkerActivityConfigurationBean> {
 
 	public LocalworkerActivityContextualView(Activity<?> activity) {
 		super(activity);
@@ -65,12 +67,15 @@ public class LocalworkerActivityContextualView extends
 
 	@Override
 	public String getViewTitle() {
-		if (checkAnnotations()) {
+		LocalworkerActivity localActivity = (LocalworkerActivity) getActivity();
+		String workerName = LocalworkerServiceProvider.getServiceNameFromClassname(localActivity.getConfiguration().getLocalworkerName());
+		if (localActivity.isAltered()) {
 			// this is a user defined localworker so use the correct name
-			return "User-defined local worker activity";
+			return "Altered local worker activity - originally " +
+				workerName;
 		} else {
 
-			return "Local worker activity";
+			return "Local worker activity - " + workerName;
 		}
 	}
 

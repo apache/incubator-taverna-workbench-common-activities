@@ -1,4 +1,4 @@
-<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.beanshell.BeanshellActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns="">
+<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
   <script>List strippedlist = new ArrayList();
 for (Iterator i = stringlist.iterator(); i.hasNext();) {
 	String item = (String) i.next();
@@ -30,4 +30,4 @@ for (Iterator i = stringlist.iterator(); i.hasNext();) {
       </mimeTypes>
     </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
   </outputs>
-</net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean></configBean></activity>
+</net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean></configBean></activity>

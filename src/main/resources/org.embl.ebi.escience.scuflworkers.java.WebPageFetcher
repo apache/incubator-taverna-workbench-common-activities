@@ -1,4 +1,4 @@
-<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.beanshell.BeanshellActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean xmlns="">
+<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
   <script>URL inputURL = null;
 if (base != void) {
   inputURL = new URL(new URL(base), url);
@@ -72,4 +72,4 @@ contents = buf.toString();
       </mimeTypes>
     </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
   </outputs>
-</net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean></configBean></activity>
+</net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean></configBean></activity>

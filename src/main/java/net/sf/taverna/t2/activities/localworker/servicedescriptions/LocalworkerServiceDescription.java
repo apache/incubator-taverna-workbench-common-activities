@@ -25,6 +25,16 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 	private String operation;
 	private String category;
 	private String provider;
+	
+	private String localworkerName;
+	public String getLocalworkerName() {
+		return localworkerName;
+	}
+
+	public void setLocalworkerName(String localworkerName) {
+		this.localworkerName = localworkerName;
+	}
+
 	private List<String> dependencies; // from old code - this property is not in use any more
 	private LinkedHashSet<BasicArtifact> artifactDependencies;
 	// Note that localworkers have no local dependencies, only artifatct ones
@@ -67,6 +77,7 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 		bean.setDependencies(this.dependencies); // this field is deprecated (replaced by artifactDependencies), but for backward compatibility we leave it here
 		// Local worker only has artifact dependencies
 		bean.setArtifactDependencies(artifactDependencies);
+		bean.setLocalworkerName(getLocalworkerName());
 		
 		// FIXME needs some mime types from the annotations (done as strings
 		// inside the port at the moment)
