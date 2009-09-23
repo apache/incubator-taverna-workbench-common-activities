@@ -1038,19 +1038,17 @@ public class BeanshellConfigView extends JPanel {
 					outputBeanList.add(activityOutputPortDefinitionBean);
 				}
 				
-				BeanshellActivityConfigurationBean beanshellActivityConfigurationBean = new BeanshellActivityConfigurationBean();
-				beanshellActivityConfigurationBean.setScript(scriptText
+				
+				configuration.setScript(scriptText
 						.getText());
-				beanshellActivityConfigurationBean
+				configuration
 						.setInputPortDefinitions(inputBeanList);
-				beanshellActivityConfigurationBean
+				configuration
 						.setOutputPortDefinitions(outputBeanList);
 				
-				beanshellActivityConfigurationBean.setClassLoaderSharing(classLoaderSharing);
-				beanshellActivityConfigurationBean.setLocalDependencies(localDependencies);
-				beanshellActivityConfigurationBean.setArtifactDependencies(new LinkedHashSet<BasicArtifact>());
-				
-				configuration = beanshellActivityConfigurationBean;				
+				configuration.setClassLoaderSharing(classLoaderSharing);
+				configuration.setLocalDependencies(localDependencies);
+				configuration.setArtifactDependencies(new LinkedHashSet<BasicArtifact>());			
 				
 				setVisible(false);
 				buttonClicked.actionPerformed(e);
