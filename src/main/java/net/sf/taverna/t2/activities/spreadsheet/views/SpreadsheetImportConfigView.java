@@ -21,9 +21,11 @@
 package net.sf.taverna.t2.activities.spreadsheet.views;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -49,6 +51,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -57,24 +60,31 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.PlainDocument;
 
 import net.sf.taverna.t2.activities.spreadsheet.Range;
 import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetEmptyCellPolicy;
 import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportActivity;
 import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportConfiguration;
+import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetOutputFormat;
 import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetUtils;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
 import net.sf.taverna.t2.lang.ui.icons.Icons;
 import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityConfigurationException;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -124,30 +134,34 @@ public class SpreadsheetImportConfigView extends JPanel {
 
 	private SpreadsheetImportConfiguration newConfiguration;
 
-	private JPanel titlePanel;
+	private JPanel titlePanel, contentPanel, buttonPanel, page1, page2;
 
 	private JLabel titleLabel, titleIcon, rowLabel, columnLabel;
 
-	private JLabel emptyCellLabel, columnMappingLabel;
+	private JLabel emptyCellLabel, outputFormatLabel, outputFormatDelimiterLabel, columnMappingLabel;
 
 	private JTextArea titleMessage;
 
 	private JTextField columnFromValue, columnToValue, rowFromValue, rowToValue;
 
-	private JTextField emptyCellUserDefinedValue;
+	private JTextField emptyCellUserDefinedValue, outputFormatDelimiter;
 
 	private JCheckBox rowSelectAllOption, rowExcludeFirstOption, rowIgnoreBlankRows;
 
-	private ButtonGroup emptyCellButtonGroup;
+	private ButtonGroup emptyCellButtonGroup, outputFormatButtonGroup;
 
 	private JRadioButton emptyCellEmptyStringOption, emptyCellUserDefinedOption,
-			emptyCellErrorValueOption;
+	emptyCellErrorValueOption;
+
+	private JRadioButton outputFormatMultiplePort, outputFormatSinglePort;
 
 	private JTable columnMappingTable;
 
 	private SpreadsheetImportConfigTableModel columnMappingTableModel;
 
-	private JButton actionOkButton, actionCancelButton;
+	private JButton actionOkButton, actionCancelButton, nextButton, backButton;
+
+	private CardLayout cardLayout = new CardLayout();
 
 	private Stack<String> warningMessages = new Stack<String>();
 
@@ -186,10 +200,12 @@ public class SpreadsheetImportConfigView extends JPanel {
 	 */
 	private void initialise() {
 		CSH.setHelpIDString(this, this.getClass().getCanonicalName());
+		
 		// title
 		titlePanel = new JPanel(new BorderLayout());
 		titlePanel.setBackground(Color.WHITE);
-
+		addDivider(titlePanel, SwingConstants.BOTTOM, true);	
+		
 		titleLabel = new JLabel(SpreadsheetImportUIText.getString("SpreadsheetImportConfigView.panelTitle"));
 		titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 13.5f));
 		titleIcon = new JLabel("");
@@ -202,21 +218,17 @@ public class SpreadsheetImportConfigView extends JPanel {
 		// titleMessage.setFont(titleLabel.getFont().deriveFont(Font.PLAIN,
 		// 12f));
 
-		Dimension textBoxSize = new Dimension(50, 22);
-
 		// column range
 		columnLabel = new JLabel(SpreadsheetImportUIText
 				.getString("SpreadsheetImportConfigView.columnSectionLabel"));
 
 		Range columnRange = newConfiguration.getColumnRange();
-		columnFromValue = new JTextField(SpreadsheetUtils.getColumnLabel(columnRange.getStart()));
+		columnFromValue = new JTextField(new UpperCaseDocument(), SpreadsheetUtils.getColumnLabel(columnRange.getStart()), 4);
 		columnFromValue.addKeyListener(enterKeyListener);
-		columnFromValue.setPreferredSize(textBoxSize);
-		columnFromValue.setMinimumSize(textBoxSize);
-		columnToValue = new JTextField(SpreadsheetUtils.getColumnLabel(columnRange.getEnd()));
+		columnFromValue.setMinimumSize(columnFromValue.getPreferredSize());
+		columnToValue = new JTextField(new UpperCaseDocument(), SpreadsheetUtils.getColumnLabel(columnRange.getEnd()), 4);
 		columnToValue.addKeyListener(enterKeyListener);
-		columnToValue.setPreferredSize(textBoxSize);
-		columnToValue.setMinimumSize(textBoxSize);
+		columnToValue.setMinimumSize(columnToValue.getPreferredSize());
 
 		columnFromValue.getDocument().addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent e) {
@@ -292,7 +304,7 @@ public class SpreadsheetImportConfigView extends JPanel {
 
 		// row range
 		rowLabel = new JLabel(SpreadsheetImportUIText.getString("SpreadsheetImportConfigView.rowSectionLabel"));
-		addDivider(rowLabel);
+		addDivider(rowLabel, SwingConstants.TOP, false);
 
 		rowSelectAllOption = new JCheckBox(SpreadsheetImportUIText
 				.getString("SpreadsheetImportConfigView.selectAllRowsOption"));
@@ -304,16 +316,16 @@ public class SpreadsheetImportConfigView extends JPanel {
 		rowExcludeFirstOption.setFocusable(false);
 		
 		Range rowRange = newConfiguration.getRowRange();
-		rowFromValue = new JTextField(String.valueOf(rowRange.getStart() + 1));
+		rowFromValue = new JTextField(new NumericDocument(), String.valueOf(rowRange.getStart() + 1), 4);
 		if (rowRange.getEnd() == -1) {
-			rowToValue = new JTextField("");
+			rowToValue = new JTextField(new NumericDocument(), "", 4);
+		} else {
+			rowToValue = new JTextField(new NumericDocument(), String.valueOf(rowRange.getEnd() + 1), 4);
 		}
 		rowFromValue.addKeyListener(enterKeyListener);
-		rowFromValue.setPreferredSize(textBoxSize);
-		rowFromValue.setMinimumSize(textBoxSize);
+		rowFromValue.setMinimumSize(rowFromValue.getPreferredSize());
 		rowToValue.addKeyListener(enterKeyListener);
-		rowToValue.setPreferredSize(textBoxSize);
-		rowToValue.setMinimumSize(textBoxSize);
+		rowToValue.setMinimumSize(rowToValue.getPreferredSize());
 
 		if (newConfiguration.isAllRows()) {
 			rowSelectAllOption.setSelected(true);
@@ -432,7 +444,7 @@ public class SpreadsheetImportConfigView extends JPanel {
 		// empty cells
 		emptyCellLabel = new JLabel(SpreadsheetImportUIText
 				.getString("SpreadsheetImportConfigView.emptyCellSectionLabel"));
-		addDivider(emptyCellLabel);
+		addDivider(emptyCellLabel, SwingConstants.TOP, false);
 
 		emptyCellButtonGroup = new ButtonGroup();
 		emptyCellEmptyStringOption = new JRadioButton(SpreadsheetImportUIText
@@ -445,7 +457,7 @@ public class SpreadsheetImportConfigView extends JPanel {
 		emptyCellUserDefinedOption.setFocusable(false);
 		emptyCellErrorValueOption.setFocusable(false);
 
-		emptyCellUserDefinedValue = new JTextField("");
+		emptyCellUserDefinedValue = new JTextField(newConfiguration.getEmptyCellValue());
 		emptyCellUserDefinedValue.addKeyListener(enterKeyListener);
 
 		emptyCellButtonGroup.add(emptyCellEmptyStringOption);
@@ -508,13 +520,14 @@ public class SpreadsheetImportConfigView extends JPanel {
 		// column mappings
 		columnMappingLabel = new JLabel(SpreadsheetImportUIText
 				.getString("SpreadsheetImportConfigView.columnMappingSectionLabel"));
-		addDivider(columnMappingLabel);
+		addDivider(columnMappingLabel, SwingConstants.TOP, false);
 
 		columnMappingTableModel = new SpreadsheetImportConfigTableModel(columnFromValue.getText(),
 				columnToValue.getText(), oldConfiguration.getColumnNames());
 
 		columnMappingTable = new JTable();
 		columnMappingTable.setRowSelectionAllowed(false);
+		columnMappingTable.getTableHeader().setReorderingAllowed(false);
 		columnMappingTable.setGridColor(Color.LIGHT_GRAY);
 		// columnMappingTable.setFocusable(false);
 
@@ -563,18 +576,132 @@ public class SpreadsheetImportConfigView extends JPanel {
 
 		columnMappingTable.setModel(columnMappingTableModel);
 
+		// output format
+		outputFormatLabel = new JLabel(SpreadsheetImportUIText
+				.getString("SpreadsheetImportConfigView.outputFormatSectionLabel"));
+		
+		outputFormatMultiplePort = new JRadioButton(SpreadsheetImportUIText
+				.getString("SpreadsheetImportConfigView.multiplePortOption"));
+		outputFormatSinglePort = new JRadioButton(SpreadsheetImportUIText
+				.getString("SpreadsheetImportConfigView.singlePortOption"));
+		outputFormatMultiplePort.setFocusable(false);
+		outputFormatSinglePort.setFocusable(false);
+
+		outputFormatDelimiterLabel = new JLabel(SpreadsheetImportUIText
+				.getString("SpreadsheetImportConfigView.userDefinedCsvDelimiter"));
+		outputFormatDelimiter = new JTextField(newConfiguration.getCsvDelimiter(), 5);
+		
+		outputFormatButtonGroup = new ButtonGroup();
+		outputFormatButtonGroup.add(outputFormatMultiplePort);
+		outputFormatButtonGroup.add(outputFormatSinglePort);
+		
+		if (newConfiguration.getOutputFormat().equals(SpreadsheetOutputFormat.PORT_PER_COLUMN)) {
+			outputFormatMultiplePort.setSelected(true);
+			outputFormatDelimiterLabel.setEnabled(false);
+			outputFormatDelimiter.setEnabled(false);
+		} else {
+			outputFormatSinglePort.setSelected(true);
+			columnMappingLabel.setEnabled(false);
+			enableTable(columnMappingTable, false);
+		}
+
+		outputFormatMultiplePort.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				outputFormatDelimiterLabel.setEnabled(false);
+				outputFormatDelimiter.setEnabled(false);
+				columnMappingLabel.setEnabled(true);
+				enableTable(columnMappingTable, true);
+				newConfiguration.setOutputFormat(SpreadsheetOutputFormat.PORT_PER_COLUMN);
+			}
+		});
+		outputFormatSinglePort.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				outputFormatDelimiterLabel.setEnabled(true);
+				outputFormatDelimiter.setEnabled(true);
+				columnMappingLabel.setEnabled(false);
+				enableTable(columnMappingTable, false);
+				newConfiguration.setOutputFormat(SpreadsheetOutputFormat.SINGLE_PORT);
+			}
+
+		});
+		outputFormatDelimiter.getDocument().addDocumentListener(new DocumentListener() {
+			public void changedUpdate(DocumentEvent e) {
+				handleUpdate();
+			}
+
+			public void insertUpdate(DocumentEvent e) {
+				handleUpdate();
+			}
+
+			public void removeUpdate(DocumentEvent e) {
+				handleUpdate();
+			}
+			
+			private void handleUpdate() {
+				String text = null;
+				try {
+					text = StringEscapeUtils.unescapeJava(outputFormatDelimiter.getText());
+				} catch (RuntimeException re) {}
+				if (text == null || text.length() == 0) {
+					newConfiguration.setCsvDelimiter(",");
+				} else {
+					newConfiguration.setCsvDelimiter(text.substring(0, 1));
+				}
+			}
+
+		});
+		
+		// buttons
 		actionOkButton = new JButton();
 		actionOkButton.setFocusable(false);
 		actionOkButton.setSelected(true);
 
 		actionCancelButton = new JButton();
 		actionCancelButton.setFocusable(false);
+		
+		nextButton = new JButton(SpreadsheetImportUIText.getString("SpreadsheetImportConfigView.nextButton"));
+		nextButton.setFocusable(false);
+		nextButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				backButton.setVisible(true);
+				nextButton.setVisible(false);
+				cardLayout.last(contentPanel);
+			}
+		});
 
+		backButton = new JButton(SpreadsheetImportUIText.getString("SpreadsheetImportConfigView.backButton"));
+		backButton.setFocusable(false);
+		backButton.setVisible(false);
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				nextButton.setVisible(true);
+				backButton.setVisible(false);
+				cardLayout.first(contentPanel);
+			}
+		});
+		
+		buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		addDivider(buttonPanel, SwingConstants.TOP, true);	
 	}
 
 	private void layoutPanel() {
-		setLayout(new GridBagLayout());
-		setPreferredSize(new Dimension(450, 530));
+		setPreferredSize(new Dimension(450, 400));
+		setLayout(new BorderLayout());
+		
+		page1 = new JPanel(new GridBagLayout());
+		page2 = new JPanel(new GridBagLayout());
+
+		contentPanel = new JPanel(cardLayout);
+		contentPanel.add(page1, "page1");
+		contentPanel.add(page2, "page2");
+		add(contentPanel, BorderLayout.CENTER);
+		
+		// title
+		titlePanel.setBorder(new CompoundBorder(titlePanel.getBorder(), new EmptyBorder(10, 10, 0, 10)));
+		add(titlePanel, BorderLayout.NORTH);
+		titlePanel.add(titleLabel, BorderLayout.NORTH);
+		titlePanel.add(titleIcon, BorderLayout.WEST);
+		titlePanel.add(titleMessage, BorderLayout.CENTER);
 
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.WEST;
@@ -583,99 +710,98 @@ public class SpreadsheetImportConfigView extends JPanel {
 		c.gridx = 0;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 
-		// title
-		titlePanel.setBorder(new EmptyBorder(10, 10, 2, 10));
-		add(titlePanel, c);
-		titlePanel.add(titleLabel, BorderLayout.NORTH);
-		titlePanel.add(titleIcon, BorderLayout.WEST);
-		titlePanel.add(titleMessage, BorderLayout.CENTER);
-
 		// column range
 		c.insets = new Insets(10, 10, 0, 10);
-		add(columnLabel, c);
+		page1.add(columnLabel, c);
 
 		c.insets = new Insets(10, 25, 0, 0);
 		c.gridwidth = 1;
 		c.weightx = 0;
-		add(new JLabel(SpreadsheetImportUIText.getString("SpreadsheetImportConfigView.from")), c);
+		page1.add(new JLabel(SpreadsheetImportUIText.getString("SpreadsheetImportConfigView.from")), c);
 		c.insets = new Insets(10, 0, 0, 0);
 		c.gridx = 1;
-		add(columnFromValue, c);
+		page1.add(columnFromValue, c);
 		c.gridx = 2;
-		c.weightx = 0;
-		add(new JLabel(SpreadsheetImportUIText.getString("SpreadsheetImportConfigView.to")), c);
+		page1.add(new JLabel(SpreadsheetImportUIText.getString("SpreadsheetImportConfigView.to")), c);
 		c.gridx = 3;
-		add(columnToValue, c);
-		c.gridx = 4;
-		c.weightx = 0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		add(new JPanel(), c);
+		page1.add(columnToValue, c);
 
 		c.gridx = 0;
 		c.weightx = 1;
 		c.insets = new Insets(10, 10, 0, 10);
+		c.gridwidth = GridBagConstraints.REMAINDER;
 
 		// row range
-		add(rowLabel, c);
+		page1.add(rowLabel, c);
 
 		c.insets = new Insets(10, 25, 0, 0);
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.weightx = 0;
-		add(new JLabel(SpreadsheetImportUIText.getString("SpreadsheetImportConfigView.from")), c);
+		page1.add(new JLabel(SpreadsheetImportUIText.getString("SpreadsheetImportConfigView.from")), c);
 		c.insets = new Insets(10, 0, 0, 0);
 		c.gridx = 1;
-		add(rowFromValue, c);
+		page1.add(rowFromValue, c);
 		c.gridx = 2;
-		c.weightx = 0;
-		add(new JLabel(SpreadsheetImportUIText.getString("SpreadsheetImportConfigView.to")), c);
+		page1.add(new JLabel(SpreadsheetImportUIText.getString("SpreadsheetImportConfigView.to")), c);
 		c.gridx = 3;
-		add(rowToValue, c);
+		page1.add(rowToValue, c);
 		c.gridx = 4;
-		c.weightx = 0;
-		add(rowSelectAllOption, c);
+		page1.add(rowSelectAllOption, c);
 		c.gridx = 5;
-		c.weightx = 0;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.insets = new Insets(10, 0, 0, 10);
-		add(rowExcludeFirstOption, c);
+		page1.add(rowExcludeFirstOption, c);
 		c.insets = new Insets(10, 25, 0, 0);
 		c.gridx = 0;
-		add(rowIgnoreBlankRows, c);
+		page1.add(rowIgnoreBlankRows, c);
 
 		c.gridx = 0;
 		
 		// empty cells
 		c.insets = new Insets(10, 10, 10, 10);
-		add(emptyCellLabel, c);
+		page1.add(emptyCellLabel, c);
 
 		c.insets = new Insets(0, 25, 0, 10);
-		add(emptyCellEmptyStringOption, c);
+		page1.add(emptyCellEmptyStringOption, c);
 		JPanel userDefinedPanel = new JPanel(new BorderLayout());
 		userDefinedPanel.add(emptyCellUserDefinedOption, BorderLayout.WEST);
 		userDefinedPanel.add(emptyCellUserDefinedValue, BorderLayout.CENTER);
-		add(userDefinedPanel, c);
-		add(emptyCellErrorValueOption, c);
+		page1.add(userDefinedPanel, c);
+		c.weighty = 1;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		page1.add(emptyCellErrorValueOption, c);
 
+		// output format
+		c.insets = new Insets(10, 10, 10, 10);
+		c.weighty = 0;
+		c.weightx = 1;
+		page2.add(outputFormatLabel, c);		
+
+		c.insets = new Insets(0, 25, 0, 10);
+		page2.add(outputFormatMultiplePort, c);
+		page2.add(outputFormatSinglePort, c);
+
+		c.insets = new Insets(0, 50, 0, 10);
+		JPanel outputFormatDelimiterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		outputFormatDelimiterPanel.add(outputFormatDelimiterLabel);
+		outputFormatDelimiterPanel.add(outputFormatDelimiter);
+		page2.add(outputFormatDelimiterPanel, c);
+		
 		// column mapping
 		c.insets = new Insets(10, 10, 0, 10);
-		add(columnMappingLabel, c);
+		page2.add(columnMappingLabel, c);
 
 		c.insets = new Insets(10, 10, 10, 10);
 		c.fill = GridBagConstraints.BOTH;
 		c.weighty = 1;
-		c.anchor = GridBagConstraints.NORTH;
-		add(new JScrollPane(columnMappingTable), c);
+		page2.add(new JScrollPane(columnMappingTable), c);
 
-		// action buttons
-		c.weighty = 0;
-		c.anchor = GridBagConstraints.SOUTHEAST;
-		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(0, 10, 10, 10);
-		JPanel buttonPanel = new JPanel();
 		buttonPanel.add(actionCancelButton);
+		buttonPanel.add(backButton);
+		buttonPanel.add(nextButton);
 		buttonPanel.add(actionOkButton);
-		add(buttonPanel, c);
+		add(buttonPanel, BorderLayout.SOUTH);
 	}
 
 	/**
@@ -846,15 +972,20 @@ public class SpreadsheetImportConfigView extends JPanel {
 	}
 
 	/**
-	 * Adds a light gray top border to a JLabel.
+	 * Adds a light gray or etched border to the top or bottom of a JComponent.
 	 * 
-	 * @param label
+	 * @param component
 	 */
-	protected void addDivider(JLabel label) {
-		label.setBorder(new Border() {
-
+	protected void addDivider(JComponent component, final int position, final boolean etched) {
+		component.setBorder(new Border() {
+			private final Color borderColor = new Color(.6f, .6f, .6f);
+			
 			public Insets getBorderInsets(Component c) {
-				return new Insets(5, 0, 0, 0);
+				if (position == SwingConstants.TOP) {
+					return new Insets(5, 0, 0, 0);
+				} else {
+					return new Insets(0, 0, 5, 0);
+				}
 			}
 
 			public boolean isBorderOpaque() {
@@ -862,8 +993,27 @@ public class SpreadsheetImportConfigView extends JPanel {
 			}
 
 			public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-				g.setColor(Color.LIGHT_GRAY);
-				g.drawLine(x, y, x + width, y);
+				if (position == SwingConstants.TOP) {
+					if (etched) {
+						g.setColor(borderColor);
+						g.drawLine(x, y, x + width, y);
+						g.setColor(Color.WHITE);
+						g.drawLine(x, y + 1, x + width, y + 1);
+					} else {
+						g.setColor(Color.LIGHT_GRAY);
+						g.drawLine(x, y, x + width, y);
+					}
+				} else {
+					if (etched) {
+						g.setColor(borderColor);
+						g.drawLine(x, y + height - 2, x + width, y + height - 2);
+						g.setColor(Color.WHITE);
+						g.drawLine(x, y + height - 1, x + width, y + height - 1);
+					} else {
+						g.setColor(Color.LIGHT_GRAY);
+						g.drawLine(x, y + height - 1, x + width, y + height - 1);
+					}
+				}
 			}
 
 		});
@@ -877,6 +1027,41 @@ public class SpreadsheetImportConfigView extends JPanel {
 		actionCancelButton.setAction(cancelAction);
 	}
 
+	private void enableTable(JTable table, boolean enabled) {
+		table.setEnabled(enabled);
+		Component editor = table.getEditorComponent();
+		if (editor != null) {
+			editor.setEnabled(enabled);
+		}
+		if (enabled) {
+			table.setForeground(Color.BLACK);
+			table.getTableHeader().setForeground(Color.BLACK);		
+		} else {
+			table.setForeground(Color.LIGHT_GRAY);
+			table.getTableHeader().setForeground(Color.LIGHT_GRAY);		
+		}
+	}
+	 
+	static class UpperCaseDocument extends PlainDocument {
+        @Override
+        public void replace(int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+        	if (text.matches("[A-Za-z]+")) {
+        		text = text.toUpperCase();
+        		super.replace(offset, length, text, attrs);
+        	}
+        }
+     }
+
+	static class NumericDocument extends PlainDocument {
+        @Override
+        public void replace(int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+        	if (text.length() == 0 || text.matches("[0-9]+")) {
+        		text = text.toUpperCase();
+        		super.replace(offset, length, text, attrs);
+        	}
+        }
+     }
+	 
 	/**
 	 * Main method for testing the panel.
 	 * 
@@ -888,7 +1073,7 @@ public class SpreadsheetImportConfigView extends JPanel {
 		SpreadsheetImportActivity activity = new SpreadsheetImportActivity();
 		activity.configure(new SpreadsheetImportConfiguration());
 		final SpreadsheetImportConfigView config = new SpreadsheetImportConfigView(activity);
-		config.setOkAction(new AbstractAction("OK") {
+		config.setOkAction(new AbstractAction("Finish") {
 			public void actionPerformed(ActionEvent arg0) {
 				Range columnRange = config.getConfiguration().getColumnRange();
 				String fromColumn = SpreadsheetUtils.getColumnLabel(columnRange.getStart());
