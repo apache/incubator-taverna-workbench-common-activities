@@ -67,16 +67,22 @@ public class LocalworkerActivityContextualView extends
 
 	@Override
 	public String getViewTitle() {
+		String result = "";
 		LocalworkerActivity localActivity = (LocalworkerActivity) getActivity();
-		String workerName = LocalworkerServiceProvider.getServiceNameFromClassname(localActivity.getConfiguration().getLocalworkerName());
 		if (localActivity.isAltered()) {
-			// this is a user defined localworker so use the correct name
-			return "Altered local worker activity - originally " +
-				workerName;
+			result = "Altered local worker activity";
+			String workerName = LocalworkerServiceProvider.getServiceNameFromClassname(localActivity.getConfiguration().getLocalworkerName());
+			if ((workerName != null) && !workerName.equals("")) {
+				result += " - originally " + workerName;
+			}
 		} else {
-
-			return "Local worker activity - " + workerName;
+			result = "Local worker activity";
+			String workerName = LocalworkerServiceProvider.getServiceNameFromClassname(localActivity.getConfiguration().getLocalworkerName());
+			if ((workerName != null) && !workerName.equals("")) {
+				result += " - " + workerName;
+			}
 		}
+		return result;
 	}
 
 	private boolean checkAnnotations() {
