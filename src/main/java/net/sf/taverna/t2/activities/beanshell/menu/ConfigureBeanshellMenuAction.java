@@ -20,11 +20,11 @@ public class ConfigureBeanshellMenuAction extends
 	protected Action createAction() {
 		Activity a = findActivity();
 		Action result = null;
-		if (! (a instanceof LocalworkerActivity)) {
-		result = new BeanshellActivityConfigurationAction(
-				findActivity(), getParentFrame());
-		result.putValue(Action.NAME, BeanshellActivityConfigurationAction.EDIT_BEANSHELL_SCRIPT);
-		addMenuDots(result);
+		if (!(a instanceof LocalworkerActivity)) {
+			result = new BeanshellActivityConfigurationAction(
+					findActivity(), getParentFrame());
+			result.putValue(Action.NAME, BeanshellActivityConfigurationAction.EDIT_BEANSHELL_SCRIPT);
+			addMenuDots(result);
 		}
 		return result;
 	}

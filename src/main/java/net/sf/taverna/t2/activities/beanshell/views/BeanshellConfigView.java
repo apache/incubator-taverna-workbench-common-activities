@@ -68,6 +68,7 @@ import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity.ClassLoaderSharing;
 import net.sf.taverna.t2.reference.ExternalReferenceSPI;
+import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
 import net.sf.taverna.t2.workflowmodel.OutputPort;
 import net.sf.taverna.t2.workflowmodel.Port;
 import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityInputPort;
@@ -195,7 +196,7 @@ public class BeanshellConfigView extends JPanel {
 						"net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.BeanshellConfigView");
 		AbstractAction okAction = getOKAction();
 		button = new JButton(okAction);
-		button.setText("OK");
+		button.setText("Apply");
 		button.setToolTipText("Click to configure with the new values");
 		inputViewList = new ArrayList<BeanshellInputViewer>();
 		outputViewList = new ArrayList<BeanshellOutputViewer>();
@@ -237,11 +238,12 @@ public class BeanshellConfigView extends JPanel {
 		buttonPanel.setLayout(new FlowLayout());
 
 		buttonPanel.add(button);
-		JButton cancelButton = new JButton(new AbstractAction() {
+		JButton closeButton = new JButton(new AbstractAction() {
 
 			public void actionPerformed(ActionEvent e) {
 				configChanged = false;
 				buttonClicked.actionPerformed(e);
+				ActivityConfigurationAction.clearDialog(activity);
 			}
 		});
 
@@ -251,8 +253,8 @@ public class BeanshellConfigView extends JPanel {
 		outerConstraint.anchor = GridBagConstraints.LINE_END;
 		outerConstraint.gridy = 2;
 		outerConstraint.weighty = 0;
-		cancelButton.setText("Cancel");
-		buttonPanel.add(cancelButton);
+		closeButton.setText("Close");
+		buttonPanel.add(closeButton);
 		add(buttonPanel, outerConstraint);
 	}
 
@@ -980,7 +982,6 @@ public class BeanshellConfigView extends JPanel {
 				} else {
 					// Exit
 					configChanged = false;
-					setVisible(false);
 					buttonClicked.actionPerformed(e);
 				}
 				
@@ -1050,7 +1051,6 @@ public class BeanshellConfigView extends JPanel {
 				configuration.setLocalDependencies(localDependencies);
 				configuration.setArtifactDependencies(new LinkedHashSet<BasicArtifact>());			
 				
-				setVisible(false);
 				buttonClicked.actionPerformed(e);
 			}
 

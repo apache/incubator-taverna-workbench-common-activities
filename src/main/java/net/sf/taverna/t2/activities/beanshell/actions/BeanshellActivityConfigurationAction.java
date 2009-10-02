@@ -23,6 +23,11 @@ package net.sf.taverna.t2.activities.beanshell.actions;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
+import javax.swing.JDialog;
 
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
@@ -47,9 +52,14 @@ public class BeanshellActivityConfigurationAction extends ActivityConfigurationA
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		JDialog currentDialog = ActivityConfigurationAction.getDialog(getActivity());
+		if (currentDialog != null) {
+			currentDialog.toFront();
+			return;
+		}
 		final BeanshellConfigView beanshellConfigView = new BeanshellConfigView((BeanshellActivity)getActivity());
 		final HelpEnabledDialog dialog =
-			new HelpEnabledDialog(owner, getRelativeName(), true, null);
+			new HelpEnabledDialog((Frame) null, getRelativeName(), false, null);
 		dialog.add(beanshellConfigView);
 		dialog.setSize(500, 600);
 		beanshellConfigView.setButtonClickedListener(new ActionListener() {
@@ -58,12 +68,16 @@ public class BeanshellActivityConfigurationAction extends ActivityConfigurationA
 				if (beanshellConfigView.isConfigurationChanged()) {
 					configureActivity(beanshellConfigView.getConfiguration());
 				}
-				dialog.setVisible(false);
 			}
 			
 		});
-		dialog.setVisible(true);
-		
+		dialog.addWindowListener(new WindowAdapter() {
+
+			public void windowClosing(WindowEvent e) {
+				ActivityConfigurationAction.clearDialog(dialog);
+			}
+		});
+		ActivityConfigurationAction.setDialog(getActivity(), dialog);	
 		
 	}
 
