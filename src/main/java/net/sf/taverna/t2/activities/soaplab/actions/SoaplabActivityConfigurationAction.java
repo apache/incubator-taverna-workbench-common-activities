@@ -23,6 +23,8 @@ package net.sf.taverna.t2.activities.soaplab.actions;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.Action;
 import javax.swing.JDialog;
@@ -47,13 +49,18 @@ public class SoaplabActivityConfigurationAction extends
 	}
 
 	public void actionPerformed(ActionEvent action) {
+		JDialog currentDialog = ActivityConfigurationAction.getDialog(getActivity());
+		if (currentDialog != null) {
+			currentDialog.toFront();
+			return;
+		}
 
 		final SoaplabConfigurationPanel panel = new SoaplabConfigurationPanel(
 				getActivity().getConfiguration());
-		final HelpEnabledDialog frame =
-			new HelpEnabledDialog(owner,getRelativeName(), true, null);
-		frame.getContentPane().add(panel);
-		panel.setOKClickedListener(new ActionListener() {
+		final HelpEnabledDialog dialog =
+			new HelpEnabledDialog((Frame) null,getRelativeName(), false, null);
+		dialog.getContentPane().add(panel);
+		panel.setApplyClickedListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (panel.validateValues()) {
 					int interval = 0;
@@ -76,24 +83,27 @@ public class SoaplabActivityConfigurationAction extends
 					bean.setEndpoint(endpoint);
 
 					configureActivity(bean);
-					
-					frame.setVisible(false);
 				}
 			}
 
 		});
 
-		panel.setCancelClickedListener(new ActionListener() {
+		panel.setCloseClickedListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);
+				ActivityConfigurationAction.clearDialog(dialog);
 			}
 
 		});
 
-		frame.pack();
-		
-		frame.setVisible(true);
+		dialog.pack();
+		dialog.addWindowListener(new WindowAdapter() {
+
+			public void windowClosing(WindowEvent e) {
+				ActivityConfigurationAction.clearDialog(dialog);
+			}
+		});
+		ActivityConfigurationAction.setDialog(getActivity(), dialog);	
 	}
 
 }

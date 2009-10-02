@@ -44,8 +44,8 @@ public class SoaplabConfigurationPanel extends JPanel {
 	private static final long serialVersionUID = 9133273338631693912L;
 	
 	SoaplabActivityConfigurationBean bean;
-	ActionListener cancelClicked;
-	ActionListener okClicked;
+	ActionListener closeClicked;
+	ActionListener applyClicked;
 
 	private JTextField intervalMaxField;
 	private JTextField intervalField;
@@ -57,12 +57,12 @@ public class SoaplabConfigurationPanel extends JPanel {
 		initialise();
 	}
 	
-	public void setCancelClickedListener(ActionListener listener) {
-		cancelClicked=listener;
+	public void setCloseClickedListener(ActionListener listener) {
+		closeClicked=listener;
 	}
 	
-	public void setOKClickedListener(ActionListener listener) {
-		okClicked=listener;
+	public void setApplyClickedListener(ActionListener listener) {
+		applyClicked=listener;
 	}
 	
 	public boolean isAllowPolling() {
@@ -136,29 +136,29 @@ public class SoaplabConfigurationPanel extends JPanel {
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
-		JButton cancelButton = new JButton("Cancel");
+		JButton closeButton = new JButton("Close");
 		
-		cancelButton.setAction(new AbstractAction() {
+		closeButton.setAction(new AbstractAction() {
 
 			public void actionPerformed(ActionEvent event) {
-				cancelClicked.actionPerformed(event);
+				closeClicked.actionPerformed(event);
 			}
 			
 		});
 		
-		JButton okButton = new JButton("OK");
-		okButton.setAction(new AbstractAction() {
+		JButton applyButton = new JButton("Apply");
+		applyButton.setAction(new AbstractAction() {
 
 			public void actionPerformed(ActionEvent e) {
-				okClicked.actionPerformed(e);	
+				applyClicked.actionPerformed(e);	
 			}
 			
 		});
 		
-		cancelButton.setText("Cancel");
-		okButton.setText("OK");
-		panel.add(cancelButton);
-		panel.add(okButton);
+		closeButton.setText("Close");
+		applyButton.setText("Apply");
+		panel.add(closeButton);
+		panel.add(applyButton);
 		
 		return panel;
 	}
