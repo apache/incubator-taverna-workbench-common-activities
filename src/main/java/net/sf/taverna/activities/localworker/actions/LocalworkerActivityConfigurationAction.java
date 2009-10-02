@@ -23,6 +23,8 @@ package net.sf.taverna.activities.localworker.actions;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.Action;
 import javax.swing.JDialog;
@@ -78,23 +80,28 @@ public class LocalworkerActivityConfigurationAction extends
 	 * just show the config view
 	 */
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		// tell the use that this is a local worker and if they change it then
-		// to be careful
+		JDialog currentDialog = ActivityConfigurationAction.getDialog(getActivity());
+		if (currentDialog != null) {
+			currentDialog.toFront();
+			return;
+		}
 		final LocalworkerActivity activity = (LocalworkerActivity) getActivity();
 		final LocalworkerActivityConfigView localworkerConfigView =
 			new LocalworkerActivityConfigView(activity);
-		final HelpEnabledDialog frame =
-			new HelpEnabledDialog(owner, getRelativeName(), true, null);
-		frame.add(localworkerConfigView);
-		frame.setSize(500, 600);
+		final HelpEnabledDialog dialog =
+			new HelpEnabledDialog((Frame) null, getRelativeName(), false, null);
+		dialog.add(localworkerConfigView);
+		dialog.setSize(500, 600);
+		dialog.addWindowListener(new WindowAdapter() {
+
+			public void windowClosing(WindowEvent e) {
+				ActivityConfigurationAction.clearDialog(dialog);
+			}
+		});
 
 		localworkerConfigView.setButtonClickedListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				// FIXME when the user clicks config on a local worker it should
-				// add it as a user defined one to the activity palette
-				frame.setVisible(false);
 				if (localworkerConfigView.isConfigurationChanged()) {
 					configureActivity(localworkerConfigView.getConfiguration());
 					addAnnotation();
@@ -107,7 +114,7 @@ public class LocalworkerActivityConfigurationAction extends
 		if (!activity.isAltered()) {
 			int n = JOptionPane
 					.showOptionDialog(
-							frame,
+							dialog,
 							"Changing the properties of a Local Worker may affect its behaviour. Do you want to continue?",
 							"WARNING", JOptionPane.YES_NO_OPTION,
 							JOptionPane.QUESTION_MESSAGE, null, // do not use a
@@ -116,12 +123,12 @@ public class LocalworkerActivityConfigurationAction extends
 
 			if (n == 0) {
 				// continue was clicked so prepare for config
-				frame.setVisible(true);
+				ActivityConfigurationAction.setDialog(getActivity(), dialog);
 			} else {
 				// do nothing
 			}
 		} else {
-			frame.setVisible(true);			
+			ActivityConfigurationAction.setDialog(getActivity(), dialog);			
 		}
 	}
 
