@@ -22,6 +22,16 @@ package net.sf.taverna.t2.activities.localworker.views;
 
 import net.sf.taverna.t2.activities.beanshell.views.BeanshellConfigView;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
+import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
+import net.sf.taverna.t2.annotation.annotationbeans.HostInstitution;
+import net.sf.taverna.t2.lang.ui.ModelMap;
+import net.sf.taverna.t2.workbench.ModelMapConstants;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
+import net.sf.taverna.t2.workbench.edits.EditManager;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
+import net.sf.taverna.t2.workflowmodel.Dataflow;
+import net.sf.taverna.t2.workflowmodel.EditException;
+import net.sf.taverna.t2.workflowmodel.EditsRegistry;
 
 @SuppressWarnings("serial")
 public class LocalworkerActivityConfigView extends BeanshellConfigView{
@@ -32,6 +42,41 @@ public class LocalworkerActivityConfigView extends BeanshellConfigView{
 	}
 
 	private void initLocalworker() {
+	}
+	
+	public void noteConfiguration() {
+		if (isConfigurationChanged()) {
+			super.noteConfiguration();
+			addAnnotation();
+		}
+	}
+	
+	/**
+	 * Annotate the Activity with the name of the Institution or person who
+	 * created the activity. Useful for Localworkers that have been altered by a
+	 * user
+	 */
+	private void addAnnotation() {
+		// FIXME use a more useful name or a different type of annotation, this
+		// is just here as a marker so that
+		// the colour manager works
+		HostInstitution hostInstitutionAnnotation = new HostInstitution();
+		hostInstitutionAnnotation.setText("UserNameHere");
+
+		try {
+			// force the dataflow view to update with the annotation added,
+			// therefore triggering the localworker to be coloured as a
+			// beanshell
+			EditManager.getInstance().doDataflowEdit(
+					(Dataflow) ModelMap.getInstance().getModel(
+							ModelMapConstants.CURRENT_DATAFLOW),
+					EditsRegistry.getEdits().getAddAnnotationChainEdit(
+							activity, hostInstitutionAnnotation));
+			ActivityIconManager.getInstance().resetIcon(activity);
+		} catch (EditException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

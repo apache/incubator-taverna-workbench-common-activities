@@ -24,10 +24,10 @@ import java.awt.Frame;
 
 import javax.swing.Action;
 
-import net.sf.taverna.activities.localworker.actions.LocalworkerActivityConfigurationAction;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
+import net.sf.taverna.t2.activities.localworker.actions.LocalworkerActivityConfigurationAction;
 import net.sf.taverna.t2.activities.localworker.servicedescriptions.LocalworkerServiceProvider;
 import net.sf.taverna.t2.annotation.AnnotationAssertion;
 import net.sf.taverna.t2.annotation.AnnotationChain;

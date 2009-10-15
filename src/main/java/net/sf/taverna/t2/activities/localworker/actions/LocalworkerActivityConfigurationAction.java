@@ -18,7 +18,7 @@
  *  License along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  ******************************************************************************/
-package net.sf.taverna.activities.localworker.actions;
+package net.sf.taverna.t2.activities.localworker.actions;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -34,6 +34,7 @@ import org.apache.log4j.Logger;
 
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
+import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
 import net.sf.taverna.t2.activities.localworker.views.LocalworkerActivityConfigView;
 import net.sf.taverna.t2.annotation.AnnotationAssertion;
 import net.sf.taverna.t2.annotation.AnnotationChain;
@@ -45,6 +46,7 @@ import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.helper.HelpEnabledDialog;
 import net.sf.taverna.t2.workbench.helper.Helper;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
 import net.sf.taverna.t2.workflowmodel.Dataflow;
 import net.sf.taverna.t2.workflowmodel.EditException;
 import net.sf.taverna.t2.workflowmodel.EditsRegistry;
@@ -80,41 +82,11 @@ public class LocalworkerActivityConfigurationAction extends
 	 * just show the config view
 	 */
 	public void actionPerformed(ActionEvent e) {
-		JDialog currentDialog = ActivityConfigurationAction.getDialog(getActivity());
-		if (currentDialog != null) {
-			currentDialog.toFront();
-			return;
-		}
-		final LocalworkerActivity activity = (LocalworkerActivity) getActivity();
-		final LocalworkerActivityConfigView localworkerConfigView =
-			new LocalworkerActivityConfigView(activity);
-		final HelpEnabledDialog dialog =
-			new HelpEnabledDialog((Frame) null, getRelativeName(), false, null);
-		dialog.add(localworkerConfigView);
-		dialog.setSize(500, 600);
-		dialog.addWindowListener(new WindowAdapter() {
-
-			public void windowClosing(WindowEvent e) {
-				ActivityConfigurationAction.clearDialog(dialog);
-			}
-		});
-
-		localworkerConfigView.setButtonClickedListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				if (localworkerConfigView.isConfigurationChanged()) {
-					configureActivity(localworkerConfigView.getConfiguration());
-					addAnnotation();
-				}
-			}
-
-		});
-
 		Object[] options = { "Continue", "Cancel" };
 		if (!activity.isAltered()) {
 			int n = JOptionPane
 					.showOptionDialog(
-							dialog,
+							null,
 							"Changing the properties of a Local Worker may affect its behaviour. Do you want to continue?",
 							"WARNING", JOptionPane.YES_NO_OPTION,
 							JOptionPane.QUESTION_MESSAGE, null, // do not use a
@@ -123,41 +95,28 @@ public class LocalworkerActivityConfigurationAction extends
 
 			if (n == 0) {
 				// continue was clicked so prepare for config
-				ActivityConfigurationAction.setDialog(getActivity(), dialog);
+				openDialog();
 			} else {
 				// do nothing
 			}
 		} else {
-			ActivityConfigurationAction.setDialog(getActivity(), dialog);			
+			openDialog();			
 		}
 	}
 
-	/**
-	 * Annotate the Activity with the name of the Institution or person who
-	 * created the activity. Useful for Localworkers that have been altered by a
-	 * user
-	 */
-	private void addAnnotation() {
-		// FIXME use a more useful name or a different type of annotation, this
-		// is just here as a marker so that
-		// the colour manager works
-		HostInstitution hostInstitutionAnnotation = new HostInstitution();
-		hostInstitutionAnnotation.setText("UserNameHere");
-
-		try {
-			// force the dataflow view to update with the annotation added,
-			// therefore triggering the localworker to be coloured as a
-			// beanshell
-			EditManager.getInstance().doDataflowEdit(
-					(Dataflow) ModelMap.getInstance().getModel(
-							ModelMapConstants.CURRENT_DATAFLOW),
-					EditsRegistry.getEdits().getAddAnnotationChainEdit(
-							getActivity(), hostInstitutionAnnotation));
-			ActivityIconManager.getInstance().resetIcon(getActivity());
-		} catch (EditException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	private void openDialog() {
+		ActivityConfigurationDialog<LocalworkerActivity, LocalworkerActivityConfigurationBean> currentDialog = ActivityConfigurationAction.getDialog(getActivity());
+		if (currentDialog != null) {
+			currentDialog.toFront();
+			return;
 		}
-	}
+		final LocalworkerActivity activity = (LocalworkerActivity) getActivity();
+		final LocalworkerActivityConfigView localworkerConfigView =
+			new LocalworkerActivityConfigView(activity);
+		final ActivityConfigurationDialog dialog =
+			new ActivityConfigurationDialog (getActivity(), localworkerConfigView);
+		ActivityConfigurationAction.setDialog(getActivity(), dialog);			
 
+		
+	}
 }
