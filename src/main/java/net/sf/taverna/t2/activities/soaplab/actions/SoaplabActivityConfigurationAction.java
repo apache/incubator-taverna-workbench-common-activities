@@ -22,18 +22,13 @@ package net.sf.taverna.t2.activities.soaplab.actions;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.Action;
-import javax.swing.JDialog;
 
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivity;
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivityConfigurationBean;
-import net.sf.taverna.t2.workbench.helper.HelpEnabledDialog;
-import net.sf.taverna.t2.workbench.helper.Helper;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
 
 public class SoaplabActivityConfigurationAction extends
 		ActivityConfigurationAction<SoaplabActivity, SoaplabActivityConfigurationBean> {
@@ -49,61 +44,19 @@ public class SoaplabActivityConfigurationAction extends
 	}
 
 	public void actionPerformed(ActionEvent action) {
-		JDialog currentDialog = ActivityConfigurationAction.getDialog(getActivity());
+		ActivityConfigurationDialog<SoaplabActivity, SoaplabActivityConfigurationBean> currentDialog =
+			ActivityConfigurationAction.getDialog(getActivity());
 		if (currentDialog != null) {
 			currentDialog.toFront();
 			return;
 		}
 
 		final SoaplabConfigurationPanel panel = new SoaplabConfigurationPanel(
-				getActivity().getConfiguration());
-		final HelpEnabledDialog dialog =
-			new HelpEnabledDialog((Frame) null,getRelativeName(), false, null);
-		dialog.getContentPane().add(panel);
-		panel.setApplyClickedListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (panel.validateValues()) {
-					int interval = 0;
-					int intervalMax = 0;
-					double backoff = 1.1;
+				getActivity());
+		final ActivityConfigurationDialog<SoaplabActivity, SoaplabActivityConfigurationBean> dialog =
+			new ActivityConfigurationDialog<SoaplabActivity, SoaplabActivityConfigurationBean>(getActivity(), panel);
 
-					if (panel.isAllowPolling()) {
-						interval = panel.getInterval();
-						intervalMax = panel.getIntervalMax();
-						backoff = panel.getBackoff();
-					}
-
-//					SoaplabActivityConfigurationBean bean = getActivity()
-//							.getConfiguration();
-					SoaplabActivityConfigurationBean bean = new SoaplabActivityConfigurationBean();
-					bean.setPollingBackoff(backoff);
-					bean.setPollingInterval(interval);
-					bean.setPollingIntervalMax(intervalMax);
-					String endpoint = getActivity().getConfiguration().getEndpoint();
-					bean.setEndpoint(endpoint);
-
-					configureActivity(bean);
-				}
-			}
-
-		});
-
-		panel.setCloseClickedListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				ActivityConfigurationAction.clearDialog(dialog);
-			}
-
-		});
-
-		dialog.pack();
-		dialog.addWindowListener(new WindowAdapter() {
-
-			public void windowClosing(WindowEvent e) {
-				ActivityConfigurationAction.clearDialog(dialog);
-			}
-		});
-		ActivityConfigurationAction.setDialog(getActivity(), dialog);	
+		ActivityConfigurationAction.setDialog(getActivity(), dialog);
 	}
 
 }
