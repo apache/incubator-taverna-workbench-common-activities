@@ -25,7 +25,10 @@ import java.awt.event.ActionEvent;
 
 import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
 import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
+import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
+import net.sf.taverna.t2.workflowmodel.Dataflow;
 
 import net.sf.taverna.t2.security.profiles.ui.WSSecurityProfileChooser;
 import net.sf.taverna.t2.security.profiles.WSSecurityProfile;
@@ -48,8 +51,11 @@ public class WSDLActivityConfigureAction
 
 	public void actionPerformed(ActionEvent e) {
 
+		// Should clone it
 		WSDLActivityConfigurationBean bean = getActivity().getConfiguration();
 
+		Dataflow owningDataflow = FileManager.getInstance()
+		.getCurrentDataflow();
 		WSSecurityProfileChooser wsSecurityProfileChooser = new WSSecurityProfileChooser(
 				owner);
 		if (wsSecurityProfileChooser.isInitialised()) {
@@ -63,7 +69,7 @@ public class WSDLActivityConfigureAction
 			profileString = wsSecurityProfile.getWSSecurityProfileString();
 			logger.info("WSSecurityProfile string read as:" + profileString);
 			bean.setSecurityProfileString(profileString);
-			configureActivity(bean);
+			ActivityConfigurationDialog.configureActivity(owningDataflow, getActivity(), bean);
 		}
 
 	}
