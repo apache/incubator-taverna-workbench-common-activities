@@ -29,8 +29,11 @@ import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportActivity;
 import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportConfiguration;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
 import net.sf.taverna.t2.activities.spreadsheet.views.SpreadsheetImportConfigView;
+import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.helper.HelpEnabledDialog;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
+import net.sf.taverna.t2.workflowmodel.Dataflow;
 
 /**
  * The configuration action for a SpreadsheetImport activity.
@@ -57,6 +60,8 @@ public class SpreadsheetImportActivityConfigurationAction extends
 				(SpreadsheetImportActivity) getActivity());
 		final HelpEnabledDialog dialog = new HelpEnabledDialog(owner, SpreadsheetImportUIText
 				.getString("SpreadsheetImportActivityConfigurationAction.dialogTitle"), true, null);
+		final Dataflow owningDataflow = FileManager.getInstance()
+		.getCurrentDataflow();
 		dialog.add(spreadsheetConfigView);
 		// dialog.setSize(500, 600);
 		dialog.pack();
@@ -65,7 +70,7 @@ public class SpreadsheetImportActivityConfigurationAction extends
 				.getString("SpreadsheetImportActivityConfigurationAction.okButton")) {
 			public void actionPerformed(ActionEvent arg0) {
 				if (spreadsheetConfigView.isConfigurationChanged()) {
-					configureActivity(spreadsheetConfigView.getConfiguration());
+					ActivityConfigurationDialog.configureActivity(owningDataflow, activity, spreadsheetConfigView.getConfiguration());
 				}
 				dialog.setVisible(false);
 				dialog.dispose();
