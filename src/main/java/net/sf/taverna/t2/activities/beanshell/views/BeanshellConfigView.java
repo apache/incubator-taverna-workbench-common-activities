@@ -23,7 +23,6 @@ package net.sf.taverna.t2.activities.beanshell.views;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -68,13 +67,14 @@ import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity.ClassLoaderSharing;
 import net.sf.taverna.t2.reference.ExternalReferenceSPI;
-import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
 import net.sf.taverna.t2.workflowmodel.OutputPort;
 import net.sf.taverna.t2.workflowmodel.Port;
 import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityInputPort;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
 
+import org.apache.log4j.Logger;
 import org.syntax.jedit.JEditTextArea;
 import org.syntax.jedit.tokenmarker.JavaTokenMarker;
 
@@ -91,11 +91,13 @@ import org.syntax.jedit.tokenmarker.JavaTokenMarker;
  * 
  */
 @SuppressWarnings("serial")
-public class BeanshellConfigView extends JPanel {
+public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellActivity, BeanshellActivityConfigurationBean> {
+
+	private static Logger logger = Logger.getLogger(BeanshellConfigView.class);
 
 	
 	/** The activity which this view describes */
-	private BeanshellActivity activity;
+	protected BeanshellActivity activity;
 	
 	/** The configuration bean used to configure the activity */
 	private BeanshellActivityConfigurationBean configuration;
@@ -158,6 +160,11 @@ public class BeanshellConfigView extends JPanel {
 
 	private boolean configChanged = false;
 
+	private JTabbedPane tabbedPane = null;
+
+
+	private JTabbedPane ports;
+
 	/**
 	 * Stores the {@link BeanshellActivity}, gets its
 	 * {@link BeanshellActivityConfigurationBean}, sets the layout and calls
@@ -168,17 +175,90 @@ public class BeanshellConfigView extends JPanel {
 	 */
 	public BeanshellConfigView(BeanshellActivity activity) {
 		this.activity = activity;
-		configuration = activity.getConfiguration();
 		setLayout(new GridBagLayout());
 		initialise();
 	}
 
-	public BeanshellActivityConfigurationBean getConfiguration() {
-		return configuration;
+	public void noteConfiguration() {
+			// Set the new configuration
+			List<ActivityInputPortDefinitionBean> inputBeanList = new ArrayList<ActivityInputPortDefinitionBean>();
+			for (BeanshellInputViewer inputView : inputViewList) {
+				ActivityInputPortDefinitionBean activityInputPortDefinitionBean = new ActivityInputPortDefinitionBean();
+				activityInputPortDefinitionBean
+						.setHandledReferenceSchemes(inputView.getBean()
+								.getHandledReferenceSchemes());
+				activityInputPortDefinitionBean.setMimeTypes(inputView
+						.getBean().getMimeTypes());
+				activityInputPortDefinitionBean
+						.setTranslatedElementType(inputView.getBean()
+								.getTranslatedElementType());
+				activityInputPortDefinitionBean
+						.setAllowsLiteralValues((Boolean) inputView
+								.getLiteralSelector().getSelectedItem());
+				activityInputPortDefinitionBean
+						.setDepth((Integer) inputView.getDepthSpinner()
+								.getValue());
+				activityInputPortDefinitionBean.setName(inputView
+						.getNameField().getText());
+				inputBeanList.add(activityInputPortDefinitionBean);
+			}
+
+			List<ActivityOutputPortDefinitionBean> outputBeanList = new ArrayList<ActivityOutputPortDefinitionBean>();
+			for (BeanshellOutputViewer outputView : outputViewList) {
+				ActivityOutputPortDefinitionBean activityOutputPortDefinitionBean = new ActivityOutputPortDefinitionBean();
+				activityOutputPortDefinitionBean
+						.setDepth((Integer) outputView.getDepthSpinner()
+								.getValue());
+				
+//				activityOutputPortDefinitionBean
+//						.setGranularDepth((Integer) outputView
+//								.getGranularDepthSpinner().getValue());
+				
+				// NOTE: Granular depth must match output depth because we return
+				// the full lists right away
+				activityOutputPortDefinitionBean
+						.setGranularDepth(activityOutputPortDefinitionBean
+								.getDepth());
+				
+				
+				activityOutputPortDefinitionBean.setName(outputView
+						.getNameField().getText());
+				activityOutputPortDefinitionBean.setMimeTypes(outputView
+						.getMimeTypeConfig().getMimeTypeList());
+				// outputView.getMimeTypeConfig().getMimeTypeList();
+
+				// Edits edits = EditsRegistry.getEdits();
+
+				// FIXME add all the mime types as an annotation
+
+				outputBeanList.add(activityOutputPortDefinitionBean);
+			}
+			
+			BeanshellActivityConfigurationBean newConfiguration =
+				(BeanshellActivityConfigurationBean) cloneBean (configuration);
+			newConfiguration.setScript(scriptText
+					.getText());
+			newConfiguration
+					.setInputPortDefinitions(inputBeanList);
+			newConfiguration
+					.setOutputPortDefinitions(outputBeanList);
+			
+			newConfiguration.setClassLoaderSharing(classLoaderSharing);
+			newConfiguration.setLocalDependencies(localDependencies);
+			newConfiguration.setArtifactDependencies(new LinkedHashSet<BasicArtifact>());
+			configuration = newConfiguration;
+			inputsChanged = false;
+			outputsChanged = false;
 	}
 
 	public boolean isConfigurationChanged() {
-		return configChanged;
+		String newScriptText = scriptText.getText();
+		String configText = configuration.getScript();
+		return !((!inputsChanged)
+		&& (!outputsChanged)
+		&& scriptText.getText().equals(configuration.getScript()) 
+		&& classLoaderSharing.equals(configuration.getClassLoaderSharing())
+		&& localDependencies.equals(configuration.getLocalDependencies()));
 	}
 
 	/**
@@ -194,10 +274,7 @@ public class BeanshellConfigView extends JPanel {
 				.setHelpIDString(
 						this,
 						"net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.BeanshellConfigView");
-		AbstractAction okAction = getOKAction();
-		button = new JButton(okAction);
-		button.setText("Apply");
-		button.setToolTipText("Click to configure with the new values");
+		configuration = activity.getConfiguration();
 		inputViewList = new ArrayList<BeanshellInputViewer>();
 		outputViewList = new ArrayList<BeanshellOutputViewer>();
 		classLoaderSharing = configuration.getClassLoaderSharing();
@@ -211,7 +288,7 @@ public class BeanshellConfigView extends JPanel {
 
 		JPanel scriptEditPanel = new JPanel(new BorderLayout());
 
-		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Script", scriptEditPanel);
 		tabbedPane.addTab("Ports", getPortPanel());
 
@@ -233,29 +310,10 @@ public class BeanshellConfigView extends JPanel {
 		scriptText.setCaretPosition(0);
 		scriptText.setPreferredSize(new Dimension(0, 0));
 		scriptEditPanel.add(new JScrollPane(scriptText), BorderLayout.CENTER);
-
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new FlowLayout());
-
-		buttonPanel.add(button);
-		JButton closeButton = new JButton(new AbstractAction() {
-
-			public void actionPerformed(ActionEvent e) {
-				configChanged = false;
-				buttonClicked.actionPerformed(e);
-				ActivityConfigurationAction.clearDialog(activity);
-			}
-		});
-
-		outerConstraint.gridx = 0;
-		outerConstraint.gridy = 1;
-		outerConstraint.fill = GridBagConstraints.NONE;
-		outerConstraint.anchor = GridBagConstraints.LINE_END;
-		outerConstraint.gridy = 2;
-		outerConstraint.weighty = 0;
-		closeButton.setText("Close");
-		buttonPanel.add(closeButton);
-		add(buttonPanel, outerConstraint);
+		setPreferredSize(new Dimension(500,500));
+		inputsChanged = false;
+		outputsChanged = false;
+		this.validate();
 	}
 
 /**
@@ -460,7 +518,7 @@ public class BeanshellConfigView extends JPanel {
 	 * @return a {@link JTabbedPane} with the ports
 	 */
 	private JTabbedPane getPortPanel() {
-		JTabbedPane ports = new JTabbedPane();
+		ports = new JTabbedPane();
 
 		JPanel portEditPanel = new JPanel(new GridLayout(0, 2));
 
@@ -985,71 +1043,7 @@ public class BeanshellConfigView extends JPanel {
 					buttonClicked.actionPerformed(e);
 				}
 				
-				// Set the new configuration
-				List<ActivityInputPortDefinitionBean> inputBeanList = new ArrayList<ActivityInputPortDefinitionBean>();
-				for (BeanshellInputViewer inputView : inputViewList) {
-					ActivityInputPortDefinitionBean activityInputPortDefinitionBean = new ActivityInputPortDefinitionBean();
-					activityInputPortDefinitionBean
-							.setHandledReferenceSchemes(inputView.getBean()
-									.getHandledReferenceSchemes());
-					activityInputPortDefinitionBean.setMimeTypes(inputView
-							.getBean().getMimeTypes());
-					activityInputPortDefinitionBean
-							.setTranslatedElementType(inputView.getBean()
-									.getTranslatedElementType());
-					activityInputPortDefinitionBean
-							.setAllowsLiteralValues((Boolean) inputView
-									.getLiteralSelector().getSelectedItem());
-					activityInputPortDefinitionBean
-							.setDepth((Integer) inputView.getDepthSpinner()
-									.getValue());
-					activityInputPortDefinitionBean.setName(inputView
-							.getNameField().getText());
-					inputBeanList.add(activityInputPortDefinitionBean);
-				}
-
-				List<ActivityOutputPortDefinitionBean> outputBeanList = new ArrayList<ActivityOutputPortDefinitionBean>();
-				for (BeanshellOutputViewer outputView : outputViewList) {
-					ActivityOutputPortDefinitionBean activityOutputPortDefinitionBean = new ActivityOutputPortDefinitionBean();
-					activityOutputPortDefinitionBean
-							.setDepth((Integer) outputView.getDepthSpinner()
-									.getValue());
-					
-//					activityOutputPortDefinitionBean
-//							.setGranularDepth((Integer) outputView
-//									.getGranularDepthSpinner().getValue());
-					
-					// NOTE: Granular depth must match output depth because we return
-					// the full lists right away
-					activityOutputPortDefinitionBean
-							.setGranularDepth(activityOutputPortDefinitionBean
-									.getDepth());
-					
-					
-					activityOutputPortDefinitionBean.setName(outputView
-							.getNameField().getText());
-					activityOutputPortDefinitionBean.setMimeTypes(outputView
-							.getMimeTypeConfig().getMimeTypeList());
-					// outputView.getMimeTypeConfig().getMimeTypeList();
-
-					// Edits edits = EditsRegistry.getEdits();
-
-					// FIXME add all the mime types as an annotation
-
-					outputBeanList.add(activityOutputPortDefinitionBean);
-				}
-				
-				
-				configuration.setScript(scriptText
-						.getText());
-				configuration
-						.setInputPortDefinitions(inputBeanList);
-				configuration
-						.setOutputPortDefinitions(outputBeanList);
-				
-				configuration.setClassLoaderSharing(classLoaderSharing);
-				configuration.setLocalDependencies(localDependencies);
-				configuration.setArtifactDependencies(new LinkedHashSet<BasicArtifact>());			
+						
 				
 				buttonClicked.actionPerformed(e);
 			}
@@ -1089,6 +1083,38 @@ public class BeanshellConfigView extends JPanel {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public BeanshellActivityConfigurationBean getConfiguration() {
+		return configuration;
+	}
+
+	@Override
+	public void refreshConfiguration() {
+		int visibleTab = -1;
+		int subTab = -1;
+		if (tabbedPane != null) {
+			visibleTab = tabbedPane.getSelectedIndex();
+			logger.info("VisibleTab is " + visibleTab);
+			if (tabbedPane.getTitleAt(visibleTab).equals("Ports")) {
+				subTab = ports.getSelectedIndex();
+			}
+		}
+		this.removeAll();
+		initialise();
+		if (visibleTab != -1) {
+			tabbedPane.setSelectedIndex(visibleTab);
+			if (subTab != -1) {
+				ports.setSelectedIndex(subTab);
+			}
+		}
+	}
+
+	@Override
+	public boolean checkValues() {
+		// TODO Not yet implemented
+		return true;
 	}
 
 }

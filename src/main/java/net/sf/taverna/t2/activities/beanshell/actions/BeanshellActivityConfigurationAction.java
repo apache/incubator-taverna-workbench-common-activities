@@ -28,6 +28,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
@@ -35,6 +36,7 @@ import net.sf.taverna.t2.activities.beanshell.views.BeanshellConfigView;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.helper.HelpEnabledDialog;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
 import net.sf.taverna.t2.workflowmodel.Dataflow;
 import net.sf.taverna.t2.workflowmodel.Processor;
 
@@ -52,31 +54,15 @@ public class BeanshellActivityConfigurationAction extends ActivityConfigurationA
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		JDialog currentDialog = ActivityConfigurationAction.getDialog(getActivity());
+		ActivityConfigurationDialog currentDialog = ActivityConfigurationAction.getDialog(getActivity());
 		if (currentDialog != null) {
 			currentDialog.toFront();
 			return;
 		}
 		final BeanshellConfigView beanshellConfigView = new BeanshellConfigView((BeanshellActivity)getActivity());
-		final HelpEnabledDialog dialog =
-			new HelpEnabledDialog((Frame) null, getRelativeName(), false, null);
-		dialog.add(beanshellConfigView);
-		dialog.setSize(500, 600);
-		beanshellConfigView.setButtonClickedListener(new ActionListener() {
+		final ActivityConfigurationDialog<BeanshellActivity, BeanshellActivityConfigurationBean> dialog =
+			new ActivityConfigurationDialog<BeanshellActivity, BeanshellActivityConfigurationBean>(getActivity(), beanshellConfigView);
 
-			public void actionPerformed(ActionEvent e) {
-				if (beanshellConfigView.isConfigurationChanged()) {
-					configureActivity(beanshellConfigView.getConfiguration());
-				}
-			}
-			
-		});
-		dialog.addWindowListener(new WindowAdapter() {
-
-			public void windowClosing(WindowEvent e) {
-				ActivityConfigurationAction.clearDialog(dialog);
-			}
-		});
 		ActivityConfigurationAction.setDialog(getActivity(), dialog);	
 		
 	}
