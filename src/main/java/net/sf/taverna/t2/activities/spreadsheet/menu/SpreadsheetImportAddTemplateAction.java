@@ -68,21 +68,8 @@ public class SpreadsheetImportAddTemplateAction extends AbstractContextualMenuAc
 				.getInstance().iconForActivity(new SpreadsheetImportActivity())) {
 
 			public void actionPerformed(ActionEvent e) {
-				Dataflow workflow = FileManager.getInstance().getCurrentDataflow();
-
-				try {
-					WorkflowView.importServiceDescription(workflow,
-							SpreadsheetImportTemplateService.getServiceDescription(),
-							(JComponent) e.getSource(), false);
-				} catch (InstantiationException e1) {
-					logger.error(
-							"Error importing service description for spreadsheet import activity",
-							e1);
-				} catch (IllegalAccessException e1) {
-					logger.error(
-							"Error importing service description for spreadsheet import activity",
-							e1);
-				}
+				WorkflowView.importServiceDescription(SpreadsheetImportTemplateService.getServiceDescription(),
+						false);
 			}
 
 		};
