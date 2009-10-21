@@ -58,7 +58,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
@@ -81,6 +80,7 @@ import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportConfiguration;
 import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetOutputFormat;
 import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetUtils;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
+import net.sf.taverna.t2.lang.ui.DialogTextArea;
 import net.sf.taverna.t2.lang.ui.icons.Icons;
 import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityConfigurationException;
 
@@ -140,7 +140,7 @@ public class SpreadsheetImportConfigView extends JPanel {
 
 	private JLabel emptyCellLabel, outputFormatLabel, outputFormatDelimiterLabel, columnMappingLabel;
 
-	private JTextArea titleMessage;
+	private DialogTextArea titleMessage;
 
 	private JTextField columnFromValue, columnToValue, rowFromValue, rowToValue;
 
@@ -209,7 +209,7 @@ public class SpreadsheetImportConfigView extends JPanel {
 		titleLabel = new JLabel(SpreadsheetImportUIText.getString("SpreadsheetImportConfigView.panelTitle"));
 		titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 13.5f));
 		titleIcon = new JLabel("");
-		titleMessage = new JTextArea(DEFAULT_MESSAGE);
+		titleMessage = new DialogTextArea(DEFAULT_MESSAGE);
 		titleMessage.setMargin(new Insets(5, 10, 10, 10));
 		// titleMessage.setMinimumSize(new Dimension(0, 30));
 		titleMessage.setFont(titleMessage.getFont().deriveFont(11f));
