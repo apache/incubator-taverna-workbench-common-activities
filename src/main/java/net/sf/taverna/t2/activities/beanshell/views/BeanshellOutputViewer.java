@@ -27,7 +27,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
@@ -54,8 +53,6 @@ public class BeanshellOutputViewer extends JPanel {
 	private JSpinner depthSpinner;
 	/** The granular depth of the port */
 	private JSpinner granularDepthSpinner;
-	/** The mime types which the output port can handle */
-	private JTextArea mimeTypeText;
 	/** Whether the values in the bean can be edited */
 	private boolean editable;
 	// private final JList mimeDropList = new JList();
@@ -166,16 +163,6 @@ public class BeanshellOutputViewer extends JPanel {
 	 */
 	public JSpinner getGranularDepthSpinner() {
 		return granularDepthSpinner;
-	}
-
-	/**
-	 * The mime types which are handled by this
-	 * {@link ActivityOutputPortDefinitionBean}
-	 * 
-	 * @return
-	 */
-	public JTextArea getMimeTypeText() {
-		return mimeTypeText;
 	}
 
 	/**
