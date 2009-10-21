@@ -32,7 +32,6 @@ import net.sf.taverna.t2.activities.beanshell.views.BeanshellActivityViewFactory
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactoryRegistry;
-import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.MimeTypeConfig;
 import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityConfigurationException;
 
 public class BeanshellViewer {
@@ -63,16 +62,6 @@ public class BeanshellViewer {
 		frame.add(viewType);
 		frame.add(button);
 		frame.setVisible(true);
-		
-		
-		JFrame mimeFrame = new JFrame();
-		MimeTypeConfig mimeConf = new MimeTypeConfig();
-		mimeFrame.add(mimeConf);
-		mimeFrame.setTitle("mime");
-		mimeFrame.setVisible(true);
-		
-		
-		
 	}
 
 }
