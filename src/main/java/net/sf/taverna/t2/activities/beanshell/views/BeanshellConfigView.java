@@ -223,13 +223,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 				
 				activityOutputPortDefinitionBean.setName(outputView
 						.getNameField().getText());
-				activityOutputPortDefinitionBean.setMimeTypes(outputView
-						.getMimeTypeConfig().getMimeTypeList());
-				// outputView.getMimeTypeConfig().getMimeTypeList();
-
-				// Edits edits = EditsRegistry.getEdits();
-
-				// FIXME add all the mime types as an annotation
+				activityOutputPortDefinitionBean.setMimeTypes(new ArrayList<String>());
 
 				outputBeanList.add(activityOutputPortDefinitionBean);
 			}
@@ -801,41 +795,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 			});
 			outputEditPanel.add(depthSpinner, outputConstraint);
 			outputConstraint.gridx = 2;
-			// final JSpinner granularDepthSpinner = beanshellOutputViewer
-			// .getGranularDepthSpinner();
-			// outputEditPanel.add(granularDepthSpinner, outputConstraint);
-			// outputConstraint.gridx = 3;
-			// final JButton addMimeButton = beanshellOutputViewer
-			// .getAddMimeButton();
-			// addMimeButton.addActionListener(new AbstractAction() {
-			//
-			// public void actionPerformed(ActionEvent e) {
-			// mimes.add(beanshellOutputViewer.getMimeTypeConfig());
-			// mimes.setVisible(true);
-			// }
-			//
-			// });
 
-			// final JFrame mimeFrame = new JFrame();
-			// outputEditPanel.add(addMimeButton, outputConstraint);
-			// beanshellOutputViewer.getMimeTypeConfig().addNewMimeListener(
-			// new AbstractAction() {
-			//
-			// public void actionPerformed(ActionEvent e) {
-			// // beanshellOutputViewer.getMimeFrame().setVisible(
-			// // false);
-			// // beanshellOutputViewer.getMimeTypeConfig().setVisible(false);
-			// // mimeFrame.setVisible(false);
-			// mimes.removeAll();
-			// mimes.setVisible(false);
-			//
-			// }
-			//
-			// });
-			// mimeFrame.add(beanshellOutputViewer
-			// .getMimeTypeConfig());
-
-			outputConstraint.gridx = 4;
 			final JButton removeButton = new JButton("Remove");
 			removeButton.addActionListener(new AbstractAction() {
 
@@ -910,45 +870,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 							.getDepthSpinner();
 					outputEditPanel.add(depthSpinner, outputConstraint);
 					outputConstraint.gridx = 2;
-					// final JSpinner granularDepthSpinner =
-					// beanshellOutputViewer
-					// .getGranularDepthSpinner();
-					// outputEditPanel.add(granularDepthSpinner,
-					// outputConstraint);
-					// outputConstraint.gridx = 3;
-					// final JButton addMimeButton = beanshellOutputViewer
-					// .getAddMimeButton();
-					// addMimeButton.addActionListener(new AbstractAction() {
-					//
-					// public void actionPerformed(ActionEvent e) {
-					// mimes
-					// .add(beanshellOutputViewer
-					// .getMimeTypeConfig());
-					// mimes.setVisible(true);
-					// }
-					//
-					// });
-					// outputEditPanel.add(addMimeButton, outputConstraint);
-					// beanshellOutputViewer.getMimeTypeConfig()
-					// .addNewMimeListener(new AbstractAction() {
-					// // hide the mime frame, annotations added when
-					// // the actual OK button is clicked
-					// public void actionPerformed(ActionEvent e) {
-					// // beanshellOutputViewer.getMimeFrame()
-					// // .setVisible(false);
-					// mimes.removeAll();
-					// mimes.setVisible(false);
-					// //
-					// beanshellOutputViewer.getMimeTypeConfig().setVisible(false
-					// );
-					// // mimeFrame.setVisible(false);
-					//
-					// }
-					//
-					// });
-					// mimeFrame.add(beanshellOutputViewer
-					// .getMimeTypeConfig());
-					outputConstraint.gridx = 4;
+
 					final JButton removeButton = new JButton("Remove");
 					removeButton.addActionListener(new AbstractAction() {
 
@@ -1004,8 +926,6 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		outerOutputPanel.add(buttonPanel, outerPanelConstraint);
 		outerPanelConstraint.gridx = 1;
 		outerPanelConstraint.gridy = 0;
-		// outerOutputPanel.add(mimes, outerPanelConstraint);
-		// mimes.setBorder(BorderFactory.createTitledBorder("Add Mime Types"));
 
 		return outerOutputPanel;
 	}

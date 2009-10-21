@@ -31,7 +31,6 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
-import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.MimeTypeConfig;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
 
@@ -59,7 +58,6 @@ public class BeanshellOutputViewer extends JPanel {
 	
 	private JPanel mimeTypePanel;
 	
-	private MimeTypeConfig mimeTypeConfig;
 	private JButton addMimeButton;
 	private JFrame mimeFrame;
 
@@ -114,25 +112,6 @@ public class BeanshellOutputViewer extends JPanel {
 		// granularDepthSpinner.setValue(bean.getGranularDepth());
 		add(granularDepthSpinner, outerConstraint);
 
-		outerConstraint.gridx = 3;
-		
-		outerConstraint.gridx = 4;
-		mimeFrame = new JFrame();
-		mimeTypeConfig = new MimeTypeConfig();
-		if (bean.getMimeTypes() !=null) {
-			mimeTypeConfig.setMimeTypeList(bean.getMimeTypes());
-		}
-		mimeFrame.add(mimeTypeConfig);
-		mimeTypeConfig.setVisible(true);
-		addMimeButton = new JButton("Add mime type");
-//		addMimeButton.addActionListener(new AbstractAction() {
-//
-//			public void actionPerformed(ActionEvent e) {
-//				mimeFrame.setVisible(true);
-//			}
-//			
-//		});
-		add(addMimeButton, outerConstraint);
 	}
 
 	/**
@@ -213,10 +192,6 @@ public class BeanshellOutputViewer extends JPanel {
 	 */
 	public JPanel getMimeTypePanel() {
 		return mimeTypePanel;
-	}
-
-	public MimeTypeConfig getMimeTypeConfig() {
-		return mimeTypeConfig;
 	}
 
 	public JButton getAddMimeButton() {
