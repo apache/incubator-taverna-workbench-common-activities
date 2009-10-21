@@ -52,12 +52,6 @@ public class BeanshellInputViewer extends JPanel {
 
 	private JSpinner depthSpinner;
 
-	private JTextArea refSchemeText;
-
-	private JTextArea mimeTypeText;
-
-	private JLabel translatedType;
-
 	private JComboBox literalSelector;
 
 	private boolean editable;
@@ -119,32 +113,6 @@ public class BeanshellInputViewer extends JPanel {
 
 		add(depthSpinner, outerConstraint);
 
-		outerConstraint.gridx = 3;
-		refSchemeText = new JTextArea();
-		String refs = "";
-		for (Object refScheme : bean.getHandledReferenceSchemes()) {
-			refs = refs + refScheme.getClass().getSimpleName() + "\n";
-		}
-		refSchemeText.setText(refs);
-		refSchemeText.setEditable(false);
-		refSchemeText.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-		// add(refSchemeText, outerConstraint);
-
-		outerConstraint.gridx = 4;
-		// mimeTypeText = new JTextArea();
-		// String mimes = "";
-		// for (String mimeType : bean.getMimeTypes()) {
-		// mimes = mimes + mimeType + "\n";
-		// }
-		// mimeTypeText.setText(mimes);
-		// mimeTypeText.setEditable(false);
-		// mimeTypeText.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-		// add(mimeTypeText, outerConstraint);
-
-		outerConstraint.gridx = 5;
-		translatedType = new JLabel(bean.getTranslatedElementType()
-				.getSimpleName());
-		// add(translatedType, outerConstraint);
 	}
 
 	/**
@@ -155,36 +123,6 @@ public class BeanshellInputViewer extends JPanel {
 	 */
 	public JTextField getNameField() {
 		return nameField;
-	}
-
-	/**
-	 * Get the component which allows {@link ReferenceScheme}s to be added to a
-	 * {@link ActivityInputPortDefinitionBean}
-	 * 
-	 * @return
-	 */
-	public JTextArea getRefSchemeText() {
-		return refSchemeText;
-	}
-
-	/**
-	 * Get the component which allows Mime Types to be added to a
-	 * {@link ActivityInputPortDefinitionBean}
-	 * 
-	 * @return
-	 */
-	public JTextArea getMimeTypeText() {
-		return mimeTypeText;
-	}
-
-	/**
-	 * Get the component which allows Translated Types to be added to a
-	 * {@link ActivityInputPortDefinitionBean}
-	 * 
-	 * @return
-	 */
-	public JLabel getTranslatedType() {
-		return translatedType;
 	}
 
 	/**
