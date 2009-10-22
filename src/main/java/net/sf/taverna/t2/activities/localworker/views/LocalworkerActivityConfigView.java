@@ -22,19 +22,22 @@ package net.sf.taverna.t2.activities.localworker.views;
 
 import net.sf.taverna.t2.activities.beanshell.views.BeanshellConfigView;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
-import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
 import net.sf.taverna.t2.annotation.annotationbeans.HostInstitution;
 import net.sf.taverna.t2.lang.ui.ModelMap;
 import net.sf.taverna.t2.workbench.ModelMapConstants;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
-import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
 import net.sf.taverna.t2.workflowmodel.Dataflow;
 import net.sf.taverna.t2.workflowmodel.EditException;
 import net.sf.taverna.t2.workflowmodel.EditsRegistry;
 
+import org.apache.log4j.Logger;
+
+
 @SuppressWarnings("serial")
 public class LocalworkerActivityConfigView extends BeanshellConfigView{
+
+	private static Logger logger = Logger.getLogger(LocalworkerActivityConfigView.class);
 
 	public LocalworkerActivityConfigView(LocalworkerActivity activity) {
 		super(activity);
@@ -74,8 +77,7 @@ public class LocalworkerActivityConfigView extends BeanshellConfigView{
 							activity, hostInstitutionAnnotation));
 			ActivityIconManager.getInstance().resetIcon(activity);
 		} catch (EditException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e);
 		}
 	}
 
