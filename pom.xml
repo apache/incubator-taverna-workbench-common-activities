@@ -23,7 +23,6 @@
 	</repositories>
 
 	<properties>
-		<t2.lang.version>0.5</t2.lang.version>
 	</properties>
 
 	<dependencies>
