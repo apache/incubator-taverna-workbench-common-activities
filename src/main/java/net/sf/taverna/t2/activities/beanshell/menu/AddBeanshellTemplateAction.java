@@ -49,16 +49,16 @@ import org.apache.log4j.Logger;
 @SuppressWarnings("serial")
 public class AddBeanshellTemplateAction extends AbstractContextualMenuAction {
 
-	private static final String ADD_BEANSHELL = "Add beanshell";
+	private static final String ADD_BEANSHELL = "Beanshell";
 
-	private static final URI serviceTemplatesSection = URI
-			.create("http://taverna.sf.net/2009/contextMenu/serviceTemplates");
+	private static final URI insertSection = URI
+			.create("http://taverna.sf.net/2009/contextMenu/insert");
 
 	private static Logger logger = Logger
 			.getLogger(AddBeanshellTemplateAction.class);
 
 	public AddBeanshellTemplateAction() {
-		super(serviceTemplatesSection, 20);
+		super(insertSection, 30);
 	}
 
 	@Override
@@ -77,8 +77,6 @@ public class AddBeanshellTemplateAction extends AbstractContextualMenuAction {
 		AddBeanshellAction () {
 			super (ADD_BEANSHELL, ActivityIconManager.getInstance().iconForActivity(
 						new BeanshellActivity()));
-			putValue(Action.ACCELERATOR_KEY,
-					KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_DOWN_MASK));
 		}
 
 		public void actionPerformed(ActionEvent e) {

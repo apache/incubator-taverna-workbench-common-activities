@@ -37,6 +37,7 @@ import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.workflowview.WorkflowView;
 import net.sf.taverna.t2.workbench.views.graph.actions.DesignOnlyAction;
 import net.sf.taverna.t2.workbench.views.graph.menu.GraphEditMenuSection;
+import net.sf.taverna.t2.workbench.views.graph.menu.InsertMenu;
 import net.sf.taverna.t2.workflowmodel.Dataflow;
 
 import org.apache.log4j.Logger;
@@ -51,7 +52,7 @@ import org.apache.log4j.Logger;
 @SuppressWarnings("serial")
 public class AddBeanshellTemplateMenuAction extends AbstractMenuAction {
 
-	private static final String ADD_BEANSHELL = "Add beanshell";
+	private static final String ADD_BEANSHELL = "Beanshell";
 
 	private static final URI ADD_BEANSHELL_URI = URI
 	.create("http://taverna.sf.net/2008/t2workbench/menu#graphMenuAddBeanshell");
@@ -60,7 +61,7 @@ public class AddBeanshellTemplateMenuAction extends AbstractMenuAction {
 			.getLogger(AddBeanshellTemplateMenuAction.class);
 
 	public AddBeanshellTemplateMenuAction() {
-		super(GraphEditMenuSection.GRAPH_EDIT_MENU_SECTION, 21, ADD_BEANSHELL_URI);
+		super(InsertMenu.INSERT, 21, ADD_BEANSHELL_URI);
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class AddBeanshellTemplateMenuAction extends AbstractMenuAction {
 			putValue(SMALL_ICON, ActivityIconManager.getInstance().iconForActivity(
 					new BeanshellActivity()));
 			putValue(NAME, ADD_BEANSHELL);	
-			putValue(SHORT_DESCRIPTION, "Add Beanshell service");	
+			putValue(SHORT_DESCRIPTION, "Beanshell service");	
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_DOWN_MASK));
 		}
