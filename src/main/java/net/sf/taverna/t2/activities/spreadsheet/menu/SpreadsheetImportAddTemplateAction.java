@@ -46,13 +46,13 @@ import org.apache.log4j.Logger;
 @SuppressWarnings("serial")
 public class SpreadsheetImportAddTemplateAction extends AbstractContextualMenuAction {
 
-	private static final URI serviceTemplatesSection = URI
-			.create("http://taverna.sf.net/2009/contextMenu/serviceTemplates");
+	private static final URI insertSection = URI
+			.create("http://taverna.sf.net/2009/contextMenu/insert");
 
 	private static Logger logger = Logger.getLogger(SpreadsheetImportAddTemplateAction.class);
 
 	public SpreadsheetImportAddTemplateAction() {
-		super(serviceTemplatesSection, 100);
+		super(insertSection, 60);
 	}
 
 	@Override

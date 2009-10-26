@@ -38,6 +38,7 @@ import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.workflowview.WorkflowView;
 import net.sf.taverna.t2.workbench.views.graph.actions.DesignOnlyAction;
 import net.sf.taverna.t2.workbench.views.graph.menu.GraphEditMenuSection;
+import net.sf.taverna.t2.workbench.views.graph.menu.InsertMenu;
 import net.sf.taverna.t2.workflowmodel.Dataflow;
 
 import org.apache.log4j.Logger;
@@ -60,7 +61,7 @@ public class SpreadsheetImportAddTemplateMenuAction extends AbstractMenuAction {
 	.getString("SpreadsheetImportAddTemplateAction.addMenu");
 
 	public SpreadsheetImportAddTemplateMenuAction(){
-		super(GraphEditMenuSection.GRAPH_EDIT_MENU_SECTION, 24, ADD_SPREADSHEET_IMPORT_URI);
+		super(InsertMenu.INSERT, 24, ADD_SPREADSHEET_IMPORT_URI);
 	}
 
 	@Override
