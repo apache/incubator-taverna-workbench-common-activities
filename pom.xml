@@ -26,6 +26,11 @@
 			<version>${t2.activities.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>net.sf.taverna.t2.ui-components</groupId>
+			<artifactId>credential-manager-ui</artifactId>
+			<version>0.10-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>net.sf.taverna.t2.ui-impl</groupId>
 			<artifactId>contextual-views-impl</artifactId>
 			<version>${t2.ui.impl.version}</version>
@@ -36,14 +41,14 @@
 			<version>${t2.ui.api.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.taverna.t2.security</groupId>
-			<artifactId>security-profiles</artifactId>
-			<version>${t2.security.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>net.sf.taverna.t2.ui-impl</groupId>
 			<artifactId>activity-tools</artifactId>
 			<version>${t2.ui.impl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.lang</groupId>
+			<artifactId>ui</artifactId>
+			<version>${t2.lang.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

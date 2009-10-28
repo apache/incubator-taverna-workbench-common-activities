@@ -25,13 +25,11 @@ import java.awt.event.ActionEvent;
 
 import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
 import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
+import net.sf.taverna.t2.activities.wsdl.views.WSDLActivityConfigurationView;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
 import net.sf.taverna.t2.workflowmodel.Dataflow;
-
-import net.sf.taverna.t2.security.profiles.ui.WSSecurityProfileChooser;
-import net.sf.taverna.t2.security.profiles.WSSecurityProfile;
 
 import org.apache.log4j.Logger;
 
@@ -56,7 +54,8 @@ public class WSDLActivityConfigureAction
 
 		Dataflow owningDataflow = FileManager.getInstance()
 		.getCurrentDataflow();
-		WSSecurityProfileChooser wsSecurityProfileChooser = new WSSecurityProfileChooser(
+		
+		/*WSSecurityProfileChooser wsSecurityProfileChooser = new WSSecurityProfileChooser(
 				owner);
 		if (wsSecurityProfileChooser.isInitialised()) {
 			wsSecurityProfileChooser.setVisible(true);
@@ -68,10 +67,36 @@ public class WSDLActivityConfigureAction
 		if (wsSecurityProfile != null) { // user did not cancel
 			profileString = wsSecurityProfile.getWSSecurityProfileString();
 			logger.info("WSSecurityProfile string read as:" + profileString);
-			bean.setSecurityProfileString(profileString);
+			bean.setSecurityProfile(profileString);
 			ActivityConfigurationDialog.configureActivity(owningDataflow, getActivity(), bean);
+		}*/
+		
+		WSDLActivityConfigurationView configDialog = new WSDLActivityConfigurationView(owner, bean);
+		configDialog.setLocationRelativeTo(owner);
+		configDialog.setVisible(true);
+		
+		// Get the new bean after configuration
+		WSDLActivityConfigurationBean newBean = configDialog.getNewBean();
+		
+		if (newBean == null){ // user cancelled
+			return;	
 		}
-
+				
+		// Has anything changed in the configuration bean?
+		if (bean.getSecurityProfile() == null){
+			if (newBean.getSecurityProfile() != null){ // config changed
+				logger.info("WSDL activity configuration: Old security profile: null");
+				logger.info("WSDL activity configuration: New security profile: " +  newBean.getSecurityProfile());
+				ActivityConfigurationDialog.configureActivity(owningDataflow, getActivity(), newBean);
+			}
+		}
+		else{
+			if (!bean.getSecurityProfile().equals(newBean.getSecurityProfile())){ // config changed
+				logger.info("WSDL activity configuration: Old security profile: " +  bean.getSecurityProfile());
+				logger.info("WSDL activity configuration: New security profile: " +  newBean.getSecurityProfile());
+				ActivityConfigurationDialog.configureActivity(owningDataflow, getActivity(), newBean);
+			}
+		}
 	}
 
 }

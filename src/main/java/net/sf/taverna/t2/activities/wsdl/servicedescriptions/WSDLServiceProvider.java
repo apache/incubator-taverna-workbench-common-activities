@@ -14,6 +14,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import net.sf.taverna.t2.lang.observer.Observable;
 import net.sf.taverna.t2.lang.observer.Observer;
 import net.sf.taverna.t2.servicedescriptions.AbstractConfigurableServiceProvider;
+import net.sf.taverna.t2.servicedescriptions.CustomizedConfigurePanelProvider;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.servicedescriptions.events.RemovedProviderEvent;
 import net.sf.taverna.t2.servicedescriptions.events.ServiceDescriptionRegistryEvent;
@@ -24,7 +25,8 @@ import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 public class WSDLServiceProvider extends
-		AbstractConfigurableServiceProvider<WSDLServiceProviderConfig> {
+		AbstractConfigurableServiceProvider<WSDLServiceProviderConfig> implements
+		CustomizedConfigurePanelProvider<WSDLServiceProviderConfig> {
 
 	private static Logger logger = Logger.getLogger(WSDLServiceProvider.class);
 
@@ -79,7 +81,9 @@ public class WSDLServiceProvider extends
 
 	public void findServiceDescriptionsAsync(
 			FindServiceDescriptionsCallBack callBack) {
-		URI wsdl = serviceProviderConfig.getURI();
+		
+		URI wsdl = serviceProviderConfig.getURI();	
+		
 		callBack.status("Parsing wsdl:" + wsdl);
 		WSDLParser parser = null;
 		try {
@@ -159,6 +163,21 @@ public class WSDLServiceProvider extends
 				registry.addObserver(flushObserver);
 			}
 		}
+	}
+
+	@SuppressWarnings("serial")
+	public void createCustomizedConfigurePanel(final CustomizedConfigureCallBack<WSDLServiceProviderConfig> callBack) {
+			
+		AddWSDLServiceDialog addWSDLServiceDialog = new AddWSDLServiceDialog() {
+				@Override
+				protected void addRegistry(String wsdlURL) {
+					
+					WSDLServiceProviderConfig providerConfig = new WSDLServiceProviderConfig(wsdlURL);					
+					callBack.newProviderConfiguration(providerConfig);
+				}
+			};
+			addWSDLServiceDialog.setLocationRelativeTo(null);
+			addWSDLServiceDialog.setVisible(true);		
 	}
 
 }

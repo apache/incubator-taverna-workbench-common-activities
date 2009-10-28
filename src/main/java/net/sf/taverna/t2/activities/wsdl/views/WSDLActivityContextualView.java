@@ -74,8 +74,8 @@ public class WSDLActivityContextualView extends
 		String summary = "<tr><td>WSDL</td><td>" + getConfigBean().getWsdl();
 		summary += "</td></tr><tr><td>Operation</td><td>"
 				+ getConfigBean().getOperation() + "</td></tr>";
-		boolean securityConfigured = getConfigBean().getSecurityProfileString() != null;
-		summary += "<tr><td>Secured?</td><td>"
+		boolean securityConfigured = getConfigBean().getSecurityProfile() != null;
+		summary += "<tr><td>Secure</td><td>"
 				+ securityConfigured + "</td></tr>";
 		summary += "</tr>";
 		summary += describePorts();
@@ -84,8 +84,8 @@ public class WSDLActivityContextualView extends
 
 	@Override
 	public Action getConfigureAction(Frame owner) {
-		return null;
-		//return new WSDLActivityConfigureAction(getActivity(),owner);
+		//return null;
+		return new WSDLActivityConfigureAction(getActivity(),owner);
 	}
 
 }
