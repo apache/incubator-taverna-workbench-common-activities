@@ -22,23 +22,12 @@ package net.sf.taverna.t2.activities.beanshell.actions;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.beanshell.views.BeanshellConfigView;
-import net.sf.taverna.t2.workbench.file.FileManager;
-import net.sf.taverna.t2.workbench.helper.HelpEnabledDialog;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
-import net.sf.taverna.t2.workflowmodel.Dataflow;
-import net.sf.taverna.t2.workflowmodel.Processor;
 
 @SuppressWarnings("serial")
 public class BeanshellActivityConfigurationAction extends ActivityConfigurationAction<BeanshellActivity, BeanshellActivityConfigurationBean>{
