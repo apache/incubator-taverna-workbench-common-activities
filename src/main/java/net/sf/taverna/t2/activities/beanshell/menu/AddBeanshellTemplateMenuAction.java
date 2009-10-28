@@ -26,19 +26,15 @@ import java.awt.event.KeyEvent;
 import java.net.URI;
 
 import javax.swing.Action;
-import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.servicedescriptions.BeanshellTemplateService;
 import net.sf.taverna.t2.ui.menu.AbstractMenuAction;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
-import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.workflowview.WorkflowView;
 import net.sf.taverna.t2.workbench.views.graph.actions.DesignOnlyAction;
-import net.sf.taverna.t2.workbench.views.graph.menu.GraphEditMenuSection;
 import net.sf.taverna.t2.workbench.views.graph.menu.InsertMenu;
-import net.sf.taverna.t2.workflowmodel.Dataflow;
 
 import org.apache.log4j.Logger;
 
