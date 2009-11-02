@@ -23,6 +23,8 @@ package net.sf.taverna.t2.activities.wsdl.actions;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 
+import javax.swing.Action;
+
 import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
 import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
 import net.sf.taverna.t2.activities.wsdl.views.WSDLActivityConfigurationView;
@@ -44,6 +46,7 @@ public class WSDLActivityConfigureAction
 
 	public WSDLActivityConfigureAction(WSDLActivity activity, Frame owner) {
 		super(activity);
+		putValue(Action.NAME, "Configure security");
 		this.owner = owner;
 	}
 
