@@ -120,11 +120,6 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	
 	///////// End of beanshell properties that can be configured //
 	
-	/**
-	 * Holds the state of the OK button in case a parent view wants to know
-	 * whether the configuration is finished
-	 */
-	private ActionListener buttonClicked;
 	
 	/** Remembers where the next input should be placed in the view */
 	private int inputGridy;
@@ -928,47 +923,6 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		outerPanelConstraint.gridy = 0;
 
 		return outerOutputPanel;
-	}
-
-	public void setButtonClickedListener(ActionListener listener) {
-		buttonClicked = listener;
-	}
-
-	/**
-	 * Calls
-	 * {@link BeanshellActivity#configure(BeanshellActivityConfigurationBean)}
-	 * using a {@link BeanshellActivityConfigurationBean} set with the new
-	 * values in the view. After setting the values it uses the
-	 * {@link #buttonClicked} {@link ActionListener} to tell any listeners that
-	 * the new values have been set (primarily used to tell any parent
-	 * components to remove the frames containing this panel)
-	 * 
-	 * @return the action which occurs when the OK button is clicked
-	 */
-	private AbstractAction getOKAction() {
-		return new AbstractAction() {
-
-			public void actionPerformed(ActionEvent e) {
-				
-				// Check if anything has actually changed from the previous configuration
-				if (! ((!inputsChanged)
-						&& (!outputsChanged)
-						&& scriptText.getText().equals(configuration.getScript()) 
-						&& classLoaderSharing.equals(configuration.getClassLoaderSharing())
-						&& localDependencies.equals(configuration.getLocalDependencies()))) {
-					configChanged = true;
-				} else {
-					// Exit
-					configChanged = false;
-					buttonClicked.actionPerformed(e);
-				}
-				
-						
-				
-				buttonClicked.actionPerformed(e);
-			}
-
-		};
 	}
 
 	/**
