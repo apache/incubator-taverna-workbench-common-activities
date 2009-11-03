@@ -21,7 +21,6 @@
 package net.sf.taverna.t2.activities.wsdl.servicedescriptions;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -29,9 +28,9 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -121,16 +120,19 @@ public abstract class AddWSDLServiceDialog extends JDialog {
     	} */
 		try {
 			URL url = new URL (wsdlURLString);
-			HttpsURLConnection httpsConnection = (HttpsURLConnection) url.openConnection();
-			// user should be asked automatically if they want to trust the connection
-			httpsConnection.connect(); // if this does not fail - add the WSDL service provider for this service to the registry
+			HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
+			// If the url starts with 'https' - security hook for https connection's trust manager
+			// will be engaged and user will be asked automatically if they want 
+			// to trust the connection (if it is not already trusted). If the urls starts with 'http' - 
+			// this will not have any effect apart from checking if we can open a connection. 
+			httpConnection.connect(); // if this does not fail - add the WSDL service provider for this service to the registry
 			addRegistry(wsdlURLString);
 		}
 		catch(Exception ex){ // anything failed
 			logger.error(
 					"Failed to add WSDL service provider for service: "
 							+ wsdlURLString,ex);
-			ex.printStackTrace();
+			//ex.printStackTrace();
 		}
     	closeDialog();
     }
