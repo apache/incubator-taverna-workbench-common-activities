@@ -20,6 +20,9 @@
  ******************************************************************************/
 package net.sf.taverna.t2.activities.localworker.views;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
@@ -31,8 +34,8 @@ public class LocalworkerActivityViewFactory implements
 		return object instanceof LocalworkerActivity;
 	}
 
-	public ContextualView getView(LocalworkerActivity activity) {
-		return new LocalworkerActivityContextualView(activity);
+	public List<ContextualView> getViews(LocalworkerActivity activity) {
+		return Arrays.asList(new ContextualView[] {new LocalworkerActivityContextualView(activity)});
 	}
 
 }

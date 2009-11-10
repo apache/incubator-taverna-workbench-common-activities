@@ -22,6 +22,10 @@ package net.sf.taverna.t2.activities.localworker.views;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
+import net.sf.taverna.t2.activities.beanshell.views.BeanshellActivityViewFactory;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
@@ -39,19 +43,15 @@ public class TestContextualViewFactory {
 		LocalworkerActivityConfigurationBean bean = new LocalworkerActivityConfigurationBean();
 		localworkerActivity.configure(bean);
 
-		ContextualViewFactory viewFactoryForBeanType = ContextualViewFactoryRegistry
-				.getInstance().getViewFactoryForObject(localworkerActivity);
-		assertNotNull("The localworker view factory should not be null",
-				viewFactoryForBeanType);
-		assertTrue(
-				"Was not a  Localworker view factory",
-				viewFactoryForBeanType instanceof LocalworkerActivityViewFactory);
-		ContextualView viewType = viewFactoryForBeanType
-				.getView(localworkerActivity);
-		assertTrue("Was not a Beanshell view", viewType.getClass()
-				.getCanonicalName().equals(
-						LocalworkerActivityContextualView.class.getName()));
-
+		List<ContextualViewFactory> viewFactoriesForBeanType = ContextualViewFactoryRegistry.getInstance().getViewFactoriesForObject(localworkerActivity);
+		assertTrue("The localworker view factory should not be empty", !viewFactoriesForBeanType.isEmpty());
+		LocalworkerActivityViewFactory factory = null;
+		for (ContextualViewFactory cvf : viewFactoriesForBeanType) {
+			if (cvf instanceof LocalworkerActivityViewFactory) {
+				factory = (LocalworkerActivityViewFactory) cvf;
+			}
+		}
+		assertTrue("No localworker view factory", factory != null);
 	}
 
 }

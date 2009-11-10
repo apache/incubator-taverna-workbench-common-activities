@@ -103,4 +103,9 @@ public class LocalworkerActivityContextualView extends
 				(LocalworkerActivity) getActivity(), owner);
 	}
 
+	@Override
+	public int getPreferredPosition() {
+		return 100;
+	}
+
 }

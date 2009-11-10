@@ -38,6 +38,18 @@ class FileExtFilter extends FileFilter {
 	boolean includeDir;
 }
 
+if (title == void) {
+	title = null;
+}
+
+if ((fileExtensions == void) || (fileExtensions == null)) {
+	fileExtensions = "";
+}
+
+if ((fileExtLabels == void) || (fileExtLabels == null)) {
+	fileExtLabels = "";
+}
+
 JFileChooser chooser = new JFileChooser();
 chooser.setDialogTitle(title);
 
