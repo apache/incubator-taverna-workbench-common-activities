@@ -20,8 +20,11 @@
  ******************************************************************************/
 package net.sf.taverna.t2.activities.soaplab.views;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivity;
-import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityContextualView;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
 
 public class SoaplabActivityViewFactory implements
@@ -31,8 +34,8 @@ public class SoaplabActivityViewFactory implements
 		return object instanceof SoaplabActivity;
 	}
 
-	public ActivityContextualView<?> getView(SoaplabActivity activity) {
-		return new SoaplabActivityContextualView(activity);
+	public List<ContextualView> getViews(SoaplabActivity activity) {
+		return Arrays.asList(new ContextualView[] {new SoaplabActivityContextualView(activity)});
 	}
 
 }

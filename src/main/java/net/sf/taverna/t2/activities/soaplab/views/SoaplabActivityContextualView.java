@@ -130,4 +130,9 @@ public class SoaplabActivityContextualView extends
 		}
 	}
 
+	@Override
+	public int getPreferredPosition() {
+		return 100;
+	}
+
 }

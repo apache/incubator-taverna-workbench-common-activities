@@ -22,6 +22,9 @@ package net.sf.taverna.t2.activities.soaplab.views;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivity;
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivityConfigurationBean;
 import net.sf.taverna.t2.activities.soaplab.actions.SoaplabActivityConfigurationAction;
@@ -50,10 +53,15 @@ public class TestSoaplabActivityContextualView {
 	@Test
 	@Ignore("Integration test")
 	public void testDisovery() throws Exception {
-		ContextualViewFactory factory = ContextualViewFactoryRegistry.getInstance().getViewFactoryForObject(a);
-		assertTrue("Factory should be SoaplabActivityViewFactory",factory instanceof SoaplabActivityViewFactory);
-		ContextualView view = factory.getView(a);
-		assertTrue("The view should be SoaplabActivityContextualView",view instanceof SoaplabActivityContextualView);
+		List<ContextualViewFactory> viewFactoriesForBeanType = ContextualViewFactoryRegistry.getInstance().getViewFactoriesForObject(a);
+		assertTrue("The soaplab view factory should not be empty", !viewFactoriesForBeanType.isEmpty());
+		SoaplabActivityViewFactory factory = null;
+		for (ContextualViewFactory cvf : viewFactoriesForBeanType) {
+			if (cvf instanceof SoaplabActivityViewFactory) {
+				factory = (SoaplabActivityViewFactory) cvf;
+			}
+		}
+		assertTrue("No Soaplab view factory", factory != null);
 	}
 	
 	@Test
