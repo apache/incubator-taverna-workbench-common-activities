@@ -168,7 +168,7 @@ public class SpreadsheetImportConfigView extends JPanel {
 	private Stack<String> errorMessages = new Stack<String>();
 
 	private KeyListener enterKeyListener = new KeyAdapter() {
-		public void keyReleased(KeyEvent e) {
+		public void keyPressed(KeyEvent e) {
 			if (actionOkButton.isSelected() && e.getKeyCode() == KeyEvent.VK_ENTER) {
 				actionOkButton.doClick();
 			}

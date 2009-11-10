@@ -20,7 +20,11 @@
  ******************************************************************************/
 package net.sf.taverna.t2.activities.spreadsheet.views;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportActivity;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
 
 /**
@@ -35,9 +39,8 @@ public class SpreadsheetImportContextualViewFactory implements
 		return object.getClass().isAssignableFrom(SpreadsheetImportActivity.class);
 	}
 
-	public SpreadsheetImportContextualView getView(SpreadsheetImportActivity activity) {
-		SpreadsheetImportContextualView view = new SpreadsheetImportContextualView(activity);
-		return view;
+	public List<ContextualView> getViews(SpreadsheetImportActivity activity) {
+		return Arrays.asList(new ContextualView[] {new SpreadsheetImportContextualView(activity)});
 	}
 
 }

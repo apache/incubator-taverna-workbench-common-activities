@@ -88,4 +88,9 @@ public class SpreadsheetImportContextualView extends
 				(SpreadsheetImportActivity) getActivity(), owner);
 	}
 
+	@Override
+	public int getPreferredPosition() {
+		return 100;
+	}
+
 }
