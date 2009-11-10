@@ -38,14 +38,9 @@ import net.sf.taverna.t2.workbench.ui.impl.configuration.colour.ColourManager;
  */
 public class SpreadsheetImportTemplateService extends
 		AbstractTemplateService<SpreadsheetImportConfiguration> {
-
+	
 	private static final String SERVICE_NAME = SpreadsheetImportUIText
 			.getString("SpreadsheetImportTemplateService.serviceName");
-
-	static {
-		ColourManager.getInstance().setPreferredColour(
-				"net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportActivity", Color.decode("#40e0d0"));
-	}
 
 	public String getName() {
 		return SERVICE_NAME;

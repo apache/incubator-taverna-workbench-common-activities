@@ -28,6 +28,7 @@ import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportActivity;
 import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportConfiguration;
 import net.sf.taverna.t2.activities.spreadsheet.actions.SpreadsheetImportActivityConfigurationAction;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
+import net.sf.taverna.t2.activities.spreadsheet.servicedescriptions.SpreadsheetImportActivityIcon;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
 import net.sf.taverna.t2.workflowmodel.Port;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
@@ -88,6 +89,11 @@ public class SpreadsheetImportContextualView extends
 				(SpreadsheetImportActivity) getActivity(), owner);
 	}
 
+	@Override
+	public String getBackgroundColour() {
+		return SpreadsheetImportActivityIcon.SPREADSHEET_COLOUR_HTML;
+	}
+	
 	@Override
 	public int getPreferredPosition() {
 		return 100;

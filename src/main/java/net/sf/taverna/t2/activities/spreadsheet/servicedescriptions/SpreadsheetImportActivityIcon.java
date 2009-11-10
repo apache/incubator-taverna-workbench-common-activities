@@ -20,11 +20,14 @@
  ******************************************************************************/
 package net.sf.taverna.t2.activities.spreadsheet.servicedescriptions;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportActivity;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI;
+import net.sf.taverna.t2.workbench.ui.impl.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 /**
@@ -34,6 +37,14 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
  */
 public class SpreadsheetImportActivityIcon implements ActivityIconSPI {
 
+	public static final String SPREADSHEET_COLOUR_HTML = "#40e0d0";
+	public static final Color SPREADSHEET_COLOUR = Color.decode(SPREADSHEET_COLOUR_HTML);
+	
+	static {
+		ColourManager.getInstance().setPreferredColour(
+				"net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportActivity", SPREADSHEET_COLOUR);
+	}
+	
 	static Icon icon = null;
 
 	public int canProvideIconScore(Activity<?> activity) {
