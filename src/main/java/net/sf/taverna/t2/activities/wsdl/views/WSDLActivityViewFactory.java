@@ -20,9 +20,11 @@
  ******************************************************************************/
 package net.sf.taverna.t2.activities.wsdl.views;
 
-import net.sf.taverna.t2.activities.wsdl.InputPortTypeDescriptorActivity;
+import java.util.Arrays;
+import java.util.List;
+
 import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
-import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityContextualView;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
 
 public class WSDLActivityViewFactory implements ContextualViewFactory<WSDLActivity>{
@@ -31,8 +33,8 @@ public class WSDLActivityViewFactory implements ContextualViewFactory<WSDLActivi
 		return object instanceof WSDLActivity;
 	}
 
-	public ActivityContextualView<?> getView(WSDLActivity activity) {
-		return new WSDLActivityContextualView(activity);
+	public List<ContextualView> getViews(WSDLActivity activity) {
+		return Arrays.asList(new ContextualView[] {new WSDLActivityContextualView(activity)});
 	}
 	
 	

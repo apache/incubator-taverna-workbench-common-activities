@@ -20,6 +20,9 @@
  ******************************************************************************/
 package net.sf.taverna.t2.activities.wsdl.views;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.sf.taverna.t2.activities.wsdl.xmlsplitter.XMLInputSplitterActivity;
 import net.sf.taverna.t2.activities.wsdl.xmlsplitter.XMLOutputSplitterActivity;
 import net.sf.taverna.t2.activities.wsdl.xmlsplitter.XMLSplitterConfigurationBean;
@@ -33,9 +36,9 @@ public class XMLSplitterViewFactory implements ContextualViewFactory<Activity<XM
 		return object instanceof XMLInputSplitterActivity || object instanceof XMLOutputSplitterActivity;
 	}
 
-	public ContextualView getView(
+	public List<ContextualView> getViews(
 			Activity<XMLSplitterConfigurationBean> activity) {
-		return new XMLSplitterContextualView(activity);		
+		return Arrays.asList(new ContextualView[] {new XMLSplitterContextualView(activity)});
 	}
 
 }

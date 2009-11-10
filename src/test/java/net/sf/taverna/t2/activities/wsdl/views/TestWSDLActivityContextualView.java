@@ -22,15 +22,16 @@ package net.sf.taverna.t2.activities.wsdl.views;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
 import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
 import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
-import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactoryRegistry;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestWSDLActivityContextualView {
@@ -50,10 +51,15 @@ public class TestWSDLActivityContextualView {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testDisovery() throws Exception {
-		ContextualViewFactory factory = ContextualViewFactoryRegistry.getInstance().getViewFactoryForObject(a);
-		assertTrue("Factory should be WSDLActivityViewFactory",factory instanceof WSDLActivityViewFactory);
-		ContextualView view = factory.getView(a);
-		assertTrue("The view should be WSDLActivityContextualView",view instanceof WSDLActivityContextualView);
+		List<ContextualViewFactory> viewFactoriesForBeanType = ContextualViewFactoryRegistry.getInstance().getViewFactoriesForObject(a);
+		assertTrue("The WSDL view factory should not be empty", !viewFactoriesForBeanType.isEmpty());
+		WSDLActivityViewFactory factory = null;
+		for (ContextualViewFactory cvf : viewFactoriesForBeanType) {
+			if (cvf instanceof WSDLActivityViewFactory) {
+				factory = (WSDLActivityViewFactory) cvf;
+			}
+		}
+		assertTrue("No WSDL view factory", factory != null);
 	}
 	
 	public void testConfigurationAction() {

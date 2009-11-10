@@ -88,4 +88,9 @@ public class WSDLActivityContextualView extends
 		return new WSDLActivityConfigureAction(getActivity(),owner);
 	}
 
+	@Override
+	public int getPreferredPosition() {
+		return 100;
+	}
+
 }
