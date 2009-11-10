@@ -23,6 +23,8 @@ package net.sf.taverna.workbench.ui.beanshell.views;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -53,10 +55,16 @@ public class BeanshellViewer {
 			e.printStackTrace();
 		}
 		
-		ContextualViewFactory viewFactoryForBeanType = ContextualViewFactoryRegistry.getInstance().getViewFactoryForObject(beanshellActivity);
-		assertNotNull("The beanshsell view factory should not be null",viewFactoryForBeanType);
-		assertTrue("Was not a  Beanshell view factory", viewFactoryForBeanType instanceof BeanshellActivityViewFactory);
-		ContextualView viewType = viewFactoryForBeanType.getView(beanshellActivity);
+		List<ContextualViewFactory> viewFactoriesForBeanType = ContextualViewFactoryRegistry.getInstance().getViewFactoriesForObject(beanshellActivity);
+		assertTrue("The beanshsell view factory should not be empty", !viewFactoriesForBeanType.isEmpty());
+		BeanshellActivityViewFactory factory = null;
+		for (ContextualViewFactory cvf : viewFactoriesForBeanType) {
+			if (cvf instanceof BeanshellActivityViewFactory) {
+				factory = (BeanshellActivityViewFactory) cvf;
+			}
+		}
+		assertTrue("No Beanshell view factory", factory != null);
+		ContextualView viewType = factory.getViews(beanshellActivity).get(0);
 		JButton button = new JButton();
 		button.addActionListener(viewType.getConfigureAction(null));
 		frame.add(viewType);

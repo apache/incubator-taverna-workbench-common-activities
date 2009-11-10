@@ -23,6 +23,7 @@ package net.sf.taverna.t2.activities.beanshell.views;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -31,7 +32,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,7 +54,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -60,6 +67,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileFilter;
 
 import net.sf.taverna.raven.repository.BasicArtifact;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
@@ -159,6 +167,9 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 
 
 	private JTabbedPane ports;
+	
+	private File currentDirectory = null;
+
 
 	/**
 	 * Stores the {@link BeanshellActivity}, gets its
@@ -299,6 +310,31 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		scriptText.setCaretPosition(0);
 		scriptText.setPreferredSize(new Dimension(0, 0));
 		scriptEditPanel.add(new JScrollPane(scriptText), BorderLayout.CENTER);
+		JButton loadRScriptButton = new JButton("Load script");
+		loadRScriptButton.setToolTipText("Load an R script from a file");
+		loadRScriptButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				readScriptFile();
+			}
+		});
+
+		JButton clearScriptButton = new JButton("Clear script");
+		clearScriptButton
+				.setToolTipText("Clear current script from the edit area");
+		clearScriptButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				clearScript();
+			}
+
+		});
+
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new FlowLayout());
+		buttonPanel.add(loadRScriptButton);
+		buttonPanel.add(clearScriptButton);
+		
+		scriptEditPanel.add(buttonPanel, BorderLayout.SOUTH);
 		setPreferredSize(new Dimension(500,500));
 		inputsChanged = false;
 		outputsChanged = false;
@@ -959,6 +995,69 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		return false;
 	}
 
+	private void readScriptFile() {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileFilter(new FileFilter() {
+
+			@Override
+			public boolean accept(File f) {
+				return f.getName().toLowerCase().endsWith(".bsh");
+			}
+
+			@Override
+			public String getDescription() {
+				return ".bsh (Beanshell files)";
+			}
+
+		});
+		fileChooser.setAcceptAllFileFilterUsed(true);
+		if (currentDirectory != null) {
+			fileChooser.setCurrentDirectory(currentDirectory);
+		}
+		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			currentDirectory = fileChooser.getCurrentDirectory();
+			File selectedFile = fileChooser.getSelectedFile();
+
+			try {
+				BufferedReader reader = new BufferedReader(new FileReader(
+						selectedFile));
+
+				String line;
+				StringBuffer buffer = new StringBuffer();
+				while ((line = reader.readLine()) != null) {
+					buffer.append(line);
+					buffer.append("\n");
+				}
+				reader.close();
+
+				scriptText.setText(buffer.toString());
+
+			} catch (FileNotFoundException ffe) {
+				JOptionPane.showMessageDialog(this, "File '"
+						+ selectedFile.getName() + "' not found",
+						"File not found", JOptionPane.ERROR_MESSAGE);
+			} catch (IOException ioe) {
+				JOptionPane.showMessageDialog(this, "Can not read file '"
+						+ selectedFile.getName() + "'", "Can not read file",
+						JOptionPane.ERROR_MESSAGE);
+			}
+
+		}
+	}
+	
+	/**
+	 * Method for clearing the script
+	 * 
+	 */
+	private void clearScript() {
+		if (JOptionPane.showConfirmDialog(this,
+				"Do you really want to clear the script?",
+				"Clearing the script", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+			scriptText.setText("");
+		}
+
+	}
+	
 	@Override
 	public BeanshellActivityConfigurationBean getConfiguration() {
 		return configuration;

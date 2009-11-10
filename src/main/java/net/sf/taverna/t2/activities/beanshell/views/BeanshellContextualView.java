@@ -91,4 +91,9 @@ public class BeanshellContextualView extends
 				(BeanshellActivity) getActivity(), owner);
 	}
 
+	@Override
+	public int getPreferredPosition() {
+		return 100;
+	}
+
 }
