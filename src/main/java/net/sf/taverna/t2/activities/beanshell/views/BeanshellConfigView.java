@@ -26,7 +26,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -159,15 +158,9 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	/** Have input ports been changed */
 	private boolean inputsChanged = false;
 
-	private JButton button;
-
-	private boolean configChanged = false;
-
 	private JTabbedPane tabbedPane = null;
 
 
-	private JTabbedPane ports;
-	
 	private File currentDirectory = null;
 
 
@@ -290,7 +283,8 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 
 		tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("Script", scriptEditPanel);
-		tabbedPane.addTab("Ports", getPortPanel());
+		tabbedPane.addTab("Input ports", new JScrollPane(getInputPanel()));
+		tabbedPane.addTab("Output ports", new JScrollPane(getOutputPanel()));
 
 		tabbedPane.addTab("Dependencies", getDependenciesPanel());
 
@@ -534,37 +528,6 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 			}
 			return panel;
 		}
-	}
-	
-
-	/**
-	 * Creates a {@link JTabbedPane} with the Output and Input ports
-	 * 
-	 * @return a {@link JTabbedPane} with the ports
-	 */
-	private JTabbedPane getPortPanel() {
-		ports = new JTabbedPane();
-
-		JPanel portEditPanel = new JPanel(new GridLayout(0, 2));
-
-		GridBagConstraints panelConstraint = new GridBagConstraints();
-		panelConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-		panelConstraint.gridx = 0;
-		panelConstraint.gridy = 0;
-		panelConstraint.weightx = 0.1;
-		panelConstraint.weighty = 0.1;
-		panelConstraint.fill = GridBagConstraints.BOTH;
-
-		JScrollPane inputScroller = new JScrollPane(getInputPanel());
-		portEditPanel.add(inputScroller, panelConstraint);
-
-		panelConstraint.gridy = 1;
-		ports.add("Input ports", inputScroller);
-		JScrollPane outputScroller = new JScrollPane(getOutputPanel());
-		portEditPanel.add(outputScroller, panelConstraint);
-		ports.add("Output ports", outputScroller);
-
-		return ports;
 	}
 
 	/**
@@ -1066,21 +1029,13 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	@Override
 	public void refreshConfiguration() {
 		int visibleTab = -1;
-		int subTab = -1;
 		if (tabbedPane != null) {
 			visibleTab = tabbedPane.getSelectedIndex();
-			logger.info("VisibleTab is " + visibleTab);
-			if (tabbedPane.getTitleAt(visibleTab).equals("Ports")) {
-				subTab = ports.getSelectedIndex();
-			}
 		}
 		this.removeAll();
 		initialise();
 		if (visibleTab != -1) {
 			tabbedPane.setSelectedIndex(visibleTab);
-			if (subTab != -1) {
-				ports.setSelectedIndex(subTab);
-			}
 		}
 	}
 
