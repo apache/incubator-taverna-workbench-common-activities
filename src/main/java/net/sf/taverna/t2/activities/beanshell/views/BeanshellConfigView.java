@@ -403,9 +403,9 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 			
 			classloadingDescriptions = new HashMap<String, String>();
 			classloadingDescriptions.put(WORKFLOW, "<html><small>"
-					+ "Classes are shared across the whole workflow (with any processor<br>"
+					+ "Classes are shared across the whole workflow (with any service<br>"
 					+ "also selecting this option), but are reinitialised for each workflow run.<br>"
-					+ "This might be needed if a processor passes objects to another, or <br>"
+					+ "This might be needed if a service passes objects to another, or <br>"
 					+ "state is shared within static members of loaded classes."
 					+ "</small></html>");
 			classloadingDescriptions.put(SYSTEM, "<html><small><p>"
