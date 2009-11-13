@@ -20,7 +20,6 @@
  ******************************************************************************/
 package net.sf.taverna.workbench.ui.beanshell.views;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -36,8 +35,12 @@ import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualV
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactoryRegistry;
 import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityConfigurationException;
 
+import org.apache.log4j.Logger;
+
 public class BeanshellViewer {
 
+	private static Logger logger = Logger
+	.getLogger(BeanshellViewer.class);
 	/**
 	 * @param args
 	 */
@@ -51,8 +54,7 @@ public class BeanshellViewer {
 		try {
 			beanshellActivity.configure(bean);
 		} catch (ActivityConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Unable to configure activity", e);
 		}
 		
 		List<ContextualViewFactory> viewFactoriesForBeanType = ContextualViewFactoryRegistry.getInstance().getViewFactoriesForObject(beanshellActivity);
