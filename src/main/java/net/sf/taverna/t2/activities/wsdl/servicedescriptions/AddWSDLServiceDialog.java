@@ -132,7 +132,6 @@ public abstract class AddWSDLServiceDialog extends JDialog {
 			logger.error(
 					"Failed to add WSDL service provider for service: "
 							+ wsdlURLString,ex);
-			//ex.printStackTrace();
 		}
     	closeDialog();
     }
@@ -233,7 +232,6 @@ public abstract class AddWSDLServiceDialog extends JDialog {
 //												+ ". 'Trust everyone' HTTPS connection failed.",
 //										e1);
 //						return false;
-//						// e.printStackTrace();
 //					} finally {// switch it off here as well if some unexpected exception occurred
 //						ThreadLocalSSLSocketFactory.stopTrustingEverything();
 //					}
@@ -241,7 +239,6 @@ public abstract class AddWSDLServiceDialog extends JDialog {
 //				} catch (Exception e2) {
 //					logger.error("Failed to add WSDL service provider for service: "+ wsdlURLString+". Connecting to service failed.", e2);
 //					return false;
-//					//e.printStackTrace();
 //				}
 //			}
 //			else{ // protocol starts with 'http'
@@ -250,11 +247,9 @@ public abstract class AddWSDLServiceDialog extends JDialog {
 //		} catch (MalformedURLException e3) {
 //			logger.error("Failed to add WSDL service provider: URL "+ wsdlURLString+" was malformed.", e3);
 //			return false;
-//			//ex.printStackTrace();
 //		} catch (URISyntaxException e4) {
 //			logger.error("Failed to add WSDL service provider: URI "+ wsdlURLString+" could not be parsed.", e4);
 //			return false;
-//			//e.printStackTrace();
 //		}
 //	}	
 	
