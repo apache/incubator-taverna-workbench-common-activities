@@ -32,14 +32,12 @@ import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityCon
 @SuppressWarnings("serial")
 public class BeanshellActivityConfigurationAction extends ActivityConfigurationAction<BeanshellActivity, BeanshellActivityConfigurationBean>{
 
-	private static final String BEANSHELL_ACTIVITY_CONFIGURATION = "Beanshell Activity Configuration";
-	private final Frame owner;
+	private static final String BEANSHELL_ACTIVITY_CONFIGURATION = "Beanshell Service Configuration";
 	public static final String EDIT_BEANSHELL_SCRIPT = "Edit beanshell script";
 
 	public BeanshellActivityConfigurationAction(BeanshellActivity activity, Frame owner) {
 		super(activity);
-		putValue(NAME, EDIT_BEANSHELL_SCRIPT );		
-		this.owner = owner;
+		putValue(NAME, EDIT_BEANSHELL_SCRIPT );
 	}
 
 	public void actionPerformed(ActionEvent e) {
