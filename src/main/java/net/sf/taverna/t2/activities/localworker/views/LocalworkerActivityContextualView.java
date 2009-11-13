@@ -70,13 +70,13 @@ public class LocalworkerActivityContextualView extends
 		String result = "";
 		LocalworkerActivity localActivity = (LocalworkerActivity) getActivity();
 		if (localActivity.isAltered()) {
-			result = "Altered local worker activity";
+			result = "Altered local worker service";
 			String workerName = LocalworkerServiceProvider.getServiceNameFromClassname(localActivity.getConfiguration().getLocalworkerName());
 			if ((workerName != null) && !workerName.equals("")) {
 				result += " - originally " + workerName;
 			}
 		} else {
-			result = "Local worker activity";
+			result = "Local worker service";
 			String workerName = LocalworkerServiceProvider.getServiceNameFromClassname(localActivity.getConfiguration().getLocalworkerName());
 			if ((workerName != null) && !workerName.equals("")) {
 				result += " - " + workerName;
