@@ -57,7 +57,7 @@ public class SoaplabActivityContextualView extends
 
 	@Override
 	public String getViewTitle() {
-		return "Soaplab activity";
+		return "Soaplab service";
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class SoaplabActivityContextualView extends
 			// JEditorPane metadataPane = new ColJEditorPane("text/html",
 			// summaryText);
 			// metadataPane.setText(transformedStream.toString());
-			// // System.out.println(transformedStream.toString());
+			// // logger.info(transformedStream.toString());
 			// JScrollPane jsp = new JScrollPane(metadataPane,
 			// JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 			// JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
