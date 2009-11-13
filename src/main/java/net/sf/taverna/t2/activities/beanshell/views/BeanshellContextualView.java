@@ -82,7 +82,7 @@ public class BeanshellContextualView extends
 
 	@Override
 	public String getViewTitle() {
-		return "Beanshell activity";
+		return "Beanshell service";
 	}
 
 	@Override
