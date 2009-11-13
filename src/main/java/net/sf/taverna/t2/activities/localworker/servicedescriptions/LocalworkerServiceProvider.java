@@ -350,7 +350,7 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 							new HashMap<String, Element>(), getClass()
 									.getClassLoader());
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			logger.error("Could not create LocalWorkerServiceDescription", e);
 			throw new ItemCreationException(e);
 		}
 		List<ActivityInputPortDefinitionBean> inputPortBeans = new ArrayList<ActivityInputPortDefinitionBean>();
