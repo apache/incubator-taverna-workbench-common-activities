@@ -28,12 +28,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.HttpURLConnection;
+import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -119,21 +121,34 @@ public abstract class AddWSDLServiceDialog extends JDialog {
     		addRegistry(wsdlURLString);
     	} */
 		try {
-			URL url = new URL (wsdlURLString);
-			HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
+			URL url = new URL(wsdlURLString);
+			URLConnection connection = url.openConnection();
+			try {
 			// If the url starts with 'https' - security hook for https connection's trust manager
 			// will be engaged and user will be asked automatically if they want 
 			// to trust the connection (if it is not already trusted). If the urls starts with 'http' - 
 			// this will not have any effect apart from checking if we can open a connection. 
-			httpConnection.connect(); // if this does not fail - add the WSDL service provider for this service to the registry
+				connection.connect(); // if this does not fail - add the WSDL
+									// service provider for this service to
+									// the registry
+			} finally {
+				try {
+					connection.getInputStream().close();
+				} catch (IOException ex) {
+				}
+			}
 			addRegistry(wsdlURLString);
+		} catch (Exception ex) { // anything failed
+			JOptionPane.showMessageDialog(this,
+					"Could not read the WSDL definition from " + wsdlURLString
+							+ ":\n" + ex,
+					"Could not add WSDL service", JOptionPane.ERROR_MESSAGE);
+
+			logger.error("Failed to add WSDL service provider for service: "
+					+ wsdlURLString, ex);
+
 		}
-		catch(Exception ex){ // anything failed
-			logger.error(
-					"Failed to add WSDL service provider for service: "
-							+ wsdlURLString,ex);
-		}
-    	closeDialog();
+		closeDialog();
     }
 
     /**
