@@ -222,7 +222,8 @@ public class WSDLActivityConfigurationView extends JDialog implements ItemListen
 
 				// Get Credential Manager UI to get the username and password for the service
 				CredentialManagerUI credManagerUI = CredentialManagerUI.getInstance();
-				credManagerUI.newPasswordForService(oldBean.getWsdl());
+				if (credManagerUI != null)
+					credManagerUI.newPasswordForService(oldBean.getWsdl());
 			}
 		});
 		
