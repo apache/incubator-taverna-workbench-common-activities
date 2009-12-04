@@ -73,6 +73,7 @@ import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity.ClassLoaderSharing;
+import net.sf.taverna.t2.lang.ui.FileTools;
 import net.sf.taverna.t2.reference.ExternalReferenceSPI;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
 import net.sf.taverna.t2.workflowmodel.OutputPort;
@@ -304,11 +305,22 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		scriptText.setCaretPosition(0);
 		scriptText.setPreferredSize(new Dimension(0, 0));
 		scriptEditPanel.add(new JScrollPane(scriptText), BorderLayout.CENTER);
-		JButton loadRScriptButton = new JButton("Load script");
-		loadRScriptButton.setToolTipText("Load an R script from a file");
-		loadRScriptButton.addActionListener(new ActionListener() {
+		JButton loadScriptButton = new JButton("Load script");
+		loadScriptButton.setToolTipText("Load a beanshell script from a file");
+		loadScriptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				readScriptFile();
+				String newScript = FileTools.readStringFromFile(BeanshellConfigView.this);
+				if (newScript != null) {
+					scriptText.setText(newScript);
+				}
+			}
+		});
+
+		JButton saveRScriptButton = new JButton("Save script");
+		saveRScriptButton.setToolTipText("Save the Beanshell script to a file");
+		saveRScriptButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FileTools.saveStringToFile(BeanshellConfigView.this, "Save Beanshell script", ".bsh", scriptText.getText());
 			}
 		});
 
@@ -325,7 +337,8 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
-		buttonPanel.add(loadRScriptButton);
+		buttonPanel.add(loadScriptButton);
+		buttonPanel.add(saveRScriptButton);
 		buttonPanel.add(clearScriptButton);
 		
 		scriptEditPanel.add(buttonPanel, BorderLayout.SOUTH);
