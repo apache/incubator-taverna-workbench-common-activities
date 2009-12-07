@@ -971,56 +971,6 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		return false;
 	}
 
-	private void readScriptFile() {
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setFileFilter(new FileFilter() {
-
-			@Override
-			public boolean accept(File f) {
-				return f.getName().toLowerCase().endsWith(".bsh");
-			}
-
-			@Override
-			public String getDescription() {
-				return ".bsh (Beanshell files)";
-			}
-
-		});
-		fileChooser.setAcceptAllFileFilterUsed(true);
-		if (currentDirectory != null) {
-			fileChooser.setCurrentDirectory(currentDirectory);
-		}
-		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-			currentDirectory = fileChooser.getCurrentDirectory();
-			File selectedFile = fileChooser.getSelectedFile();
-
-			try {
-				BufferedReader reader = new BufferedReader(new FileReader(
-						selectedFile));
-
-				String line;
-				StringBuffer buffer = new StringBuffer();
-				while ((line = reader.readLine()) != null) {
-					buffer.append(line);
-					buffer.append("\n");
-				}
-				reader.close();
-
-				scriptText.setText(buffer.toString());
-
-			} catch (FileNotFoundException ffe) {
-				JOptionPane.showMessageDialog(this, "File '"
-						+ selectedFile.getName() + "' not found",
-						"File not found", JOptionPane.ERROR_MESSAGE);
-			} catch (IOException ioe) {
-				JOptionPane.showMessageDialog(this, "Can not read file '"
-						+ selectedFile.getName() + "'", "Can not read file",
-						JOptionPane.ERROR_MESSAGE);
-			}
-
-		}
-	}
-	
 	/**
 	 * Method for clearing the script
 	 * 
@@ -1054,8 +1004,36 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 
 	@Override
 	public boolean checkValues() {
-		// TODO Not yet implemented
-		return true;
+		boolean result = true;
+		String text = "";
+		Set<String> inputPortNames = new HashSet<String>();
+		for (BeanshellInputViewer v : inputViewList) {
+			String name = v.getNameField().getText();
+			if (inputPortNames.contains(name)) {
+				text += "Two input ports have the name " + name + "\n";
+				result = false;
+			} else {
+				inputPortNames.add(name);
+			}
+		}
+		Set<String> outputPortNames = new HashSet<String>();
+		for (BeanshellOutputViewer v : outputViewList) {
+			String name = v.getNameField().getText();
+			if (inputPortNames.contains(name)) {
+				text += "An input and an output port are named " + name + "\n";
+				result = false;
+			}
+			if (outputPortNames.contains(name)) {
+				text += "Two output ports have the name " + name + "\n";
+				result = false;
+			} else {
+				outputPortNames.add(name);
+			}
+		}
+		if (!result) {
+			JOptionPane.showMessageDialog(this, text, "Port name problem", JOptionPane.ERROR_MESSAGE);
+		}
+		return result;
 	}
 
 }
