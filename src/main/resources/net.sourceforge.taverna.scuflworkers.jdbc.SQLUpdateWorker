@@ -19,8 +19,8 @@ if ((url == void) || (url == null) || url.equals("")) {
 	throw new RuntimeException("The url must be specified");
 }
 
-if ((userid == void) || (userid == null) || userid.equals("")) {
-	throw new RuntimeException("The userid must be specified");
+if ((userid == void) || (userid == null)) {
+	userid = "";
 }
 
 if ((params == void) || (params == null)) {

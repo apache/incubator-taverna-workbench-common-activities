@@ -10,7 +10,7 @@ ButtonGroup group = new ButtonGroup();
 JPanel messagePanel = new JPanel();
 messagePanel.setLayout(new BoxLayout(messagePanel,BoxLayout.Y_AXIS));
 
-messagePanel.add(new JLabel(message));
+messagePanel.add(new JLabel((message == void ? null : message)));
 		
 JRadioButton[] buttonArray = new JRadioButton[selectionValues.size()];
 for (int i = 0; i &lt; buttonArray.length; i++) {			
@@ -20,7 +20,7 @@ for (int i = 0; i &lt; buttonArray.length; i++) {
 	messagePanel.add(buttonArray[i]);
 }				
 
-JOptionPane.showOptionDialog(null, messagePanel, title,
+JOptionPane.showOptionDialog(null, messagePanel, (title == void ? null : title),
 		JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"OK"}, null);
 		
 String answer="";
