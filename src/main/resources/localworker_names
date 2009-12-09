@@ -27,8 +27,9 @@ org.embl.ebi.escience.scuflworkers.java.FlattenList
 org.embl.ebi.escience.scuflworkers.java.StringStripDuplicates
 org.embl.ebi.escience.scuflworkers.java.StringListMerge
 category:test
-org.embl.ebi.escience.scuflworkers.java.EmitLotsOfStrings
 org.embl.ebi.escience.scuflworkers.java.TestAlwaysFailingProcessor
+org.embl.ebi.escience.scuflworkers.java.EmitLotsOfStrings
+org.embl.ebi.escience.scuflworkers.java.TestSometimesFails
 category:text
 org.embl.ebi.escience.scuflworkers.java.ByteArrayToString
 org.embl.ebi.escience.scuflworkers.java.StringSetDifference
