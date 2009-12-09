@@ -105,7 +105,11 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 		localWorkerToScript
 				.put(
 						"org.embl.ebi.escience.scuflworkers.java.TestAlwaysFailingProcessor",
-						"Test - Always Fails");
+						"Always Fails");
+		localWorkerToScript
+		.put(
+				"org.embl.ebi.escience.scuflworkers.java.TestSometimesFails",
+				"Sometimes Fails");
 		localWorkerToScript.put(
 				"org.embl.ebi.escience.scuflworkers.java.WebImageFetcher",
 				"Get Image From URL");
