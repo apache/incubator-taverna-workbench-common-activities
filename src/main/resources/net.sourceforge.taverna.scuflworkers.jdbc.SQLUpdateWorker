@@ -12,15 +12,11 @@ import javax.sql.rowset.WebRowSet;
 import com.sun.rowset.WebRowSetImpl;
 
 if ((driver == void) || (driver == null) || driver.equals("")) {
-	throw new RuntimeException("The drivermust be specified");
+	throw new RuntimeException("The driver must be specified");
 }
 
 if ((url == void) || (url == null) || url.equals("")) {
 	throw new RuntimeException("The url must be specified");
-}
-
-if ((userid == void) || (userid == null)) {
-	userid = "";
 }
 
 if ((params == void) || (params == null)) {
@@ -38,22 +34,33 @@ if (c == null) {
 }
 
 Driver d = c.newInstance();
+if (d == null) {
+	throw new RuntimeException("Could not create instance of driver");
+}
 
 Properties p = new Properties();
 
+if ((userid == void) || (userid == null)) {
+	userid = "";
+}
+
 p.setProperty("user", userid);
 
-if ((password == void) || (passsword == null)) {
+if ((password == void) || (password == null)) {
 	password = "";
 }
 
 p.setProperty("password", password);
 
-try {
-	Connection con = d.connect(url, p);
-	PreparedStatement ps = con.prepareStatement(sql);
+Connection con = null;
+PreparedStatement ps = null;
 
-	for (int i = 0; i &lt; params.size(); i++) {
+try {
+	con = d.connect(url, p);
+	ps = con.prepareStatement(sql);
+
+	int paramsSize = params.size();
+	for (int i = 0; i < paramsSize; i++) {
 		ps.setObject(i + 1, params.get(i));
 	}
 
@@ -65,7 +72,7 @@ finally {
 	if (ps != null) {
 		ps.close();
 	}
-	if (con != null) }
+	if (con != null) {
 		con.close();
 	}
 }
