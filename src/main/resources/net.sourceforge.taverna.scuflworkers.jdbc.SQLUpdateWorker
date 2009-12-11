@@ -30,7 +30,7 @@ if ((sql == void) || (sql == null) || sql.equals("")) {
 Class c = Thread.currentThread().getContextClassLoader().loadClass(driver);
 
 if (c == null) {
-	throw new RuntimeExcecption("Class " + driver + " not found");
+	throw new RuntimeException("Class " + driver + " not found");
 }
 
 Driver d = c.newInstance();
@@ -76,6 +76,7 @@ finally {
 		con.close();
 	}
 }
+
 </script>
 
   <dependencies />

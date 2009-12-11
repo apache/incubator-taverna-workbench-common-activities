@@ -1,7 +1,7 @@
 <activity  xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap><map from="password" to="password" /><map from="userid" to="userid" /><map from="params" to="params" /><map from="url" to="url" /><map from="provideXml" to="provideXml" /><map from="driver" to="driver" /><map from="sql" to="sql" /></inputMap><outputMap><map from="resultList" to="resultList" /><map from="xmlresults" to="xmlresults" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
 
   <script>
-  import java.sql.Driver;
+ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,7 +35,7 @@ if ((sql == void) || (sql == null) || sql.equals("")) {
 Class c = Thread.currentThread().getContextClassLoader().loadClass(driver);
 
 if (c == null) {
-	throw new RuntimeExcecption("Class " + driver + " not found");
+	throw new RuntimeException("Class " + driver + " not found");
 }
 
 Driver d = c.newInstance();
@@ -113,6 +113,7 @@ finally {
 	}
 }
   
+
  </script>
 
   <dependencies />
