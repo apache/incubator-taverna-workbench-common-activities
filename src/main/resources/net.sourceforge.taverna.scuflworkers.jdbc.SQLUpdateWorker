@@ -4,12 +4,6 @@
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-
-import javax.sql.rowset.WebRowSet;
-
-import com.sun.rowset.WebRowSetImpl;
 
 if ((driver == void) || (driver == null) || driver.equals("")) {
 	throw new RuntimeException("The driver must be specified");
