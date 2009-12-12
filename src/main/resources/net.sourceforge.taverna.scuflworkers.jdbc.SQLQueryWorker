@@ -22,7 +22,7 @@ if ((url == void) || (url == null) || url.equals("")) {
 	throw new RuntimeException("The url must be specified");
 }
 
-boolean provideXmlBoolean = ((provideXml != void) && (provideXml != null) && Boolean.valueOf(provideXml));
+boolean provideXmlBoolean = ((provideXml != void) &amp;&amp; (provideXml != null) &amp;&amp; Boolean.valueOf(provideXml));
 
 if ((params == void) || (params == null)) {
    params = new ArrayList();
