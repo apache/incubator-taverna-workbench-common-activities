@@ -74,8 +74,8 @@ public class WSDLServiceProvider extends
 						"http://eutils.ncbi.nlm.nih.gov/entrez/eutils/soap/eutils.wsdl"));
 		defaults.add(new WSDLServiceProviderConfig(
 				"http://soap.bind.ca/wsdl/bind.wsdl"));
-		defaults.add(new WSDLServiceProviderConfig(
-				"http://www.ebi.ac.uk/ws/services/urn:Dbfetch?wsdl"));
+		//		defaults.add(new WSDLServiceProviderConfig(
+		//				"http://www.ebi.ac.uk/ws/services/urn:Dbfetch?wsdl"));
 		return defaults;
 	}
 
