@@ -71,9 +71,9 @@ public class WSDLServiceProvider extends
 				"http://soap.genome.jp/KEGG.wsdl"));
 		
 		// 2009-12-16: 503 server error
-//		defaults
-//				.add(new WSDLServiceProviderConfig(
-//						"http://eutils.ncbi.nlm.nih.gov/entrez/eutils/soap/eutils.wsdl"));
+		defaults
+				.add(new WSDLServiceProviderConfig(
+						"http://eutils.ncbi.nlm.nih.gov/entrez/eutils/soap/eutils.wsdl"));
 		
 		defaults.add(new WSDLServiceProviderConfig(
 				"http://soap.bind.ca/wsdl/bind.wsdl"));

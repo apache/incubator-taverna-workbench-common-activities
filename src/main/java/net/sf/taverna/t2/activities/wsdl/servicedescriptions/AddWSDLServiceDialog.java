@@ -112,42 +112,54 @@ public abstract class AddWSDLServiceDialog extends JDialog {
      */
     private void addPressed()
     {
-    	
-    	String wsdlURLString = wsdlLocationField.getText();
-    	   	
-    	// Only add the service provider for this service if service URL starts with 'http' 
-    	// or if it starts with 'https' and user explicitly said they wanted to trust this service.
-    	/*if (shouldTrust(wsdlURLString)){
-    		addRegistry(wsdlURLString);
-    	} */
-		try {
-			URL url = new URL(wsdlURLString);
-			URLConnection connection = url.openConnection();
-			try {
-			// If the url starts with 'https' - security hook for https connection's trust manager
-			// will be engaged and user will be asked automatically if they want 
-			// to trust the connection (if it is not already trusted). If the urls starts with 'http' - 
-			// this will not have any effect apart from checking if we can open a connection. 
-				connection.connect(); // if this does not fail - add the WSDL
-									// service provider for this service to
-									// the registry
-			} finally {
+		final String wsdlURLString = wsdlLocationField.getText();
+		new Thread("Adding WSDL " + wsdlURLString) {
+			public void run() {
+				// Only add the service provider for this service if service URL
+				// starts with 'http'
+				// or if it starts with 'https' and user explicitly said they
+				// wanted to trust this service.
+				/*
+				 * if (shouldTrust(wsdlURLString)){ addRegistry(wsdlURLString);
+				 * }
+				 */
 				try {
-					connection.getInputStream().close();
-				} catch (IOException ex) {
+					URL url = new URL(wsdlURLString);
+					URLConnection connection = url.openConnection();
+					try {
+						// If the url starts with 'https' - security hook for
+						// https connection's trust manager
+						// will be engaged and user will be asked automatically
+						// if they want
+						// to trust the connection (if it is not already
+						// trusted). If the urls starts with 'http' -
+						// this will not have any effect apart from checking if
+						// we can open a connection.
+						connection.connect(); // if this does not fail - add the
+						// WSDL
+						// service provider for this service to
+						// the registry
+					} finally {
+						try {
+							connection.getInputStream().close();
+						} catch (IOException ex) {
+						}
+					}
+					addRegistry(wsdlURLString);
+				} catch (Exception ex) { // anything failed
+					JOptionPane.showMessageDialog(null,
+							"Could not read the WSDL definition from "
+									+ wsdlURLString + ":\n" + ex,
+							"Could not add WSDL service",
+							JOptionPane.ERROR_MESSAGE);
+
+					logger.error(
+							"Failed to add WSDL service provider for service: "
+									+ wsdlURLString, ex);
+
 				}
-			}
-			addRegistry(wsdlURLString);
-		} catch (Exception ex) { // anything failed
-			JOptionPane.showMessageDialog(this,
-					"Could not read the WSDL definition from " + wsdlURLString
-							+ ":\n" + ex,
-					"Could not add WSDL service", JOptionPane.ERROR_MESSAGE);
-
-			logger.error("Failed to add WSDL service provider for service: "
-					+ wsdlURLString, ex);
-
-		}
+			};
+		}.start();
 		closeDialog();
     }
 
