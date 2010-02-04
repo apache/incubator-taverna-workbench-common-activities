@@ -1017,6 +1017,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 				result = false;
 			} else if (!name.matches(VALID_NAME_REGEX)){
 				text += "Input port name " + name + " is invalid\n";
+				result = false;
 			} else {
 				inputPortNames.add(name);
 			}
@@ -1029,6 +1030,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 				result = false;
 			} else if (!name.matches(VALID_NAME_REGEX)){
 				text += "Output port name " + name + " is invalid\n";
+				result = false;
 			} else {
 				outputPortNames.add(name);
 			}
