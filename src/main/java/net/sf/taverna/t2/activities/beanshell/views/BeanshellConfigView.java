@@ -101,6 +101,9 @@ import org.syntax.jedit.tokenmarker.JavaTokenMarker;
 @SuppressWarnings("serial")
 public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellActivity, BeanshellActivityConfigurationBean> {
 
+	private static final String VALID_NAME_REGEX = "[\\p{L}\\p{Digit}_]+";
+
+
 	private static Logger logger = Logger.getLogger(BeanshellConfigView.class);
 
 	
@@ -1012,6 +1015,8 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 			if (inputPortNames.contains(name)) {
 				text += "Two input ports have the name " + name + "\n";
 				result = false;
+			} else if (!name.matches(VALID_NAME_REGEX)){
+				text += "Input port name " + name + " is invalid\n";
 			} else {
 				inputPortNames.add(name);
 			}
@@ -1019,13 +1024,11 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		Set<String> outputPortNames = new HashSet<String>();
 		for (BeanshellOutputViewer v : outputViewList) {
 			String name = v.getNameField().getText();
-			if (inputPortNames.contains(name)) {
-				text += "An input and an output port are named " + name + "\n";
-				result = false;
-			}
 			if (outputPortNames.contains(name)) {
 				text += "Two output ports have the name " + name + "\n";
 				result = false;
+			} else if (!name.matches(VALID_NAME_REGEX)){
+				text += "Output port name " + name + " is invalid\n";
 			} else {
 				outputPortNames.add(name);
 			}
