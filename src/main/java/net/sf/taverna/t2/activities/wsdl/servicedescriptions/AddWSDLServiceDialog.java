@@ -28,6 +28,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -88,7 +89,7 @@ public abstract class AddWSDLServiceDialog extends JDialog {
 		gbc.insets = new Insets(5, 10, 0, 5);		
 		mainPanel.add(wsdlLocationField, gbc);
 		
-	    JButton addServiceButton = new JButton("Add");
+	    final JButton addServiceButton = new JButton("Add");
 	    addServiceButton.addActionListener(new ActionListener()
 	        {
 	            public void actionPerformed(ActionEvent evt)
@@ -96,6 +97,17 @@ public abstract class AddWSDLServiceDialog extends JDialog {
 	                addPressed();
 	            }
 	        });
+	    
+	    // When user presses "Return" key fire the action on the "Add" button
+	    addServiceButton.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(java.awt.event.KeyEvent evt) {
+				if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+					addPressed();
+				}
+			}
+		});
+		getRootPane().setDefaultButton(addServiceButton);
+	    
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonsPanel.add(addServiceButton);
         
