@@ -73,6 +73,8 @@ public class WSDLActivityConfigurationView extends JDialog implements ItemListen
 	private ButtonGroup buttonGroup;
 	private JRadioButton noSecurityRadioButton;
 	private JLabel noSecurityLabel;
+	private JRadioButton httpSecurityAuthNRadioButton;
+	private JLabel httpSecurityAuthNLabel;
 	private JRadioButton wsSecurityAuthNRadioButton;
 	private JLabel wsSecurityAuthNLabel;
 
@@ -84,7 +86,8 @@ public class WSDLActivityConfigurationView extends JDialog implements ItemListen
 			"Password will be digested (cryptographically hashed) before sending"};
 	private JComboBox passwordTypeComboBox;
 	private JCheckBox addTimestampCheckBox;
-	private JButton setUsernamePasswordButton;
+	private JButton setHttpUsernamePasswordButton;
+	private JButton setWsdlUsernamePasswordButton;
 		
 	//private  Logger logger = Logger.getLogger(WSDLActivityConfigurationView.class);
 
@@ -117,6 +120,8 @@ public class WSDLActivityConfigurationView extends JDialog implements ItemListen
 
 	private void initComponents() {
 		
+		int gridy = 0;
+		
 		// title panel
 		JPanel titlePanel = new JPanel(new BorderLayout());
 		titlePanel.setBackground(Color.WHITE);
@@ -145,17 +150,21 @@ public class WSDLActivityConfigurationView extends JDialog implements ItemListen
 	    wsSecurityAuthNRadioButton = new JRadioButton("WS-Security username and password authentication");
 	    wsSecurityAuthNRadioButton.addItemListener(this);
 	    
+	    httpSecurityAuthNRadioButton = new JRadioButton("HTTP username and password authentication");
+	    httpSecurityAuthNRadioButton.addItemListener(this);
+	    
 	    //Group the radio buttons
 	    buttonGroup = new ButtonGroup();
 	    buttonGroup.add(noSecurityRadioButton);
 	    buttonGroup.add(wsSecurityAuthNRadioButton);
+	    buttonGroup.add(httpSecurityAuthNRadioButton);
 			
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.0;
 		
 		gbc.gridx = 0;
-		gbc.gridy = 0;
+		gbc.gridy = gridy++;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 10, 0, 0);
@@ -163,25 +172,64 @@ public class WSDLActivityConfigurationView extends JDialog implements ItemListen
 		
 	    noSecurityLabel = new JLabel("Service requires no security");
 	    noSecurityLabel.setFont(noSecurityLabel.getFont().deriveFont(11f));
-		addDivider(noSecurityLabel, SwingConstants.BOTTOM, false);
+//		addDivider(noSecurityLabel, SwingConstants.BOTTOM, false);
 		gbc.gridx = 0;
-		gbc.gridy = 1;
+		gbc.gridy = gridy++;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(0, 40, 10, 10);
 		mainPanel.add(noSecurityLabel, gbc);
 		
 		gbc.gridx = 0;
-		gbc.gridy = 2;
+		gbc.gridy = gridy++;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets = new Insets(5, 10, 0, 0);
+		mainPanel.add(httpSecurityAuthNRadioButton, gbc);
+		
+		ActionListener usernamePasswordListener = new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+
+				// Get Credential Manager UI to get the username and password for the service
+				CredentialManagerUI credManagerUI = CredentialManagerUI.getInstance();
+				if (credManagerUI != null)
+					credManagerUI.newPasswordForService(oldBean.getWsdl());
+			}
+		};
+		
+	    httpSecurityAuthNLabel = new JLabel("Service requires HTTP username and password in order to authenticate the user");
+	    httpSecurityAuthNLabel.setFont(httpSecurityAuthNLabel.getFont().deriveFont(11f));
+		gbc.gridx = 0;
+		gbc.gridy = gridy++;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets = new Insets(0, 40, 10, 10);
+		mainPanel.add(httpSecurityAuthNLabel, gbc);
+		
+		// Set username and password button;
+		setHttpUsernamePasswordButton = new JButton("Set username and password");
+		gbc.gridx = 0;
+		gbc.gridy = gridy++;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.anchor = GridBagConstraints.EAST;
+		gbc.insets = new Insets(0, 40, 10, 10);
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0; // add any vertical space to this component
+		mainPanel.add(setHttpUsernamePasswordButton, gbc);
+		setHttpUsernamePasswordButton.addActionListener(usernamePasswordListener);
+		
+		gbc.gridx = 0;
+		gbc.gridy = gridy++;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 10, 0, 0);
 		mainPanel.add(wsSecurityAuthNRadioButton, gbc);
 		
-	    wsSecurityAuthNLabel = new JLabel("Service requires WS-Security username and password token in order to authenticate the user");
+	    wsSecurityAuthNLabel = new JLabel("Service requires WS-Security username and password in order to authenticate the user");
 	    wsSecurityAuthNLabel.setFont(wsSecurityAuthNLabel.getFont().deriveFont(11f));
 		gbc.gridx = 0;
-		gbc.gridy = 3;
+		gbc.gridy = gridy++;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(0, 40, 0, 0);
@@ -191,7 +239,7 @@ public class WSDLActivityConfigurationView extends JDialog implements ItemListen
 		passwordTypeComboBox = new JComboBox(passwordTypes);
 		passwordTypeComboBox.setRenderer(new ComboBoxTooltipRenderer());
 		gbc.gridx = 0;
-		gbc.gridy = 4;
+		gbc.gridy = gridy++;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(10, 40, 0, 0);
@@ -200,32 +248,23 @@ public class WSDLActivityConfigurationView extends JDialog implements ItemListen
 		// 'Add timestamp' checkbox
 		addTimestampCheckBox = new JCheckBox("Add a timestamp to SOAP message");
 		gbc.gridx = 0;
-		gbc.gridy = 5;
+		gbc.gridy = gridy++;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(5, 40, 0, 0);
+		gbc.insets = new Insets(5, 40, 10, 10);
 		mainPanel.add(addTimestampCheckBox, gbc);
 
-		// Set username and password button
-		setUsernamePasswordButton = new JButton("Set username and password");
+		// Set username and password button;
+		setWsdlUsernamePasswordButton = new JButton("Set username and password");
 		gbc.gridx = 0;
-		gbc.gridy = 6;
+		gbc.gridy = gridy++;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.EAST;
-		gbc.insets = new Insets(0, 10, 0, 10);
+		gbc.insets = new Insets(0, 40, 10, 10);
 		gbc.weightx = 1.0;
 		gbc.weighty = 1.0; // add any vertical space to this component
-		mainPanel.add(setUsernamePasswordButton, gbc);
-		setUsernamePasswordButton.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-
-				// Get Credential Manager UI to get the username and password for the service
-				CredentialManagerUI credManagerUI = CredentialManagerUI.getInstance();
-				if (credManagerUI != null)
-					credManagerUI.newPasswordForService(oldBean.getWsdl());
-			}
-		});
+		mainPanel.add(setWsdlUsernamePasswordButton, gbc);
+		setWsdlUsernamePasswordButton.addActionListener(usernamePasswordListener);
 		
 		addDivider(mainPanel, SwingConstants.BOTTOM, true);	
 		
@@ -247,26 +286,31 @@ public class WSDLActivityConfigurationView extends JDialog implements ItemListen
 		okCancelPanel.add(okButton);
 		
 		// Enable/disable controls based on what is the current security profiles
-	    if (oldBean.getSecurityProfile() == null){
+	    String securityProfile = oldBean.getSecurityProfile();
+		if (securityProfile == null){
 	    	noSecurityRadioButton.setSelected(true);
 	    }
 	    else{
-		    if (oldBean.getSecurityProfile().equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_PLAINTEXTPASSWORD) ||
-		    		oldBean.getSecurityProfile().equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_DIGESTPASSWORD) ||
-		    		oldBean.getSecurityProfile().equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_PLAINTEXTPASSWORD) ||
-		    		oldBean.getSecurityProfile().equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_DIGESTPASSWORD) ){
+		    if (securityProfile.equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_PLAINTEXTPASSWORD) ||
+		    		securityProfile.equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_DIGESTPASSWORD) ||
+		    		securityProfile.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_PLAINTEXTPASSWORD) ||
+		    		securityProfile.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_DIGESTPASSWORD) ){
 		    	wsSecurityAuthNRadioButton.setSelected(true);
 		    }
-		    if (oldBean.getSecurityProfile().equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_PLAINTEXTPASSWORD) ||
-		    		oldBean.getSecurityProfile().equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_PLAINTEXTPASSWORD)){
+		    if (securityProfile.equals(SecurityProfiles.HTTP_BASIC_AUTHN) ||
+		    		securityProfile.equals(SecurityProfiles.HTTP_DIGEST_AUTHN)) {
+		    	httpSecurityAuthNRadioButton.setSelected(true);
+		    }
+		    if (securityProfile.equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_PLAINTEXTPASSWORD) ||
+		    		securityProfile.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_PLAINTEXTPASSWORD)){
 		    	passwordTypeComboBox.setSelectedItem(PLAINTEXT_PASSWORD);
 		    }
-		    else if (oldBean.getSecurityProfile().equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_DIGESTPASSWORD) ||
-		    		oldBean.getSecurityProfile().equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_DIGESTPASSWORD)){
+		    else if (securityProfile.equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_DIGESTPASSWORD) ||
+		    		securityProfile.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_DIGESTPASSWORD)){
 		    	passwordTypeComboBox.setSelectedItem(DIGEST_PASSWORD);
 		    }
-		    if (oldBean.getSecurityProfile().equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_DIGESTPASSWORD) ||
-		    		oldBean.getSecurityProfile().equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_PLAINTEXTPASSWORD)){
+		    if (securityProfile.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_DIGESTPASSWORD) ||
+		    		securityProfile.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_PLAINTEXTPASSWORD)){
 		    	addTimestampCheckBox.setSelected(true);
 		    }
 		    else {
@@ -289,6 +333,9 @@ public class WSDLActivityConfigurationView extends JDialog implements ItemListen
 
 		if (noSecurityRadioButton.isSelected()){
 			newBean.setSecurityProfile(null); // no security required
+		}
+		else if (httpSecurityAuthNRadioButton.isSelected()) {
+				newBean.setSecurityProfile(SecurityProfiles.HTTP_BASIC_AUTHN);
 		}
 		else if (wsSecurityAuthNRadioButton.isSelected()){ // plaintext password
 			if (passwordTypeComboBox.getSelectedItem().equals(PLAINTEXT_PASSWORD)){
@@ -333,19 +380,31 @@ public class WSDLActivityConfigurationView extends JDialog implements ItemListen
 	      
 		Object source = e.getItemSelectable();
 		if (source == noSecurityRadioButton) {
+			httpSecurityAuthNLabel.setEnabled(false);
 			wsSecurityAuthNLabel.setEnabled(false);
 			passwordTypeComboBox.setEnabled(false);
-			setUsernamePasswordButton.setEnabled(false);
+			setHttpUsernamePasswordButton.setEnabled(false);
+			setWsdlUsernamePasswordButton.setEnabled(false);
 			addTimestampCheckBox.setEnabled(false);
 			
 			noSecurityLabel.setEnabled(true);
 		}
+		else if (source == httpSecurityAuthNRadioButton) {
+			noSecurityLabel.setEnabled(false);
+			httpSecurityAuthNLabel.setEnabled(true);
+			wsSecurityAuthNLabel.setEnabled(false);
+			passwordTypeComboBox.setEnabled(false);
+			setHttpUsernamePasswordButton.setEnabled(true);
+			setWsdlUsernamePasswordButton.setEnabled(false);
+			addTimestampCheckBox.setEnabled(false);
+		}
 		else if (source == wsSecurityAuthNRadioButton) {
 			noSecurityLabel.setEnabled(false);
-			
+			httpSecurityAuthNLabel.setEnabled(false);			
 			wsSecurityAuthNLabel.setEnabled(true);
 			passwordTypeComboBox.setEnabled(true);
-			setUsernamePasswordButton.setEnabled(true);
+			setHttpUsernamePasswordButton.setEnabled(false);
+			setWsdlUsernamePasswordButton.setEnabled(true);
 			addTimestampCheckBox.setEnabled(true);
 		}
 	}
