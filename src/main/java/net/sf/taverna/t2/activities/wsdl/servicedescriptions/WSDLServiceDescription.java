@@ -29,8 +29,12 @@ import javax.swing.Icon;
 
 import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
 import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
+import net.sf.taverna.t2.security.credentialmanager.CMException;
+import net.sf.taverna.t2.security.credentialmanager.CredentialManager;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
+
+import org.apache.log4j.Logger;
 
 public class WSDLServiceDescription extends
 		ServiceDescription<WSDLActivityConfigurationBean> {
@@ -41,6 +45,8 @@ public class WSDLServiceDescription extends
 	private URI uri;
 	private String style;
 	private String operation;
+
+	private static Logger logger = Logger.getLogger(WSDLServiceDescription.class);
 
 	public String getUse() {
 		return use;
@@ -110,5 +116,26 @@ public class WSDLServiceDescription extends
 	protected List<Object> getIdentifyingData() {
 		return Arrays.<Object> asList(getURI(), getOperation());
 	}
+	
+	@Override
+	public boolean isTemplateService() {
+		return needsSecurity();
+	}
+
+	protected boolean needsSecurity() {
+		CredentialManager credMan = CredentialManager.getInstanceIfInitialized();
+		if (credMan == null) {
+			// We don't know if it needs security or not
+			return false;
+		}
+		// A match is a good indicator that security configuration is needed 
+		try {
+			return credMan.hasUsernamePasswordForService(getURI());
+		} catch (CMException e) {
+			logger.warn("Could not check if credential manager has username/password for " + getURI(), e);
+			return false;
+		}		
+	}
+
 
 }
