@@ -1,5 +1,7 @@
 package net.sf.taverna.t2.activities.beanshell.servicedescriptions;
 
+import java.net.URI;
+
 import javax.swing.Icon;
 
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
@@ -11,6 +13,9 @@ public class BeanshellTemplateService extends
 		AbstractTemplateService<BeanshellActivityConfigurationBean> {
 
 	private static final String BEANSHELL = "Beanshell";
+	
+	private static final URI providerId = URI
+	.create("http://taverna.sf.net/2010/service-provider/beanshell");
 
 	public String getName() {
 		return BEANSHELL;
@@ -36,8 +41,13 @@ public class BeanshellTemplateService extends
 		return "A service that allows Beanshell scripts, with dependencies on libraries";	
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static ServiceDescription getServiceDescription() {
 		BeanshellTemplateService bts = new BeanshellTemplateService();
 		return bts.templateService;
+	}
+
+	public String getId() {
+		return providerId.toString();
 	}
 }
