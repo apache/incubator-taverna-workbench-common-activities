@@ -20,7 +20,7 @@
  ******************************************************************************/
 package net.sf.taverna.t2.activities.spreadsheet.servicedescriptions;
 
-import java.awt.Color;
+import java.net.URI;
 
 import javax.swing.Icon;
 
@@ -29,7 +29,6 @@ import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportConfiguration;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
 import net.sf.taverna.t2.servicedescriptions.AbstractTemplateService;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
-import net.sf.taverna.t2.workbench.ui.impl.configuration.colour.ColourManager;
 
 /**
  * Definition of the SpreadsheetImport spreadsheet import template service.
@@ -42,6 +41,9 @@ public class SpreadsheetImportTemplateService extends
 	private static final String SERVICE_NAME = SpreadsheetImportUIText
 			.getString("SpreadsheetImportTemplateService.serviceName");
 
+	private static final URI providerId = URI
+	.create("http://taverna.sf.net/2010/service-provider/spreadsheet");
+	
 	public String getName() {
 		return SERVICE_NAME;
 	}
@@ -70,5 +72,9 @@ public class SpreadsheetImportTemplateService extends
 	public static ServiceDescription<SpreadsheetImportConfiguration> getServiceDescription() {
 		SpreadsheetImportTemplateService bts = new SpreadsheetImportTemplateService();
 		return bts.templateService;
+	}
+
+	public String getId() {
+		return providerId.toString();
 	}
 }
