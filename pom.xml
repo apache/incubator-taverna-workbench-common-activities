@@ -21,6 +21,11 @@
 			<version>${t2.ui.api.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>net.sf.taverna.t2.ui-impl</groupId>
+			<artifactId>activity-palette-impl</artifactId>
+			<version>${t2.ui.impl.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>net.sf.taverna.t2.activities</groupId>
 			<artifactId>wsdl-activity</artifactId>
 			<version>${t2.activities.version}</version>
@@ -55,14 +60,13 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>net.sf.taverna.t2.ui-impl</groupId>
 			<artifactId>activity-palette-impl</artifactId>
 			<version>${t2.ui.impl.version}</version>
 			<scope>test</scope>
-		</dependency>
+		</dependency>-->
 		
-
 		<!--  testing dependencies -->
 	</dependencies>
 </project>

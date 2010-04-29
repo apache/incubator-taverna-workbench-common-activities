@@ -18,6 +18,7 @@ import net.sf.taverna.t2.servicedescriptions.CustomizedConfigurePanelProvider;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.servicedescriptions.events.RemovedProviderEvent;
 import net.sf.taverna.t2.servicedescriptions.events.ServiceDescriptionRegistryEvent;
+import net.sf.taverna.t2.servicedescriptions.impl.ServiceDescriptionRegistryImpl;
 import net.sf.taverna.wsdl.parser.UnknownOperationException;
 import net.sf.taverna.wsdl.parser.WSDLParser;
 
@@ -30,6 +31,9 @@ public class WSDLServiceProvider extends
 
 	private static Logger logger = Logger.getLogger(WSDLServiceProvider.class);
 
+	private static final URI providerId = URI
+	.create("http://taverna.sf.net/2010/service-provider/wsdl");
+	
 	public static class FlushWSDLCacheOnRemovalObserver implements
 			Observer<ServiceDescriptionRegistryEvent> {
 		public void notify(
@@ -63,22 +67,25 @@ public class WSDLServiceProvider extends
 	}
 
 	public List<WSDLServiceProviderConfig> getDefaultConfigurations() {
+		
 		List<WSDLServiceProviderConfig> defaults = new ArrayList<WSDLServiceProviderConfig>();
-		// TODO: Defaults should come from a config/resource file
-		defaults.add(new WSDLServiceProviderConfig(
-				"http://www.ebi.ac.uk/xembl/XEMBL.wsdl"));
-		defaults.add(new WSDLServiceProviderConfig(
-				"http://soap.genome.jp/KEGG.wsdl"));
 		
-		// 2009-12-16: 503 server error
-		defaults
-				.add(new WSDLServiceProviderConfig(
-						"http://eutils.ncbi.nlm.nih.gov/entrez/eutils/soap/eutils.wsdl"));
+		ServiceDescriptionRegistryImpl serviceRegistry = ServiceDescriptionRegistryImpl.getInstance();
+		// If defaults have failed to load from a configuration file then load them here.
+		if (!serviceRegistry.isDefaultSystemConfigurableProvidersLoaded()){
+			defaults.add(new WSDLServiceProviderConfig(
+					"http://www.ebi.ac.uk/xembl/XEMBL.wsdl"));
+			defaults.add(new WSDLServiceProviderConfig(
+					"http://soap.genome.jp/KEGG.wsdl"));
+			// 2009-12-16: 503 server error
+			defaults.add(new WSDLServiceProviderConfig(
+							"http://eutils.ncbi.nlm.nih.gov/entrez/eutils/soap/eutils.wsdl"));
+			defaults.add(new WSDLServiceProviderConfig(
+					"http://soap.bind.ca/wsdl/bind.wsdl"));
+			defaults.add(new WSDLServiceProviderConfig(
+					"http://www.ebi.ac.uk/ws/services/urn:Dbfetch?wsdl"));
+		} // else return an empty list
 		
-		defaults.add(new WSDLServiceProviderConfig(
-				"http://soap.bind.ca/wsdl/bind.wsdl"));
-		defaults.add(new WSDLServiceProviderConfig(
-				"http://www.ebi.ac.uk/ws/services/urn:Dbfetch?wsdl"));
 		return defaults;
 	}
 
@@ -181,6 +188,10 @@ public class WSDLServiceProvider extends
 			};
 			addWSDLServiceDialog.setLocationRelativeTo(null);
 			addWSDLServiceDialog.setVisible(true);		
+	}
+
+	public String getId() {
+		return providerId.toString();
 	}
 
 	
