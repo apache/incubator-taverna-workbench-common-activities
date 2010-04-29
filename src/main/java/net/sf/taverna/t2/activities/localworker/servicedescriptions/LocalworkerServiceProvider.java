@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -14,7 +15,6 @@ import javax.swing.Icon;
 
 import net.sf.taverna.raven.repository.BasicArtifact;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
-import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
@@ -37,6 +37,9 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 
 	private static Logger logger = Logger.getLogger(Logger.class);
 
+	private static final URI providerId = URI
+	.create("http://taverna.sf.net/2010/service-provider/localworker");
+	
 	/** Used to deserialize the Activities stored on disk */
 	private ActivityXMLDeserializer deserializer = ActivityXMLDeserializer.getInstance();;
 
@@ -252,7 +255,7 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 	 * {@link Activity}. Create the {@link LocalworkerActivityItem} by
 	 * populating them with the correct ports and depths. Sets the category to
 	 * match the T1 version so that a query by category will split the local
-	 * workers in to the correct place
+	 * workers in to the correct place.
 	 */
 	public void findServiceDescriptionsAsync(FindServiceDescriptionsCallBack callBack) {
 
@@ -422,8 +425,11 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 	}
 	
 	public static String getServiceNameFromClassname(String classname) {
-		String result = null;
 		return (localWorkerToScript.get(classname));
+	}
+
+	public String getId() {
+		return providerId.toString();
 	}
 
 }
