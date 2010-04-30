@@ -41,6 +41,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import net.sf.taverna.t2.workbench.ui.impl.Workbench;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -59,9 +61,9 @@ public abstract class AddWSDLServiceDialog extends JDialog {
 	private Logger logger = Logger.getLogger(AddWSDLServiceDialog.class);
 
 	public AddWSDLServiceDialog()  {
-		super((Frame) null, "Add WSDL service", true, null); // create a non-modal dialog
+		super(Workbench.getInstance(), "Add WSDL service", true, null); // create a non-modal dialog
 		initComponents();
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(getParent());
 	}
 
 	private void initComponents() {
