@@ -19,7 +19,6 @@ import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.servicedescriptions.events.RemovedProviderEvent;
 import net.sf.taverna.t2.servicedescriptions.events.ServiceDescriptionRegistryEvent;
 import net.sf.taverna.t2.servicedescriptions.impl.ServiceDescriptionRegistryImpl;
-import net.sf.taverna.t2.workbench.ui.impl.Workbench;
 import net.sf.taverna.wsdl.parser.UnknownOperationException;
 import net.sf.taverna.wsdl.parser.WSDLParser;
 
