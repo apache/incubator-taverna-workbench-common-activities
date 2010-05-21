@@ -32,6 +32,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -68,10 +69,14 @@ import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity.ClassLoaderSharing;
 import net.sf.taverna.t2.lang.ui.FileTools;
+import net.sf.taverna.t2.lang.ui.LineEnabledTextPanel;
 import net.sf.taverna.t2.reference.ExternalReferenceSPI;
+import net.sf.taverna.t2.visit.VisitReport;
+import net.sf.taverna.t2.visit.VisitReport.Status;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
 import net.sf.taverna.t2.workflowmodel.OutputPort;
 import net.sf.taverna.t2.workflowmodel.Port;
+import net.sf.taverna.t2.workflowmodel.health.HealthCheck;
 import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityInputPort;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
@@ -79,6 +84,9 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputP
 import org.apache.log4j.Logger;
 import org.syntax.jedit.JEditTextArea;
 import org.syntax.jedit.tokenmarker.JavaTokenMarker;
+
+import bsh.ParseException;
+import bsh.Parser;
 
 /**
  * Provides the configurable view for a {@link BeanshellActivity} through it's
@@ -301,7 +309,22 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		scriptText.setTokenMarker(new JavaTokenMarker());
 		scriptText.setCaretPosition(0);
 		scriptText.setPreferredSize(new Dimension(0, 0));
-		scriptEditPanel.add(new JScrollPane(scriptText), BorderLayout.CENTER);
+		scriptEditPanel.add(new LineEnabledTextPanel(scriptText), BorderLayout.CENTER);
+		final JButton checkScriptButton = new JButton("Check script");
+		checkScriptButton.setToolTipText("Check the beanshell script");
+		checkScriptButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent ex) {
+				Parser parser = new Parser(new StringReader(scriptText.getText()));
+				try {
+					while (!parser.Line());
+					JOptionPane.showMessageDialog(BeanshellConfigView.this, "Beanshell service script parsed OK", "Beanshell script check", JOptionPane.INFORMATION_MESSAGE);
+				} catch (ParseException e) {
+					JOptionPane.showMessageDialog(BeanshellConfigView.this, e.getMessage(), "Beanshell script check", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			
+		});
 		JButton loadScriptButton = new JButton("Load script");
 		loadScriptButton.setToolTipText("Load a beanshell script from a file");
 		loadScriptButton.addActionListener(new ActionListener() {
@@ -334,12 +357,13 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
+		buttonPanel.add(checkScriptButton);
 		buttonPanel.add(loadScriptButton);
 		buttonPanel.add(saveRScriptButton);
 		buttonPanel.add(clearScriptButton);
 		
 		scriptEditPanel.add(buttonPanel, BorderLayout.SOUTH);
-		setPreferredSize(new Dimension(500,500));
+		setPreferredSize(new Dimension(600,500));
 		inputsChanged = false;
 		outputsChanged = false;
 		this.validate();

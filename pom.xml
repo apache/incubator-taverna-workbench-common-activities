@@ -72,6 +72,11 @@
 			<version>2.2.2-taverna-2008-11-28</version>
 		</dependency>
 		<dependency>
+	<groupId>net.sf.taverna.t2.lang</groupId>
+	<artifactId>ui</artifactId>
+		<version>${t2.lang.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
