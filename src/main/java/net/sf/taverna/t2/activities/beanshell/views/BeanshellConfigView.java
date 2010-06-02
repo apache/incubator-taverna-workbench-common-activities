@@ -244,9 +244,6 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 			
 			newConfiguration.setClassLoaderSharing(classLoaderSharing);
 			newConfiguration.setLocalDependencies(localDependencies);
-			for (String s : newConfiguration.getLocalDependencies()) {
-			    System.err.println("New config has " + s);
-			}
 			newConfiguration.setArtifactDependencies(new LinkedHashSet<BasicArtifact>());
 			configuration = newConfiguration;
 			inputsChanged = false;
@@ -550,7 +547,6 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 						JCheckBox box = (JCheckBox) e.getSource();
 						if (e.getStateChange() == ItemEvent.SELECTED) {
 							localDependencies.add(box.getText());
-							System.err.println("Added " + box.getText());
 						} else if (e.getStateChange() == ItemEvent.DESELECTED) {
 							localDependencies.remove(box.getText());
 						}
