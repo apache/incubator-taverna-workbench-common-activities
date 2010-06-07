@@ -41,6 +41,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import net.sf.taverna.t2.workbench.MainWindow;
+import net.sf.taverna.t2.workbench.helper.HelpEnabledDialog;
 
 import org.apache.log4j.Logger;
 
@@ -54,7 +55,7 @@ import org.apache.log4j.Logger;
  *
  */
 @SuppressWarnings("serial")
-public abstract class AddWSDLServiceDialog extends JDialog {
+public abstract class AddWSDLServiceDialog extends HelpEnabledDialog {
 
 	private JTextField wsdlLocationField;
 	private Logger logger = Logger.getLogger(AddWSDLServiceDialog.class);

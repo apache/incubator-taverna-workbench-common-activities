@@ -56,6 +56,8 @@ import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
 import net.sf.taverna.t2.activities.wsdl.security.SecurityProfiles;
 import net.sf.taverna.t2.lang.ui.DialogTextArea;
+import net.sf.taverna.t2.workbench.MainWindow;
+import net.sf.taverna.t2.workbench.helper.HelpEnabledDialog;
 import net.sf.taverna.t2.workbench.ui.credentialmanager.CredentialManagerUI;
 
 /**
@@ -65,7 +67,7 @@ import net.sf.taverna.t2.workbench.ui.credentialmanager.CredentialManagerUI;
  *
  */
 @SuppressWarnings("serial")
-public class WSDLActivityConfigurationView extends JDialog implements ItemListener{
+public class WSDLActivityConfigurationView extends HelpEnabledDialog implements ItemListener{
 
 	private WSDLActivityConfigurationBean oldBean;
 	private WSDLActivityConfigurationBean newBean;
@@ -92,14 +94,14 @@ public class WSDLActivityConfigurationView extends JDialog implements ItemListen
 	//private  Logger logger = Logger.getLogger(WSDLActivityConfigurationView.class);
 
 	public WSDLActivityConfigurationView(WSDLActivityConfigurationBean bean){
-    	super((Frame)null, "Web service configuration", true); //create a modal dialog
+    	super(MainWindow.getMainWindow(), "Web service configuration", true, null); //create a modal dialog
     	this.oldBean = bean;
     	newBean = copy(oldBean);
     	initComponents();
 	}
 	
 	public WSDLActivityConfigurationView(Frame owner, WSDLActivityConfigurationBean bean){
-    	super(owner, "WSDL service configuration", true); //create a modal dialog
+    	super(owner, "WSDL service configuration", true, null); //create a modal dialog
     	this.oldBean = bean;
     	newBean = copy(oldBean);
     	initComponents();
