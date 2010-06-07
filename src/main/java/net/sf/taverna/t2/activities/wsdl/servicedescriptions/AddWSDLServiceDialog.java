@@ -40,7 +40,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import net.sf.taverna.t2.workbench.ui.impl.Workbench;
+import net.sf.taverna.t2.workbench.MainWindow;
 
 import org.apache.log4j.Logger;
 
@@ -60,7 +60,7 @@ public abstract class AddWSDLServiceDialog extends JDialog {
 	private Logger logger = Logger.getLogger(AddWSDLServiceDialog.class);
 
 	public AddWSDLServiceDialog()  {
-		super(Workbench.getInstance(), "Add WSDL service", true, null); // create a non-modal dialog
+		super(MainWindow.getMainWindow(), "Add WSDL service", true, null); // create a non-modal dialog
 		initComponents();
 		setLocationRelativeTo(getParent());
 	}
