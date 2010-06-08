@@ -66,6 +66,7 @@ import javax.swing.event.DocumentListener;
 import net.sf.taverna.raven.repository.BasicArtifact;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
+import net.sf.taverna.t2.activities.beanshell.BeanshellActivityHealthChecker;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity.ClassLoaderSharing;
 import net.sf.taverna.t2.lang.ui.FileTools;
@@ -77,6 +78,7 @@ import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityCon
 import net.sf.taverna.t2.workflowmodel.OutputPort;
 import net.sf.taverna.t2.workflowmodel.Port;
 import net.sf.taverna.t2.workflowmodel.health.HealthCheck;
+import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityConfigurationException;
 import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityInputPort;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
@@ -184,70 +186,74 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		initialise();
 	}
 
-	public void noteConfiguration() {
-			// Set the new configuration
-			List<ActivityInputPortDefinitionBean> inputBeanList = new ArrayList<ActivityInputPortDefinitionBean>();
-			for (BeanshellInputViewer inputView : inputViewList) {
-				ActivityInputPortDefinitionBean activityInputPortDefinitionBean = new ActivityInputPortDefinitionBean();
-				activityInputPortDefinitionBean
-						.setHandledReferenceSchemes(inputView.getBean()
-								.getHandledReferenceSchemes());
-				activityInputPortDefinitionBean.setMimeTypes(inputView
-						.getBean().getMimeTypes());
-				activityInputPortDefinitionBean
-						.setTranslatedElementType(inputView.getBean()
-								.getTranslatedElementType());
-				activityInputPortDefinitionBean
-						.setAllowsLiteralValues((Boolean) inputView
-								.getLiteralSelector().getSelectedItem());
-				activityInputPortDefinitionBean
-						.setDepth((Integer) inputView.getDepthSpinner()
-								.getValue());
-				activityInputPortDefinitionBean.setName(inputView
-						.getNameField().getText());
-				inputBeanList.add(activityInputPortDefinitionBean);
-			}
-
-			List<ActivityOutputPortDefinitionBean> outputBeanList = new ArrayList<ActivityOutputPortDefinitionBean>();
-			for (BeanshellOutputViewer outputView : outputViewList) {
-				ActivityOutputPortDefinitionBean activityOutputPortDefinitionBean = new ActivityOutputPortDefinitionBean();
-				activityOutputPortDefinitionBean
-						.setDepth((Integer) outputView.getDepthSpinner()
-								.getValue());
-				
-//				activityOutputPortDefinitionBean
-//						.setGranularDepth((Integer) outputView
-//								.getGranularDepthSpinner().getValue());
-				
-				// NOTE: Granular depth must match output depth because we return
-				// the full lists right away
-				activityOutputPortDefinitionBean
-						.setGranularDepth(activityOutputPortDefinitionBean
-								.getDepth());
-				
-				
-				activityOutputPortDefinitionBean.setName(outputView
-						.getNameField().getText());
-				activityOutputPortDefinitionBean.setMimeTypes(new ArrayList<String>());
-
-				outputBeanList.add(activityOutputPortDefinitionBean);
-			}
-			
-			BeanshellActivityConfigurationBean newConfiguration =
-				(BeanshellActivityConfigurationBean) cloneBean (configuration);
-			newConfiguration.setScript(scriptText
-					.getText());
-			newConfiguration
-					.setInputPortDefinitions(inputBeanList);
-			newConfiguration
-					.setOutputPortDefinitions(outputBeanList);
-			
-			newConfiguration.setClassLoaderSharing(classLoaderSharing);
-			newConfiguration.setLocalDependencies(localDependencies);
-			newConfiguration.setArtifactDependencies(new LinkedHashSet<BasicArtifact>());
-			configuration = newConfiguration;
+	public void noteConfiguration() {			
+			configuration = makeConfiguration();
 			inputsChanged = false;
 			outputsChanged = false;
+	}
+
+	private BeanshellActivityConfigurationBean makeConfiguration() {
+		// Set the new configuration
+		List<ActivityInputPortDefinitionBean> inputBeanList = new ArrayList<ActivityInputPortDefinitionBean>();
+		for (BeanshellInputViewer inputView : inputViewList) {
+			ActivityInputPortDefinitionBean activityInputPortDefinitionBean = new ActivityInputPortDefinitionBean();
+			activityInputPortDefinitionBean
+					.setHandledReferenceSchemes(inputView.getBean()
+							.getHandledReferenceSchemes());
+			activityInputPortDefinitionBean.setMimeTypes(inputView
+					.getBean().getMimeTypes());
+			activityInputPortDefinitionBean
+					.setTranslatedElementType(inputView.getBean()
+							.getTranslatedElementType());
+			activityInputPortDefinitionBean
+					.setAllowsLiteralValues((Boolean) inputView
+							.getLiteralSelector().getSelectedItem());
+			activityInputPortDefinitionBean
+					.setDepth((Integer) inputView.getDepthSpinner()
+							.getValue());
+			activityInputPortDefinitionBean.setName(inputView
+					.getNameField().getText());
+			inputBeanList.add(activityInputPortDefinitionBean);
+		}
+
+		List<ActivityOutputPortDefinitionBean> outputBeanList = new ArrayList<ActivityOutputPortDefinitionBean>();
+		for (BeanshellOutputViewer outputView : outputViewList) {
+			ActivityOutputPortDefinitionBean activityOutputPortDefinitionBean = new ActivityOutputPortDefinitionBean();
+			activityOutputPortDefinitionBean
+					.setDepth((Integer) outputView.getDepthSpinner()
+							.getValue());
+			
+//			activityOutputPortDefinitionBean
+//					.setGranularDepth((Integer) outputView
+//							.getGranularDepthSpinner().getValue());
+			
+			// NOTE: Granular depth must match output depth because we return
+			// the full lists right away
+			activityOutputPortDefinitionBean
+					.setGranularDepth(activityOutputPortDefinitionBean
+							.getDepth());
+			
+			
+			activityOutputPortDefinitionBean.setName(outputView
+					.getNameField().getText());
+			activityOutputPortDefinitionBean.setMimeTypes(new ArrayList<String>());
+
+			outputBeanList.add(activityOutputPortDefinitionBean);
+		}
+		
+		BeanshellActivityConfigurationBean newConfiguration =
+			(BeanshellActivityConfigurationBean) cloneBean (configuration);
+		newConfiguration.setScript(scriptText
+				.getText());
+		newConfiguration
+				.setInputPortDefinitions(inputBeanList);
+		newConfiguration
+				.setOutputPortDefinitions(outputBeanList);
+		
+		newConfiguration.setClassLoaderSharing(classLoaderSharing);
+		newConfiguration.setLocalDependencies(localDependencies);
+		newConfiguration.setArtifactDependencies(new LinkedHashSet<BasicArtifact>());
+		return newConfiguration;
 	}
 
 	public boolean isConfigurationChanged() {
@@ -315,13 +321,25 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		checkScriptButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent ex) {
-				Parser parser = new Parser(new StringReader(scriptText.getText()));
+				BeanshellActivityHealthChecker healthChecker = new BeanshellActivityHealthChecker();
+				BeanshellActivity fakeActivity = new BeanshellActivity();
 				try {
-					while (!parser.Line());
-					JOptionPane.showMessageDialog(BeanshellConfigView.this, "Beanshell service script parsed OK", "Beanshell script check", JOptionPane.INFORMATION_MESSAGE);
-				} catch (ParseException e) {
-					JOptionPane.showMessageDialog(BeanshellConfigView.this, e.getMessage(), "Beanshell script check", JOptionPane.ERROR_MESSAGE);
+					fakeActivity.configure(makeConfiguration());
+				} catch (ActivityConfigurationException e) {
+					JOptionPane.showMessageDialog(BeanshellConfigView.this, e.getMessage(), "Invalid Beanshell configuration", JOptionPane.ERROR_MESSAGE);
+					return;
 				}
+				
+				VisitReport visit = healthChecker.visit(fakeActivity, Collections.emptyList());
+				int messageType;
+				if (visit.getStatus().equals(Status.OK)) {
+					messageType = JOptionPane.INFORMATION_MESSAGE;
+				} else if (visit.getStatus().equals(Status.WARNING)) {
+					messageType = JOptionPane.WARNING_MESSAGE;
+				} else { // SEVERE
+					messageType = JOptionPane.ERROR_MESSAGE;
+				}
+				JOptionPane.showMessageDialog(BeanshellConfigView.this, visit.toString(), "Beanshell script check", messageType);
 			}
 			
 		});
