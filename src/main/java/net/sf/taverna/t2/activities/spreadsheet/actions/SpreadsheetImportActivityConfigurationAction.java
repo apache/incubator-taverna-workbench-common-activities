@@ -70,7 +70,7 @@ public class SpreadsheetImportActivityConfigurationAction extends
 				.getString("SpreadsheetImportActivityConfigurationAction.okButton")) {
 			public void actionPerformed(ActionEvent arg0) {
 				if (spreadsheetConfigView.isConfigurationChanged()) {
-					ActivityConfigurationDialog.configureActivity(owningDataflow, activity, spreadsheetConfigView.getConfiguration());
+					ActivityConfigurationDialog.configureActivityStatic(owningDataflow, activity, spreadsheetConfigView.getConfiguration());
 				}
 				dialog.setVisible(false);
 				dialog.dispose();
