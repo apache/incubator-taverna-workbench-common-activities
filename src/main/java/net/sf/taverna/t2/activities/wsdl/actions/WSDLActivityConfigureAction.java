@@ -90,14 +90,14 @@ public class WSDLActivityConfigureAction
 			if (newBean.getSecurityProfile() != null){ // config changed
 				logger.info("WSDL activity configuration: Old security profile: null");
 				logger.info("WSDL activity configuration: New security profile: " +  newBean.getSecurityProfile());
-				ActivityConfigurationDialog.configureActivity(owningDataflow, getActivity(), newBean);
+				ActivityConfigurationDialog.configureActivityStatic(owningDataflow, getActivity(), newBean);
 			}
 		}
 		else{
 			if (!bean.getSecurityProfile().equals(newBean.getSecurityProfile())){ // config changed
 				logger.info("WSDL activity configuration: Old security profile: " +  bean.getSecurityProfile());
 				logger.info("WSDL activity configuration: New security profile: " +  newBean.getSecurityProfile());
-				ActivityConfigurationDialog.configureActivity(owningDataflow, getActivity(), newBean);
+				ActivityConfigurationDialog.configureActivityStatic(owningDataflow, getActivity(), newBean);
 			}
 		}
 	}
