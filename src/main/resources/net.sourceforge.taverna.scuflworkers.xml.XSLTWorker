@@ -63,7 +63,7 @@ if (outputExt != void) {
 }
 
 if (((outFilename == null) || outFilename.equals("")) &amp;&amp; (ext != null)) {
-		outFilename = FileNameUtil.replacePathExtension(inFileURL, ext);
+		outFilename = inFileURL.substring(0, inFileURL.indexOf(".")+1) + ext;
 }
 
 // Create transformer factory
