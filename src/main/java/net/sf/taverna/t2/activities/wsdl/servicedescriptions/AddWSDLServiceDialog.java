@@ -126,7 +126,7 @@ public abstract class AddWSDLServiceDialog extends HelpEnabledDialog {
      */
     private void addPressed()
     {
-		final String wsdlURLString = wsdlLocationField.getText();
+		final String wsdlURLString = wsdlLocationField.getText().trim();
 		new Thread("Adding WSDL " + wsdlURLString) {
 			public void run() {
 				// Only add the service provider for this service if service URL
