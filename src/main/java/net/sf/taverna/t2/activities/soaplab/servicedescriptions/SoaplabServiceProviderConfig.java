@@ -13,7 +13,7 @@ public class SoaplabServiceProviderConfig extends PropertyAnnotated {
 	}
 
 	public SoaplabServiceProviderConfig(String endpointURI) {
-		this.setEndpoint(URI.create(endpointURI));
+		this.setEndpoint(URI.create(endpointURI.trim()));
 	}
 
 	@PropertyAnnotation(displayName = "Soaplab location", preferred = true)
