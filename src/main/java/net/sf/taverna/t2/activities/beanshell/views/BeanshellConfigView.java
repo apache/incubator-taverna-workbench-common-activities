@@ -29,6 +29,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
@@ -186,6 +188,10 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		initialise();
 	}
 
+    public void whenOpened() {
+	scriptText.requestFocus();
+    }
+
 	public void noteConfiguration() {			
 			configuration = makeConfiguration();
 			inputsChanged = false;
@@ -316,6 +322,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		scriptText.setCaretPosition(0);
 		scriptText.setPreferredSize(new Dimension(0, 0));
 		scriptEditPanel.add(new LineEnabledTextPanel(scriptText), BorderLayout.CENTER);
+		
 		final JButton checkScriptButton = new JButton("Check script");
 		checkScriptButton.setToolTipText("Check the beanshell script");
 		checkScriptButton.addActionListener(new ActionListener() {
