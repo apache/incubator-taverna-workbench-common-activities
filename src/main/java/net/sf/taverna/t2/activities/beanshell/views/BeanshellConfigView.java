@@ -357,7 +357,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		loadScriptButton.setToolTipText("Load a beanshell script from a file");
 		loadScriptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String newScript = FileTools.readStringFromFile(BeanshellConfigView.this);
+			    String newScript = FileTools.readStringFromFile(BeanshellConfigView.this, "Load Beanshell script", ".bsh");
 				if (newScript != null) {
 					scriptText.setText(newScript);
 				}
