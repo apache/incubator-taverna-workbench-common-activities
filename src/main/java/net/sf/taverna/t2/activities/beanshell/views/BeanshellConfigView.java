@@ -338,15 +338,18 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 				}
 				
 				VisitReport visit = healthChecker.visit(fakeActivity, Collections.emptyList());
-				int messageType;
-				if (visit.getStatus().equals(Status.OK)) {
-					messageType = JOptionPane.INFORMATION_MESSAGE;
-				} else if (visit.getStatus().equals(Status.WARNING)) {
-					messageType = JOptionPane.WARNING_MESSAGE;
-				} else { // SEVERE
-					messageType = JOptionPane.ERROR_MESSAGE;
+				boolean invalidScript = false;
+                                for (VisitReport subReport : visit.getSubReports()) {
+                                    if (subReport.getResultId() == HealthCheck.INVALID_SCRIPT) {
+					invalidScript = true;
+					String message = subReport.getMessage();
+					JOptionPane.showMessageDialog(BeanshellConfigView.this, message, "Beanshell script check", JOptionPane.ERROR_MESSAGE);
+					break;
+				    }
 				}
-				JOptionPane.showMessageDialog(BeanshellConfigView.this, visit.toString(), "Beanshell script check", messageType);
+				if (!invalidScript) {
+				    JOptionPane.showMessageDialog(BeanshellConfigView.this, "No problem found", "Beanshell script check", JOptionPane.INFORMATION_MESSAGE);
+				}
 			}
 			
 		});
