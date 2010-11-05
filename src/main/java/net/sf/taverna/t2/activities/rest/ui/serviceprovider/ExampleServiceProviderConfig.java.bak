@@ -1,0 +1,31 @@
+package net.sf.taverna.t2.activities.rest.ui.serviceprovider;
+
+import java.net.URI;
+
+import net.sf.taverna.t2.lang.beans.PropertyAnnotated;
+import net.sf.taverna.t2.lang.beans.PropertyAnnotation;
+
+public class ExampleServiceProviderConfig extends PropertyAnnotated
+{
+  private URI uri = URI.create("http://www.example.com");
+  private int numberOfServices = 5;
+  
+  @PropertyAnnotation(displayName="Provider URI", preferred=true)
+  public URI getUri() {
+    return uri;
+  }
+  
+  public void setUri(URI uri) {
+    this.uri = uri;
+  }
+  
+  @PropertyAnnotation(displayName="Number of services")
+  public int getNumberOfServices() {
+    return numberOfServices;
+  }
+  
+  public void setNumberOfServices(int numberOfServices) {
+    this.numberOfServices = numberOfServices;
+  }
+  
+}
