@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2010 Hajo Nils Krabbenhšft, INB, University of Luebeck   
+ * Copyright (C) 2010 Hajo Nils Krabbenhoeft, INB, University of Luebeck   
  * 
  *  Modifications to the initial code base are copyright of their
  *  respective authors, or their employers as appropriate.
@@ -31,7 +31,7 @@ import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualV
 /**
  * ExternalToolActivityViewFactory produces an ExternalToolActivityContextualView to show information for a use case activity.
  * 
- * @author Hajo Nils Krabbenhšft
+ * @author Hajo Nils Krabbenhoeft
  */
 public class ExternalToolActivityViewFactory implements ContextualViewFactory<ExternalToolActivity> {
 

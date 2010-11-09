@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (C) 2009 Hajo Nils Krabbenhšft, INB, University of Luebeck   
- * modified 2010 Hajo Nils Krabbenhšft, spratpix GmbH & Co. KG
+ * Copyright (C) 2009 Hajo Nils Krabbenhoeft, INB, University of Luebeck   
+ * modified 2010 Hajo Nils Krabbenhoeft, spratpix GmbH & Co. KG
  * 
  *  Modifications to the initial code base are copyright of their
  *  respective authors, or their employers as appropriate.
@@ -39,7 +39,7 @@ import de.uni_luebeck.inb.knowarc.gui.KnowARCConfigurationDialog;
  * "Configure UseCase invocation" and is implemented in the
  * KnowARCConfigurationDialog inside the knowarc-usecases maven artifact.
  * 
- * @author Hajo Nils Krabbenhšft
+ * @author Hajo Nils Krabbenhoeft
  */
 @SuppressWarnings("serial")
 public class ExternalToolActivityConfigureAction extends ActivityConfigurationAction<ExternalToolActivity, ExternalToolActivityConfigurationBean> {

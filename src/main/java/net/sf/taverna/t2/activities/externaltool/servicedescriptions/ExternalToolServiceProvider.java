@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2009 Hajo Nils Krabbenhšft, INB, University of Luebeck   
+ * Copyright (C) 2009 Hajo Nils Krabbenhoeft, INB, University of Luebeck   
  * 
  *  Modifications to the initial code base are copyright of their
  *  respective authors, or their employers as appropriate.
@@ -39,7 +39,7 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
  * ExternalToolServiceProvider searches an use case repository XML for use case
  * descriptions.
  * 
- * @author Hajo Nils Krabbenhšft
+ * @author Hajo Nils Krabbenhoeft
  */
 public class ExternalToolServiceProvider extends AbstractConfigurableServiceProvider<ExternalToolServiceProviderConfig> {
 

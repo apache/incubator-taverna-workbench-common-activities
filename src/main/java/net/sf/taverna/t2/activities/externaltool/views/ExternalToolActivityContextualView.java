@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2010 Hajo Nils Krabbenhšft, INB, University of Luebeck   
+ * Copyright (C) 2010 Hajo Nils Krabbenhoeft, INB, University of Luebeck   
  * 
  *  Modifications to the initial code base are copyright of their
  *  respective authors, or their employers as appropriate.
@@ -35,7 +35,7 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
  * ExternalToolActivityContextualView displays the use case information in a HTML table.
  * Currently, this is only the use case ID.
  * 
- * @author Hajo Nils Krabbenhšft
+ * @author Hajo Nils Krabbenhoeft
  */
 public class ExternalToolActivityContextualView extends HTMLBasedActivityContextualView<ExternalToolActivityConfigurationBean> {
 	private static final long serialVersionUID = 1L;

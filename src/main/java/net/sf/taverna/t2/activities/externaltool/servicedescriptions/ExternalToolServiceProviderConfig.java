@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2009 Hajo Nils Krabbenhšft, INB, University of Luebeck   
+ * Copyright (C) 2009 Hajo Nils Krabbenhoeft, INB, University of Luebeck   
  * 
  *  Modifications to the initial code base are copyright of their
  *  respective authors, or their employers as appropriate.
@@ -27,7 +27,7 @@ import net.sf.taverna.t2.lang.beans.PropertyAnnotation;
 /**
  * ExternalToolServiceProviderConfig stores the URL of the use case repository XML file
  * 
- * @author Hajo Nils Krabbenhšft
+ * @author Hajo Nils Krabbenhoeft
  */
 public class ExternalToolServiceProviderConfig extends PropertyAnnotated {
 	private String repositoryUrl;

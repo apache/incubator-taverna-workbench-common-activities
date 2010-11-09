@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2010 Hajo Nils Krabbenhšft, spratpix GmbH & Co. KG   
+ * Copyright (C) 2010 Hajo Nils Krabbenhoeft, spratpix GmbH & Co. KG   
  * 
  *  Modifications to the initial code base are copyright of their
  *  respective authors, or their employers as appropriate.
@@ -30,7 +30,7 @@ import net.sf.taverna.t2.workbench.activitytools.AbstractConfigureActivityMenuAc
 /**
  * This class adds the plugin configuration action to the context menu of every use case activity.
  * 
- * @author Hajo Nils Krabbenhšft
+ * @author Hajo Nils Krabbenhoeft
  */
 public class ConfigureExternalToolMenuAction extends AbstractConfigureActivityMenuAction<ExternalToolActivity> {
 

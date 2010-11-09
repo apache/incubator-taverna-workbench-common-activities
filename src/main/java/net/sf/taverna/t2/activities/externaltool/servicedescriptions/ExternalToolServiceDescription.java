@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2009 Hajo Nils Krabbenhšft, INB, University of Luebeck   
+ * Copyright (C) 2009 Hajo Nils Krabbenhoeft, INB, University of Luebeck   
  * 
  *  Modifications to the initial code base are copyright of their
  *  respective authors, or their employers as appropriate.
@@ -37,7 +37,7 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
  * ExternalToolServiceDescription stores the repository URL and the use case id so
  * that it can create an ExternalToolActivityConfigurationBean
  * 
- * @author Hajo Nils Krabbenhšft
+ * @author Hajo Nils Krabbenhoeft
  */
 public class ExternalToolServiceDescription extends ServiceDescription<ExternalToolActivityConfigurationBean> {
 
