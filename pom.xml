@@ -11,7 +11,7 @@
   
   <dependencies>
   	<dependency>
-  		<groupId>net.sf.taverna.t2.ui-activities</groupId>
+  		<groupId>net.sf.taverna.t2.activities</groupId>
   		<artifactId>xpath-activity</artifactId>
   		<version>${t2.activities.version}</version>
   		<type>jar</type>
