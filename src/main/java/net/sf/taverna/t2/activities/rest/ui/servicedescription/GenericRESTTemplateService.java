@@ -8,6 +8,7 @@ import javax.swing.Icon;
 import net.sf.taverna.t2.activities.rest.RESTActivity;
 import net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean;
 import net.sf.taverna.t2.servicedescriptions.AbstractTemplateService;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 
 /**
  * 
@@ -54,6 +55,14 @@ public class GenericRESTTemplateService extends AbstractTemplateService<RESTActi
   public String getDescription() {
     return "A generic REST service that can handle all HTTP methods";
   }
+  
+	@SuppressWarnings("unchecked")
+	public static ServiceDescription getServiceDescription() {
+		GenericRESTTemplateService gts = new GenericRESTTemplateService();
+		return gts.templateService;
+	}
+
+
 
   public String getId() {
     return "http://www.taverna.org.uk/2010/services/rest";
