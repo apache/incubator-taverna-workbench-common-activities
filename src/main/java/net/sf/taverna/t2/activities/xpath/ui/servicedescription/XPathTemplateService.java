@@ -5,6 +5,7 @@ import javax.swing.Icon;
 import net.sf.taverna.t2.activities.xpath.XPathActivity;
 import net.sf.taverna.t2.activities.xpath.XPathActivityConfigurationBean;
 import net.sf.taverna.t2.servicedescriptions.AbstractTemplateService;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 
 /**
  * 
@@ -51,6 +52,13 @@ public class XPathTemplateService extends AbstractTemplateService<XPathActivityC
   public String getDescription() {
     return "Service for point-and-click creation of XPath expressions for XML data";
   }
+  
+	@SuppressWarnings("unchecked")
+	public static ServiceDescription getServiceDescription() {
+		XPathTemplateService gts = new XPathTemplateService();
+		return gts.templateService;
+	}
+
 
   public String getId() {
     return "http://www.taverna.org.uk/2010/services/xpath";
