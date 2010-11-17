@@ -78,12 +78,6 @@
 			<version>${t2.activities.version}</version>
 		</dependency>
 
-		<!-- for the feedback action -->
-		<dependency>
-			<groupId>BrowserLauncher2</groupId>
-			<artifactId>BrowserLauncher2</artifactId>
-			<version>${browserlauncher.version}</version>
-		</dependency>
 	</dependencies>
 </project>
 
