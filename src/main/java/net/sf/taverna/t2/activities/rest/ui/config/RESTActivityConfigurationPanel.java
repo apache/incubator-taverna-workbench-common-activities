@@ -98,198 +98,261 @@ public class RESTActivityConfigurationPanel	extends
 	
 	private JPanel createGeneralTab()
 	{
-	  JPanel jpGeneral = new JPanel(new GridBagLayout());
-    GridBagConstraints c = new GridBagConstraints();
-    
-    c.gridx = 0;
-    c.gridy = 0;
-    c.gridwidth = 1;
-    c.fill = GridBagConstraints.HORIZONTAL;
-    c.insets = new Insets(7, 7, 3, 3);
-    JLabel labelMethod = new JLabel("HTTP Method:", infoIcon, JLabel.LEFT);
-    labelMethod.setToolTipText("<html>HTTP method determines how a request to the remote server will be made.<br><br>" +
-    		                             "Supported HTTP methods are normally used for different purposes:<br>" +
-    		                             "<b>GET</b> - to fetch data;<br>" +
-    		                             "<b>POST</b> - to create new resources;<br>" +
-    		                             "<b>PUT</b> - to update existing resources;<br>" +
-    		                             "<b>DELETE</b> - to remove existing resources.<br><br>" +
-    		                             "Documentation of the server that is about to be used may suggest the<br>" +
-    		                             "HTTP method that should be used.</html>");
-    jpGeneral.add(labelMethod, c);
-    
-    // the HTTP method combo-box will always contain the same values - it is the selected
-    // method which is important; therefore, can prepopulate as the set of values is known
-    c.gridx++;
-    c.insets = new Insets(7, 3, 3, 7);
-    cbHTTPMethod = new JComboBox(RESTActivity.HTTP_METHOD.values());
-    cbHTTPMethod.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        boolean contentTypeSelEnabled = RESTActivity.hasMessageBodyInputPort((HTTP_METHOD)cbHTTPMethod.getSelectedItem());
-        
-        jlContentTypeExplanation.setVisible(contentTypeSelEnabled);
-        jlContentType.setVisible(contentTypeSelEnabled);
-        cbContentType.setVisible(contentTypeSelEnabled);
-        jlSendDataAs.setVisible(contentTypeSelEnabled);
-        cbSendDataAs.setVisible(contentTypeSelEnabled);
-        
-        jlContentTypeExplanationPlaceholder.setVisible(!contentTypeSelEnabled);
-        jlContentTypeLabelPlaceholder.setVisible(!contentTypeSelEnabled);
-        jlContentTypeFieldPlaceholder.setVisible(!contentTypeSelEnabled);
-        jlSendDataAsLabelPlaceholder.setVisible(!contentTypeSelEnabled);
-        jlSendDataAsFieldPlaceholder.setVisible(!contentTypeSelEnabled);
-      }
-    });
-    jpGeneral.add(cbHTTPMethod, c);
-    
-    c.gridx = 0;
-    c.gridy++;
-    c.insets = new Insets(3, 7, 3, 3);
-    JLabel labelString = new JLabel("URL Template:", infoIcon, JLabel.LEFT);
-    labelString.setToolTipText("<html>URL template enables to define a URL with <b>configurable<br>" +
-                                     "parameters</b> that will be used to access a remote server.<br><br>" +
-                                     "The template may contain zero or more <b>parameters</b> - each<br>" +
-                                     "enclosed within curly braces <b>\"{\"</b> and <b>\"}\"</b>.<br>" +
-                                     "Taverna will automatically create an individual input port for<br>" +
-                                     "this activity for each parameter.<br><br>" +
-                                     "Values extracted from these input ports during the workflow<br>" +
-                                     "execution these will be used to replace the parameters to<br>" +
-                                     "produce complete URLs.<br><br>" +
-                                     "For example, if the URL template is configured as<br>" +
-                                     "\"<i>http://www.myexperiment.org/user.xml?id={userID}</i>\", a<br>" +
-                                     "single input port with the name \"<i>userID</i>\" will be created.</html>");
-    labelString.setLabelFor(tfURLSignature);
-    jpGeneral.add(labelString, c);
-    
-    c.gridx++;
-    c.insets = new Insets(3, 3, 3, 7);
-    tfURLSignature = new JTextField(50);
-    tfURLSignature.addFocusListener(new FocusListener() {
-      public void focusGained(FocusEvent e) {
-        tfURLSignature.selectAll();
-      }
-      public void focusLost(FocusEvent e) { /* do nothing */ }
-    });
-    jpGeneral.add(tfURLSignature, c);
-    
-    c.gridx = 0;
-    c.gridwidth = 2;
-    c.gridy++;
-    c.insets = new Insets(18, 7, 3, 7);
-    JLabel jlAcceptsExplanation = new JLabel("Preferred MIME type for data to be fetched from the remote server --");
-    jpGeneral.add(jlAcceptsExplanation, c);
-    c.gridwidth = 1;
-    
-    c.gridx = 0;
-    c.gridy++;
-    c.insets = new Insets(3, 7, 3, 3);
-    JLabel jlAccepts = new JLabel("'Accept' header:", infoIcon, JLabel.LEFT);
-    jlAccepts.setToolTipText("Select a MIME type from the drop-down menu or type your own");
-    jlAccepts.setLabelFor(cbAccepts);
-    jpGeneral.add(jlAccepts, c);
-    
-    c.gridx++;
-    c.insets = new Insets(3, 3, 3, 7);
-    cbAccepts = new JComboBox(RESTActivity.MIME_TYPES);
-    cbAccepts.setEditable(true);
-    cbAccepts.getEditor().getEditorComponent().addFocusListener(new FocusListener() {
-      public void focusGained(FocusEvent e) {
-        cbAccepts.getEditor().selectAll();
-      }
-      public void focusLost(FocusEvent e) { /* do nothing */ }
-    });
-    jpGeneral.add(cbAccepts, c);
-    
-    
-    c.gridx = 0;
-    c.gridwidth = 2;
-    c.gridy++;
-    c.insets = new Insets(18, 7, 3, 7);
-    jlContentTypeExplanation = new JLabel("MIME type of data that will be sent to the remote server --");
-    jpGeneral.add(jlContentTypeExplanation, c);
-    c.gridwidth = 1;
-    
-    c.gridx = 0;
-    c.gridy++;
-    c.insets = new Insets(3, 7, 3, 3);
-    jlContentType = new JLabel("'Content-Type' header:", infoIcon, JLabel.LEFT);
-    jlContentType.setToolTipText("Select a MIME type from the drop-down menu or type your own");
-    jlContentType.setLabelFor(cbContentType);
-    jpGeneral.add(jlContentType, c);
-    
-    c.gridx++;
-    c.insets = new Insets(3, 3, 3, 7);
-    cbContentType = new JComboBox(RESTActivity.MIME_TYPES);
-    cbContentType.setEditable(true);
-    cbContentType.getEditor().getEditorComponent().addFocusListener(new FocusListener() {
-      public void focusGained(FocusEvent e) {
-        cbContentType.getEditor().selectAll();
-      }
-      public void focusLost(FocusEvent e) { /* do nothing */ }
-    });
-    cbContentType.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        // change selection in the "Send data as" combo-box, based on the selection of Content-Type
-        String selectedContentType = (String)cbContentType.getSelectedItem();
-        if (selectedContentType.startsWith("text")) { cbSendDataAs.setSelectedItem(DATA_FORMAT.String); }
-        else { cbSendDataAs.setSelectedItem(DATA_FORMAT.Binary); }
-      }
-    });
-    jpGeneral.add(cbContentType, c);
-    
-    
-    c.gridx = 0;
-    c.gridwidth = 2;
-    c.gridy++;
-    c.insets = new Insets(18, 7, 3, 7);
-    jlContentTypeExplanationPlaceholder = new JLabel();
-    jlContentTypeExplanationPlaceholder.setPreferredSize(jlContentTypeExplanation.getPreferredSize());
-    jpGeneral.add(jlContentTypeExplanationPlaceholder, c);
-    c.gridwidth = 1;
-    
-    c.gridx = 0;
-    c.gridy++;
-    c.insets = new Insets(3, 7, 3, 3);
-    jlContentTypeLabelPlaceholder = new JLabel();
-    jlContentTypeLabelPlaceholder.setPreferredSize(jlContentType.getPreferredSize());
-    jpGeneral.add(jlContentTypeLabelPlaceholder, c);
-    
-    c.gridx++;
-    c.insets = new Insets(3, 3, 3, 7);
-    jlContentTypeFieldPlaceholder = new JLabel();
-    jlContentTypeFieldPlaceholder.setPreferredSize(cbContentType.getPreferredSize());
-    jpGeneral.add(jlContentTypeFieldPlaceholder, c);
-    
-    
-    
-    c.gridx = 0;
-    c.gridy++;
-    c.insets = new Insets(3, 7, 8, 3);
-    jlSendDataAs = new JLabel("Send data as:", infoIcon, JLabel.LEFT);
-    jlSendDataAs.setToolTipText("Select the format for the data to be sent to the remote server");
-    jlSendDataAs.setLabelFor(cbSendDataAs);
-    jpGeneral.add(jlSendDataAs, c);
-    
-    c.gridx++;
-    c.insets = new Insets(3, 3, 8, 7);
-    cbSendDataAs = new JComboBox(RESTActivity.DATA_FORMAT.values());
-    cbSendDataAs.setEditable(false);
-    jpGeneral.add(cbSendDataAs, c);
-    
-    
-    c.gridx = 0;
-    c.gridy++;
-    c.insets = new Insets(3, 7, 8, 3);
-    jlSendDataAsLabelPlaceholder = new JLabel();
-    jlSendDataAsLabelPlaceholder.setPreferredSize(jlSendDataAs.getPreferredSize());
-    jpGeneral.add(jlSendDataAsLabelPlaceholder, c);
-    
-    c.gridx++;
-    c.insets = new Insets(3, 3, 8, 7);
-    jlSendDataAsFieldPlaceholder = new JLabel();
-    jlSendDataAsFieldPlaceholder.setPreferredSize(cbSendDataAs.getPreferredSize());
-    jpGeneral.add(jlSendDataAsFieldPlaceholder, c);
-    
-    return (jpGeneral);
+		JPanel jpGeneral = new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		// All components to be anchored WEST
+		c.anchor = GridBagConstraints.WEST;
+
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 1;
+		c.insets = new Insets(7, 7, 3, 3);
+		c.weightx = 0.0;
+		c.fill = GridBagConstraints.NONE;
+		JLabel labelMethod = new JLabel("HTTP Method:", infoIcon, JLabel.LEFT);
+		labelMethod
+				.setToolTipText("<html>HTTP method determines how a request to the remote server will be made.<br><br>"
+						+ "Supported HTTP methods are normally used for different purposes:<br>"
+						+ "<b>GET</b> - to fetch data;<br>"
+						+ "<b>POST</b> - to create new resources;<br>"
+						+ "<b>PUT</b> - to update existing resources;<br>"
+						+ "<b>DELETE</b> - to remove existing resources.<br><br>"
+						+ "Documentation of the server that is about to be used may suggest the<br>"
+						+ "HTTP method that should be used.</html>");
+		jpGeneral.add(labelMethod, c);
+
+		// the HTTP method combo-box will always contain the same values - it is
+		// the selected
+		// method which is important; therefore, can prepopulate as the set of
+		// values is known
+		c.gridx++;
+		c.insets = new Insets(7, 3, 3, 7);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1.0;
+		cbHTTPMethod = new JComboBox(RESTActivity.HTTP_METHOD.values());
+		cbHTTPMethod.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boolean contentTypeSelEnabled = RESTActivity
+						.hasMessageBodyInputPort((HTTP_METHOD) cbHTTPMethod
+								.getSelectedItem());
+
+				jlContentTypeExplanation.setVisible(contentTypeSelEnabled);
+				jlContentType.setVisible(contentTypeSelEnabled);
+				cbContentType.setVisible(contentTypeSelEnabled);
+				jlSendDataAs.setVisible(contentTypeSelEnabled);
+				cbSendDataAs.setVisible(contentTypeSelEnabled);
+
+				jlContentTypeExplanationPlaceholder
+						.setVisible(!contentTypeSelEnabled);
+				jlContentTypeLabelPlaceholder
+						.setVisible(!contentTypeSelEnabled);
+				jlContentTypeFieldPlaceholder
+						.setVisible(!contentTypeSelEnabled);
+				jlSendDataAsLabelPlaceholder.setVisible(!contentTypeSelEnabled);
+				jlSendDataAsFieldPlaceholder.setVisible(!contentTypeSelEnabled);
+			}
+		});
+		jpGeneral.add(cbHTTPMethod, c);
+
+		c.gridx = 0;
+		c.gridy++;
+		c.insets = new Insets(3, 7, 3, 3);
+		c.fill = GridBagConstraints.NONE;
+		c.weightx = 0.0;
+		JLabel labelString = new JLabel("URL Template:", infoIcon, JLabel.LEFT);
+		labelString
+				.setToolTipText("<html>URL template enables to define a URL with <b>configurable<br>"
+						+ "parameters</b> that will be used to access a remote server.<br><br>"
+						+ "The template may contain zero or more <b>parameters</b> - each<br>"
+						+ "enclosed within curly braces <b>\"{\"</b> and <b>\"}\"</b>.<br>"
+						+ "Taverna will automatically create an individual input port for<br>"
+						+ "this activity for each parameter.<br><br>"
+						+ "Values extracted from these input ports during the workflow<br>"
+						+ "execution these will be used to replace the parameters to<br>"
+						+ "produce complete URLs.<br><br>"
+						+ "For example, if the URL template is configured as<br>"
+						+ "\"<i>http://www.myexperiment.org/user.xml?id={userID}</i>\", a<br>"
+						+ "single input port with the name \"<i>userID</i>\" will be created.</html>");
+		labelString.setLabelFor(tfURLSignature);
+		jpGeneral.add(labelString, c);
+
+		c.gridx++;
+		c.insets = new Insets(3, 3, 3, 7);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1.0;
+		tfURLSignature = new JTextField(50);
+		tfURLSignature.addFocusListener(new FocusListener() {
+			public void focusGained(FocusEvent e) {
+				tfURLSignature.selectAll();
+			}
+
+			public void focusLost(FocusEvent e) { /* do nothing */
+			}
+		});
+		jpGeneral.add(tfURLSignature, c);
+
+		c.gridx = 0;
+		c.gridwidth = 2;
+		c.gridy++;
+		c.weightx = 0.0;
+		c.fill = GridBagConstraints.NONE;
+		c.insets = new Insets(18, 7, 3, 7);
+		JLabel jlAcceptsExplanation = new JLabel(
+				"Preferred MIME type for data to be fetched from the remote server --");
+		jpGeneral.add(jlAcceptsExplanation, c);
+		c.gridwidth = 1;
+
+		c.gridx = 0;
+		c.gridy++;
+		c.insets = new Insets(3, 7, 3, 3);
+		c.weightx = 0.0;
+		c.fill = GridBagConstraints.NONE;
+		JLabel jlAccepts = new JLabel("'Accept' header:", infoIcon, JLabel.LEFT);
+		jlAccepts
+				.setToolTipText("Select a MIME type from the drop-down menu or type your own");
+		jlAccepts.setLabelFor(cbAccepts);
+		jpGeneral.add(jlAccepts, c);
+
+		c.gridx++;
+		c.insets = new Insets(3, 3, 3, 7);
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		cbAccepts = new JComboBox(RESTActivity.MIME_TYPES);
+		cbAccepts.setEditable(true);
+		cbAccepts.getEditor().getEditorComponent().addFocusListener(
+				new FocusListener() {
+					public void focusGained(FocusEvent e) {
+						cbAccepts.getEditor().selectAll();
+					}
+
+					public void focusLost(FocusEvent e) { /* do nothing */
+					}
+				});
+		jpGeneral.add(cbAccepts, c);
+
+		c.gridx = 0;
+		c.gridwidth = 2;
+		c.gridy++;
+		c.insets = new Insets(18, 7, 3, 7);
+		c.weightx = 0.0;
+		c.fill = GridBagConstraints.NONE;
+		jlContentTypeExplanation = new JLabel(
+				"MIME type of data that will be sent to the remote server --");
+		jpGeneral.add(jlContentTypeExplanation, c);
+		c.gridwidth = 1;
+
+		c.gridx = 0;
+		c.gridy++;
+		c.insets = new Insets(3, 7, 3, 3);
+		c.weightx = 0.0;
+		c.fill = GridBagConstraints.NONE;
+		jlContentType = new JLabel("'Content-Type' header:", infoIcon,
+				JLabel.LEFT);
+		jlContentType
+				.setToolTipText("Select a MIME type from the drop-down menu or type your own");
+		jlContentType.setLabelFor(cbContentType);
+		jpGeneral.add(jlContentType, c);
+
+		c.gridx++;
+		c.insets = new Insets(3, 3, 3, 7);
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		cbContentType = new JComboBox(RESTActivity.MIME_TYPES);
+		cbContentType.setEditable(true);
+		cbContentType.getEditor().getEditorComponent().addFocusListener(
+				new FocusListener() {
+					public void focusGained(FocusEvent e) {
+						cbContentType.getEditor().selectAll();
+					}
+
+					public void focusLost(FocusEvent e) { /* do nothing */
+					}
+				});
+		cbContentType.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// change selection in the "Send data as" combo-box, based on
+				// the selection of Content-Type
+				String selectedContentType = (String) cbContentType
+						.getSelectedItem();
+				if (selectedContentType.startsWith("text")) {
+					cbSendDataAs.setSelectedItem(DATA_FORMAT.String);
+				} else {
+					cbSendDataAs.setSelectedItem(DATA_FORMAT.Binary);
+				}
+			}
+		});
+		jpGeneral.add(cbContentType, c);
+
+		c.gridx = 0;
+		c.gridwidth = 2;
+		c.gridy++;
+		c.insets = new Insets(18, 7, 3, 7);
+		c.weightx = 0.0;
+		c.fill = GridBagConstraints.NONE;
+		jlContentTypeExplanationPlaceholder = new JLabel();
+		jlContentTypeExplanationPlaceholder
+				.setPreferredSize(jlContentTypeExplanation.getPreferredSize());
+		jpGeneral.add(jlContentTypeExplanationPlaceholder, c);
+		c.gridwidth = 1;
+
+		c.gridx = 0;
+		c.gridy++;
+		c.insets = new Insets(3, 7, 3, 3);
+		c.weightx = 0.0;
+		c.fill = GridBagConstraints.NONE;
+		jlContentTypeLabelPlaceholder = new JLabel();
+		jlContentTypeLabelPlaceholder.setPreferredSize(jlContentType
+				.getPreferredSize());
+		jpGeneral.add(jlContentTypeLabelPlaceholder, c);
+
+		c.gridx++;
+		c.insets = new Insets(3, 3, 3, 7);
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		jlContentTypeFieldPlaceholder = new JLabel();
+		jlContentTypeFieldPlaceholder.setPreferredSize(cbContentType
+				.getPreferredSize());
+		jpGeneral.add(jlContentTypeFieldPlaceholder, c);
+
+		c.gridx = 0;
+		c.gridy++;
+		c.weightx = 0.0;
+		c.fill = GridBagConstraints.NONE;
+		c.insets = new Insets(3, 7, 8, 3);
+		jlSendDataAs = new JLabel("Send data as:", infoIcon, JLabel.LEFT);
+		jlSendDataAs
+				.setToolTipText("Select the format for the data to be sent to the remote server");
+		jlSendDataAs.setLabelFor(cbSendDataAs);
+		jpGeneral.add(jlSendDataAs, c);
+
+		c.gridx++;
+		c.insets = new Insets(3, 3, 8, 7);
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		cbSendDataAs = new JComboBox(RESTActivity.DATA_FORMAT.values());
+		cbSendDataAs.setEditable(false);
+		jpGeneral.add(cbSendDataAs, c);
+
+		c.gridx = 0;
+		c.gridy++;
+		c.insets = new Insets(3, 7, 8, 3);
+		c.weightx = 0.0;
+		c.fill = GridBagConstraints.NONE;
+		jlSendDataAsLabelPlaceholder = new JLabel();
+		jlSendDataAsLabelPlaceholder.setPreferredSize(jlSendDataAs
+				.getPreferredSize());
+		jpGeneral.add(jlSendDataAsLabelPlaceholder, c);
+
+		c.gridx++;
+		c.insets = new Insets(3, 3, 8, 7);
+		c.weightx = 1.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		jlSendDataAsFieldPlaceholder = new JLabel();
+		jlSendDataAsFieldPlaceholder.setPreferredSize(cbSendDataAs
+				.getPreferredSize());
+		jpGeneral.add(jlSendDataAsFieldPlaceholder, c);
+
+		return (jpGeneral);
 	}
 	
 	
