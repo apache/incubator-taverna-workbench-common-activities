@@ -1,8 +1,6 @@
 package net.sf.taverna.t2.activities.rest.ui.config;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -43,7 +41,7 @@ public class RESTActivityConfigurationPanel extends
 	private RESTActivity activity;
 	private RESTActivityConfigurationBean configBean;
 
-	private RESTActivityConfigurationPanel thisPanel;
+	//private RESTActivityConfigurationPanel thisPanel;
 
 	// GENERAL tab
 	private JComboBox cbHTTPMethod; // HTTP method of this REST activity
@@ -71,7 +69,7 @@ public class RESTActivityConfigurationPanel extends
 	private JCheckBox cbShowRedirectionOutputPort;
 
 	public RESTActivityConfigurationPanel(RESTActivity activity) {
-		this.thisPanel = this;
+		//this.thisPanel = this;
 		this.activity = activity;
 		initGui();
 	}

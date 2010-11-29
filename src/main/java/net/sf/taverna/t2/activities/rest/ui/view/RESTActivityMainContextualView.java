@@ -80,6 +80,7 @@ public class RESTActivityMainContextualView extends ContextualView {
 		// tfURLSignature = new JTextField(20);
 		// tfURLSignature.setEditable(false);
 		taURLSignature = new JTextArea(3, 30);
+		taURLSignature.setEditable(false);
 		taURLSignature.setLineWrap(true);
 		JScrollPane spURLSignature = new JScrollPane(taURLSignature);
 		jpMainPanel.add(spURLSignature, c);
@@ -147,8 +148,8 @@ public class RESTActivityMainContextualView extends ContextualView {
 	 * views (even when this contextual view is collapsed).
 	 */
 	public String getViewTitle() {
-		RESTActivityConfigurationBean configuration = activity
-				.getConfiguration();
+		//RESTActivityConfigurationBean configuration = activity
+		//		.getConfiguration();
 		return "REST Service Details";
 	}
 
