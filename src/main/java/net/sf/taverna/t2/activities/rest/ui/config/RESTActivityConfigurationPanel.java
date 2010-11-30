@@ -67,6 +67,7 @@ public class RESTActivityConfigurationPanel extends
 	// ADVANCED tab
 	private JCheckBox cbSendHTTPExpectHeader;
 	private JCheckBox cbShowRedirectionOutputPort;
+	private JCheckBox cbEscapeParameters;
 
 	public RESTActivityConfigurationPanel(RESTActivity activity) {
 		//this.thisPanel = this;
@@ -401,6 +402,22 @@ public class RESTActivityConfigurationPanel extends
 		cbShowRedirectionOutputPort = new JCheckBox(
 				"Show \"Redirection\" output port");
 		jpAdvanced.add(cbShowRedirectionOutputPort, c);
+		
+		c.gridx = 0;
+		c.gridy++;
+		c.weightx = 0;
+		c.insets = new Insets(2, 10, 5, 4);
+		JLabel jlEscapeParametersInfoIcon = new JLabel(infoIcon);
+		jlEscapeParametersInfoIcon
+				.setToolTipText("<html>Determines if parameters you pass to form the full URL<br>" +
+						" of the REST service will be URL-escaped.</html>");
+		jpAdvanced.add(jlEscapeParametersInfoIcon, c);
+
+		c.gridx++;
+		c.weightx = 1.0;
+		c.insets = new Insets(2, 0, 5, 8);
+		cbEscapeParameters = new JCheckBox("Escape URL parameter values");
+		jpAdvanced.add(cbEscapeParameters, c);
 
 		// this JLabel makes the rest of the content of the panel to go to the
 		// top of the tab
@@ -505,6 +522,7 @@ public class RESTActivityConfigurationPanel extends
 				.getSendHTTPExpectRequestHeader();
 		boolean originalShowRedirectionOutputPort = configBean
 				.getShowRedirectionOutputPort();
+		boolean originalEscapeParameters = configBean.getEscapeParameters();
 
 		boolean contentTypeHasNotChanged = (originalContentType == null && ((String) cbContentType
 				.getSelectedItem()).length() == 0)
@@ -520,9 +538,9 @@ public class RESTActivityConfigurationPanel extends
 				&& contentTypeHasNotChanged
 				&& originalOutgoingDataFormat == (DATA_FORMAT) cbSendDataAs
 						.getSelectedItem()
-				&& originalSendHTTPExpectRequestHeader == cbSendHTTPExpectHeader
-						.isSelected() && originalShowRedirectionOutputPort == cbShowRedirectionOutputPort
-				.isSelected());
+				&& originalSendHTTPExpectRequestHeader == cbSendHTTPExpectHeader.isSelected() 
+				&& originalShowRedirectionOutputPort == cbShowRedirectionOutputPort.isSelected()
+				&& originalEscapeParameters == cbEscapeParameters.isSelected());
 	}
 
 	/**
@@ -546,6 +564,7 @@ public class RESTActivityConfigurationPanel extends
 				.isSelected());
 		configBean.setShowRedirectionOutputPort(cbShowRedirectionOutputPort
 				.isSelected());
+		configBean.setEscapeParameters(cbEscapeParameters.isSelected());
 	}
 
 	/**
@@ -557,6 +576,7 @@ public class RESTActivityConfigurationPanel extends
 
 		cbHTTPMethod.setSelectedItem(configBean.getHttpMethod());
 		tfURLSignature.setText(configBean.getUrlSignature());
+		tfURLSignature.setCaretPosition(0);
 		cbAccepts.setSelectedItem(configBean.getAcceptsHeaderValue());
 		cbContentType.setSelectedItem(configBean.getContentTypeForUpdates());
 		cbSendDataAs.setSelectedItem(configBean.getOutgoingDataFormat());
@@ -564,5 +584,6 @@ public class RESTActivityConfigurationPanel extends
 				.getSendHTTPExpectRequestHeader());
 		cbShowRedirectionOutputPort.setSelected(configBean
 				.getShowRedirectionOutputPort());
+		cbEscapeParameters.setSelected(configBean.getEscapeParameters());
 	}
 }
