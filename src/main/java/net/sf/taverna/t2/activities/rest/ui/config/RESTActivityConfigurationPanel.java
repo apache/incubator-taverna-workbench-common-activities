@@ -3,7 +3,6 @@ package net.sf.taverna.t2.activities.rest.ui.config;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,7 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
-import net.sf.taverna.t2.lang.ui.ShadedLabel;
 import net.sf.taverna.t2.workbench.MainWindow;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
 
@@ -80,14 +78,14 @@ public class RESTActivityConfigurationPanel extends
 		setLayout(new BorderLayout());
 
 		// create view title
-		ShadedLabel slConfigurationLabel = new ShadedLabel(
-				"Configuration options for this REST service",
-				ShadedLabel.ORANGE);
-		JPanel jpConfigurationLabel = new JPanel(new GridLayout(1, 1));
-		jpConfigurationLabel.add(slConfigurationLabel);
-		jpConfigurationLabel.setBorder(BorderFactory.createEmptyBorder(8, 10,
-				0, 10));
-		add(jpConfigurationLabel, BorderLayout.NORTH);
+//		ShadedLabel slConfigurationLabel = new ShadedLabel(
+//				"Configuration options for this REST service",
+//				ShadedLabel.ORANGE);
+//		JPanel jpConfigurationLabel = new JPanel(new GridLayout(1, 1));
+//		jpConfigurationLabel.add(slConfigurationLabel);
+//		jpConfigurationLabel.setBorder(BorderFactory.createEmptyBorder(8, 10,
+//				0, 10));
+//		add(jpConfigurationLabel, BorderLayout.NORTH);
 
 		// create tabbed view
 		JTabbedPane tpTabs = new JTabbedPane();
@@ -451,9 +449,30 @@ public class RESTActivityConfigurationPanel extends
 			return (false);
 		} else {
 			try {
-				// test if any exceptions will be thrown - if not, proceed to
+				// Test if any exceptions will be thrown - if not, proceed to
 				// other validations
 				URISignatureHandler.validate(candidateURLSignature);
+			} catch (URISignatureParsingException e) {
+				JOptionPane.showMessageDialog(MainWindow.getMainWindow(), e
+						.getMessage(), "REST Activity Configuration - Warning",
+						JOptionPane.WARNING_MESSAGE);
+				return (false);
+			}
+						
+			// Test if the URL string contains "unsafe" characters, i.e. characters 
+			// that need URL-encoding.
+			// Form RFC 1738: "...Only alphanumerics [0-9a-zA-Z], the special 
+			// characters "$-_.+!*'()," (not including the quotes) and reserved 
+			// characters used for their reserved purposes may be 
+			// used unencoded within a URL." 
+			// Reserved characters are: ";/?:@&=" (excluding quotes).
+			// We do not warn the user if they have not properly enclosed parameter 
+			// names in curly braces as this check is already being done elsewhere in the code.
+			// We do not check the characters in parameter names either.
+			try {
+				// Test if any exceptions will be thrown - if not, proceed to
+				// other validations
+				URISignatureHandler.checkForUnsafeCharacters(candidateURLSignature);
 			} catch (URISignatureParsingException e) {
 				JOptionPane.showMessageDialog(MainWindow.getMainWindow(), e
 						.getMessage(), "REST Activity Configuration - Warning",
