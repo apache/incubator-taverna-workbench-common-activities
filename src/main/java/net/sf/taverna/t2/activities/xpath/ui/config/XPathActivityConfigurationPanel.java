@@ -23,15 +23,19 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.prefs.Preferences;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -50,13 +54,16 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
 
 import net.sf.taverna.t2.activities.xpath.XPathActivityConfigurationBean;
 import net.sf.taverna.t2.activities.xpath.ui.config.xmltree.TableCellListener;
 import net.sf.taverna.t2.activities.xpath.ui.config.xmltree.XPathActivityXMLTree;
 import net.sf.taverna.t2.activities.xpath.ui.servicedescription.XPathActivityIcon;
+import net.sf.taverna.t2.workbench.icons.WorkbenchIcons;
 
+import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -70,6 +77,9 @@ import org.dom4j.XPathException;
  */
 @SuppressWarnings("serial")
 public class XPathActivityConfigurationPanel extends JPanel {
+
+	private Logger logger = Logger.getLogger(XPathActivityConfigurationPanel.class);
+
 	// --- CONSTANTS ---
 	public static final int MAX_NUMBER_OF_MATCHING_NODES_TO_HIGHLIGHT_IN_THE_TREE = 100;
 
@@ -77,6 +87,8 @@ public class XPathActivityConfigurationPanel extends JPanel {
 			215, 215);
 
 	private static final String EXAMPLE_XML_PROMPT = "Paste example XML here...";
+
+	private static final String XPATH_XML_DOCUMENT_DIR_PROPERTY="XPathXMLDocumentDir";
 
 	private XPathActivityConfigurationPanel thisPanel;
 
@@ -95,6 +107,7 @@ public class XPathActivityConfigurationPanel extends JPanel {
 	private JCheckBoxMenuItem miIncludeNamespaces;
 
 	private JTextArea taSourceXML;
+	private JButton bLoadXMLDocument;
 	private JButton bParseXML;
 	private XPathActivityXMLTree xmlTree;
 	private JScrollPane spXMLTreePlaceholder;
@@ -181,7 +194,7 @@ public class XPathActivityConfigurationPanel extends JPanel {
 		c.insets = new Insets(5, 0, 0, 5);
 		taSourceXML = new JTextArea(10, 30);
 		taSourceXML
-				.setToolTipText("<html>Use this text area to paste an example XML document.<br>"
+				.setToolTipText("<html>Use this text area to paste or load an example XML document.<br>"
 						+ "This document can then be parsed by clicking the button<br>"
 						+ "with a green arrow in order to see its tree structure.</html>");
 		taSourceXML.setText(EXAMPLE_XML_PROMPT);
@@ -246,6 +259,64 @@ public class XPathActivityConfigurationPanel extends JPanel {
 		jpRight.add(spXMLTreePlaceholder);
 		jpConfig.add(jpRight, c);
 
+		// Button to load XML document from a file
+		
+		bLoadXMLDocument = new JButton("Load XML from file", WorkbenchIcons.openIcon);	
+		bLoadXMLDocument.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				Preferences prefs = Preferences.userNodeForPackage(getClass());
+				String curDir = prefs.get(XPATH_XML_DOCUMENT_DIR_PROPERTY, System.getProperty("user.home"));
+				fileChooser.setDialogTitle("Select file to load XML from");
+				fileChooser.setFileFilter(new FileFilter() {  
+					public boolean accept(File f) {
+				        return f.isDirectory() || f.getName().toLowerCase().endsWith(".xml");
+				    }
+				    
+				    public String getDescription() {
+				        return ".xml files";
+				    }
+				});
+				fileChooser.setCurrentDirectory(new File(curDir));		
+				int returnVal = fileChooser.showOpenDialog(((JButton) e
+						.getSource()).getParent());
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					prefs.put(XPATH_XML_DOCUMENT_DIR_PROPERTY, fileChooser
+							.getCurrentDirectory().toString());
+					File file = fileChooser.getSelectedFile();
+					// Read the contents of a file into a string
+					// and set the value of the XML document text area to it
+					try{
+						byte[] fileBytes = new byte[(int)file.length()];
+						FileInputStream fis = new FileInputStream(file);
+						fis.read(fileBytes);
+						String xmlDocument = new String(fileBytes, "UTF-8");
+						setSourceXML(xmlDocument);
+					}
+					catch(Exception ex){
+						logger.error("An error occured while trying to read the XML document from file " + file.getAbsolutePath(), ex);
+						JOptionPane.showMessageDialog(
+								((JButton) e.getSource()).getParent(), 
+								"There was an error while trying to read the file", 
+								"XPath Activity", 
+								JOptionPane.ERROR_MESSAGE);
+					}
+
+				}
+			}
+		});
+		c.gridx = 0;
+		c.gridy++;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.NONE;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.insets = new Insets(5, 0, 0, 5);
+		c.anchor = GridBagConstraints.EAST;
+		jpConfig.add(bLoadXMLDocument, c);
+		
 		// settings for the view of XML tree from example XML document
 
 		miIncludeAttributes = new JCheckBoxMenuItem("Show XML node attributes");
@@ -309,7 +380,6 @@ public class XPathActivityConfigurationPanel extends JPanel {
 		});
 
 		c.gridx = 2;
-		c.gridy++;
 		c.gridwidth = 1;
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 0;
