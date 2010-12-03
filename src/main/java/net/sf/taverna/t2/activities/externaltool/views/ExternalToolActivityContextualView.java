@@ -46,7 +46,7 @@ public class ExternalToolActivityContextualView extends HTMLBasedActivityContext
 
 	@Override
 	protected String getRawTableRowsHtml() {
-		String html = "<b>Externaltool: </b>" + getConfigBean().getExternaltoolid();
+		String html = "<b>Externaltool: </b>" /* + getConfigBean().getExternaltoolid() */;
 		return html;
 	}
 

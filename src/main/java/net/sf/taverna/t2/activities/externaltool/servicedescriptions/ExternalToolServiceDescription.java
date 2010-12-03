@@ -30,6 +30,7 @@ import javax.swing.Icon;
 import net.sf.taverna.t2.activities.externaltool.KnowARCConfigurationFactory;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
+import net.sf.taverna.t2.activities.externaltool.RegisteredExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
@@ -69,7 +70,7 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 	}
 
 	public ExternalToolActivityConfigurationBean getActivityConfiguration() {
-		ExternalToolActivityConfigurationBean bean = new ExternalToolActivityConfigurationBean();
+		RegisteredExternalToolActivityConfigurationBean bean = new RegisteredExternalToolActivityConfigurationBean();
 		bean.setRepositoryUrl(repositoryUrl);
 		bean.setExternaltoolid(externaltoolid);
 		return bean;

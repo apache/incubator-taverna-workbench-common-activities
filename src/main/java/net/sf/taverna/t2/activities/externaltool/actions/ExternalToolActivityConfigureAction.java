@@ -27,10 +27,13 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.Action;
 
-import net.sf.taverna.t2.activities.externaltool.KnowARCConfigurationFactory;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
+import net.sf.taverna.t2.activities.externaltool.KnowARCConfigurationFactory;
+import net.sf.taverna.t2.activities.externaltool.RegisteredExternalToolActivityConfigurationBean;
+import net.sf.taverna.t2.activities.externaltool.views.ExternalToolConfigView;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
 import de.uni_luebeck.inb.knowarc.gui.KnowARCConfigurationDialog;
 
 /**
@@ -53,6 +56,19 @@ public class ExternalToolActivityConfigureAction extends ActivityConfigurationAc
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		new KnowARCConfigurationDialog(owner, false, KnowARCConfigurationFactory.getConfiguration()).setVisible(true);
+		if (getActivity().getConfiguration() instanceof RegisteredExternalToolActivityConfigurationBean) {
+			new KnowARCConfigurationDialog(owner, false, KnowARCConfigurationFactory.getConfiguration()).setVisible(true);
+		} else {
+			ActivityConfigurationDialog currentDialog = ActivityConfigurationAction.getDialog(getActivity());
+			if (currentDialog != null) {
+				currentDialog.toFront();
+				return;
+			}
+			final ExternalToolConfigView externalToolConfigView = new ExternalToolConfigView((ExternalToolActivity)getActivity());
+			final ActivityConfigurationDialog<ExternalToolActivity, ExternalToolActivityConfigurationBean> dialog =
+				new ActivityConfigurationDialog<ExternalToolActivity, ExternalToolActivityConfigurationBean>(getActivity(), externalToolConfigView);
+
+			ActivityConfigurationAction.setDialog(getActivity(), dialog);	
+		}
 	}
 }
