@@ -25,6 +25,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -288,9 +289,10 @@ public class XPathActivityConfigurationPanel extends JPanel {
 					File file = fileChooser.getSelectedFile();
 					// Read the contents of a file into a string
 					// and set the value of the XML document text area to it
+					FileInputStream fis = null;
 					try{
 						byte[] fileBytes = new byte[(int)file.length()];
-						FileInputStream fis = new FileInputStream(file);
+						fis = new FileInputStream(file);
 						fis.read(fileBytes);
 						String xmlDocument = new String(fileBytes, "UTF-8");
 						setSourceXML(xmlDocument);
@@ -302,6 +304,13 @@ public class XPathActivityConfigurationPanel extends JPanel {
 								"There was an error while trying to read the file", 
 								"XPath Activity", 
 								JOptionPane.ERROR_MESSAGE);
+					}
+					finally{
+						try {
+							fis.close();
+						} catch (IOException e1) {
+							// Ignore
+						}
 					}
 
 				}
