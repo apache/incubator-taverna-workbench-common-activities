@@ -62,8 +62,10 @@ public class XPathActivityXMLTreeSelectionHandler implements TreeSelectionListen
     // (with new values for XPath expression and namespace mappings)
     
     // inform the parent activity configuration panel to update the XPath expression in the UI
-    theTree.getParentConfigPanel().updateXPathEditingPanelValues();
-    
+    /* We do not update the XPath expression after changes in selection in the XML tree - we
+     * now have a button to explicitly do that.
+     * theTree.getParentConfigPanel().updateXPathEditingPanelValues();
+     */
     
     // --- SELECTION ---
     selectAllNodesThatMatchTheCurrentXPath(wildcardedXPath, newSelectedPath);

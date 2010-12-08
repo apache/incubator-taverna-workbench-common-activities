@@ -102,6 +102,7 @@ public class XPathActivityConfigurationPanel extends JPanel {
 	private JToggleButton bShowXMLTreeSettings;
 	private Popup xmlTreeSettingsMenu;
 	private long xmlTreeSettingsMenuLastShownAt;
+	private JButton bGenerateXPathExpression;
 	private JPanel jpXMLTreeSettingsMenuContents;
 	private JCheckBoxMenuItem miIncludeAttributes;
 	private JCheckBoxMenuItem miIncludeValues;
@@ -115,6 +116,7 @@ public class XPathActivityConfigurationPanel extends JPanel {
 
 	// --- COMPONENTS FOR XPATH EDITING PANEL ---
 	private JLabel jlXPathExpressionStatus;
+	private JLabel jlXPathExpression;
 	private JTextField tfXPathExpression;
 	private Map<String, String> xpathNamespaceMap;
 	private JButton bRunXPath;
@@ -153,7 +155,6 @@ public class XPathActivityConfigurationPanel extends JPanel {
 		this.add(this.jpActivityConfiguration, c);
 
 		c.gridy++;
-		;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weighty = 0;
 		c.insets = new Insets(0, 10, 0, 10);
@@ -362,7 +363,7 @@ public class XPathActivityConfigurationPanel extends JPanel {
 		jpXMLTreeSettingsMenuContents.add(miIncludeValues);
 		jpXMLTreeSettingsMenuContents.add(miIncludeNamespaces);
 
-		bShowXMLTreeSettings = new JToggleButton("Show XML Tree Settings...",
+		bShowXMLTreeSettings = new JToggleButton("Show XML tree settings...",
 				XPathActivityIcon.getIconById(XPathActivityIcon.UNFOLD_ICON));
 		bShowXMLTreeSettings.setSelectedIcon(XPathActivityIcon
 				.getIconById(XPathActivityIcon.FOLD_ICON));
@@ -387,7 +388,21 @@ public class XPathActivityConfigurationPanel extends JPanel {
 				}
 			}
 		});
-
+		
+		bGenerateXPathExpression = new JButton("Generate XPath expression",
+				XPathActivityIcon
+						.getIconById(XPathActivityIcon.XML_TREE_NODE_ICON));
+		bGenerateXPathExpression.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			     updateXPathEditingPanelValues();	
+			}	
+		});
+		
+		JPanel xmlTreeButtonPanel = new JPanel();
+		xmlTreeButtonPanel.add(bGenerateXPathExpression);
+		xmlTreeButtonPanel.add(bShowXMLTreeSettings);
+		
 		c.gridx = 2;
 		c.gridwidth = 1;
 		c.fill = GridBagConstraints.NONE;
@@ -395,7 +410,7 @@ public class XPathActivityConfigurationPanel extends JPanel {
 		c.weighty = 0;
 		c.insets = new Insets(5, 0, 0, 0);
 		c.anchor = GridBagConstraints.EAST;
-		jpConfig.add(bShowXMLTreeSettings, c);
+		jpConfig.add(xmlTreeButtonPanel, c);
 
 		// register a new listener for all AWT mouse events - this will be used
 		// to identify clicks outside of the XML tree popup menu and the toggle
@@ -450,6 +465,8 @@ public class XPathActivityConfigurationPanel extends JPanel {
 	private JPanel createXPathExpressionEditingPanel() {
 		this.jlXPathExpressionStatus = new JLabel();
 
+		this.jlXPathExpression = new JLabel("XPath expression");
+
 		this.bRunXPath = new JButton("Run XPath");
 		this.bRunXPath.setEnabled(false);
 		this.bRunXPath.addActionListener(new ActionListener() {
@@ -501,6 +518,11 @@ public class XPathActivityConfigurationPanel extends JPanel {
 		jpXPath.add(jlXPathExpressionStatus);
 
 		c.gridx++;
+		c.weightx = 0.0;
+		c.insets = new Insets(0, 10, 0, 0);
+		jpXPath.add(jlXPathExpression, c);
+		
+		c.gridx++;
 		c.weightx = 1.0;
 		c.insets = new Insets(0, 10, 0, 10);
 		jpXPath.add(tfXPathExpression, c);
@@ -510,7 +532,7 @@ public class XPathActivityConfigurationPanel extends JPanel {
 		c.insets = new Insets(0, 0, 0, 0);
 		jpXPath.add(bRunXPath, c);
 
-		c.gridx = 1;
+		c.gridx = 2;
 		c.gridy++;
 		c.weightx = 1.0;
 		c.weighty = 0;
@@ -549,33 +571,9 @@ public class XPathActivityConfigurationPanel extends JPanel {
 		// that when the dedicated area is larger than the table, the latter is
 		// stretched vertically to fill the empty space
 		jtXPathNamespaceMappings
-				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // only
-																		// one
-																		// row
-																		// can
-																		// be
-																		// selected
-																		// at a
-																		// time
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // only one row can be selected at a time
 		jtXPathNamespaceMappings
-				.setPreferredScrollableViewportSize(new Dimension(200, 50)); // NB!
-																				// this
-																				// prevents
-																				// the
-																				// table
-																				// from
-																				// occupying
-																				// most
-																				// of
-																				// the
-																				// space
-																				// in
-																				// the
-																				// panel
-																				// when
-																				// screen
-																				// is
-																				// maximized
+				.setPreferredScrollableViewportSize(new Dimension(200, 50)); // NB! this prevents the table from occupying most of the space in the panel when screen is maximized
 		jtXPathNamespaceMappings.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_DELETE) {
@@ -633,28 +631,7 @@ public class XPathActivityConfigurationPanel extends JPanel {
 		JScrollPane spXPathNamespaceMappings = new JScrollPane(
 				jtXPathNamespaceMappings);
 		spXPathNamespaceMappings.setAlignmentY(TOP_ALIGNMENT);
-		spXPathNamespaceMappings.setMinimumSize(new Dimension(200, 50)); // makes
-																			// the
-																			// table
-																			// to
-																			// have
-																			// at
-																			// least
-																			// two
-																			// rows
-																			// visible
-																			// in
-																			// all
-																			// cases
-																			// -
-																			// no
-																			// matter
-																			// how
-																			// small
-																			// the
-																			// parent
-																			// panel
-																			// is
+		spXPathNamespaceMappings.setMinimumSize(new Dimension(200, 50)); // makes the table to have at least two rows visible in all cases - no matter how small the parent panel is
 
 		bAddMapping = new JButton("Add Mapping");
 		bAddMapping.addActionListener(new ActionListener() {
@@ -671,46 +648,13 @@ public class XPathActivityConfigurationPanel extends JPanel {
 			}
 		});
 
-		bAddMapping.setMinimumSize(bRemoveMapping.getPreferredSize()); // make
-																		// sure
-																		// that
-																		// the
-																		// 'Add
-																		// Mapping'
-																		// button
-																		// is of
-																		// the
-																		// same
-																		// size
-																		// as
-																		// 'Remove
-																		// Mapping'
-		bAddMapping.setPreferredSize(bRemoveMapping.getPreferredSize()); // --
-																			// both
-																			// are
-																			// required
-																			// to
-																			// achieve
-																			// desired
-																			// behaviour
-																			// when
-																			// window
-																			// is
-																			// resized
-																			// /
-																			// namespace
-																			// mapping
-																			// table
-																			// is
-																			// enabled/disabled
+		bAddMapping.setMinimumSize(bRemoveMapping.getPreferredSize()); // make sure that the 'Add Mapping' button is of the same size as 'Remove Mapping'
+															
+		bAddMapping.setPreferredSize(bRemoveMapping.getPreferredSize()); // -- both are required to achieve desired behaviour when window is resized / namespace mapping table is enabled/disabled 												
 
-		bRunXPath.setMinimumSize(bRemoveMapping.getPreferredSize()); // do the
-																		// same
-																		// for
-																		// 'Run
-																		// XPath'
-																		// button
-		bRunXPath.setPreferredSize(bRemoveMapping.getPreferredSize()); // 
+		bRunXPath.setMinimumSize(bRemoveMapping.getPreferredSize()); // do the same for 'Run XPath' button
+		
+		bRunXPath.setPreferredSize(bRemoveMapping.getPreferredSize());
 
 		JPanel jpAddRemoveButtons = new JPanel();
 		jpAddRemoveButtons.setLayout(new GridBagLayout());
@@ -736,7 +680,7 @@ public class XPathActivityConfigurationPanel extends JPanel {
 
 		c.gridx = 0;
 		c.gridy++;
-		c.gridwidth = 3;
+		c.gridwidth = 4;
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 1.0;
 		c.weighty = 1.0;
