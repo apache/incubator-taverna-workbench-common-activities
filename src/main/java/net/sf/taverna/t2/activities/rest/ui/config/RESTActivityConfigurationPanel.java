@@ -461,11 +461,12 @@ public class RESTActivityConfigurationPanel extends
 						
 			// Test if the URL string contains "unsafe" characters, i.e. characters 
 			// that need URL-encoding.
-			// Form RFC 1738: "...Only alphanumerics [0-9a-zA-Z], the special 
+			// From RFC 1738: "...Only alphanumerics [0-9a-zA-Z], the special 
 			// characters "$-_.+!*'()," (not including the quotes) and reserved 
 			// characters used for their reserved purposes may be 
 			// used unencoded within a URL." 
-			// Reserved characters are: ";/?:@&=" (excluding quotes).
+			// Reserved characters are: ";/?:@&=" ..." (excluding quotes) and "%" used 
+			// for escaping.
 			// We do not warn the user if they have not properly enclosed parameter 
 			// names in curly braces as this check is already being done elsewhere in the code.
 			// We do not check the characters in parameter names either.
