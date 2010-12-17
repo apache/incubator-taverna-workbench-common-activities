@@ -26,7 +26,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -38,6 +42,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -45,7 +50,10 @@ import javax.swing.JTextField;
 import net.sf.taverna.t2.activities.externaltool.AdHocExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
+import net.sf.taverna.t2.activities.externaltool.ExternalToolInvocationConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.KnowARCConfigurationFactory;
+import net.sf.taverna.t2.spi.SPIRegistry;
+import net.sf.taverna.t2.visit.Visitor;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
 import net.sf.taverna.t2.workflowmodel.OutputPort;
 import net.sf.taverna.t2.workflowmodel.Port;
@@ -59,6 +67,7 @@ import de.uni_luebeck.inb.knowarc.usecases.ScriptInput;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInputStatic;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInputUser;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptOutput;
+import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 
 /**
  * Provides the configurable view for a {@link ExternalToolActivity} through it's
@@ -112,6 +121,8 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 	private int newOutputPortNumber = 1;
 
 	private int newStaticNumber= 1;
+	
+	private JComboBox invocationSelection;
 
 	/**
 	 * Stores the {@link ExternalToolActivity}, gets its
@@ -134,83 +145,99 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 
 	private AdHocExternalToolActivityConfigurationBean makeConfiguration() {
 		AdHocExternalToolActivityConfigurationBean newConfiguration = new AdHocExternalToolActivityConfigurationBean();
-		Element newNode = new Element("program");
-		newNode.setAttribute("name", nameText.getText());
-		newNode.setAttribute("description", descriptionText.getText());
-		newNode.setAttribute("command", commandText.getText());
+		UseCaseDescription ucd = newConfiguration.getUseCaseDescription();
+		ucd.usecaseid = configuration.getUseCaseDescription().usecaseid;
+
+		ucd.usecaseid = nameText.getText();
+		ucd.description = descriptionText.getText();
+		ucd.command = commandText.getText();
 		synchronized(inputViewList) {
+			ucd.inputs.clear();
+			ucd.tags.clear();
 		for (ExternalToolInputViewer viewer : inputViewList) {
-			Element inputNode = new Element("input");
-			inputNode.setAttribute("name", viewer.getName());
-			if (viewer.isBinary()) {
-				inputNode.setAttribute("binary", "true");
-			}
+			ScriptInputUser si = new ScriptInputUser();
+			si.binary = viewer.isBinary();
+			si.list = viewer.isList();
 			if (viewer.isList()) {
-				inputNode.setAttribute("list", "true");
-				inputNode.setAttribute("concatenate", "true");
+				si.list = true;
+				si.concatenate = true;
 			}
 			if (viewer.isReplace()) {
-				Element subElem = new Element("replace");
-				subElem.setAttribute("tag", viewer.getValue());
-				inputNode.addContent(subElem);
+				si.tag = viewer.getValue();
+				si.tempFile = si.file = false;
+				ucd.tags.add(si.tag);
 			} else if (viewer.isFile()) {
-				Element subElem = new Element("file");
-				subElem.setAttribute("path", viewer.getValue());
-				inputNode.addContent(subElem);				
+				si.tag = viewer.getValue();
+				si.tempFile = false;
+				si.file = true;
 			} else if (viewer.isTempFile()) {
-				Element subElem = new Element("tempfile");
-				subElem.setAttribute("tag", viewer.getValue());
-				inputNode.addContent(subElem);								
+				si.tag = viewer.getValue();
+				si.tempFile = true;
+				si.file = true;
+				ucd.tags.add(si.tag);
 			}
 			
-			newNode.addContent(inputNode);
+			ucd.inputs.put(viewer.getName(), si);
 		}
 		}
 		synchronized(outputViewList) {
+			ucd.outputs.clear();
 			for (ExternalToolOutputViewer viewer : outputViewList) {
-				Element outputNode = new Element("output");
-				outputNode.setAttribute("name", viewer.getName());
-				if (viewer.isBinary()) {
-					outputNode.setAttribute("binary", "true");
-				}
-				Element subElem = new Element("fromfile");
-					subElem.setAttribute("path", viewer.getValue());
-					outputNode.addContent(subElem);				
-				newNode.addContent(outputNode);
+				ScriptOutput so = new ScriptOutput();
+				so.binary = viewer.isBinary();
+				so.path = viewer.getValue();
+				ucd.outputs.put(viewer.getName(), so);
 			}
 			}
 		synchronized(staticViewList) {
+			ucd.static_inputs.clear();
 			for (ExternalToolStaticViewer viewer : staticViewList) {
-				Element staticNode = new Element("static");
-				Element contentNode = new Element("content");
+				ScriptInputStatic sis = new ScriptInputStatic();
 				if (viewer.isURL()) {
-					contentNode.setAttribute("url", viewer.getContent());
+					sis.url = viewer.getContent();
 				} else {
-					contentNode.addContent(viewer.getContent());
+					sis.content = viewer.getContent();
 				}
 				if (viewer.isReplace()) {
-					Element subElem = new Element("replace");
-					subElem.setAttribute("tag", viewer.getValue());
-					staticNode.addContent(subElem);
+					sis.tag = viewer.getValue();
+					sis.tempFile = sis.file = false;
+					ucd.tags.add(sis.tag);
 				} else {
-					Element subElem = new Element("file");
-					subElem.setAttribute("path", viewer.getValue());
-					staticNode.addContent(subElem);				
+					sis.tag = viewer.getValue();
+					sis.tempFile = false;
+					sis.file = true;
 				}
-				staticNode.addContent(contentNode);
-				
-				newNode.addContent(staticNode);
+				ucd.static_inputs.add(sis);
 			}
 			}
-		newConfiguration.setProgramNode(newNode);
+		ExternalToolInvocationViewer currentViewer = (ExternalToolInvocationViewer) invocationSelection.getSelectedItem();
+		newConfiguration.setInvocationBean(currentViewer.getInvocationConfiguration());
+		if (newConfiguration.getInvocationBean() == null) {
+			logger.error("New invocation bean is null");
+		}
 		return newConfiguration;
+	}
+	
+	private String stripDescription(UseCaseDescription desc) {
+		String descString = desc.toString();
+		return (descString.substring(descString.indexOf("[")));
 	}
 
 	public boolean isConfigurationChanged() {
-		if (configuration.getProgramNode() == null) {
-			return true;
+		ExternalToolActivityConfigurationBean newBean = makeConfiguration();
+		boolean basicUseCaseDescriptionChanged =
+			!stripDescription(newBean.getUseCaseDescription()).equals(stripDescription(configuration.getUseCaseDescription()));
+		System.err.println(newBean.getUseCaseDescription().toString());
+		System.err.println(configuration.getUseCaseDescription().toString());
+		if (basicUseCaseDescriptionChanged) {
+			logger.error("Basic use case description changed");
 		}
-		return !makeConfiguration().getProgramText().equals(configuration.getProgramText());
+		ExternalToolInvocationViewer currentViewer = (ExternalToolInvocationViewer) invocationSelection.getSelectedItem();
+		boolean invocationChanged = currentViewer.invocationChanged(configuration.getInvocationBean());
+		if (invocationChanged) {
+			logger.error("Invocation changed");
+		}
+		return basicUseCaseDescriptionChanged || invocationChanged;
 	}
 
 	/**
@@ -242,20 +269,41 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 		for (Entry<String,ScriptInput> entry : configuration
 				.getUseCaseDescription().inputs.entrySet()) {
 			final ExternalToolInputViewer inputView  = new ExternalToolInputViewer(entry.getKey(), (ScriptInputUser) entry.getValue());
-			inputViewList .add(inputView);
+			inputViewList.add(inputView);
 		}
+		Collections.sort(inputViewList, new Comparator<ExternalToolInputViewer>(){
+
+			@Override
+			public int compare(ExternalToolInputViewer o1,
+					ExternalToolInputViewer o2) {
+				return o1.getName().compareTo(o2.getName());
+			}});
 
 		for (Entry<String,ScriptOutput> entry : configuration
 				.getUseCaseDescription().outputs.entrySet()) {
 			final ExternalToolOutputViewer outputView  = new ExternalToolOutputViewer(entry.getKey(), (ScriptOutput) entry.getValue());
 			outputViewList .add(outputView);
 		}
+		Collections.sort(outputViewList, new Comparator<ExternalToolOutputViewer>(){
+
+			@Override
+			public int compare(ExternalToolOutputViewer o1,
+					ExternalToolOutputViewer o2) {
+				return o1.getName().compareTo(o2.getName());
+			}});
 
 		for (ScriptInputStatic sis : configuration
 				.getUseCaseDescription().static_inputs) {
 			final ExternalToolStaticViewer staticView  = new ExternalToolStaticViewer(sis);
 			staticViewList.add(staticView);
 		}
+		Collections.sort(staticViewList, new Comparator<ExternalToolStaticViewer>(){
+
+			@Override
+			public int compare(ExternalToolStaticViewer o1,
+					ExternalToolStaticViewer o2) {
+				return o1.getContent().compareTo(o2.getContent());
+			}});
 
 		tabbedPane.addTab("Input ports", createInputPanel());
 		tabbedPane.addTab("Output ports", createOutputPanel());
@@ -283,25 +331,19 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 		gc.gridx = 0;
 		gc.gridy = 0;
 		
-		if (configuration.getProgramNode() != null) {
 			nameText.setText(configuration.getUseCaseDescription().usecaseid);
-		}
 		scriptEditPanel.add(new JLabel("Name:"), gc);
 		gc.gridx = 1;
 		scriptEditPanel.add(nameText, gc);
 		
-		if (configuration.getProgramNode() != null) {
 			descriptionText.setText(configuration.getUseCaseDescription().description);
-		}
 		gc.gridx = 0;
 		gc.gridy = 1;
 		scriptEditPanel.add(new JLabel("Description:"), gc);
 		gc.gridx = 1;
 		scriptEditPanel.add(descriptionText, gc);
 		
-		if (configuration.getProgramNode() != null) {
 			commandText.setText(configuration.getUseCaseDescription().getCommand());
-		}
 		gc.gridx = 0;
 		gc.gridy = 2;
 		scriptEditPanel.add(new JLabel("Command:"), gc);
@@ -342,56 +384,8 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 		inputConstraint.gridx = 0;
 		synchronized(inputViewList) {
 		for (ExternalToolInputViewer inputView : inputViewList) {
-			// FIXME refactor this into a method
-			inputConstraint.gridy = inputGridy;
-			inputConstraint.gridx = 0;
-			final JTextField nameField = inputView.getNameField();
-			inputConstraint.weightx = 0.1;
-			inputEditPanel.add(nameField, inputConstraint);
-			
-			inputConstraint.weightx = 0.0;
-			inputConstraint.gridx++;
+			addInputViewer(outerInputPanel, inputEditPanel, inputView);
 
-			final JComboBox depthSelector = inputView
-					.getDepthSelector();
-			inputEditPanel.add(depthSelector, inputConstraint);
-			
-			inputConstraint.gridx++;
-			final JComboBox actionSelector = inputView.getActionSelector();
-			inputEditPanel.add(actionSelector, inputConstraint);
-			
-			inputConstraint.gridx++;
-			final JTextField valueField = inputView.getValueField();
-			inputEditPanel.add(valueField ,inputConstraint);
-			
-			inputConstraint.gridx++;
-			final JComboBox typeSelector = inputView.getTypeSelector();
-			inputEditPanel.add(typeSelector, inputConstraint);
-			
-			inputConstraint.gridx++;
-			final JButton removeButton = new JButton("Remove");
-			final ExternalToolInputViewer v = inputView;
-			removeButton.addActionListener(new AbstractAction() {
-
-				public void actionPerformed(ActionEvent e) {
-					synchronized(inputViewList) {
-						inputViewList.remove(v);
-					}
-					inputEditPanel.remove(nameField);
-					inputEditPanel.remove(depthSelector);
-					inputEditPanel.remove(actionSelector);
-					inputEditPanel.remove(valueField);
-					inputEditPanel.remove(typeSelector);
-					inputEditPanel.remove(removeButton);
-					inputEditPanel.revalidate();
-					inputEditPanel.repaint();
-					outerInputPanel.revalidate();
-					outerInputPanel.repaint();
-				}
-
-			});
-			inputEditPanel.add(removeButton, inputConstraint);
-			inputGridy++;
 		}
 		}
 		outerInputPanel.setLayout(new GridBagLayout());
@@ -421,59 +415,11 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 				ExternalToolInputViewer newViewer = new ExternalToolInputViewer(name2);
 				synchronized(inputViewList) {
 					inputViewList.add(newViewer);
+					addInputViewer(outerInputPanel, inputEditPanel, newViewer);
+					inputEditPanel.revalidate();
+					inputEditPanel.repaint();
 				}
-				// FIXME refactor this into a method
-				inputConstraint.gridy = inputGridy;
-				inputConstraint.gridx = 0;
-				final JTextField nameField = newViewer.getNameField();
-				inputConstraint.weightx = 0.1;
-				inputEditPanel.add(nameField, inputConstraint);
-				
-				inputConstraint.weightx = 0.0;
-				inputConstraint.gridx++;
 
-				final JComboBox depthSelector = newViewer
-						.getDepthSelector();
-				inputEditPanel.add(depthSelector, inputConstraint);
-				
-				inputConstraint.gridx++;
-				final JComboBox actionSelector = newViewer.getActionSelector();
-				inputEditPanel.add(actionSelector, inputConstraint);
-				
-				inputConstraint.gridx++;
-				final JTextField valueField = newViewer.getValueField();
-				inputEditPanel.add(valueField ,inputConstraint);
-				
-				inputConstraint.gridx++;
-				final JComboBox typeSelector = newViewer.getTypeSelector();
-				inputEditPanel.add(typeSelector, inputConstraint);
-				
-				inputConstraint.gridx++;
-				final JButton removeButton = new JButton("Remove");
-				final ExternalToolInputViewer v = newViewer;
-				removeButton.addActionListener(new AbstractAction() {
-
-					public void actionPerformed(ActionEvent e) {
-						synchronized(inputViewList) {
-							inputViewList.remove(v);
-						}
-						inputEditPanel.remove(nameField);
-						inputEditPanel.remove(depthSelector);
-						inputEditPanel.remove(actionSelector);
-						inputEditPanel.remove(valueField);
-						inputEditPanel.remove(typeSelector);
-						inputEditPanel.remove(removeButton);
-						inputEditPanel.revalidate();
-						inputEditPanel.repaint();
-						outerInputPanel.revalidate();
-						outerInputPanel.repaint();
-					}
-
-				});
-				inputEditPanel.add(removeButton, inputConstraint);
-				inputEditPanel.revalidate();
-
-				inputGridy++;
 			}
 
 		});
@@ -505,16 +451,113 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 
 		return outerInputPanel;
 	}
+	
+	private void addInputViewer(final JPanel outerPanel, final JPanel panel, ExternalToolInputViewer viewer) {
+		final GridBagConstraints inputConstraint = new GridBagConstraints();
+		inputConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
+		inputConstraint.weightx = 0.1;
+		inputConstraint.fill = GridBagConstraints.BOTH;
+
+		inputConstraint.gridy = inputGridy;
+		inputConstraint.gridx = 0;
+		
+		final JTextField nameField = viewer.getNameField();
+		panel.add(nameField, inputConstraint);
+		inputConstraint.gridx++;
+
+		final JComboBox depthSelector = viewer
+				.getDepthSelector();
+		panel.add(depthSelector, inputConstraint);
+		inputConstraint.gridx++;
+		
+		final JComboBox actionSelector = viewer.getActionSelector();
+		panel.add(actionSelector, inputConstraint);
+		inputConstraint.gridx++;
+		
+		final JTextField valueField = viewer.getValueField();
+		panel.add(valueField ,inputConstraint);
+		inputConstraint.gridx++;
+		
+		final JComboBox typeSelector = viewer.getTypeSelector();
+		panel.add(typeSelector, inputConstraint);
+		inputConstraint.gridx++;
+		
+		final JButton removeButton = new JButton("Remove");
+		final ExternalToolInputViewer v = viewer;
+		removeButton.addActionListener(new AbstractAction() {
+
+			public void actionPerformed(ActionEvent e) {
+				synchronized(inputViewList) {
+					inputViewList.remove(v);
+				}
+				panel.remove(nameField);
+				panel.remove(depthSelector);
+				panel.remove(actionSelector);
+				panel.remove(valueField);
+				panel.remove(typeSelector);
+				panel.remove(removeButton);
+				panel.revalidate();
+				panel.repaint();
+				outerPanel.revalidate();
+				outerPanel.repaint();
+			}
+
+		});
+		panel.add(removeButton, inputConstraint);
+		inputConstraint.gridy = ++ inputGridy;
+		panel.add(new JSeparator(), inputConstraint);
+		inputGridy++;
+		
+	}
 
 	private JPanel createInvocationPanel() {
 		final JPanel invocationPanel = new JPanel();
-		invocationPanel.add(new JButton(new AbstractAction("Configure invocation") {
+		invocationPanel.setLayout(new BorderLayout());
+		invocationSelection = new JComboBox();
+		ExternalToolInvocationViewer current = null;
+		SPIRegistry<ExternalToolInvocationViewer> invocationViewerRegistry = new SPIRegistry(ExternalToolInvocationViewer.class);
+		
+		Class invocationBeanClass = configuration.getInvocationBean().getClass();
+		for (ExternalToolInvocationViewer viewer : invocationViewerRegistry.getInstances()) {
+			invocationSelection.addItem(viewer);
+			if (viewer.canShow(invocationBeanClass)) {
+				current = viewer;
+			}
+		}
+		if (current != null) {
+			invocationSelection.setSelectedItem(current);
+		}
+		invocationPanel.add(invocationSelection, BorderLayout.NORTH);
+		final JPanel subPanel = new JPanel();
+		subPanel.setLayout(new BorderLayout());
+		invocationPanel.add(subPanel, BorderLayout.CENTER);
+		invocationSelection.addItemListener(new ItemListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				new KnowARCConfigurationDialog(null, false, KnowARCConfigurationFactory.getConfiguration()).setVisible(true);
-				}}));
+			public void itemStateChanged(ItemEvent e) {
+				JComboBox c = (JComboBox) e.getSource();
+				ExternalToolInvocationViewer v = (ExternalToolInvocationViewer) c.getSelectedItem();
+				showInvocationViewer(invocationPanel, subPanel, v);
+			}
+			
+		});
+		if (current != null) {
+			showInvocationViewer(invocationPanel, subPanel, current);
+		}
 		return invocationPanel;
+	}
+	
+	private void showInvocationViewer(JPanel invocationPanel, JPanel subPanel, ExternalToolInvocationViewer v) {
+		JPanel view = v.show(configuration.getInvocationBean());
+		subPanel.removeAll();
+		if (view != null) {
+			subPanel.add(view, BorderLayout.CENTER);
+		}
+		subPanel.revalidate();
+		subPanel.repaint();
+		invocationPanel.revalidate();
+		invocationPanel.repaint();
+		
 	}
 	
 	@Override
@@ -596,45 +639,7 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 			outputConstraint.gridx = 0;
 			synchronized(outputViewList) {
 			for (ExternalToolOutputViewer outputView : outputViewList) {
-				// FIXME refactor this into a method
-				outputConstraint.gridy = outputGridy;
-				outputConstraint.gridx = 0;
-				final JTextField nameField = outputView.getNameField();
-				outputConstraint.weightx = 0.1;
-				outputEditPanel.add(nameField, outputConstraint);
-				
-				outputConstraint.weightx = 0.0;
-				outputConstraint.gridx++;
-	
-				final JTextField valueField = outputView.getValueField();
-				outputEditPanel.add(valueField ,outputConstraint);
-				outputConstraint.gridx++;
-				
-				final JComboBox typeSelector = outputView.getTypeSelector();
-				outputEditPanel.add(typeSelector ,outputConstraint);
-				
-				outputConstraint.gridx++;
-				final JButton removeButton = new JButton("Remove");
-				final ExternalToolOutputViewer v = outputView;
-				removeButton.addActionListener(new AbstractAction() {
-	
-					public void actionPerformed(ActionEvent e) {
-						synchronized(outputViewList) {
-							outputViewList.remove(v);
-						}
-						outputEditPanel.remove(nameField);
-						outputEditPanel.remove(valueField);
-						outputEditPanel.remove(typeSelector);
-						outputEditPanel.remove(removeButton);
-						outputEditPanel.revalidate();
-						outputEditPanel.repaint();
-						outerOutputPanel.revalidate();
-						outerOutputPanel.repaint();
-					}
-	
-				});
-				outputEditPanel.add(removeButton, outputConstraint);
-				outputGridy++;
+				addOutputViewer(outerOutputPanel, outputEditPanel, outputView);
 			}
 			}
 			outerOutputPanel.setLayout(new GridBagLayout());
@@ -664,47 +669,10 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 					ExternalToolOutputViewer newViewer = new ExternalToolOutputViewer(name2);
 					synchronized(outputViewList) {
 						outputViewList.add(newViewer);
-					}
-					outputConstraint.gridy = outputGridy;
-					outputConstraint.gridx = 0;
-					final JTextField nameField = newViewer.getNameField();
-					outputConstraint.weightx = 0.1;
-					outputEditPanel.add(nameField, outputConstraint);
-					
-					outputConstraint.weightx = 0.0;
-					outputConstraint.gridx++;
-		
-					final JTextField valueField = newViewer.getValueField();
-					outputEditPanel.add(valueField ,outputConstraint);
-					
-					outputConstraint.gridx++;
-					final JComboBox typeSelector = newViewer.getTypeSelector();
-					outputEditPanel.add(typeSelector ,outputConstraint);
-					
-					outputConstraint.gridx++;
-					final JButton removeButton = new JButton("Remove");
-					final ExternalToolOutputViewer v = newViewer;
-					removeButton.addActionListener(new AbstractAction() {
-		
-						public void actionPerformed(ActionEvent e) {
-							synchronized(outputViewList) {
-								outputViewList.remove(v);
-							}
-							outputEditPanel.remove(nameField);
-							outputEditPanel.remove(valueField);
-							outputEditPanel.remove(typeSelector);
-							outputEditPanel.remove(removeButton);
-							outputEditPanel.revalidate();
-							outputEditPanel.repaint();
-							outerOutputPanel.revalidate();
-							outerOutputPanel.repaint();
-						}
-		
-					});
-					outputEditPanel.add(removeButton, outputConstraint);
-					outputEditPanel.revalidate();
-	
-					outputGridy++;
+						addOutputViewer(outerOutputPanel, outputEditPanel, newViewer);
+						outputEditPanel.revalidate();
+						outputEditPanel.repaint();
+					}	
 				}
 	
 			});
@@ -736,6 +704,52 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 	
 			return outerOutputPanel;
 		}
+	
+	private void addOutputViewer(final JPanel outerPanel, final JPanel panel, ExternalToolOutputViewer viewer) {
+		final GridBagConstraints outputConstraint = new GridBagConstraints();
+		outputConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
+		outputConstraint.weightx = 0.1;
+		outputConstraint.fill = GridBagConstraints.BOTH;
+
+		outputConstraint.gridy = outputGridy;
+		outputConstraint.gridx = 0;
+		final JTextField nameField = viewer.getNameField();
+		panel.add(nameField, outputConstraint);
+		
+		outputConstraint.weightx = 0.0;
+		outputConstraint.gridx++;
+
+		final JTextField valueField = viewer.getValueField();
+		panel.add(valueField ,outputConstraint);
+		outputConstraint.gridx++;
+		
+		final JComboBox typeSelector = viewer.getTypeSelector();
+		panel.add(typeSelector ,outputConstraint);
+		
+		outputConstraint.gridx++;
+		final JButton removeButton = new JButton("Remove");
+		final ExternalToolOutputViewer v = viewer;
+		removeButton.addActionListener(new AbstractAction() {
+
+			public void actionPerformed(ActionEvent e) {
+				synchronized(outputViewList) {
+					outputViewList.remove(v);
+				}
+				panel.remove(nameField);
+				panel.remove(valueField);
+				panel.remove(typeSelector);
+				panel.remove(removeButton);
+				panel.revalidate();
+				panel.repaint();
+				outerPanel.revalidate();
+				outerPanel.repaint();
+			}
+
+		});
+		panel.add(removeButton, outputConstraint);
+		outputGridy++;
+		
+	}
 
 	private JPanel createStaticPanel() {
 		final JPanel outerStaticPanel = new JPanel();
@@ -760,52 +774,7 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 			staticConstraint.gridx = 0;
 			synchronized(staticViewList) {
 			for (ExternalToolStaticViewer staticView : staticViewList) {
-				// FIXME refactor this into a method
-				staticConstraint.gridy = staticGridy;
-				staticConstraint.gridx = 0;
-				staticConstraint.weightx = 0.1;
-
-				final JComboBox typeSelector = staticView.getTypeSelector();
-				staticEditPanel.add(typeSelector ,staticConstraint);
-				
-				staticConstraint.gridx++;
-				
-				final JTextArea contentField = staticView.getContentField();
-				staticEditPanel.add(contentField, staticConstraint);
-				
-				staticConstraint.gridx++;
-
-				final JComboBox actionSelector = staticView.getActionSelector();
-				staticEditPanel.add(actionSelector, staticConstraint);
-				
-				staticConstraint.gridx++;
-				final JTextField valueField = staticView.getValueField();
-				staticEditPanel.add(valueField ,staticConstraint);
-				
-				staticConstraint.gridx++;
-				
-				final JButton removeButton = new JButton("Remove");
-				final ExternalToolStaticViewer v = staticView;
-				removeButton.addActionListener(new AbstractAction() {
-	
-					public void actionPerformed(ActionEvent e) {
-						synchronized(staticViewList) {
-							staticViewList.remove(v);
-						}
-						staticEditPanel.remove(typeSelector);
-						staticEditPanel.remove(contentField);
-						staticEditPanel.remove(actionSelector);
-						staticEditPanel.remove(valueField);
-						staticEditPanel.remove(removeButton);
-						staticEditPanel.revalidate();
-						staticEditPanel.repaint();
-						outerStaticPanel.revalidate();
-						outerStaticPanel.repaint();
-					}
-	
-				});
-				staticEditPanel.add(removeButton, staticConstraint);
-				staticGridy++;
+				addStaticViewer(outerStaticPanel, staticEditPanel, staticView);
 			}
 			}
 			outerStaticPanel.setLayout(new GridBagLayout());
@@ -825,52 +794,10 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 					ExternalToolStaticViewer newViewer = new ExternalToolStaticViewer();
 					synchronized(staticViewList) {
 						staticViewList.add(newViewer);
+						addStaticViewer(outerStaticPanel, staticEditPanel, newViewer);
+						staticEditPanel.revalidate();
+						staticEditPanel.repaint();
 					}
-					staticConstraint.gridy = staticGridy;
-					staticConstraint.gridx = 0;
-					staticConstraint.weightx = 0.1;
-					final JComboBox typeSelector = newViewer.getTypeSelector();
-					staticEditPanel.add(typeSelector ,staticConstraint);
-					
-					staticConstraint.gridx++;
-					
-					final JTextArea contentField = newViewer.getContentField();
-					staticEditPanel.add(contentField, staticConstraint);
-					
-					staticConstraint.gridx++;
-					final JComboBox actionSelector = newViewer.getActionSelector();
-					staticEditPanel.add(actionSelector, staticConstraint);
-					
-					staticConstraint.gridx++;
-					final JTextField valueField = newViewer.getValueField();
-					staticEditPanel.add(valueField ,staticConstraint);
-					
-					staticConstraint.gridx++;
-					final JButton removeButton = new JButton("Remove");
-					final ExternalToolStaticViewer v = newViewer;
-					removeButton.addActionListener(new AbstractAction() {
-		
-						public void actionPerformed(ActionEvent e) {
-							synchronized(staticViewList) {
-								staticViewList.remove(v);
-							}
-							staticEditPanel.remove(typeSelector);
-							staticEditPanel.remove(contentField);
-							staticEditPanel.remove(actionSelector);
-							staticEditPanel.remove(valueField);
-							staticEditPanel.remove(removeButton);
-							staticEditPanel.revalidate();
-							staticEditPanel.repaint();
-							outerStaticPanel.revalidate();
-							outerStaticPanel.repaint();
-						}
-		
-					});
-					staticEditPanel.add(removeButton, staticConstraint);
-					staticGridy++;
-					staticEditPanel.revalidate();
-	
-					staticGridy++;
 				}
 	
 			});
@@ -902,6 +829,60 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 	
 			return outerStaticPanel;
 		}
+	
+	private void addStaticViewer(final JPanel outerPanel, final JPanel panel, ExternalToolStaticViewer viewer) {
+		final GridBagConstraints staticConstraint = new GridBagConstraints();
+		staticConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
+		staticConstraint.weightx = 0.1;
+		staticConstraint.fill = GridBagConstraints.BOTH;
+
+		staticConstraint.gridy = staticGridy;
+		staticConstraint.gridx = 0;
+		staticConstraint.weightx = 0.1;
+
+		final JComboBox typeSelector = viewer.getTypeSelector();
+		panel.add(typeSelector ,staticConstraint);
+		
+		staticConstraint.gridx++;
+		
+		final JTextArea contentField = viewer.getContentField();
+		panel.add(contentField, staticConstraint);
+		
+		staticConstraint.gridx++;
+
+		final JComboBox actionSelector = viewer.getActionSelector();
+		panel.add(actionSelector, staticConstraint);
+		
+		staticConstraint.gridx++;
+		final JTextField valueField = viewer.getValueField();
+		panel.add(valueField ,staticConstraint);
+		
+		staticConstraint.gridx++;
+		
+		final JButton removeButton = new JButton("Remove");
+		final ExternalToolStaticViewer v = viewer;
+		removeButton.addActionListener(new AbstractAction() {
+
+			public void actionPerformed(ActionEvent e) {
+				synchronized(staticViewList) {
+					staticViewList.remove(v);
+				}
+				panel.remove(typeSelector);
+				panel.remove(contentField);
+				panel.remove(actionSelector);
+				panel.remove(valueField);
+				panel.remove(removeButton);
+				panel.revalidate();
+				panel.repaint();
+				outerPanel.revalidate();
+				outerPanel.repaint();
+			}
+
+		});
+		panel.add(removeButton, staticConstraint);
+		staticGridy++;
+		
+	}
 
 
 }
