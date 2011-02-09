@@ -67,11 +67,6 @@
 			<version>${javahelp.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.taverna.jedit</groupId>
-			<artifactId>jedit-syntax</artifactId>
-			<version>${jedit.syntax.version}</version>
-		</dependency>
-		<dependency>
 	<groupId>net.sf.taverna.t2.lang</groupId>
 	<artifactId>ui</artifactId>
 		<version>${t2.lang.version}</version>

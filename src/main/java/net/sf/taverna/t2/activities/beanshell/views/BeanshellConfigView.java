@@ -24,6 +24,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -52,6 +53,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -59,11 +61,23 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.BoxView;
+import javax.swing.text.ComponentView;
+import javax.swing.text.Element;
+import javax.swing.text.IconView;
+import javax.swing.text.LabelView;
+import javax.swing.text.ParagraphView;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledEditorKit;
+import javax.swing.text.View;
+import javax.swing.text.ViewFactory;
 
 import net.sf.taverna.raven.repository.BasicArtifact;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
@@ -73,6 +87,7 @@ import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDepen
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity.ClassLoaderSharing;
 import net.sf.taverna.t2.lang.ui.FileTools;
 import net.sf.taverna.t2.lang.ui.LineEnabledTextPanel;
+import net.sf.taverna.t2.lang.ui.KeywordDocument;
 import net.sf.taverna.t2.reference.ExternalReferenceSPI;
 import net.sf.taverna.t2.visit.VisitReport;
 import net.sf.taverna.t2.visit.VisitReport.Status;
@@ -121,7 +136,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	
 	///////// Beanshell properties that can be configured ////////
 	/** The beanshell script */
-	private JEditTextArea scriptText;
+	private JEditorPane scriptTextArea;
 	
 	/** A list of views over the input ports */
 	private List<BeanshellInputViewer> inputViewList;
@@ -189,7 +204,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	}
 
     public void whenOpened() {
-	scriptText.requestFocus();
+	scriptTextArea.requestFocus();
     }
 
 	public void noteConfiguration() {			
@@ -249,7 +264,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		
 		BeanshellActivityConfigurationBean newConfiguration =
 			(BeanshellActivityConfigurationBean) cloneBean (configuration);
-		newConfiguration.setScript(scriptText
+		newConfiguration.setScript(scriptTextArea
 				.getText());
 		newConfiguration
 				.setInputPortDefinitions(inputBeanList);
@@ -263,11 +278,9 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	}
 
 	public boolean isConfigurationChanged() {
-		String newScriptText = scriptText.getText();
-		String configText = configuration.getScript();
 		return !((!inputsChanged)
 		&& (!outputsChanged)
-		&& scriptText.getText().equals(configuration.getScript()) 
+		&& scriptTextArea.getText().equals(configuration.getScript()) 
 		&& classLoaderSharing.equals(configuration.getClassLoaderSharing())
 		&& localDependencies.equals(configuration.getLocalDependencies()));
 	}
@@ -316,12 +329,27 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		outerConstraint.weightx = 0.1;
 		add(tabbedPane, outerConstraint);
 
-		scriptText = new JEditTextArea();
-		scriptText.setText(configBean.getScript());
-		scriptText.setTokenMarker(new JavaTokenMarker());
-		scriptText.setCaretPosition(0);
-		scriptText.setPreferredSize(new Dimension(0, 0));
-		scriptEditPanel.add(new LineEnabledTextPanel(scriptText), BorderLayout.CENTER);
+		scriptTextArea = new JTextPane();
+
+		final KeywordDocument doc = new KeywordDocument(BeanshellKeySetManager.getKeySet());
+		// NOTE: Due to T2-1145 - always set editor kit BEFORE setDocument
+		scriptTextArea.setEditorKit( new NoWrapEditorKit() );
+		scriptTextArea.setFont(new Font("Monospaced",Font.PLAIN,14));
+		scriptTextArea.setDocument(doc);
+		scriptTextArea.setText(configBean.getScript());
+		scriptTextArea.setCaretPosition(0);
+		scriptTextArea.setPreferredSize(new Dimension(200, 100));
+
+		for (ActivityInputPortDefinitionBean ip : configuration.getInputPortDefinitions()) {
+			String name = ip.getName();
+			doc.addPort(name);
+		}
+		for (ActivityOutputPortDefinitionBean op : configuration.getOutputPortDefinitions()) {
+			String name = op.getName();
+			doc.addPort(name);
+		}
+		
+		scriptEditPanel.add(new LineEnabledTextPanel(scriptTextArea), BorderLayout.CENTER);
 		
 		final JButton checkScriptButton = new JButton("Check script");
 		checkScriptButton.setToolTipText("Check the beanshell script");
@@ -359,7 +387,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 			public void actionPerformed(ActionEvent e) {
 			    String newScript = FileTools.readStringFromFile(BeanshellConfigView.this, "Load Beanshell script", ".bsh");
 				if (newScript != null) {
-					scriptText.setText(newScript);
+					scriptTextArea.setText(newScript);
 				}
 			}
 		});
@@ -368,7 +396,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		saveRScriptButton.setToolTipText("Save the Beanshell script to a file");
 		saveRScriptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FileTools.saveStringToFile(BeanshellConfigView.this, "Save Beanshell script", ".bsh", scriptText.getText());
+				FileTools.saveStringToFile(BeanshellConfigView.this, "Save Beanshell script", ".bsh", scriptTextArea.getText());
 			}
 		});
 
@@ -1028,7 +1056,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		if (JOptionPane.showConfirmDialog(this,
 				"Do you really want to clear the script?",
 				"Clearing the script", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-			scriptText.setText("");
+			scriptTextArea.setText("");
 		}
 
 	}
@@ -1086,5 +1114,65 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		}
 		return result;
 	}
+	
+	/**
+	 * 
+	 * The following classes are copied from http://forums.sun.com/thread.jspa?threadID=622683
+	 *
+	 */
+	private class NoWrapEditorKit extends StyledEditorKit
+	{
+		public ViewFactory getViewFactory()
+		{
+				return new StyledViewFactory();
+		} 
+	}
+	 
+		static class StyledViewFactory implements ViewFactory
+		{
+			public View create(Element elem)
+			{
+				String kind = elem.getName();
+	 
+				if (kind != null)
+				{
+					if (kind.equals(AbstractDocument.ContentElementName))
+					{
+						return new LabelView(elem);
+					}
+					else if (kind.equals(AbstractDocument.ParagraphElementName))
+					{
+						return new ParagraphView(elem);
+					}
+					else if (kind.equals(AbstractDocument.SectionElementName))
+					{
+						return new NoWrapBoxView(elem, View.Y_AXIS);
+					}
+					else if (kind.equals(StyleConstants.ComponentElementName))
+					{
+						return new ComponentView(elem);
+					}
+					else if (kind.equals(StyleConstants.IconElementName))
+					{
+						return new IconView(elem);
+					}
+				}
+	 
+		 		return new LabelView(elem);
+			}
+		}
+
+		static class NoWrapBoxView extends BoxView {
+	        public NoWrapBoxView(Element elem, int axis) {
+	            super(elem, axis);
+	        }
+	 
+	        public void layout(int width, int height) {
+	            super.layout(32768, height);
+	        }
+	        public float getMinimumSpan(int axis) {
+	            return super.getPreferredSpan(axis);
+	        }
+	    }
 
 }
