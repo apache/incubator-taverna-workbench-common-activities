@@ -30,12 +30,9 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -90,7 +87,6 @@ import net.sf.taverna.t2.lang.ui.LineEnabledTextPanel;
 import net.sf.taverna.t2.lang.ui.KeywordDocument;
 import net.sf.taverna.t2.reference.ExternalReferenceSPI;
 import net.sf.taverna.t2.visit.VisitReport;
-import net.sf.taverna.t2.visit.VisitReport.Status;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
 import net.sf.taverna.t2.workflowmodel.OutputPort;
 import net.sf.taverna.t2.workflowmodel.Port;
@@ -100,12 +96,7 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityInputPort;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
 
-import org.apache.log4j.Logger;
-import org.syntax.jedit.JEditTextArea;
-import org.syntax.jedit.tokenmarker.JavaTokenMarker;
-
-import bsh.ParseException;
-import bsh.Parser;
+//import org.apache.log4j.Logger;
 
 /**
  * Provides the configurable view for a {@link BeanshellActivity} through it's
@@ -124,9 +115,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 
 	private static final String VALID_NAME_REGEX = "[\\p{L}\\p{Digit}_]+";
 
-
-	private static Logger logger = Logger.getLogger(BeanshellConfigView.class);
-
+	//private static Logger logger = Logger.getLogger(BeanshellConfigView.class);
 	
 	/** The activity which this view describes */
 	protected BeanshellActivity activity;
@@ -185,8 +174,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 
 	private JTabbedPane tabbedPane = null;
 
-
-	private File currentDirectory = null;
+	//private File currentDirectory = null;
 
 
 	/**
