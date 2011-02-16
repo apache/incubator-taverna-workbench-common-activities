@@ -37,7 +37,6 @@ import java.math.BigInteger;
 import java.util.HashMap;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -54,7 +53,7 @@ import javax.security.auth.x500.X500Principal;
 
 import net.sf.taverna.t2.lang.ui.DialogTextArea;
 import net.sf.taverna.t2.security.credentialmanager.CMException;
-import net.sf.taverna.t2.security.credentialmanager.CMX509Util;
+import net.sf.taverna.t2.security.credentialmanager.CMUtils;
 import net.sf.taverna.t2.workbench.helper.HelpEnabledDialog;
 
 import org.apache.log4j.Logger;
@@ -184,7 +183,7 @@ public class ConfirmTrustedCertificateDialog extends HelpEnabledDialog {
 		// Distinguished Name (DN)
 		String sDN = cert.getSubjectX500Principal().getName(
 				X500Principal.RFC2253);
-		CMX509Util util = new CMX509Util();
+		CMUtils util = new CMUtils();
 		util.parseDN(sDN);
 		// Extract the CN, O, OU and EMAILADDRESS fields
 		String sCN = util.getCN();
