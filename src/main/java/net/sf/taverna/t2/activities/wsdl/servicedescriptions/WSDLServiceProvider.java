@@ -11,6 +11,7 @@ import javax.wsdl.Operation;
 import javax.wsdl.WSDLException;
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.sf.taverna.t2.activities.wsdl.WSDLActivityHealthChecker;
 import net.sf.taverna.t2.lang.observer.Observable;
 import net.sf.taverna.t2.lang.observer.Observer;
 import net.sf.taverna.t2.servicedescriptions.AbstractConfigurableServiceProvider;
@@ -105,12 +106,18 @@ public class WSDLServiceProvider extends
 			for (Operation op : operations) {
 				WSDLServiceDescription item = new WSDLServiceDescription();
 				try {
-					item.setOperation(op.getName());
-					item.setUse(parser.getUse(op.getName()));
-					item.setStyle(parser.getStyle());
+					String name = op.getName();
+					item.setOperation(name);
+					String use = parser.getUse(name);
+					String style = parser.getStyle();
+					if (!WSDLActivityHealthChecker.checkStyleAndUse(style, use)) {
+						logger.warn("Unsupport style for operation " + name + " from " + wsdl);
+						continue;
+					}
+					item.setUse(use);
+					item.setStyle(style);
 					item.setURI(wsdl);
-					item.setDescription(parser.getOperationDocumentation(op
-							.getName()));
+					item.setDescription(parser.getOperationDocumentation(name));
 					items.add(item);
 				} catch (UnknownOperationException e) {
 					String message = "Encountered an unexpected operation name:"
