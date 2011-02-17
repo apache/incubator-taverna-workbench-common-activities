@@ -111,7 +111,7 @@ public class WSDLServiceProvider extends
 					String use = parser.getUse(name);
 					String style = parser.getStyle();
 					if (!WSDLActivityHealthChecker.checkStyleAndUse(style, use)) {
-						logger.warn("Unsupport style for operation " + name + " from " + wsdl);
+						logger.warn("Unsupported style " + style + "/" + use + " for operation " + name + " from " + wsdl);
 						continue;
 					}
 					item.setUse(use);
