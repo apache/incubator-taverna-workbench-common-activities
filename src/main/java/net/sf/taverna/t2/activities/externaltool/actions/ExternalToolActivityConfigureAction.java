@@ -29,12 +29,9 @@ import javax.swing.Action;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
-import net.sf.taverna.t2.activities.externaltool.KnowARCConfigurationFactory;
-import net.sf.taverna.t2.activities.externaltool.RegisteredExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.views.ExternalToolConfigView;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
-import de.uni_luebeck.inb.knowarc.gui.KnowARCConfigurationDialog;
 
 /**
  * This class implements an ActivityConfigurationAction to configure the
@@ -56,9 +53,9 @@ public class ExternalToolActivityConfigureAction extends ActivityConfigurationAc
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (getActivity().getConfiguration() instanceof RegisteredExternalToolActivityConfigurationBean) {
+/*		if (getActivity().getConfiguration() instanceof RegisteredExternalToolActivityConfigurationBean) {
 			new KnowARCConfigurationDialog(owner, false, KnowARCConfigurationFactory.getConfiguration()).setVisible(true);
-		} else {
+		} else*/ {
 			ActivityConfigurationDialog currentDialog = ActivityConfigurationAction.getDialog(getActivity());
 			if (currentDialog != null) {
 				currentDialog.toFront();

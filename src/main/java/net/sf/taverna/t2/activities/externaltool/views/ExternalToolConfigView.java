@@ -50,19 +50,14 @@ import javax.swing.JTextField;
 import net.sf.taverna.t2.activities.externaltool.AdHocExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
-import net.sf.taverna.t2.activities.externaltool.ExternalToolInvocationConfigurationBean;
-import net.sf.taverna.t2.activities.externaltool.KnowARCConfigurationFactory;
 import net.sf.taverna.t2.spi.SPIRegistry;
-import net.sf.taverna.t2.visit.Visitor;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
 import net.sf.taverna.t2.workflowmodel.OutputPort;
 import net.sf.taverna.t2.workflowmodel.Port;
 import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityInputPort;
 
 import org.apache.log4j.Logger;
-import org.jdom.Element;
 
-import de.uni_luebeck.inb.knowarc.gui.KnowARCConfigurationDialog;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInput;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInputStatic;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInputUser;
@@ -146,68 +141,70 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 	private AdHocExternalToolActivityConfigurationBean makeConfiguration() {
 		AdHocExternalToolActivityConfigurationBean newConfiguration = new AdHocExternalToolActivityConfigurationBean();
 		UseCaseDescription ucd = newConfiguration.getUseCaseDescription();
-		ucd.usecaseid = configuration.getUseCaseDescription().usecaseid;
+		ucd.setUsecaseid(configuration.getUseCaseDescription().getUsecaseid());
 
-		ucd.usecaseid = nameText.getText();
-		ucd.description = descriptionText.getText();
-		ucd.command = commandText.getText();
+		ucd.setUsecaseid(nameText.getText());
+		ucd.setDescription(descriptionText.getText());
+		ucd.setCommand(commandText.getText());
 		synchronized(inputViewList) {
-			ucd.inputs.clear();
-			ucd.tags.clear();
+			ucd.getInputs().clear();
+			ucd.getTags().clear();
 		for (ExternalToolInputViewer viewer : inputViewList) {
 			ScriptInputUser si = new ScriptInputUser();
-			si.binary = viewer.isBinary();
-			si.list = viewer.isList();
+			si.setBinary(viewer.isBinary());
+			si.setList(viewer.isList());
 			if (viewer.isList()) {
-				si.list = true;
-				si.concatenate = true;
+				si.setList(true);
+				si.setConcatenate(true);
 			}
 			if (viewer.isReplace()) {
-				si.tag = viewer.getValue();
-				si.tempFile = si.file = false;
-				ucd.tags.add(si.tag);
+				si.setTag(viewer.getValue());
+				si.setTempFile(false);
+				si.setFile(false);
+				ucd.getTags().add(si.getTag());
 			} else if (viewer.isFile()) {
-				si.tag = viewer.getValue();
-				si.tempFile = false;
-				si.file = true;
+				si.setTag(viewer.getValue());
+				si.setTempFile(false);
+				si.setFile(true);
 			} else if (viewer.isTempFile()) {
-				si.tag = viewer.getValue();
-				si.tempFile = true;
-				si.file = true;
-				ucd.tags.add(si.tag);
+				si.setTag(viewer.getValue());
+				si.setTempFile(true);
+				si.setFile(true);
+				ucd.getTags().add(si.getTag());
 			}
 			
-			ucd.inputs.put(viewer.getName(), si);
+			ucd.getInputs().put(viewer.getName(), si);
 		}
 		}
 		synchronized(outputViewList) {
-			ucd.outputs.clear();
+			ucd.getOutputs().clear();
 			for (ExternalToolOutputViewer viewer : outputViewList) {
 				ScriptOutput so = new ScriptOutput();
-				so.binary = viewer.isBinary();
-				so.path = viewer.getValue();
-				ucd.outputs.put(viewer.getName(), so);
+				so.setBinary(viewer.isBinary());
+				so.setPath(viewer.getValue());
+				ucd.getOutputs().put(viewer.getName(), so);
 			}
 			}
 		synchronized(staticViewList) {
-			ucd.static_inputs.clear();
+			ucd.getStatic_inputs().clear();
 			for (ExternalToolStaticViewer viewer : staticViewList) {
 				ScriptInputStatic sis = new ScriptInputStatic();
 				if (viewer.isURL()) {
-					sis.url = viewer.getContent();
+					sis.setUrl(viewer.getContent());
 				} else {
-					sis.content = viewer.getContent();
+					sis.setContent(viewer.getContent());
 				}
 				if (viewer.isReplace()) {
-					sis.tag = viewer.getValue();
-					sis.tempFile = sis.file = false;
-					ucd.tags.add(sis.tag);
+					sis.setTag(viewer.getValue());
+					sis.setTempFile(false);
+					sis.setFile(false);
+					ucd.getTags().add(sis.getTag());
 				} else {
-					sis.tag = viewer.getValue();
-					sis.tempFile = false;
-					sis.file = true;
+					sis.setTag(viewer.getValue());
+					sis.setTempFile(false);
+					sis.setFile(true);
 				}
-				ucd.static_inputs.add(sis);
+				ucd.getStatic_inputs().add(sis);
 			}
 			}
 		ExternalToolInvocationViewer currentViewer = (ExternalToolInvocationViewer) invocationSelection.getSelectedItem();
@@ -267,7 +264,7 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 		staticViewList = new ArrayList<ExternalToolStaticViewer> ();
 
 		for (Entry<String,ScriptInput> entry : configuration
-				.getUseCaseDescription().inputs.entrySet()) {
+				.getUseCaseDescription().getInputs().entrySet()) {
 			final ExternalToolInputViewer inputView  = new ExternalToolInputViewer(entry.getKey(), (ScriptInputUser) entry.getValue());
 			inputViewList.add(inputView);
 		}
@@ -280,7 +277,7 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 			}});
 
 		for (Entry<String,ScriptOutput> entry : configuration
-				.getUseCaseDescription().outputs.entrySet()) {
+				.getUseCaseDescription().getOutputs().entrySet()) {
 			final ExternalToolOutputViewer outputView  = new ExternalToolOutputViewer(entry.getKey(), (ScriptOutput) entry.getValue());
 			outputViewList .add(outputView);
 		}
@@ -293,7 +290,7 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 			}});
 
 		for (ScriptInputStatic sis : configuration
-				.getUseCaseDescription().static_inputs) {
+				.getUseCaseDescription().getStatic_inputs()) {
 			final ExternalToolStaticViewer staticView  = new ExternalToolStaticViewer(sis);
 			staticViewList.add(staticView);
 		}
@@ -331,12 +328,12 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 		gc.gridx = 0;
 		gc.gridy = 0;
 		
-			nameText.setText(configuration.getUseCaseDescription().usecaseid);
+			nameText.setText(configuration.getUseCaseDescription().getUsecaseid());
 		scriptEditPanel.add(new JLabel("Name:"), gc);
 		gc.gridx = 1;
 		scriptEditPanel.add(nameText, gc);
 		
-			descriptionText.setText(configuration.getUseCaseDescription().description);
+			descriptionText.setText(configuration.getUseCaseDescription().getDescription());
 		gc.gridx = 0;
 		gc.gridy = 1;
 		scriptEditPanel.add(new JLabel("Description:"), gc);

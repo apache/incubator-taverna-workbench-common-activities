@@ -27,10 +27,8 @@ import java.net.URI;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
-import net.sf.taverna.t2.activities.externaltool.KnowARCConfigurationFactory;
 import net.sf.taverna.t2.ui.menu.AbstractMenuAction;
 import edu.stanford.ejalbert.BrowserLauncher;
 import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;

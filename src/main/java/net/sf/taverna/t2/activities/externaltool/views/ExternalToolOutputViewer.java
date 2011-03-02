@@ -26,8 +26,8 @@ public class ExternalToolOutputViewer {
 		this(name);
 		this.output = output;
 		nameField.setText(name);
-		valueField.setText(output.path);
-		if (output.binary) {
+		valueField.setText(output.getPath());
+		if (output.isBinary()) {
 			typeSelector.setSelectedItem("Binary");
 		} else {
 			typeSelector.setSelectedItem("Text");

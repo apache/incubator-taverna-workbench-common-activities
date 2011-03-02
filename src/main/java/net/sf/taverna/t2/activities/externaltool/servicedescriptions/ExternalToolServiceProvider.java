@@ -28,10 +28,8 @@ import java.util.List;
 
 import javax.swing.Icon;
 
-import net.sf.taverna.t2.activities.externaltool.KnowARCConfigurationFactory;
 import net.sf.taverna.t2.servicedescriptions.AbstractConfigurableServiceProvider;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
-import de.uni_luebeck.inb.knowarc.gui.ProgressDisplayImpl;
 import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
 
@@ -68,7 +66,7 @@ public class ExternalToolServiceProvider extends AbstractConfigurableServiceProv
 		try {
 			// prepare a list of all use case descriptions which are stored in
 			// the given repository URL
-			List<UseCaseDescription> usecases = UseCaseEnumeration.enumerateXmlFile(new ProgressDisplayImpl(KnowARCConfigurationFactory.getConfiguration()),
+			List<UseCaseDescription> usecases = UseCaseEnumeration.enumerateXmlFile(
 					repositoryUrl);
 			callBack.status("Found " + usecases.size() + " use cases:" + repositoryUrl);
 			// convert all the UseCaseDescriptions in the XML file into
@@ -77,7 +75,7 @@ public class ExternalToolServiceProvider extends AbstractConfigurableServiceProv
 			for (UseCaseDescription usecase : usecases) {
 				ExternalToolServiceDescription item = new ExternalToolServiceDescription();
 				item.setRepositoryUrl(repositoryUrl);
-				item.setExternaltoolid(usecase.usecaseid);
+				item.setExternaltoolid(usecase.getUsecaseid());
 				items.add(item);
 			}
 			// we dont have streaming data loading or partial results, so return

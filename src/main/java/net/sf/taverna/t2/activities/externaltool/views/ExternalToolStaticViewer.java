@@ -27,19 +27,19 @@ public class ExternalToolStaticViewer {
 	public ExternalToolStaticViewer(ScriptInputStatic input) {
 		this();
 		this.input = input;
-		if (input.url != null) {
+		if (input.getUrl() != null) {
 			typeSelector.setSelectedItem("URL");
-			contentField.setText(input.url);
+			contentField.setText(input.getUrl());
 		} else {
 			typeSelector.setSelectedItem("Explicit");
-			contentField.setText((String) input.content);
+			contentField.setText((String) input.getContent());
 		}
-		if (input.file) {
+		if (input.isFile()) {
 			actionSelector.setSelectedItem("File");
 		} else {
 			actionSelector.setSelectedItem("Replace");
 		}
-		valueField.setText(input.tag);
+		valueField.setText(input.getTag());
 	}
 
 	public ExternalToolStaticViewer() {

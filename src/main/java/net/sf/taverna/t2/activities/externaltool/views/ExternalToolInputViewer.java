@@ -27,20 +27,20 @@ public class ExternalToolInputViewer {
 		this(name);
 		this.input = input;
 		nameField.setText(name);
-		if (input.list) {
+		if (input.isList()) {
 			depthSelector.setSelectedItem("List");
 		} else {
 			depthSelector.setSelectedItem("Single");
 		}
-		if (input.file) {
+		if (input.isFile()) {
 			actionSelector.setSelectedItem("File");
-		} else if (input.tempFile) {
+		} else if (input.isTempFile()) {
 			actionSelector.setSelectedItem("Temporary file");
 		} else {
 			actionSelector.setSelectedItem("Replace");
 		}
-		valueField.setText(input.tag);
-		if (input.binary) {
+		valueField.setText(input.getTag());
+		if (input.isBinary()) {
 			typeSelector.setSelectedItem("Binary");
 		} else {
 			typeSelector.setSelectedItem("Text");

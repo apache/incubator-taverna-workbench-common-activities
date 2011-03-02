@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -22,7 +21,6 @@ import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNode;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolInvocationConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.ssh.ExternalToolSshInvocationConfigurationBean;
-import net.sf.taverna.t2.activities.externaltool.views.ExternalToolInputViewer;
 import net.sf.taverna.t2.activities.externaltool.views.ExternalToolInvocationViewer;
 
 /**
@@ -188,8 +186,8 @@ public final class ExternalToolSshInvocationViewer extends
 		List<SshNode> result = new ArrayList<SshNode>();
 		for (ExternalToolSshNodeViewer viewer : nodeViewers) {
 			SshNode node = new SshNode();
-			node.host = viewer.getHostname();
-			node.port = viewer.getPort();
+			node.setHost(viewer.getHostname());
+			node.setPort(viewer.getPort());
 			result.add(node);
 		}
 		return result;

@@ -7,6 +7,8 @@ import javax.swing.JTextField;
 
 import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNode;
 
+
+
 /**
  * @author alanrw
  *
@@ -17,8 +19,8 @@ public class ExternalToolSshNodeViewer {
 	private JTextField portField;
 
 	public ExternalToolSshNodeViewer(SshNode node) {
-		hostnameField = new JTextField(node.host, 30);
-		portField = new JTextField(Integer.toString(node.port), 3);
+		hostnameField = new JTextField(node.getHost(), 30);
+		portField = new JTextField(Integer.toString(node.getPort()), 3);
 	}
 
 	public ExternalToolSshNodeViewer() {
