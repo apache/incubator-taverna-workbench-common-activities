@@ -76,6 +76,7 @@ public class ExternalToolServiceProvider extends AbstractConfigurableServiceProv
 				ExternalToolServiceDescription item = new ExternalToolServiceDescription();
 				item.setRepositoryUrl(repositoryUrl);
 				item.setExternaltoolid(usecase.getUsecaseid());
+				item.setUseCaseDescription(usecase);
 				items.add(item);
 			}
 			// we dont have streaming data loading or partial results, so return

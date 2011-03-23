@@ -26,13 +26,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.Map.Entry;
 
 import javax.help.CSH;
@@ -47,10 +46,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import net.sf.taverna.t2.activities.externaltool.AdHocExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
-import net.sf.taverna.t2.spi.SPIRegistry;
+import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroup;
+import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManager;
+import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManagerListener;
+import net.sf.taverna.t2.activities.externaltool.manager.InvocationManagerUI;
+import net.sf.taverna.t2.activities.externaltool.manager.action.InvocationManagerAction;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
 import net.sf.taverna.t2.workflowmodel.OutputPort;
 import net.sf.taverna.t2.workflowmodel.Port;
@@ -86,7 +88,7 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 	protected ExternalToolActivity activity;
 	
 	/** The configuration bean used to configure the activity */
-	private AdHocExternalToolActivityConfigurationBean configuration;
+	private ExternalToolActivityConfigurationBean configuration;
 	
 	private JTextField nameText = new JTextField(20);
 	private JTextArea descriptionText = new JTextArea(6, 40);
@@ -119,6 +121,9 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 	
 	private JComboBox invocationSelection;
 
+
+	private JPanel invocationPanel;
+
 	/**
 	 * Stores the {@link ExternalToolActivity}, gets its
 	 * {@link ExternalToolActivityConfigurationBean}, sets the layout and calls
@@ -129,7 +134,7 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 	 */
 	public ExternalToolConfigView(ExternalToolActivity activity) {
 		this.activity = activity;
-		configuration = (AdHocExternalToolActivityConfigurationBean) activity.getConfiguration();
+		configuration =  activity.getConfiguration();
 		setLayout(new GridBagLayout());
 		initialise();
 	}
@@ -138,9 +143,10 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 			configuration = makeConfiguration();
 	}
 
-	private AdHocExternalToolActivityConfigurationBean makeConfiguration() {
-		AdHocExternalToolActivityConfigurationBean newConfiguration = new AdHocExternalToolActivityConfigurationBean();
-		UseCaseDescription ucd = newConfiguration.getUseCaseDescription();
+	private ExternalToolActivityConfigurationBean makeConfiguration() {
+		ExternalToolActivityConfigurationBean newConfiguration = new ExternalToolActivityConfigurationBean();
+		UseCaseDescription ucd = new UseCaseDescription(UUID.randomUUID().toString());
+		newConfiguration.setUseCaseDescription(ucd);
 		ucd.setUsecaseid(configuration.getUseCaseDescription().getUsecaseid());
 
 		ucd.setUsecaseid(nameText.getText());
@@ -207,11 +213,8 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 				ucd.getStatic_inputs().add(sis);
 			}
 			}
-		ExternalToolInvocationViewer currentViewer = (ExternalToolInvocationViewer) invocationSelection.getSelectedItem();
-		newConfiguration.setInvocationBean(currentViewer.getInvocationConfiguration());
-		if (newConfiguration.getInvocationBean() == null) {
-			logger.error("New invocation bean is null");
-		}
+        InvocationGroup group =  (InvocationGroup) invocationSelection.getSelectedItem();
+		newConfiguration.setInvocationGroup(group);
 		return newConfiguration;
 	}
 	
@@ -229,11 +232,8 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 		if (basicUseCaseDescriptionChanged) {
 			logger.error("Basic use case description changed");
 		}
-		ExternalToolInvocationViewer currentViewer = (ExternalToolInvocationViewer) invocationSelection.getSelectedItem();
-		boolean invocationChanged = currentViewer.invocationChanged(configuration.getInvocationBean());
-		if (invocationChanged) {
-			logger.error("Invocation changed");
-		}
+		InvocationGroup group =  (InvocationGroup) invocationSelection.getSelectedItem();
+		boolean invocationChanged = !group.equals(configuration.getInvocationGroup());
 		return basicUseCaseDescriptionChanged || invocationChanged;
 	}
 
@@ -250,7 +250,7 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 				.setHelpIDString(
 						this,
 						"net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ExternalToolConfigView");
-		configuration = (AdHocExternalToolActivityConfigurationBean) activity.getConfiguration();
+		configuration =  activity.getConfiguration();
 		setBorder(javax.swing.BorderFactory.createTitledBorder(null, null,
 				javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 				javax.swing.border.TitledBorder.DEFAULT_POSITION,
@@ -508,55 +508,40 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 	}
 
 	private JPanel createInvocationPanel() {
-		final JPanel invocationPanel = new JPanel();
-		invocationPanel.setLayout(new BorderLayout());
-		invocationSelection = new JComboBox();
-		ExternalToolInvocationViewer current = null;
-		SPIRegistry<ExternalToolInvocationViewer> invocationViewerRegistry = new SPIRegistry(ExternalToolInvocationViewer.class);
-		
-		Class invocationBeanClass = configuration.getInvocationBean().getClass();
-		for (ExternalToolInvocationViewer viewer : invocationViewerRegistry.getInstances()) {
-			invocationSelection.addItem(viewer);
-			if (viewer.canShow(invocationBeanClass)) {
-				current = viewer;
-			}
-		}
-		if (current != null) {
-			invocationSelection.setSelectedItem(current);
-		}
-		invocationPanel.add(invocationSelection, BorderLayout.NORTH);
-		final JPanel subPanel = new JPanel();
-		subPanel.setLayout(new BorderLayout());
-		invocationPanel.add(subPanel, BorderLayout.CENTER);
-		invocationSelection.addItemListener(new ItemListener() {
+		invocationPanel = new JPanel();
+		populateInvocationPanel();
+		InvocationGroupManager.getInstance().addListener(new InvocationGroupManagerListener() {
 
 			@Override
-			public void itemStateChanged(ItemEvent e) {
-				JComboBox c = (JComboBox) e.getSource();
-				ExternalToolInvocationViewer v = (ExternalToolInvocationViewer) c.getSelectedItem();
-				showInvocationViewer(invocationPanel, subPanel, v);
-			}
-			
-		});
-		if (current != null) {
-			showInvocationViewer(invocationPanel, subPanel, current);
-		}
+			public void change() {
+				populateInvocationPanel();
+			}});
+		
 		return invocationPanel;
 	}
 	
-	private void showInvocationViewer(JPanel invocationPanel, JPanel subPanel, ExternalToolInvocationViewer v) {
-		JPanel view = v.show(configuration.getInvocationBean());
-		subPanel.removeAll();
-		if (view != null) {
-			subPanel.add(view, BorderLayout.CENTER);
+	private void populateInvocationPanel() {
+		invocationPanel.removeAll();
+		invocationPanel.setLayout(new BorderLayout());
+		invocationSelection = new JComboBox();
+
+		for (InvocationGroup group : InvocationGroupManager.getInstance().getInvocationGroups()) {
+			invocationSelection.addItem(group);
 		}
-		subPanel.revalidate();
-		subPanel.repaint();
-		invocationPanel.revalidate();
-		invocationPanel.repaint();
+
+		invocationPanel.add(invocationSelection, BorderLayout.NORTH);
 		
+		JButton manageInvocation = new JButton(new AbstractAction("Manage invocations"){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				InvocationManagerUI ui = InvocationManagerUI.getInstance();
+				ui.setVisible(true);
+			}});
+		invocationPanel.add(manageInvocation, BorderLayout.SOUTH);
+		invocationPanel.repaint();
 	}
-	
+
 	@Override
 	public ExternalToolActivityConfigurationBean getConfiguration() {
 		return configuration;

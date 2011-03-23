@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sf.taverna.t2.activities.externaltool.views.ssh;
+package net.sf.taverna.t2.activities.externaltool.manager.ssh;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -19,33 +19,32 @@ import javax.swing.JTextField;
 
 import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNode;
 
-import net.sf.taverna.t2.activities.externaltool.ExternalToolInvocationConfigurationBean;
-import net.sf.taverna.t2.activities.externaltool.ssh.ExternalToolSshInvocationConfigurationBean;
-import net.sf.taverna.t2.activities.externaltool.views.ExternalToolInvocationViewer;
+import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
+import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismEditor;
+import net.sf.taverna.t2.activities.externaltool.ssh.ExternalToolSshInvocationMechanism;
 
 /**
  * @author alanrw
  *
  */
-public final class ExternalToolSshInvocationViewer extends
-		ExternalToolInvocationViewer {
+public final class SshInvocationMechanismEditor extends
+		InvocationMechanismEditor<ExternalToolSshInvocationMechanism> {
 	
-	private List<ExternalToolSshNodeViewer> nodeViewers = new ArrayList<ExternalToolSshNodeViewer> ();
-	private int inputGridy = 1;
+	private ArrayList<ExternalToolSshNodeViewer> nodeViewers = new ArrayList<ExternalToolSshNodeViewer>();
+	private int inputGridy = 0;
+	
+	private ExternalToolSshInvocationMechanism mechanism = null;
 
 	@Override
 	public boolean canShow(Class<?> c) {
-		return ExternalToolSshInvocationConfigurationBean.class.isAssignableFrom(c);
+		return ExternalToolSshInvocationMechanism.class.isAssignableFrom(c);
 	}
 
 	@Override
-	public String getName() {
-		return "Ssh";
-	}
-
-	@Override
-	public JPanel show(ExternalToolInvocationConfigurationBean<?> invocationBean) {
-		final JPanel result = new JPanel();
+	public void show(ExternalToolSshInvocationMechanism invocationMechanism) {
+		mechanism = invocationMechanism;
+		this.removeAll();
+		inputGridy = 1;
 		final JPanel innerPanel = new JPanel(new GridBagLayout());
 //		inputEditPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
 //				.createEtchedBorder(), "Inputs"));
@@ -64,21 +63,20 @@ public final class ExternalToolSshInvocationViewer extends
 		inputConstraint.gridx++;
 
 		inputConstraint.gridx = 0;
-		if (invocationBean instanceof ExternalToolSshInvocationConfigurationBean) {
 			nodeViewers.clear();
-			for (SshNode node : ((ExternalToolSshInvocationConfigurationBean) invocationBean).getSshWorkerNodes()) {
+			for (SshNode node : invocationMechanism.getNodes()) {
 				ExternalToolSshNodeViewer nodeViewer = new ExternalToolSshNodeViewer(node);
-				addNodeViewer(result, innerPanel, nodeViewer);
+				addNodeViewer(this, innerPanel, nodeViewer);
 			}
-		}
-		result.setLayout(new GridBagLayout());
+
+		this.setLayout(new GridBagLayout());
 		GridBagConstraints outerPanelConstraint = new GridBagConstraints();
 		outerPanelConstraint.gridx = 0;
 		outerPanelConstraint.gridy = 0;
 		outerPanelConstraint.weightx = 0.1;
 		outerPanelConstraint.weighty = 0.1;
 		outerPanelConstraint.fill = GridBagConstraints.BOTH;
-		result.add(new JScrollPane(innerPanel),
+		this.add(new JScrollPane(innerPanel),
 				outerPanelConstraint);
 		outerPanelConstraint.weighty = 0;
 		JButton addHostButton = new JButton(new AbstractAction() {
@@ -86,7 +84,7 @@ public final class ExternalToolSshInvocationViewer extends
 
 				ExternalToolSshNodeViewer newViewer = new ExternalToolSshNodeViewer();
 
-					addNodeViewer(result, innerPanel, newViewer);
+					addNodeViewer(SshInvocationMechanismEditor.this, innerPanel, newViewer);
 					innerPanel.revalidate();
 					innerPanel.repaint();
 
@@ -117,10 +115,7 @@ public final class ExternalToolSshInvocationViewer extends
 		outerPanelConstraint.gridx = 0;
 		outerPanelConstraint.gridy = 1;
 		outerPanelConstraint.fill = GridBagConstraints.BOTH;
-		result.add(buttonPanel, outerPanelConstraint);
-
-		return result;
-
+		this.add(buttonPanel, outerPanelConstraint);
 	}
 
 	protected void addNodeViewer(final JPanel result, final JPanel innerPanel,
@@ -130,7 +125,7 @@ public final class ExternalToolSshInvocationViewer extends
 		inputConstraint.weightx = 0.1;
 		inputConstraint.fill = GridBagConstraints.BOTH;
 
-		inputConstraint.gridy = inputGridy ;
+		inputConstraint.gridy = inputGridy  ;
 		inputConstraint.gridx = 0;
 		
 		final JTextField hostnameField = viewer.getHostnameField();
@@ -172,16 +167,6 @@ public final class ExternalToolSshInvocationViewer extends
 		inputGridy++;		
 	}
 
-	@Override
-	public boolean invocationChanged(
-			ExternalToolInvocationConfigurationBean invocationBean) {
-		if (!(invocationBean instanceof ExternalToolSshInvocationConfigurationBean)) {
-			return true;
-		}
-		ExternalToolSshInvocationConfigurationBean sshBean = (ExternalToolSshInvocationConfigurationBean) invocationBean;
-		return !(sshBean.equals(getInvocationConfiguration()));
-	}
-	
 	private List<SshNode> getNodeList() {
 		List<SshNode> result = new ArrayList<SshNode>();
 		for (ExternalToolSshNodeViewer viewer : nodeViewers) {
@@ -194,10 +179,21 @@ public final class ExternalToolSshInvocationViewer extends
 	}
 
 	@Override
-	public ExternalToolInvocationConfigurationBean getInvocationConfiguration() {
-		ExternalToolSshInvocationConfigurationBean result = new ExternalToolSshInvocationConfigurationBean();
-		result.setSshWorkerNodes(getNodeList());
+	public ExternalToolSshInvocationMechanism updateInvocationMechanism() {
+		mechanism.setNodes(getNodeList());
+		return mechanism;
+	}
+
+	@Override
+	public InvocationMechanism createMechanism(String mechanismName) {
+		ExternalToolSshInvocationMechanism result = new ExternalToolSshInvocationMechanism();
+		result.setName(mechanismName);
 		return result;
+	}
+
+	@Override
+	public String getName() {
+		return ("Ssh");
 	}
 
 }

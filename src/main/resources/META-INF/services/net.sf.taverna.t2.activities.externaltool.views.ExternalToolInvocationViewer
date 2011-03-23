@@ -1,3 +1,0 @@
-net.sf.taverna.t2.activities.externaltool.views.local.ExternalToolLocalInvocationViewer
-net.sf.taverna.t2.activities.externaltool.views.ssh.ExternalToolSshInvocationViewer
-#net.sf.taverna.t2.activities.externaltool.views.grid.ExternalToolGridInvocationViewer

@@ -1,2 +1,3 @@
 net.sf.taverna.t2.activities.externaltool.menu.ConfigureExternalToolMenuAction
 # net.sf.taverna.t2.activities.externaltool.menu.FeedbackMenuAction
+net.sf.taverna.t2.activities.externaltool.manager.menu.InvocationManagerMenu

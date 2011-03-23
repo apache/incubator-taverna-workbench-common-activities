@@ -29,9 +29,9 @@ import javax.swing.Icon;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
-import net.sf.taverna.t2.activities.externaltool.RegisteredExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
+import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 
 /**
  * ExternalToolServiceDescription stores the repository URL and the use case id so
@@ -43,6 +43,7 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 
 	private String repositoryUrl;
 	private String externaltoolid;
+	private UseCaseDescription useCaseDescription;
 
 	public String getRepositoryUrl() {
 		return repositoryUrl;
@@ -69,9 +70,10 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 	}
 
 	public ExternalToolActivityConfigurationBean getActivityConfiguration() {
-		RegisteredExternalToolActivityConfigurationBean bean = new RegisteredExternalToolActivityConfigurationBean();
+		ExternalToolActivityConfigurationBean bean = new ExternalToolActivityConfigurationBean();
 		bean.setRepositoryUrl(repositoryUrl);
 		bean.setExternaltoolid(externaltoolid);
+		bean.setUseCaseDescription(useCaseDescription);
 		return bean;
 	}
 
@@ -89,6 +91,10 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 		// means every externaltool is uniquely identified by its repository URL and
 		// its use case ID.
 		return Arrays.<Object> asList(repositoryUrl, externaltoolid);
+	}
+
+	public void setUseCaseDescription(UseCaseDescription usecase) {
+		this.useCaseDescription = usecase;
 	}
 
 }

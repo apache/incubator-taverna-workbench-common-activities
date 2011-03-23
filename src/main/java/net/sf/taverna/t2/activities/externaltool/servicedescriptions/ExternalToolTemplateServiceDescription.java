@@ -4,15 +4,17 @@
 package net.sf.taverna.t2.activities.externaltool.servicedescriptions;
 
 import java.net.URI;
+import java.util.UUID;
 
 import javax.swing.Icon;
 
-import net.sf.taverna.t2.activities.externaltool.AdHocExternalToolActivityConfigurationBean;
+import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
+
+import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.servicedescriptions.AbstractTemplateService;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
-import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 
 /**
  * @author alanrw
@@ -33,8 +35,10 @@ public class ExternalToolTemplateServiceDescription extends
 	}
 
 	@Override
-	public AdHocExternalToolActivityConfigurationBean getActivityConfiguration() {
-		return new AdHocExternalToolActivityConfigurationBean();
+	public ExternalToolActivityConfigurationBean getActivityConfiguration() {
+		ExternalToolActivityConfigurationBean result = new ExternalToolActivityConfigurationBean();
+		result.setUseCaseDescription(new UseCaseDescription(UUID.randomUUID().toString()));
+		return result;
 	}
 
 	@Override

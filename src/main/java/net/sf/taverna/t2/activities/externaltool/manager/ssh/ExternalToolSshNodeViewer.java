@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sf.taverna.t2.activities.externaltool.views.ssh;
+package net.sf.taverna.t2.activities.externaltool.manager.ssh;
 
 import javax.swing.JTextField;
 
