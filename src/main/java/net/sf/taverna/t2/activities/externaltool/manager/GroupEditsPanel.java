@@ -16,11 +16,18 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
+import org.apache.log4j.Logger;
+
+import de.uni_luebeck.inb.knowarc.grid.re.RuntimeEnvironmentConstraint;
+
 /**
  * @author alanrw
  *
  */
 public class GroupEditsPanel extends JPanel implements InvocationGroupManagerListener {
+	
+	private static Logger logger = Logger.getLogger(GroupEditsPanel.class);
+	
 	
 	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
 
@@ -54,7 +61,7 @@ public class GroupEditsPanel extends JPanel implements InvocationGroupManagerLis
 			public void actionPerformed(ActionEvent e) {
 				InvocationMechanism mechanism = (InvocationMechanism) mechanismList.getSelectedValue();
 				if ((mechanism != null) && (group != null)) {
-					System.err.println("Changing mechanism for " + group.getInvocationGroupName() + " from " + group.getMechanism().getName() + " to " + mechanism.getName());
+					logger.info("Changing mechanism for " + group.getInvocationGroupName() + " from " + group.getMechanism().getName() + " to " + mechanism.getName());
 					group.setMechanism(mechanism);
 				}
 			}

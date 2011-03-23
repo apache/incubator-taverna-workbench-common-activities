@@ -12,6 +12,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.apache.log4j.Logger;
+
+import de.uni_luebeck.inb.knowarc.grid.re.RuntimeEnvironmentConstraint;
+
 import net.sf.taverna.t2.activities.externaltool.InvocationCreator;
 import net.sf.taverna.t2.spi.SPIRegistry;
 
@@ -23,7 +27,9 @@ public class MechanismEditsPanel extends JPanel {
 	
 private static SPIRegistry<InvocationMechanismEditor> invocationMechanismEditorRegistry = new SPIRegistry(InvocationMechanismEditor.class);
 	
-	private InvocationMechanism mechanism = null;
+private static Logger logger = Logger.getLogger(MechanismEditsPanel.class);
+
+private InvocationMechanism mechanism = null;
 
 	private InvocationMechanismEditor chosenEditor;
 	
@@ -32,7 +38,7 @@ private static SPIRegistry<InvocationMechanismEditor> invocationMechanismEditorR
 	public MechanismEditsPanel() {
 		this.setLayout(new BorderLayout());
 		buttonPanel = createButtonPanel();
-		System.err.println("Mechanism Edits Panel created");
+		logger.info("Mechanism Edits Panel created");
 	}
 
 	private JPanel createButtonPanel() {

@@ -16,6 +16,10 @@ import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.apache.log4j.Logger;
+
+import de.uni_luebeck.inb.knowarc.grid.re.RuntimeEnvironmentConstraint;
+
 import net.sf.taverna.t2.activities.externaltool.servicedescriptions.ExternalToolActivityIcon;
 
 /**
@@ -24,6 +28,8 @@ import net.sf.taverna.t2.activities.externaltool.servicedescriptions.ExternalToo
  */
 public class InvocationManagerUI extends JFrame {
 	
+	private static Logger logger = Logger.getLogger(InvocationManagerUI.class);
+
 	private static InvocationManagerUI INSTANCE = null;
 	
 	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
@@ -71,7 +77,7 @@ public class InvocationManagerUI extends JFrame {
 		// Set the frame's title
 		setTitle("Invocation Manager");
 
-		System.err.println("UI created");
+		logger.info("UI created");
 	}
 
 	protected void closeFrame() {

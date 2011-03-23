@@ -227,10 +227,10 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 		ExternalToolActivityConfigurationBean newBean = makeConfiguration();
 		boolean basicUseCaseDescriptionChanged =
 			!stripDescription(newBean.getUseCaseDescription()).equals(stripDescription(configuration.getUseCaseDescription()));
-		System.err.println(newBean.getUseCaseDescription().toString());
-		System.err.println(configuration.getUseCaseDescription().toString());
+		logger.info(newBean.getUseCaseDescription().toString());
+		logger.info(configuration.getUseCaseDescription().toString());
 		if (basicUseCaseDescriptionChanged) {
-			logger.error("Basic use case description changed");
+			logger.info("Basic use case description changed");
 		}
 		InvocationGroup group =  (InvocationGroup) invocationSelection.getSelectedItem();
 		boolean invocationChanged = !group.equals(configuration.getInvocationGroup());

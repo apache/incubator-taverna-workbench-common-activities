@@ -29,6 +29,10 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
+import org.apache.log4j.Logger;
+
+import de.uni_luebeck.inb.knowarc.grid.re.RuntimeEnvironmentConstraint;
+
 import net.sf.taverna.t2.ui.menu.AbstractMenuAction;
 import edu.stanford.ejalbert.BrowserLauncher;
 import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
@@ -41,6 +45,9 @@ import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
  * @author Hajo Nils Krabbenhoeft
  */
 public class FeedbackMenuAction extends AbstractMenuAction {
+	
+	private static Logger logger = Logger.getLogger(FeedbackMenuAction.class);
+
 
 	private static final URI feedbackSection = URI.create("http://taverna.sf.net/2009/contextMenu/configure");
 
@@ -68,10 +75,10 @@ public class FeedbackMenuAction extends AbstractMenuAction {
 				final BrowserLauncher launcher = new BrowserLauncher();
 				launcher.openURLinBrowser(feedbackUrl);
 			} catch (BrowserLaunchingInitializingException e1) {
-				e1.printStackTrace();
+				logger.error(e1);
 				JOptionPane.showMessageDialog(null, feedbackUrl + "\n" + e1.getLocalizedMessage(), errTitle, JOptionPane.ERROR_MESSAGE);
 			} catch (UnsupportedOperatingSystemException e1) {
-				e1.printStackTrace();
+				logger.error(e1);
 				JOptionPane.showMessageDialog(null, feedbackUrl + "\n" + e1.getLocalizedMessage(), errTitle, JOptionPane.ERROR_MESSAGE);
 			}
 		}
