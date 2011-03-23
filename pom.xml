@@ -67,12 +67,6 @@
 
 		<!-- function dependencies for invocation -->
 		<dependency>
-			<groupId>de.uni_luebeck.inb.krabbenh</groupId>
-			<artifactId>knowarc-usecases</artifactId>
-			<version>${knowarc.usecases.version}</version>
-		</dependency>
-
-		<dependency>
 			<groupId>net.sf.taverna.t2.activities</groupId>
 			<artifactId>external-tool-activity</artifactId>
 			<version>${t2.activities.version}</version>
