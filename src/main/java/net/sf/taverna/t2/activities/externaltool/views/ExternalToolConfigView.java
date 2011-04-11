@@ -530,6 +530,7 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 		}
 
 		invocationPanel.add(invocationSelection, BorderLayout.NORTH);
+		invocationSelection.setSelectedItem(configuration.getInvocationGroup());
 		
 		JButton manageInvocation = new JButton(new AbstractAction("Manage invocations"){
 
