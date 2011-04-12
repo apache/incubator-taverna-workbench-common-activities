@@ -55,7 +55,9 @@ private InvocationMechanism mechanism = null;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				System.err.println("Trying to update invocation mechanism");
 				chosenEditor.updateInvocationMechanism();
+				InvocationGroupManager.getInstance().mechanismChanged(mechanism);
 			}
 			
 		});

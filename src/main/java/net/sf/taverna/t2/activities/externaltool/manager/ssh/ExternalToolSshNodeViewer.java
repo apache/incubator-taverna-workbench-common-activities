@@ -17,10 +17,15 @@ public class ExternalToolSshNodeViewer {
 	
 	private JTextField hostnameField;
 	private JTextField portField;
+	private JTextField directoryField;
 
 	public ExternalToolSshNodeViewer(SshNode node) {
 		hostnameField = new JTextField(node.getHost(), 30);
 		portField = new JTextField(Integer.toString(node.getPort()), 3);
+		directoryField = new JTextField(30);
+		if (node.getDirectory() != null) {
+			directoryField.setText(node.getDirectory());
+		}
 	}
 
 	public ExternalToolSshNodeViewer() {
@@ -34,6 +39,10 @@ public class ExternalToolSshNodeViewer {
 	public JTextField getPortField() {
 		return portField;
 	}
+	
+	public JTextField getDirectoryField() {
+		return directoryField;
+	}
 
 	public String getHostname() {
 		return hostnameField.getText();
@@ -41,6 +50,10 @@ public class ExternalToolSshNodeViewer {
 
 	public int getPort() {
 		return Integer.parseInt(portField.getText());
+	}
+	
+	public String getDirectory() {
+		return directoryField.getText();
 	}
 
 }

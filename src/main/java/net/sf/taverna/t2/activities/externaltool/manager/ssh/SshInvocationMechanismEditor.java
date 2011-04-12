@@ -61,6 +61,8 @@ public final class SshInvocationMechanismEditor extends
 		inputConstraint.gridx++;
 		innerPanel.add(new JLabel("Port"), inputConstraint);
 		inputConstraint.gridx++;
+		innerPanel.add(new JLabel("Directory"), inputConstraint);
+		inputConstraint.gridx++;
 
 		inputConstraint.gridx = 0;
 			nodeViewers.clear();
@@ -136,6 +138,9 @@ public final class SshInvocationMechanismEditor extends
 		innerPanel.add(portField ,inputConstraint);
 		inputConstraint.gridx++;
 		
+		final JTextField directoryField = viewer.getDirectoryField();
+		innerPanel.add(directoryField ,inputConstraint);
+		inputConstraint.gridx++;
 		
 		final JButton removeButton = new JButton("Remove");
 		final ExternalToolSshNodeViewer v = viewer;
@@ -153,6 +158,7 @@ public final class SshInvocationMechanismEditor extends
 				}
 				innerPanel.remove(hostnameField);
 				innerPanel.remove(portField);
+				innerPanel.remove(directoryField);
 				innerPanel.remove(removeButton);
 				innerPanel.remove(separator);
 				innerPanel.revalidate();
@@ -173,6 +179,7 @@ public final class SshInvocationMechanismEditor extends
 			SshNode node = new SshNode();
 			node.setHost(viewer.getHostname());
 			node.setPort(viewer.getPort());
+			node.setDirectory(viewer.getDirectory());
 			result.add(node);
 		}
 		return result;
