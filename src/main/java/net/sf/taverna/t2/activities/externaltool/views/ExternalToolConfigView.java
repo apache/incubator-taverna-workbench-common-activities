@@ -218,23 +218,9 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 		return newConfiguration;
 	}
 	
-	private String stripDescription(UseCaseDescription desc) {
-		String descString = desc.toString();
-		return (descString.substring(descString.indexOf("[")));
-	}
-
 	public boolean isConfigurationChanged() {
-		ExternalToolActivityConfigurationBean newBean = makeConfiguration();
-		boolean basicUseCaseDescriptionChanged =
-			!stripDescription(newBean.getUseCaseDescription()).equals(stripDescription(configuration.getUseCaseDescription()));
-		logger.info(newBean.getUseCaseDescription().toString());
-		logger.info(configuration.getUseCaseDescription().toString());
-		if (basicUseCaseDescriptionChanged) {
-			logger.info("Basic use case description changed");
-		}
-		InvocationGroup group =  (InvocationGroup) invocationSelection.getSelectedItem();
-		boolean invocationChanged = !group.equals(configuration.getInvocationGroup());
-		return basicUseCaseDescriptionChanged || invocationChanged;
+		String configurationString = convertBeanToString(activity.getConfiguration());
+		return (!convertBeanToString(makeConfiguration()).equals(configurationString));
 	}
 
 	/**

@@ -18,6 +18,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNode;
+import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNodeFactory;
 
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismEditor;
@@ -62,6 +63,10 @@ public final class SshInvocationMechanismEditor extends
 		innerPanel.add(new JLabel("Port"), inputConstraint);
 		inputConstraint.gridx++;
 		innerPanel.add(new JLabel("Directory"), inputConstraint);
+		inputConstraint.gridx++;
+		innerPanel.add(new JLabel("Link command"), inputConstraint);
+		inputConstraint.gridx++;
+		innerPanel.add(new JLabel("Copy command"), inputConstraint);
 		inputConstraint.gridx++;
 
 		inputConstraint.gridx = 0;
@@ -142,6 +147,14 @@ public final class SshInvocationMechanismEditor extends
 		innerPanel.add(directoryField ,inputConstraint);
 		inputConstraint.gridx++;
 		
+		final JTextField linkCommandField = viewer.getLinkCommandField();
+		innerPanel.add(linkCommandField ,inputConstraint);
+		inputConstraint.gridx++;
+
+		final JTextField copyCommandField = viewer.getCopyCommandField();
+		innerPanel.add(copyCommandField ,inputConstraint);
+		inputConstraint.gridx++;
+
 		final JButton removeButton = new JButton("Remove");
 		final ExternalToolSshNodeViewer v = viewer;
 		innerPanel.add(removeButton, inputConstraint);
@@ -159,6 +172,8 @@ public final class SshInvocationMechanismEditor extends
 				innerPanel.remove(hostnameField);
 				innerPanel.remove(portField);
 				innerPanel.remove(directoryField);
+				innerPanel.remove(linkCommandField);
+				innerPanel.remove(copyCommandField);
 				innerPanel.remove(removeButton);
 				innerPanel.remove(separator);
 				innerPanel.revalidate();
@@ -176,10 +191,9 @@ public final class SshInvocationMechanismEditor extends
 	private List<SshNode> getNodeList() {
 		List<SshNode> result = new ArrayList<SshNode>();
 		for (ExternalToolSshNodeViewer viewer : nodeViewers) {
-			SshNode node = new SshNode();
-			node.setHost(viewer.getHostname());
-			node.setPort(viewer.getPort());
-			node.setDirectory(viewer.getDirectory());
+			SshNode node = SshNodeFactory.getInstance().getSshNode(viewer.getHostname(), viewer.getPort(), viewer.getDirectory());
+			node.setLinkCommand(viewer.getLinkCommand());
+			node.setCopyCommand(viewer.getCopyCommand());
 			result.add(node);
 		}
 		return result;

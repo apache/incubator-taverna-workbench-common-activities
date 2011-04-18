@@ -18,18 +18,30 @@ public class ExternalToolSshNodeViewer {
 	private JTextField hostnameField;
 	private JTextField portField;
 	private JTextField directoryField;
+	private JTextField linkCommandField;
+	private JTextField copyCommandField;
 
 	public ExternalToolSshNodeViewer(SshNode node) {
-		hostnameField = new JTextField(node.getHost(), 30);
-		portField = new JTextField(Integer.toString(node.getPort()), 3);
-		directoryField = new JTextField(30);
+		this();
+		hostnameField.setText(node.getHost());
+		portField.setText(Integer.toString(node.getPort()));
 		if (node.getDirectory() != null) {
 			directoryField.setText(node.getDirectory());
+		}
+		if (node.getLinkCommand() != null) {
+			linkCommandField.setText(node.getLinkCommand());
+		}
+		if (node.getCopyCommand() != null) {
+			copyCommandField.setText(node.getCopyCommand());
 		}
 	}
 
 	public ExternalToolSshNodeViewer() {
-		this(new SshNode());
+		hostnameField = new JTextField(30);
+		portField = new JTextField(3);
+		directoryField = new JTextField(30);
+		linkCommandField = new JTextField(30);
+		copyCommandField = new JTextField(30);
 	}
 
 	public JTextField getHostnameField() {
@@ -44,6 +56,14 @@ public class ExternalToolSshNodeViewer {
 		return directoryField;
 	}
 
+	public JTextField getLinkCommandField() {
+		return linkCommandField;
+	}
+
+	public JTextField getCopyCommandField() {
+		return copyCommandField;
+	}
+
 	public String getHostname() {
 		return hostnameField.getText();
 	}
@@ -55,5 +75,12 @@ public class ExternalToolSshNodeViewer {
 	public String getDirectory() {
 		return directoryField.getText();
 	}
-
+	
+	public String getLinkCommand() {
+		return linkCommandField.getText();
+	}
+	
+	public String getCopyCommand() {
+		return copyCommandField.getText();
+	}
 }

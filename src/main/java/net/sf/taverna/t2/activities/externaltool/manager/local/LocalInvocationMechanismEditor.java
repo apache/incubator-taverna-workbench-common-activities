@@ -25,6 +25,10 @@ public final class LocalInvocationMechanismEditor extends
 	
 	private JTextField directoryField = new JTextField(30);
 	
+	private JTextField shellPrefixField = new JTextField(30);
+	
+	private JTextField linkCommandField = new JTextField(30);
+	
 
 	@Override
 	public boolean canShow(Class<?> c) {
@@ -51,8 +55,20 @@ public final class LocalInvocationMechanismEditor extends
 		innerPanel.add(new JLabel("Working directory"), inputConstraint);
 		inputConstraint.gridx++;
 		directoryField.setText(invocationMechanism.getDirectory());
-		innerPanel.add(directoryField);
+		innerPanel.add(directoryField, inputConstraint);
+		inputConstraint.gridx = 0;
+		inputConstraint.gridy++;
+		innerPanel.add(new JLabel("Shell"), inputConstraint);
+		inputConstraint.gridx++;
+		shellPrefixField.setText(invocationMechanism.getShellPrefix());
+		innerPanel.add(shellPrefixField, inputConstraint);
 		
+		inputConstraint.gridx = 0;
+		inputConstraint.gridy++;
+		innerPanel.add(new JLabel("Link command"), inputConstraint);
+		inputConstraint.gridx++;
+		linkCommandField.setText(invocationMechanism.getLinkCommand());
+		innerPanel.add(linkCommandField, inputConstraint);
 		this.add(innerPanel);
 	}
 
@@ -63,6 +79,21 @@ public final class LocalInvocationMechanismEditor extends
 		} else {
 			invocationMechanism.setDirectory(directoryField.getText());
 		}
+		if ((shellPrefixField.getText() == null) || (shellPrefixField.getText().length() == 0)) {
+			invocationMechanism.setShellPrefix(null);
+		} else {
+			invocationMechanism.setShellPrefix(shellPrefixField.getText());
+		}
+		if ((shellPrefixField.getText() == null) || (shellPrefixField.getText().length() == 0)) {
+			invocationMechanism.setShellPrefix(null);
+		} else {
+			invocationMechanism.setShellPrefix(shellPrefixField.getText());
+		}
+		if ((linkCommandField.getText() == null) || (linkCommandField.getText().length() == 0)) {
+			invocationMechanism.setLinkCommand(null);
+		} else {
+			invocationMechanism.setLinkCommand(linkCommandField.getText());
+		}
 		return invocationMechanism;
 	}
 
@@ -70,7 +101,6 @@ public final class LocalInvocationMechanismEditor extends
 	public InvocationMechanism createMechanism(String mechanismName) {
 		ExternalToolLocalInvocationMechanism result = new ExternalToolLocalInvocationMechanism();
 		result.setName(mechanismName);
-		result.setDirectory(null);
 		return(result);
 	}
 
