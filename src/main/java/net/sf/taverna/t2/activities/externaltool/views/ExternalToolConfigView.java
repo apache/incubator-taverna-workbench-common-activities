@@ -175,7 +175,7 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 			} else if (viewer.isTempFile()) {
 				si.setTag(viewer.getValue());
 				si.setTempFile(true);
-				si.setFile(true);
+				si.setFile(false);
 				ucd.getTags().add(si.getTag());
 			}
 			

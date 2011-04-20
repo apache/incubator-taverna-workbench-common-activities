@@ -24,12 +24,17 @@ package net.sf.taverna.t2.activities.externaltool.views;
 import java.awt.Frame;
 
 import javax.swing.Action;
+import java.util.List;
+import java.util.Map;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.actions.ExternalToolActivityConfigureAction;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
+import de.uni_luebeck.inb.knowarc.usecases.ScriptInput;
+import de.uni_luebeck.inb.knowarc.usecases.ScriptInputStatic;
+import de.uni_luebeck.inb.knowarc.usecases.ScriptOutput;
 
 /**
  * ExternalToolActivityContextualView displays the use case information in a HTML table.
@@ -46,13 +51,74 @@ public class ExternalToolActivityContextualView extends HTMLBasedActivityContext
 
 	@Override
 	protected String getRawTableRowsHtml() {
-		String html = "<b>Externaltool: </b>" /* + getConfigBean().getExternaltoolid() */;
+		String html = "";
+		ExternalToolActivityConfigurationBean bean = getConfigBean();
+		String repositoryUrl = bean.getRepositoryUrl();
+		if ((repositoryUrl == null) || repositoryUrl.isEmpty()){
+		    repositoryUrl = "<b>Not specified</b>";
+		}
+		html += "<tr><td>Repository URL</td><td>" + repositoryUrl + "</td></tr>";
+
+		String id = bean.getExternaltoolid();
+		if ((id == null) || id.isEmpty()){
+		    id = "<b>Not specified</b>";
+		}
+		html += "<tr><td>Id</td><td>" + id + "</td></tr>";
+		
+		Map<String, ScriptInput> inputs = bean.getUseCaseDescription().getInputs();
+		if (!inputs.isEmpty()) {
+		    html += "<tr><td colspan=2 align=center><b>Inputs</b></td></tr>";
+		    html += "<tr><td><b>Port name</b></td><td><b>Action</b></td></tr>";
+		    for (String name : inputs.keySet()) {
+			html += "<tr><td>" + name + "</td>";
+			ScriptInput si = inputs.get(name);
+			if (si.isFile()) {
+			    html += "<td>File: " + si.getTag() + "</td>";
+			} else if (si.isTempFile()) {
+			    html += "<td>Temporary file</td>";
+			} else {
+			    html += "<td>Replaces: %%" + si.getTag() + "%%</td>";
+			}
+			html += "</tr>";
+		    }
+		}
+		List<ScriptInputStatic> staticInputs = bean.getUseCaseDescription().getStatic_inputs();
+		if (!staticInputs.isEmpty()) {
+		    html += "<tr><td colspan=2 align=center><b>Static inputs</b></td></tr>";
+		    html += "<tr><td><b>Type</b></td><td><b>Action</b></td></tr>";
+		    for (ScriptInputStatic si : staticInputs) {
+			if (si.getUrl() != null) {
+			    html += "<td><b>URL</b></td>";
+			} else {
+			    html += "<td><b>Explicit content</b></td>";
+			}
+			if (si.isFile()) {
+			    html += "<td>File: " + si.getTag() + "</td>";
+			} else if (si.isTempFile()) {
+			    html += "<td>Temporary file</td>";
+			} else {
+			    html += "<td>Replaces: %%" + si.getTag() + "%%</td>";
+			}
+			html += "</tr>";
+		    }
+		}
+		Map<String, ScriptOutput> outputs = bean.getUseCaseDescription().getOutputs();
+		if (!outputs.isEmpty()) {
+		    html += "<tr><td colspan=2 align=center><b>Outputs</b></td></tr>";
+		    html += "<tr><td><b>Port name</b></td><td><b>File</b></td></tr>";
+		    for (String name : outputs.keySet()) {
+			html += "<tr><td>" + name + "</td>";
+			ScriptOutput so = outputs.get(name);
+			html += "<td>" + so.getPath() + "</td>";
+			html += "</tr>";
+		    }
+		}
 		return html;
 	}
 
 	@Override
 	public String getViewTitle() {
-		return "use case activity";
+		return "External Tool service";
 	}
 
 	@Override
