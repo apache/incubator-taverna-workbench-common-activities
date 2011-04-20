@@ -38,8 +38,11 @@ public class ExternalToolSshNodeViewer {
 
 	public ExternalToolSshNodeViewer() {
 		hostnameField = new JTextField(30);
+		hostnameField.setText(SshNode.DEFAULT_HOST);
 		portField = new JTextField(3);
+		portField.setText("" + SshNode.DEFAULT_PORT);
 		directoryField = new JTextField(30);
+		directoryField.setText(SshNode.DEFAULT_DIRECTORY);
 		linkCommandField = new JTextField(30);
 		copyCommandField = new JTextField(30);
 	}
