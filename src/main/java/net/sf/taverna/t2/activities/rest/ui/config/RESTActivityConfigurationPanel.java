@@ -210,7 +210,7 @@ public class RESTActivityConfigurationPanel extends
 		c.fill = GridBagConstraints.NONE;
 		JLabel jlAccepts = new JLabel("'Accept' header:", infoIcon, JLabel.LEFT);
 		jlAccepts
-				.setToolTipText("Select a MIME type from the drop-down menu or type your own");
+				.setToolTipText("<html>Select a MIME type from the drop-down menu or type your own.<br>Select blank if you do not want this header to be set.</br>");
 		jlAccepts.setLabelFor(cbAccepts);
 		jpGeneral.add(jlAccepts, c);
 
@@ -250,7 +250,7 @@ public class RESTActivityConfigurationPanel extends
 		jlContentType = new JLabel("'Content-Type' header:", infoIcon,
 				JLabel.LEFT);
 		jlContentType
-				.setToolTipText("Select a MIME type from the drop-down menu or type your own");
+				.setToolTipText("<html>Select a MIME type from the drop-down menu or type your own.<br>Select blank if you do not want this header to be set.</html>");
 		jlContentType.setLabelFor(cbContentType);
 		jpGeneral.add(jlContentType, c);
 
@@ -483,35 +483,37 @@ public class RESTActivityConfigurationPanel extends
 		}
 
 		// check if Accept header value is at least not empty
-		Object candidateAcceptHeaderValue = cbAccepts.getSelectedItem();
-		if (candidateAcceptHeaderValue == null
-				|| ((String) candidateAcceptHeaderValue).length() == 0) {
-			JOptionPane.showMessageDialog(MainWindow.getMainWindow(),
-					"Accept header value must not be empty",
-					"REST Activity Configuration - Warning",
-					JOptionPane.WARNING_MESSAGE);
-			return (false);
-		}
+// We now allow blank values for the 'Accept' header
+//		Object candidateAcceptHeaderValue = cbAccepts.getSelectedItem();
+//		if (candidateAcceptHeaderValue == null
+//				|| ((String) candidateAcceptHeaderValue).length() == 0) {
+//			JOptionPane.showMessageDialog(MainWindow.getMainWindow(),
+//					"Accept header value must not be empty",
+//					"REST Activity Configuration - Warning",
+//					JOptionPane.WARNING_MESSAGE);
+//			return (false);
+//		}
 
 		// check if Content-Type header value is at least not empty - only do
 		// this for those HTTP
 		// methods which actually use this value; otherwise, it doesn't really
 		// matter, as the value
 		// will not be stored to the bean anyway
-		if (RESTActivity
-				.hasMessageBodyInputPort((RESTActivity.HTTP_METHOD) cbHTTPMethod
-						.getSelectedItem())) {
-			Object candidateContentTypeHeaderValue = cbContentType
-					.getSelectedItem();
-			if (candidateContentTypeHeaderValue == null
-					|| ((String) candidateContentTypeHeaderValue).length() == 0) {
-				JOptionPane.showMessageDialog(MainWindow.getMainWindow(),
-						"Content-Type header value must not be empty",
-						"REST Activity Configuration - Warning",
-						JOptionPane.WARNING_MESSAGE);
-				return (false);
-			}
-		}
+// We now allow blank values for the 'Content-Type' header
+//		if (RESTActivity
+//				.hasMessageBodyInputPort((RESTActivity.HTTP_METHOD) cbHTTPMethod
+//						.getSelectedItem())) {
+//			Object candidateContentTypeHeaderValue = cbContentType
+//					.getSelectedItem();
+//			if (candidateContentTypeHeaderValue == null
+//					|| ((String) candidateContentTypeHeaderValue).length() == 0) {
+//				JOptionPane.showMessageDialog(MainWindow.getMainWindow(),
+//						"Content-Type header value must not be empty",
+//						"REST Activity Configuration - Warning",
+//						JOptionPane.WARNING_MESSAGE);
+//				return (false);
+//			}
+//		}
 
 		// All valid, return true
 		return true;
