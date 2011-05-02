@@ -56,7 +56,7 @@ public class InvocationManagerUI extends JFrame {
 		JPanel groupsPanel = createGroupsPanel();
 		JPanel mechanismsPanel = createMechanismsPanel();
 		tabbedPane.add("Groups", groupsPanel);
-		tabbedPane.add("Mechanisms", mechanismsPanel);
+		tabbedPane.add("Locations", mechanismsPanel);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
 		// Handle application close
@@ -97,11 +97,7 @@ public class InvocationManagerUI extends JFrame {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				InvocationGroup group = groupsListPanel.getSelectedGroup();
-				if (group == null) {
-					groupEditsPanel.clear();
-				} else {
-					groupEditsPanel.showGroup(group);
-				}
+				groupEditsPanel.showGroup(group);
 			}});
 		
 		result.add(groupEditsPanel);
@@ -126,7 +122,20 @@ public class InvocationManagerUI extends JFrame {
 					mechanismEditsPanel.showMechanism(mechanism);
 				}
 			}});
-		
+		groupsListPanel.addListSelectionListener(new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent arg0) {
+				InvocationGroup group = groupsListPanel.getSelectedGroup();
+				if (group != null) {
+					InvocationMechanism m = group.getMechanism();
+					if (m != null) {
+						mechanismListPanel.setSelectedMechanism(m);
+						return;
+					}
+				}
+				mechanismListPanel.setSelectedMechanism(null);
+			}});
 		result.add(mechanismEditsPanel);
 		return result;
 	}

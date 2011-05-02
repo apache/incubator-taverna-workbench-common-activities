@@ -5,6 +5,8 @@ package net.sf.taverna.t2.activities.externaltool.manager.ssh;
 
 import javax.swing.JTextField;
 
+import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
+
 import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNode;
 
 
@@ -44,7 +46,9 @@ public class ExternalToolSshNodeViewer {
 		directoryField = new JTextField(30);
 		directoryField.setText(SshNode.DEFAULT_DIRECTORY);
 		linkCommandField = new JTextField(30);
+		linkCommandField.setText(InvocationMechanism.UNIX_LINK);
 		copyCommandField = new JTextField(30);
+		copyCommandField.setText(InvocationMechanism.UNIX_COPY);
 	}
 
 	public JTextField getHostnameField() {

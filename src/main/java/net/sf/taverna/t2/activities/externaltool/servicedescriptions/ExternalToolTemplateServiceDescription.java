@@ -37,7 +37,8 @@ public class ExternalToolTemplateServiceDescription extends
 	@Override
 	public ExternalToolActivityConfigurationBean getActivityConfiguration() {
 		ExternalToolActivityConfigurationBean result = new ExternalToolActivityConfigurationBean();
-		result.setUseCaseDescription(new UseCaseDescription(UUID.randomUUID().toString()));
+		result.setExternaltoolid(UUID.randomUUID().toString());
+		result.setUseCaseDescription(new UseCaseDescription(""));
 		return result;
 	}
 

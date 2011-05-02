@@ -70,7 +70,7 @@ public class ExternalToolServiceProvider extends AbstractConfigurableServiceProv
 					repositoryUrl);
 			callBack.status("Found " + usecases.size() + " use cases:" + repositoryUrl);
 			// convert all the UseCaseDescriptions in the XML file into
-			// displayeable ExternalToolServiceDescription items
+			// ExternalToolServiceDescription items
 			List<ExternalToolServiceDescription> items = new ArrayList<ExternalToolServiceDescription>();
 			for (UseCaseDescription usecase : usecases) {
 				ExternalToolServiceDescription item = new ExternalToolServiceDescription();

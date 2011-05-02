@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
 
@@ -42,9 +43,21 @@ public class GroupEditsPanel extends JPanel implements InvocationGroupManagerLis
 		manager.addListener(this);
 		this.setLayout(new BorderLayout());
 		buttonPanel = createButtonPanel();
-
+		initialise();
 	}
 	
+	private void initialise() {
+		this.clear();
+		populateList();
+		this.add(new JLabel("Associated location"), BorderLayout.NORTH);
+		JScrollPane mechanismListPane = new JScrollPane(mechanismList);
+		this.add(mechanismListPane, BorderLayout.CENTER);
+		if ((group != null) && manager.containsGroup(group)) {
+			mechanismList.setSelectedValue(group.getMechanism(), true);
+		}
+		this.add(buttonPanel, BorderLayout.SOUTH);
+	}
+
 	private JPanel createButtonPanel() {
 		JPanel result = new JPanel();
 		result.setLayout(new FlowLayout());
@@ -92,23 +105,19 @@ public class GroupEditsPanel extends JPanel implements InvocationGroupManagerLis
 	}
 
 	public void showGroup(InvocationGroup group) {
-		clear();
 		this.group = group;
-		populateList();
-		this.add(new JLabel(group.getInvocationGroupName()), BorderLayout.NORTH);
-		this.add(mechanismList, BorderLayout.CENTER);
-		mechanismList.setSelectedValue(group.getMechanism(), true);
-		this.add(buttonPanel, BorderLayout.SOUTH);
+		if (group == null) {
+			mechanismList.clearSelection();
+		} else {
+			mechanismList.setSelectedValue(group.getMechanism(), true);
+		}
 	}
 
 	@Override
 	public void change() {
-		if ((group == null) || !manager.containsGroup(group)) {
-			clear();
-		}
-		else {
-			showGroup(group);
-		}
+		populateList();
+//		showGroup(group);
+		this.repaint();
 	}
 
 }

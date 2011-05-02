@@ -52,20 +52,20 @@ public final class LocalInvocationMechanismEditor extends
 		inputConstraint.gridy = 0;
 		inputConstraint.weightx = 0.1;
 		inputConstraint.fill = GridBagConstraints.BOTH;
-		innerPanel.add(new JLabel("Working directory"), inputConstraint);
+		innerPanel.add(new JLabel("Working directory: "), inputConstraint);
 		inputConstraint.gridx++;
 		directoryField.setText(invocationMechanism.getDirectory());
 		innerPanel.add(directoryField, inputConstraint);
 		inputConstraint.gridx = 0;
 		inputConstraint.gridy++;
-		innerPanel.add(new JLabel("Shell"), inputConstraint);
+		innerPanel.add(new JLabel("Shell: "), inputConstraint);
 		inputConstraint.gridx++;
 		shellPrefixField.setText(invocationMechanism.getShellPrefix());
 		innerPanel.add(shellPrefixField, inputConstraint);
 		
 		inputConstraint.gridx = 0;
 		inputConstraint.gridy++;
-		innerPanel.add(new JLabel("Link command"), inputConstraint);
+		innerPanel.add(new JLabel("Link command: "), inputConstraint);
 		inputConstraint.gridx++;
 		linkCommandField.setText(invocationMechanism.getLinkCommand());
 		innerPanel.add(linkCommandField, inputConstraint);
@@ -104,4 +104,7 @@ public final class LocalInvocationMechanismEditor extends
 		return(result);
 	}
 
+	public boolean isSingleton() {
+		return true;
+	}
 }

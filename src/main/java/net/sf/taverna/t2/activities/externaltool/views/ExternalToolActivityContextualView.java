@@ -35,6 +35,7 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInput;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInputStatic;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptOutput;
+import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 
 /**
  * ExternalToolActivityContextualView displays the use case information in a HTML table.
@@ -65,13 +66,20 @@ public class ExternalToolActivityContextualView extends HTMLBasedActivityContext
 		}
 		html += "<tr><td>Id</td><td>" + id + "</td></tr>";
 		
-		Map<String, ScriptInput> inputs = bean.getUseCaseDescription().getInputs();
+		UseCaseDescription useCaseDescription = bean.getUseCaseDescription();
+		String name = useCaseDescription.getUsecaseid();
+		if ((name == null) || name.isEmpty()){
+		    name = "<b>Not specified</b>";
+		}
+		html += "<tr><td>Name</td><td>" + name + "</td></tr>";
+		
+		Map<String, ScriptInput> inputs = useCaseDescription.getInputs();
 		if (!inputs.isEmpty()) {
 		    html += "<tr><td colspan=2 align=center><b>Inputs</b></td></tr>";
 		    html += "<tr><td><b>Port name</b></td><td><b>Action</b></td></tr>";
-		    for (String name : inputs.keySet()) {
-			html += "<tr><td>" + name + "</td>";
-			ScriptInput si = inputs.get(name);
+		    for (String siName : inputs.keySet()) {
+			html += "<tr><td>" + siName + "</td>";
+			ScriptInput si = inputs.get(siName);
 			if (si.isFile()) {
 			    html += "<td>File: " + si.getTag() + "</td>";
 			} else if (si.isTempFile()) {
@@ -82,7 +90,7 @@ public class ExternalToolActivityContextualView extends HTMLBasedActivityContext
 			html += "</tr>";
 		    }
 		}
-		List<ScriptInputStatic> staticInputs = bean.getUseCaseDescription().getStatic_inputs();
+		List<ScriptInputStatic> staticInputs = useCaseDescription.getStatic_inputs();
 		if (!staticInputs.isEmpty()) {
 		    html += "<tr><td colspan=2 align=center><b>Static inputs</b></td></tr>";
 		    html += "<tr><td><b>Type</b></td><td><b>Action</b></td></tr>";
@@ -102,13 +110,13 @@ public class ExternalToolActivityContextualView extends HTMLBasedActivityContext
 			html += "</tr>";
 		    }
 		}
-		Map<String, ScriptOutput> outputs = bean.getUseCaseDescription().getOutputs();
+		Map<String, ScriptOutput> outputs = useCaseDescription.getOutputs();
 		if (!outputs.isEmpty()) {
 		    html += "<tr><td colspan=2 align=center><b>Outputs</b></td></tr>";
 		    html += "<tr><td><b>Port name</b></td><td><b>File</b></td></tr>";
-		    for (String name : outputs.keySet()) {
-			html += "<tr><td>" + name + "</td>";
-			ScriptOutput so = outputs.get(name);
+		    for (String soName : outputs.keySet()) {
+			html += "<tr><td>" + soName + "</td>";
+			ScriptOutput so = outputs.get(soName);
 			html += "<td>" + so.getPath() + "</td>";
 			html += "</tr>";
 		    }

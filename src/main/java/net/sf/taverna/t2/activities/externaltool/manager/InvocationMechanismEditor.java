@@ -22,5 +22,9 @@ public abstract class InvocationMechanismEditor<T extends InvocationMechanism> e
 	public abstract T updateInvocationMechanism();
 
 	public abstract InvocationMechanism createMechanism(String mechanismName);
+	
+	public boolean isSingleton() {
+		return false;
+	}
 
 }

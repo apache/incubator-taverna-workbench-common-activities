@@ -3,6 +3,7 @@
  */
 package net.sf.taverna.t2.activities.externaltool.manager.ssh;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -10,12 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
 
 import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNode;
 import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNodeFactory;
@@ -47,27 +50,13 @@ public final class SshInvocationMechanismEditor extends
 		this.removeAll();
 		inputGridy = 1;
 		final JPanel innerPanel = new JPanel(new GridBagLayout());
-//		inputEditPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
-//				.createEtchedBorder(), "Inputs"));
 
 		final GridBagConstraints inputConstraint = new GridBagConstraints();
-//		inputConstraint.insets = new Insets(5,5,5,5);
 		inputConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
 		inputConstraint.gridx = 0;
 		inputConstraint.gridy = 0;
 		inputConstraint.weightx = 0.1;
 		inputConstraint.fill = GridBagConstraints.BOTH;
-
-		innerPanel.add(new JLabel("Hostname"), inputConstraint);
-		inputConstraint.gridx++;
-		innerPanel.add(new JLabel("Port"), inputConstraint);
-		inputConstraint.gridx++;
-		innerPanel.add(new JLabel("Directory"), inputConstraint);
-		inputConstraint.gridx++;
-		innerPanel.add(new JLabel("Link command"), inputConstraint);
-		inputConstraint.gridx++;
-		innerPanel.add(new JLabel("Copy command"), inputConstraint);
-		inputConstraint.gridx++;
 
 		inputConstraint.gridx = 0;
 			nodeViewers.clear();
@@ -127,41 +116,58 @@ public final class SshInvocationMechanismEditor extends
 
 	protected void addNodeViewer(final JPanel result, final JPanel innerPanel,
 			ExternalToolSshNodeViewer viewer) {
+		final JPanel subPanel = new JPanel();
+		subPanel.setLayout(new GridBagLayout());
+		subPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 		final GridBagConstraints inputConstraint = new GridBagConstraints();
 		inputConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
 		inputConstraint.weightx = 0.1;
 		inputConstraint.fill = GridBagConstraints.BOTH;
 
-		inputConstraint.gridy = inputGridy  ;
+		inputConstraint.gridy = 0 ;
 		inputConstraint.gridx = 0;
 		
+		subPanel.add(new JLabel("Host: "), inputConstraint);
 		final JTextField hostnameField = viewer.getHostnameField();
-		innerPanel.add(hostnameField, inputConstraint);
 		inputConstraint.gridx++;
+		subPanel.add(hostnameField, inputConstraint);
 
+		inputConstraint.gridy++ ;
+		inputConstraint.gridx = 0;
+		subPanel.add(new JLabel("Port: "), inputConstraint);
 		final JTextField portField = viewer.getPortField();
-		innerPanel.add(portField ,inputConstraint);
 		inputConstraint.gridx++;
+		subPanel.add(portField ,inputConstraint);
 		
+		inputConstraint.gridy++ ;
+		inputConstraint.gridx = 0;
+		subPanel.add(new JLabel("Working directory: "), inputConstraint);
 		final JTextField directoryField = viewer.getDirectoryField();
-		innerPanel.add(directoryField ,inputConstraint);
 		inputConstraint.gridx++;
+		subPanel.add(directoryField ,inputConstraint);
 		
+		inputConstraint.gridy++ ;
+		inputConstraint.gridx = 0;
+		subPanel.add(new JLabel("Link command: "), inputConstraint);
 		final JTextField linkCommandField = viewer.getLinkCommandField();
-		innerPanel.add(linkCommandField ,inputConstraint);
 		inputConstraint.gridx++;
+		subPanel.add(linkCommandField ,inputConstraint);
 
+		inputConstraint.gridy++ ;
+		inputConstraint.gridx = 0;
+		subPanel.add(new JLabel("Copy command: "), inputConstraint);
 		final JTextField copyCommandField = viewer.getCopyCommandField();
-		innerPanel.add(copyCommandField ,inputConstraint);
 		inputConstraint.gridx++;
+		subPanel.add(copyCommandField ,inputConstraint);
 
+		inputConstraint.gridy++ ;
+		inputConstraint.gridx = 0;
 		final JButton removeButton = new JButton("Remove");
 		final ExternalToolSshNodeViewer v = viewer;
-		innerPanel.add(removeButton, inputConstraint);
-		inputConstraint.gridy = ++ inputGridy;
-		inputConstraint.gridx = 0;
-		final JSeparator separator = new JSeparator();
-		innerPanel.add(separator, inputConstraint);
+		subPanel.add(removeButton, inputConstraint);
+		
+		inputConstraint.gridy = ++inputGridy;
+		innerPanel.add(subPanel, inputConstraint);
 
 		removeButton.addActionListener(new AbstractAction() {
 
@@ -169,13 +175,7 @@ public final class SshInvocationMechanismEditor extends
 				synchronized(nodeViewers) {
 					nodeViewers.remove(v);
 				}
-				innerPanel.remove(hostnameField);
-				innerPanel.remove(portField);
-				innerPanel.remove(directoryField);
-				innerPanel.remove(linkCommandField);
-				innerPanel.remove(copyCommandField);
-				innerPanel.remove(removeButton);
-				innerPanel.remove(separator);
+				innerPanel.remove(subPanel);
 				innerPanel.revalidate();
 				innerPanel.repaint();
 				result.revalidate();

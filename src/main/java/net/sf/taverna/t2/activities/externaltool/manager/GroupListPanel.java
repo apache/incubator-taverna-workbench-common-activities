@@ -4,20 +4,26 @@
 package net.sf.taverna.t2.activities.externaltool.manager;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionListener;
+
+import net.sf.taverna.t2.lang.ui.ValidatingUserInputDialog;
 
 
 /**
@@ -38,7 +44,9 @@ public class GroupListPanel extends JPanel implements InvocationGroupManagerList
 		this.add(new JLabel("Groups"), BorderLayout.NORTH);
 
 		populateList();
-		this.add(groupList, BorderLayout.CENTER);
+		JScrollPane groupListPane = new JScrollPane(groupList);
+		
+		this.add(groupListPane, BorderLayout.CENTER);
 		JPanel groupListButtonPanel = createButtonsPanel();
 		this.add(groupListButtonPanel, BorderLayout.SOUTH);
 	}
@@ -77,12 +85,28 @@ public class GroupListPanel extends JPanel implements InvocationGroupManagerList
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String groupName = JOptionPane.showInputDialog(null, "Group name", "Add group", JOptionPane.QUESTION_MESSAGE);
-				if (groupName != null) {
+				Set<String> usedGroupNames = new HashSet<String>();
+				for (InvocationGroup g : manager.getInvocationGroups()) {
+					usedGroupNames.add(g.getInvocationGroupName());
+				}
+
+				GroupPanel inputPanel = new GroupPanel();
+				
+				ValidatingUserInputDialog vuid = new ValidatingUserInputDialog(
+						"Add invocation group", inputPanel);
+				vuid.addTextComponentValidation(inputPanel.getGroupNameField(),
+						"Set the group name.", usedGroupNames,
+						"Duplicate group name.", "[\\p{L}\\p{Digit}_.]+",
+						"Invalid group name.");
+				vuid.setSize(new Dimension(400, 250));
+
+				if (vuid.show(null)) {
+					String groupName = inputPanel.getGroupName();
 					InvocationGroup newGroup = new InvocationGroup();
 					newGroup.setInvocationGroupName(groupName);
 					newGroup.setMechanism(manager.getDefaultMechanism());
 					manager.addInvocationGroup(newGroup);
+					groupList.setSelectedValue(newGroup, true);
 				}
 			}});
 		return result;
