@@ -1,6 +1,9 @@
 package net.sf.taverna.t2.activities.rest.ui.config;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -8,17 +11,24 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 
 import net.sf.taverna.t2.workbench.MainWindow;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
@@ -66,6 +76,10 @@ public class RESTActivityConfigurationPanel extends
 	private JCheckBox cbSendHTTPExpectHeader;
 	private JCheckBox cbShowRedirectionOutputPort;
 	private JCheckBox cbEscapeParameters;
+	private JButton addHeaderButton;
+	private JButton removeHeaderButton;
+	private JTable httpHeadersTable;
+	private HTTPHeadersTableModel httpHeadersTableModel;
 
 	public RESTActivityConfigurationPanel(RESTActivity activity) {
 		//this.thisPanel = this;
@@ -416,20 +430,85 @@ public class RESTActivityConfigurationPanel extends
 		c.insets = new Insets(2, 0, 5, 8);
 		cbEscapeParameters = new JCheckBox("Escape URL parameter values");
 		jpAdvanced.add(cbEscapeParameters, c);
+		
+		c.gridx = 0;
+		c.gridy++;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.WEST;
+		c.fill = GridBagConstraints.NONE;
+		c.insets = new Insets(2, 10, 5, 4);
+		JLabel jlHTTPHeadersInfoIcon = new JLabel(infoIcon);
+		jlHTTPHeadersInfoIcon
+				.setToolTipText("<html>Set additional HTTP headers</html>");
+		jpAdvanced.add(jlHTTPHeadersInfoIcon, c);
+		
+		c.gridx = 1;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.anchor = GridBagConstraints.WEST;
+		c.fill = GridBagConstraints.NONE;
+		c.insets = new Insets(2, 10, 5, 4);
+		addHeaderButton = new JButton("Add HTTP header");
+		addHeaderButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				httpHeadersTableModel.addEmptyRow();
+				httpHeadersTable.getSelectionModel().setSelectionInterval(httpHeadersTableModel.getRowCount() - 1, httpHeadersTableModel.getRowCount() - 1);			}
+		});
+		removeHeaderButton = new JButton("Remove HTTP header");
+		removeHeaderButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int row = httpHeadersTable.getSelectedRow();
+				httpHeadersTableModel.removeRow(row);
+			}
+		});
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.add(addHeaderButton, FlowLayout.LEFT);
+		buttonPanel.add(removeHeaderButton);
+		jpAdvanced.add(buttonPanel, c);
+		
+		c.gridx = 1;
+		c.gridy++;
+		c.weightx = 0;
+		c.weighty = 1.0;
+		c.fill = GridBagConstraints.BOTH;
+		c.insets = new Insets(2, 10, 5, 4);
+		httpHeadersTableModel = new HTTPHeadersTableModel();
+		httpHeadersTable = new JTable(httpHeadersTableModel);
+		httpHeadersTable.setGridColor(Color.GRAY);
+		httpHeadersTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		setVisibleRowCount(httpHeadersTable, 3);
+		JScrollPane headersTableScrollPane = new JScrollPane(httpHeadersTable);
+		jpAdvanced.add(headersTableScrollPane, c);
 
 		// this JLabel makes the rest of the content of the panel to go to the
 		// top of the tab
 		// (instead of being centered)
-		c.gridx = 0;
-		c.gridy++;
-		c.weightx = 0;
-		c.weighty = 1.0;
-		c.insets = new Insets(0, 0, 0, 0);
-		JLabel jlSpacer = new JLabel();
-		jpAdvanced.add(jlSpacer, c);
-
+//		c.gridx = 0;
+//		c.gridy++;
+//		c.weightx = 0;
+//		c.weighty = 1.0;
+//		c.insets = new Insets(0, 0, 0, 0);
+//		JLabel jlSpacer = new JLabel();
+//		jpAdvanced.add(jlSpacer, c);
+		
 		return (jpAdvanced);
 	}
+	
+	/*
+	 * Based on http://www.javalobby.org/java/forums/t19559.html
+	 */
+	public static void setVisibleRowCount(JTable table, int visibleRows){ 
+	    int height = 0; 
+	    for(int row = 0; row < visibleRows; row++) 
+	        height += table.getRowHeight(row); 
+	 
+	    table.setPreferredScrollableViewportSize(new Dimension( 
+	            table.getPreferredScrollableViewportSize().width, 
+	            height)); 
+	}
+
 
 	/**
 	 * Check that user values in the UI are valid.
@@ -479,6 +558,16 @@ public class RESTActivityConfigurationPanel extends
 						.getMessage(), "REST Activity Configuration - Warning",
 						JOptionPane.WARNING_MESSAGE);
 				return (false);
+			}
+			
+			// Other HTTP headers configured must not have empty names
+			ArrayList<String> otherHTTPHeaderNames = httpHeadersTableModel.getHTTPHeaderNames();
+			for (String headerName : otherHTTPHeaderNames){
+				if (headerName.equals("")){
+					JOptionPane.showMessageDialog(MainWindow.getMainWindow(), "One of the HTTP header names is empty", "REST Activity Configuration - Warning",
+							JOptionPane.WARNING_MESSAGE);
+					return false;
+				}
 			}
 		}
 
@@ -551,6 +640,34 @@ public class RESTActivityConfigurationPanel extends
 				|| (originalContentType != null && originalContentType
 						.equals((String) cbContentType.getSelectedItem()));
 
+		// Check if other HTTP header fields or their values have changed
+		boolean otherHTTPHeadersNotChanged = true;
+		// List of 2-element lists containing header name and value
+		ArrayList<ArrayList<String>> originalOtherHTTPHeaders = configBean.getOtherHTTPHeaders();
+		ArrayList<ArrayList<String>> otherHTTPHeaders = httpHeadersTableModel.getHTTPHeaderData();
+		ListComparator listComparator = new ListComparator();
+		// Sort the list rows by the first element in the row (which is HTTP header name)
+		Collections.sort(originalOtherHTTPHeaders, listComparator);
+		Collections.sort(otherHTTPHeaders, listComparator);
+		if (originalOtherHTTPHeaders.size() != otherHTTPHeaders.size()){
+			otherHTTPHeadersNotChanged = false; // if size differs we do not have to check anything else
+		}
+		else{
+			// Lists are sorted by HTTP header names now, we can just iterate over any
+			for (int i = 0; i < otherHTTPHeaders.size() ; i++){
+				// Compare the header names
+				if (!otherHTTPHeaders.get(i).get(0).equals(originalOtherHTTPHeaders.get(i).get(0))){
+					otherHTTPHeadersNotChanged = false;
+					break;
+				}
+				// Compare the header values
+				if (!otherHTTPHeaders.get(i).get(1).equals(originalOtherHTTPHeaders.get(i).get(1))){
+					otherHTTPHeadersNotChanged = false;
+					break;
+				}
+			}
+		}
+		
 		// true (changed) unless all fields match the originals
 		return !(originalHTTPMethod == (HTTP_METHOD) cbHTTPMethod
 				.getSelectedItem()
@@ -562,7 +679,9 @@ public class RESTActivityConfigurationPanel extends
 						.getSelectedItem()
 				&& originalSendHTTPExpectRequestHeader == cbSendHTTPExpectHeader.isSelected() 
 				&& originalShowRedirectionOutputPort == cbShowRedirectionOutputPort.isSelected()
-				&& originalEscapeParameters == cbEscapeParameters.isSelected());
+				&& originalEscapeParameters == cbEscapeParameters.isSelected()
+				&& otherHTTPHeadersNotChanged);
+		
 	}
 
 	/**
@@ -587,6 +706,7 @@ public class RESTActivityConfigurationPanel extends
 		configBean.setShowRedirectionOutputPort(cbShowRedirectionOutputPort
 				.isSelected());
 		configBean.setEscapeParameters(cbEscapeParameters.isSelected());
+		configBean.setOtherHTTPHeaders(httpHeadersTableModel.getHTTPHeaderData());
 	}
 
 	/**
@@ -607,5 +727,36 @@ public class RESTActivityConfigurationPanel extends
 		cbShowRedirectionOutputPort.setSelected(configBean
 				.getShowRedirectionOutputPort());
 		cbEscapeParameters.setSelected(configBean.getEscapeParameters());
+		httpHeadersTableModel.setHTTPHeaderData(configBean.getOtherHTTPHeaders());
 	}
+	
+	/*
+	 * Compares two lists of strings by doing string comparison on their first element.
+	 */
+	private class ListComparator implements Comparator<ArrayList<String>>{
+
+		@Override
+		public int compare(ArrayList<String> list1, ArrayList<String> list2) {
+			// lists should not be empty, but ...
+			if (list1.isEmpty()){
+				if (list2.isEmpty()){
+					return 0;
+				}
+				else{
+					return 1;
+				}
+			}
+			else{
+				if (list2.isEmpty()){
+					return -1;
+				}
+				else{
+					return list1.get(0).compareTo(list2.get(0));
+				}			
+				
+			}
+		}
+		
+	}
+
 }
