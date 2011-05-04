@@ -21,6 +21,7 @@ net.sourceforge.taverna.scuflworkers.ui.WarnWorker
 category:xml
 net.sourceforge.taverna.scuflworkers.xml.XPathTextWorker
 net.sourceforge.taverna.scuflworkers.xml.XSLTWorker
+net.sourceforge.taverna.scuflworkers.xml.XSLTWorkerWithParameters
 category:list
 org.embl.ebi.escience.scuflworkers.java.EchoList
 org.embl.ebi.escience.scuflworkers.java.FlattenList
