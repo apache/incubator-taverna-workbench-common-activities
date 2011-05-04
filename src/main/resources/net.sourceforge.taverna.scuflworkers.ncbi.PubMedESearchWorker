@@ -25,6 +25,7 @@ char[] buffer = new char[1024];
         }
         writer.write(buffer, 0, r);
     }
+reader.close();
 outputText = writer.toString();
 </script>
   <dependencies />

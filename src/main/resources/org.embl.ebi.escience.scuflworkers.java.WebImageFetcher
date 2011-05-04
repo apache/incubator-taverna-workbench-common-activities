@@ -1,36 +1,32 @@
 <activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
-  <script>URL inputURL = null;
+  <script>if ((url == void) || (url == null)) {
+	throw new RuntimeException("The url must be specified");
+}
+
+URL inputURL = null;
 if (base != void) {
 	inputURL = new URL(new URL(base), url);
 } else {
 	inputURL = new URL(url);
 }
 
-byte[] contents;
-if (inputURL.openConnection().getContentLength() == -1) {
-	// Content size unknown, must read first...
-	byte[] buffer = new byte[1024];
-	int bytesRead = 0;
-	int totalBytesRead = 0;
-	InputStream is = inputURL.openStream();
-	while (bytesRead != -1) {
-		totalBytesRead += bytesRead;
-		bytesRead = is.read(buffer, 0, 1024);
-	}
-	contents = new byte[totalBytesRead];
-} else {
-	contents = new byte[inputURL.openConnection().getContentLength()];
-}
 int bytesRead = 0;
 int totalBytesRead = 0;
 InputStream is = inputURL.openStream();
-while (bytesRead != -1) {
-	bytesRead = is.read(contents, totalBytesRead, contents.length - totalBytesRead);
-	totalBytesRead += bytesRead;
-	if (contents.length==totalBytesRead) break;
+ByteArrayOutputStream os = new ByteArrayOutputStream();
+byte[] buffer = new byte[2048];
+while (true) {
+	bytesRead = is.read(buffer);
+	if (bytesRead == -1) {
+		break;	
+	}
+
+	os.write(buffer, 0, bytesRead);
 }
 
-image = contents;
+image = os.toByteArray();
+is.close();
+os.close();
 </script>
   <dependencies />
   <inputs>

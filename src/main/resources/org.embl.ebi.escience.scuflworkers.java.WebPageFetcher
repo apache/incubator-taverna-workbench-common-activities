@@ -1,5 +1,9 @@
 <activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
-  <script>URL inputURL = null;
+  <script>if ((url == void) || (url == null)) {
+	throw new RuntimeException("The url must be specified");
+}
+
+URL inputURL = null;
 if (base != void) {
   inputURL = new URL(new URL(base), url);
 }
@@ -9,35 +13,23 @@ else {
 URLConnection con = inputURL.openConnection();
 InputStream in = con.getInputStream();
 
-InputStreamReader isr = new InputStreamReader(in);
-Reader inReader = new BufferedReader(isr);
+StringBuffer result = new StringBuffer();
+BufferedReader reader;
 
-StringBuffer buf = new StringBuffer();
-int ch;
-while ((ch = inReader.read()) &gt; -1) {
-  buf.append((char)ch);
+String encoding = con.getContentEncoding();
+if (encoding == null) {
+  reader = new BufferedReader(new InputStreamReader(in));
+} else {
+  reader = new BufferedReader(new InputStreamReader(in, encoding));
 }
-inReader.close();
-contents = buf.toString();
+String line = null;
+while ((line = reader.readLine()) != null) {
+	result.append(line);
+	result.append(NEWLINE);
+}
 
-
-//String NEWLINE = System.getProperty("line.separator");
-//
-//URL inputURL = null;
-//if (base != void) {
-//	inputURL = new URL(new URL(base), url);
-//} else {
-//	inputURL = new URL(url);
-//}
-//StringBuffer result = new StringBuffer();
-//BufferedReader reader = new BufferedReader(new InputStreamReader(inputURL.openStream()));
-//String line = null;
-//while ((line = reader.readLine()) != null) {
-//	result.append(line);
-//	result.append(NEWLINE);
-//}
-//
-//contents = result.toString();
+reader.close();
+contents = result.toString();
 </script>
   <dependencies />
   <inputs>

@@ -19,7 +19,11 @@ BufferedReader getReader (String fileUrl) throws IOException {
 		}
 		return new BufferedReader(reader);
 	}
-	
+
+if ((fileUrl == void) || (fileUrl == null)) {
+    throw new RuntimeException("The fileUrl must be specified");
+}
+
 BufferedReader br  = getReader(fileUrl);
 
 // read the GenBank File
@@ -37,7 +41,9 @@ while (sequences.hasNext()) {
 	sb.append(os.toString());
 }
 
-genbankdata = sb.toString()
+genbankdata = sb.toString();
+br.close();
+ps.close();
   
 </script>
   <dependencies class="java.util.Collections$SingletonList">

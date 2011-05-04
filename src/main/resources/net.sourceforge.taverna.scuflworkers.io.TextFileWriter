@@ -8,6 +8,7 @@
   	out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), encoding)); 
   }
 out.write(filecontents);
+out.flush();
 out.close();
 outputFile = filecontents;
 </script>
