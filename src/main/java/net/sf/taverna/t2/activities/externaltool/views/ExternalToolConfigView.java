@@ -415,14 +415,27 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 		scriptTextArea.setPreferredSize(new Dimension(200, 100));
 
 		tabbedPane.addTab("Script", createScriptPanel());
-		tabbedPane.addTab("Annotation", createAnnotationPanel());
 		tabbedPane.addTab("String replacements", createStringReplacementPanel());
 		tabbedPane.addTab("File inputs", createFilePanel(inputFileViewList, "To file", "File type", "in"));
-		tabbedPane.addTab("File lists", createFilePanel(fileListViewList, "To file containing list", "Individual file type", "in"));
 		tabbedPane.addTab("File outputs", createFilePanel(outputViewList, "From file", "File type", "out"));
-		tabbedPane.addTab("Static strings", createStaticStringPanel());
-		tabbedPane.addTab("Static URLs", createStaticUrlPanel());
-		tabbedPane.addTab("Runtime environments", createRuntimeEnvironmentPanel(runtimeEnvironmentViewList));
+		JPanel advancedPanel = new JPanel();
+		advancedPanel.setLayout(new GridBagLayout());
+		GridBagConstraints advancedConstraint = new GridBagConstraints();
+		advancedConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
+		advancedConstraint.gridx = 0;
+		advancedConstraint.gridy = 0;
+
+		advancedConstraint.fill = GridBagConstraints.BOTH;
+		advancedConstraint.weighty = 0.1;
+		advancedConstraint.weightx = 0.1;
+		JTabbedPane advancedTab = new JTabbedPane();
+		advancedTab.addTab("Annotation", createAnnotationPanel());
+		advancedTab.addTab("File lists", createFilePanel(fileListViewList, "To file containing list", "Individual file type", "in"));
+		advancedTab.addTab("Static strings", createStaticStringPanel());
+		advancedTab.addTab("Static URLs", createStaticUrlPanel());
+		advancedTab.addTab("Runtime environments", createRuntimeEnvironmentPanel(runtimeEnvironmentViewList));
+		advancedPanel.add(advancedTab, advancedConstraint);
+		tabbedPane.addTab("Advanced", advancedPanel);
 		}
 		tabbedPane.addTab("Location", createInvocationPanel());
 		if (isFromRepository()) {

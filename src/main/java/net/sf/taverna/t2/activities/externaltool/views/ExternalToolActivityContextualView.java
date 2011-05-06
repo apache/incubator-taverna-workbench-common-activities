@@ -30,7 +30,9 @@ import java.util.Map;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.actions.ExternalToolActivityConfigureAction;
+import net.sf.taverna.t2.activities.externaltool.servicedescriptions.ExternalToolActivityIcon;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
+import net.sf.taverna.t2.workbench.ui.impl.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInput;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInputStatic;
@@ -133,6 +135,12 @@ public class ExternalToolActivityContextualView extends HTMLBasedActivityContext
 	public Action getConfigureAction(final Frame owner) {
 		return new ExternalToolActivityConfigureAction((ExternalToolActivity) getActivity(), owner);
 	}
+	
+	public String getBackgroundColour() {
+		
+		return ExternalToolActivityIcon.getColourString();
+	}
+
 
 	@Override
 	public int getPreferredPosition() {

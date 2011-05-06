@@ -22,11 +22,14 @@
 
 package net.sf.taverna.t2.activities.externaltool.servicedescriptions;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI;
+import net.sf.taverna.t2.workbench.ui.impl.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 /**
@@ -35,6 +38,15 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
  * @author Hajo Nils Krabbenhoeft
  */
 public class ExternalToolActivityIcon implements ActivityIconSPI{
+	
+	 private static final String PROCESSOR_COLOUR_STRING = "#F28C55";
+
+	static {
+		    // set colour for XPath processors in the workflow diagram
+		    ColourManager.getInstance().setPreferredColour(
+		        ExternalToolActivity.class.getCanonicalName(), Color.decode(PROCESSOR_COLOUR_STRING));
+		  }
+
 	
 	private static Icon icon;
 	
@@ -54,6 +66,10 @@ public class ExternalToolActivityIcon implements ActivityIconSPI{
 			icon = new ImageIcon(ExternalToolActivityIcon.class.getResource("/externaltool.png"));
 		}
 		return icon;
+	}
+	
+	public static String getColourString() {
+		return PROCESSOR_COLOUR_STRING;
 	}
 }
 
