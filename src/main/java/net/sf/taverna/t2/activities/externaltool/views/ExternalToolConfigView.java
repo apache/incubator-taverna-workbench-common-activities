@@ -50,17 +50,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.BoxView;
-import javax.swing.text.ComponentView;
-import javax.swing.text.Element;
-import javax.swing.text.IconView;
-import javax.swing.text.LabelView;
-import javax.swing.text.ParagraphView;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledEditorKit;
-import javax.swing.text.View;
-import javax.swing.text.ViewFactory;
+import javax.swing.border.EmptyBorder;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
@@ -72,6 +62,7 @@ import net.sf.taverna.t2.lang.ui.FileTools;
 import net.sf.taverna.t2.lang.ui.KeywordDocument;
 import net.sf.taverna.t2.lang.ui.LineEnabledTextPanel;
 import net.sf.taverna.t2.lang.ui.LinePainter;
+import net.sf.taverna.t2.lang.ui.LineWrappingTextArea;
 import net.sf.taverna.t2.lang.ui.NoWrapEditorKit;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
 
@@ -100,6 +91,27 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
  */
 @SuppressWarnings("serial")
 public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalToolActivity, ExternalToolActivityConfigurationBean> {
+
+	private static final String STRING_REPLACEMENT_DESCRIPTION = "This is a description of what should be done";
+
+
+	private static final String FILE_INPUT_DESCRIPTION = "This is a description of what should be done";
+
+
+	private static final String FILE_OUTPUT_DESCRIPTION = "This is a description of what should be done";
+
+
+	private static final String FILE_LIST_DESCRIPTION = "This is a description of what should be done";
+
+
+	private static final String RUNTIME_ENVIRONMENT_DESCRIPTION = "This is a description of what should be done";
+
+
+	private static final String STATIC_STRING_DESCRIPTION = "This is a description of what should be done";
+
+
+	private static final String STATIC_URL_DESCRIPTION = "This is a description of what should be done";
+
 
 	private static Logger logger = Logger.getLogger(ExternalToolConfigView.class);
 
@@ -416,8 +428,8 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 
 		tabbedPane.addTab("Script", createScriptPanel());
 		tabbedPane.addTab("String replacements", createStringReplacementPanel());
-		tabbedPane.addTab("File inputs", createFilePanel(inputFileViewList, "To file", "File type", "in"));
-		tabbedPane.addTab("File outputs", createFilePanel(outputViewList, "From file", "File type", "out"));
+		tabbedPane.addTab("File inputs", createFilePanel(inputFileViewList, "To file", "File type", "in", FILE_INPUT_DESCRIPTION));
+		tabbedPane.addTab("File outputs", createFilePanel(outputViewList, "From file", "File type", "out", FILE_OUTPUT_DESCRIPTION));
 		JPanel advancedPanel = new JPanel();
 		advancedPanel.setLayout(new GridBagLayout());
 		GridBagConstraints advancedConstraint = new GridBagConstraints();
@@ -430,7 +442,7 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 		advancedConstraint.weightx = 0.1;
 		JTabbedPane advancedTab = new JTabbedPane();
 		advancedTab.addTab("Annotation", createAnnotationPanel());
-		advancedTab.addTab("File lists", createFilePanel(fileListViewList, "To file containing list", "Individual file type", "in"));
+		advancedTab.addTab("File lists", createFilePanel(fileListViewList, "To file containing list", "Individual file type", "in", FILE_LIST_DESCRIPTION));
 		advancedTab.addTab("Static strings", createStaticStringPanel());
 		advancedTab.addTab("Static URLs", createStaticUrlPanel());
 		advancedTab.addTab("Runtime environments", createRuntimeEnvironmentPanel(runtimeEnvironmentViewList));
@@ -561,13 +573,12 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 
 	private JPanel createStringReplacementPanel() {
 		 final JPanel outerInputPanel = new JPanel();
+		 outerInputPanel.setLayout(new BorderLayout());
 
 		final JPanel inputEditPanel = new JPanel(new GridBagLayout());
-//		inputEditPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
-//				.createEtchedBorder(), "Inputs"));
 
 		final GridBagConstraints inputConstraint = new GridBagConstraints();
-//		inputConstraint.insets = new Insets(5,5,5,5);
+
 		inputConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
 		inputConstraint.gridx = 0;
 		inputConstraint.gridy = 0;
@@ -586,18 +597,16 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 
 		}
 		}
-		outerInputPanel.setLayout(new GridBagLayout());
-		GridBagConstraints outerPanelConstraint = new GridBagConstraints();
-		outerPanelConstraint.gridx = 0;
-		outerPanelConstraint.gridy = 0;
-		outerPanelConstraint.weightx = 0.1;
-		outerPanelConstraint.weighty = 0.1;
-		outerPanelConstraint.fill = GridBagConstraints.BOTH;
-		outerInputPanel.add(new JScrollPane(inputEditPanel),
-				outerPanelConstraint);
-		outerPanelConstraint.weighty = 0;
+		
+		JTextArea descriptionText = new LineWrappingTextArea(STRING_REPLACEMENT_DESCRIPTION);
+		descriptionText.setEditable(false);
+		descriptionText.setFocusable(false);
+		descriptionText.setBorder(new EmptyBorder(5,5, 10, 5));
+		
+		outerInputPanel.add(descriptionText , BorderLayout.NORTH);
+		outerInputPanel.add(new JScrollPane(inputEditPanel), BorderLayout.CENTER);
 		JButton addInputPortButton = new JButton(new AbstractAction() {
-			// FIXME refactor this into a method
+
 			public void actionPerformed(ActionEvent e) {
 
 				int portNumber = 1;
@@ -621,31 +630,14 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 			}
 
 		});
+		
 		addInputPortButton.setText("Add string replacement");
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new GridBagLayout());
+		buttonPanel.setLayout(new BorderLayout());
 
-		JPanel filler = new JPanel();
-		outerPanelConstraint.weightx = 0.1;
-		outerPanelConstraint.weighty = 0;
-		outerPanelConstraint.gridx = 0;
-		outerPanelConstraint.gridy = 0;
+		buttonPanel.add(addInputPortButton, BorderLayout.EAST);
 
-		buttonPanel.add(filler, outerPanelConstraint);
-
-		outerPanelConstraint.weightx = 0;
-		outerPanelConstraint.weighty = 0;
-		outerPanelConstraint.gridx = 1;
-		outerPanelConstraint.gridy = 0;
-
-		buttonPanel.add(addInputPortButton, outerPanelConstraint);
-
-		outerPanelConstraint.weightx = 0;
-		outerPanelConstraint.weighty = 0;
-		outerPanelConstraint.gridx = 0;
-		outerPanelConstraint.gridy = 1;
-		outerPanelConstraint.fill = GridBagConstraints.BOTH;
-		outerInputPanel.add(buttonPanel, outerPanelConstraint);
+		outerInputPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		return outerInputPanel;
 	}
@@ -687,8 +679,6 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 		});
 		panel.add(removeButton, inputConstraint);
 		inputConstraint.gridy = ++ stringReplacementGridy;
-		panel.add(new JSeparator(), inputConstraint);
-		stringReplacementGridy++;
 		
 	}
 
@@ -786,8 +776,9 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 		return false;
 	}
 
-	private JPanel createFilePanel(final List<ExternalToolFileViewer> viewList, String fileHeader, String typeHeader, final String portPrefix) {
+	private JPanel createFilePanel(final List<ExternalToolFileViewer> viewList, String fileHeader, String typeHeader, final String portPrefix, final String description) {
 		final JPanel outerFilePanel = new JPanel();
+		outerFilePanel.setLayout(new BorderLayout());
 			final JPanel fileEditPanel = new JPanel(new GridBagLayout());
 	
 			final GridBagConstraints fileConstraint = new GridBagConstraints();
@@ -810,18 +801,7 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 				addFileViewer(viewList, outerFilePanel, fileEditPanel, outputView);
 			}
 			}
-			outerFilePanel.setLayout(new GridBagLayout());
-			GridBagConstraints outerPanelConstraint = new GridBagConstraints();
-			outerPanelConstraint.gridx = 0;
-			outerPanelConstraint.gridy = 0;
-			outerPanelConstraint.weightx = 0.1;
-			outerPanelConstraint.weighty = 0.1;
-			outerPanelConstraint.fill = GridBagConstraints.BOTH;
-			outerFilePanel.add(new JScrollPane(fileEditPanel),
-					outerPanelConstraint);
-			outerPanelConstraint.weighty = 0;
 			JButton addFilePortButton = new JButton(new AbstractAction() {
-				// FIXME refactor this into a method
 				public void actionPerformed(ActionEvent e) {
 					
 					int portNumber = 1;
@@ -845,31 +825,21 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 				}
 	
 			});
+			JTextArea descriptionText = new LineWrappingTextArea(description);
+			descriptionText.setEditable(false);
+			descriptionText.setFocusable(false);
+			descriptionText.setBorder(new EmptyBorder(5,5, 10, 5));
+			
+			outerFilePanel.add(descriptionText , BorderLayout.NORTH);
+			
+			outerFilePanel.add(new JScrollPane(fileEditPanel), BorderLayout.CENTER);
+			
 			addFilePortButton.setText("Add Port");
-			JPanel buttonPanel = new JPanel();
-			buttonPanel.setLayout(new GridBagLayout());
+			JPanel buttonPanel = new JPanel(new BorderLayout());
+		
+			buttonPanel.add(addFilePortButton, BorderLayout.EAST);
 	
-			JPanel filler = new JPanel();
-			outerPanelConstraint.weightx = 0.1;
-			outerPanelConstraint.weighty = 0;
-			outerPanelConstraint.gridx = 0;
-			outerPanelConstraint.gridy = 0;
-	
-			buttonPanel.add(filler, outerPanelConstraint);
-	
-			outerPanelConstraint.weightx = 0;
-			outerPanelConstraint.weighty = 0;
-			outerPanelConstraint.gridx = 1;
-			outerPanelConstraint.gridy = 0;
-	
-			buttonPanel.add(addFilePortButton, outerPanelConstraint);
-	
-			outerPanelConstraint.weightx = 0;
-			outerPanelConstraint.weighty = 0;
-			outerPanelConstraint.gridx = 0;
-			outerPanelConstraint.gridy = 1;
-			outerPanelConstraint.fill = GridBagConstraints.BOTH;
-			outerFilePanel.add(buttonPanel, outerPanelConstraint);
+			outerFilePanel.add(buttonPanel, BorderLayout.SOUTH);
 	
 			return outerFilePanel;
 		}
@@ -921,39 +891,40 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 	}
 	
 	private JPanel createRuntimeEnvironmentPanel(final List<ExternalToolRuntimeEnvironmentViewer> viewList) {
-		final JPanel outerFilePanel = new JPanel();
+		final JPanel outerREPanel = new JPanel(new BorderLayout());
 			final JPanel runtimeEnvironmentEditPanel = new JPanel(new GridBagLayout());
 	
-			final GridBagConstraints fileConstraint = new GridBagConstraints();
-			fileConstraint.insets = new Insets(5,5,5,5);
-			fileConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-			fileConstraint.gridx = 0;
-			fileConstraint.gridy = 0;
-			fileConstraint.weightx = 0.1;
-			fileConstraint.fill = GridBagConstraints.BOTH;
+			final GridBagConstraints reConstraint = new GridBagConstraints();
+			reConstraint.insets = new Insets(5,5,5,5);
+			reConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
+			reConstraint.gridx = 0;
+			reConstraint.gridy = 0;
+			reConstraint.weightx = 0.1;
+			reConstraint.fill = GridBagConstraints.BOTH;
 	
-			runtimeEnvironmentEditPanel.add(new JLabel("Environment description"), fileConstraint);
-			fileConstraint.gridx++;
-			runtimeEnvironmentEditPanel.add(new JLabel("Relationship"), fileConstraint);	
-			fileConstraint.gridx++;
+			runtimeEnvironmentEditPanel.add(new JLabel("Environment description"), reConstraint);
+			reConstraint.gridx++;
+			runtimeEnvironmentEditPanel.add(new JLabel("Relationship"), reConstraint);	
+			reConstraint.gridx++;
 	
 	
-			fileConstraint.gridx = 0;
+			reConstraint.gridx = 0;
 			synchronized(viewList) {
 			for (ExternalToolRuntimeEnvironmentViewer outputView : viewList) {
-				addEnvironmentViewer(viewList, outerFilePanel, runtimeEnvironmentEditPanel, outputView);
+				addEnvironmentViewer(viewList, outerREPanel, runtimeEnvironmentEditPanel, outputView);
 			}
 			}
-			outerFilePanel.setLayout(new GridBagLayout());
-			GridBagConstraints outerPanelConstraint = new GridBagConstraints();
-			outerPanelConstraint.gridx = 0;
-			outerPanelConstraint.gridy = 0;
-			outerPanelConstraint.weightx = 0.1;
-			outerPanelConstraint.weighty = 0.1;
-			outerPanelConstraint.fill = GridBagConstraints.BOTH;
-			outerFilePanel.add(new JScrollPane(runtimeEnvironmentEditPanel),
-					outerPanelConstraint);
-			outerPanelConstraint.weighty = 0;
+
+			JTextArea descriptionText = new LineWrappingTextArea(RUNTIME_ENVIRONMENT_DESCRIPTION);
+			descriptionText.setEditable(false);
+			descriptionText.setFocusable(false);
+			descriptionText.setBorder(new EmptyBorder(5,5, 10, 5));
+			
+			outerREPanel.add(descriptionText , BorderLayout.NORTH);
+
+			outerREPanel.add(new JScrollPane(runtimeEnvironmentEditPanel),
+					BorderLayout.CENTER);
+
 			JButton addRuntimeEnvironmentButton = new JButton(new AbstractAction() {
 				// FIXME refactor this into a method
 				public void actionPerformed(ActionEvent e) {
@@ -961,7 +932,7 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 					ExternalToolRuntimeEnvironmentViewer newViewer = new ExternalToolRuntimeEnvironmentViewer();
 					synchronized(viewList) {
 						viewList.add(newViewer);
-						addEnvironmentViewer(viewList, outerFilePanel, runtimeEnvironmentEditPanel, newViewer);
+						addEnvironmentViewer(viewList, outerREPanel, runtimeEnvironmentEditPanel, newViewer);
 						runtimeEnvironmentEditPanel.revalidate();
 						runtimeEnvironmentEditPanel.repaint();
 					}	
@@ -969,32 +940,13 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 	
 			});
 			addRuntimeEnvironmentButton.setText("Add runtime environment");
-			JPanel buttonPanel = new JPanel();
-			buttonPanel.setLayout(new GridBagLayout());
+			JPanel buttonPanel = new JPanel(new BorderLayout());
 	
-			JPanel filler = new JPanel();
-			outerPanelConstraint.weightx = 0.1;
-			outerPanelConstraint.weighty = 0;
-			outerPanelConstraint.gridx = 0;
-			outerPanelConstraint.gridy = 0;
+			buttonPanel.add(addRuntimeEnvironmentButton, BorderLayout.EAST);
+
+			outerREPanel.add(buttonPanel, BorderLayout.SOUTH);
 	
-			buttonPanel.add(filler, outerPanelConstraint);
-	
-			outerPanelConstraint.weightx = 0;
-			outerPanelConstraint.weighty = 0;
-			outerPanelConstraint.gridx = 1;
-			outerPanelConstraint.gridy = 0;
-	
-			buttonPanel.add(addRuntimeEnvironmentButton, outerPanelConstraint);
-	
-			outerPanelConstraint.weightx = 0;
-			outerPanelConstraint.weighty = 0;
-			outerPanelConstraint.gridx = 0;
-			outerPanelConstraint.gridy = 1;
-			outerPanelConstraint.fill = GridBagConstraints.BOTH;
-			outerFilePanel.add(buttonPanel, outerPanelConstraint);
-	
-			return outerFilePanel;
+			return outerREPanel;
 		}
 	
 	private void addEnvironmentViewer(final List<ExternalToolRuntimeEnvironmentViewer> viewList, final JPanel outerPanel, final JPanel panel, ExternalToolRuntimeEnvironmentViewer viewer) {
@@ -1040,7 +992,7 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 
 
 	private JPanel createStaticUrlPanel() {
-		final JPanel outerStaticPanel = new JPanel();
+		final JPanel outerStaticPanel = new JPanel(new BorderLayout());
 			final JPanel staticEditPanel = new JPanel(new GridBagLayout());
 	
 			final GridBagConstraints staticConstraint = new GridBagConstraints();
@@ -1062,16 +1014,17 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 				addStaticUrlViewer(outerStaticPanel, staticEditPanel, staticView);
 			}
 			}
-			outerStaticPanel.setLayout(new GridBagLayout());
-			GridBagConstraints outerPanelConstraint = new GridBagConstraints();
-			outerPanelConstraint.gridx = 0;
-			outerPanelConstraint.gridy = 0;
-			outerPanelConstraint.weightx = 0.1;
-			outerPanelConstraint.weighty = 0.1;
-			outerPanelConstraint.fill = GridBagConstraints.BOTH;
+
 			outerStaticPanel.add(new JScrollPane(staticEditPanel),
-					outerPanelConstraint);
-			outerPanelConstraint.weighty = 0;
+					BorderLayout.CENTER);
+			
+			JTextArea descriptionText = new LineWrappingTextArea(STATIC_URL_DESCRIPTION);
+			descriptionText.setEditable(false);
+			descriptionText.setFocusable(false);
+			descriptionText.setBorder(new EmptyBorder(5,5, 10, 5));
+			
+			outerStaticPanel.add(descriptionText , BorderLayout.NORTH);
+			
 			JButton addstaticPortButton = new JButton(new AbstractAction() {
 				// FIXME refactor this into a method
 				public void actionPerformed(ActionEvent e) {
@@ -1087,30 +1040,11 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 	
 			});
 			addstaticPortButton.setText("Add Static");
-			JPanel buttonPanel = new JPanel();
-			buttonPanel.setLayout(new GridBagLayout());
+			JPanel buttonPanel = new JPanel(new BorderLayout());
 	
-			JPanel filler = new JPanel();
-			outerPanelConstraint.weightx = 0.1;
-			outerPanelConstraint.weighty = 0;
-			outerPanelConstraint.gridx = 0;
-			outerPanelConstraint.gridy = 0;
+			buttonPanel.add(addstaticPortButton, BorderLayout.EAST);
 	
-			buttonPanel.add(filler, outerPanelConstraint);
-	
-			outerPanelConstraint.weightx = 0;
-			outerPanelConstraint.weighty = 0;
-			outerPanelConstraint.gridx = 1;
-			outerPanelConstraint.gridy = 0;
-	
-			buttonPanel.add(addstaticPortButton, outerPanelConstraint);
-	
-			outerPanelConstraint.weightx = 0;
-			outerPanelConstraint.weighty = 0;
-			outerPanelConstraint.gridx = 0;
-			outerPanelConstraint.gridy = 1;
-			outerPanelConstraint.fill = GridBagConstraints.BOTH;
-			outerStaticPanel.add(buttonPanel, outerPanelConstraint);
+			outerStaticPanel.add(buttonPanel, BorderLayout.SOUTH);
 	
 			return outerStaticPanel;
 		}
@@ -1158,7 +1092,7 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 	}
 
 	private JPanel createStaticStringPanel() {
-		final JPanel outerStaticPanel = new JPanel();
+		final JPanel outerStaticPanel = new JPanel(new BorderLayout());
 			final JPanel staticEditPanel = new JPanel(new GridBagLayout());
 	
 			final GridBagConstraints staticConstraint = new GridBagConstraints();
@@ -1179,16 +1113,15 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 				addStaticStringViewer(outerStaticPanel, staticEditPanel, staticView);
 			}
 			}
-			outerStaticPanel.setLayout(new GridBagLayout());
-			GridBagConstraints outerPanelConstraint = new GridBagConstraints();
-			outerPanelConstraint.gridx = 0;
-			outerPanelConstraint.gridy = 0;
-			outerPanelConstraint.weightx = 0.1;
-			outerPanelConstraint.weighty = 0.1;
-			outerPanelConstraint.fill = GridBagConstraints.BOTH;
+
+			JTextArea descriptionText = new LineWrappingTextArea(STATIC_STRING_DESCRIPTION);
+			descriptionText.setEditable(false);
+			descriptionText.setFocusable(false);
+			descriptionText.setBorder(new EmptyBorder(5,5, 10, 5));
+			outerStaticPanel.add(descriptionText , BorderLayout.NORTH);
+			
 			outerStaticPanel.add(new JScrollPane(staticEditPanel),
-					outerPanelConstraint);
-			outerPanelConstraint.weighty = 0;
+					BorderLayout.CENTER);
 			JButton addStaticStringButton = new JButton(new AbstractAction() {
 				// FIXME refactor this into a method
 				public void actionPerformed(ActionEvent e) {
@@ -1204,30 +1137,11 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 	
 			});
 			addStaticStringButton.setText("Add static string");
-			JPanel buttonPanel = new JPanel();
-			buttonPanel.setLayout(new GridBagLayout());
+			JPanel buttonPanel = new JPanel(new BorderLayout());
 	
-			JPanel filler = new JPanel();
-			outerPanelConstraint.weightx = 0.1;
-			outerPanelConstraint.weighty = 0;
-			outerPanelConstraint.gridx = 0;
-			outerPanelConstraint.gridy = 0;
+			buttonPanel.add(addStaticStringButton, BorderLayout.EAST);
 	
-			buttonPanel.add(filler, outerPanelConstraint);
-	
-			outerPanelConstraint.weightx = 0;
-			outerPanelConstraint.weighty = 0;
-			outerPanelConstraint.gridx = 1;
-			outerPanelConstraint.gridy = 0;
-	
-			buttonPanel.add(addStaticStringButton, outerPanelConstraint);
-	
-			outerPanelConstraint.weightx = 0;
-			outerPanelConstraint.weighty = 0;
-			outerPanelConstraint.gridx = 0;
-			outerPanelConstraint.gridy = 1;
-			outerPanelConstraint.fill = GridBagConstraints.BOTH;
-			outerStaticPanel.add(buttonPanel, outerPanelConstraint);
+			outerStaticPanel.add(buttonPanel, BorderLayout.SOUTH);
 	
 			return outerStaticPanel;
 		}
