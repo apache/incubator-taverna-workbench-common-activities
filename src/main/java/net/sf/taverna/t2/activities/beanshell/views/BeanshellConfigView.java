@@ -64,17 +64,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.BoxView;
-import javax.swing.text.ComponentView;
-import javax.swing.text.Element;
-import javax.swing.text.IconView;
-import javax.swing.text.LabelView;
-import javax.swing.text.ParagraphView;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledEditorKit;
-import javax.swing.text.View;
-import javax.swing.text.ViewFactory;
 
 import net.sf.taverna.raven.repository.BasicArtifact;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
@@ -82,9 +71,12 @@ import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityHealthChecker;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity.ClassLoaderSharing;
+import net.sf.taverna.t2.lang.ui.EditorKeySetUtil;
 import net.sf.taverna.t2.lang.ui.FileTools;
-import net.sf.taverna.t2.lang.ui.LineEnabledTextPanel;
 import net.sf.taverna.t2.lang.ui.KeywordDocument;
+import net.sf.taverna.t2.lang.ui.LineEnabledTextPanel;
+import net.sf.taverna.t2.lang.ui.LinePainter;
+import net.sf.taverna.t2.lang.ui.NoWrapEditorKit;
 import net.sf.taverna.t2.reference.ExternalReferenceSPI;
 import net.sf.taverna.t2.visit.VisitReport;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
@@ -173,6 +165,8 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	private boolean inputsChanged = false;
 
 	private JTabbedPane tabbedPane = null;
+	
+	private static Set<String> keys = EditorKeySetUtil.loadKeySet(BeanshellConfigView.class.getResourceAsStream("keys.txt"));
 
 	//private File currentDirectory = null;
 
@@ -318,8 +312,9 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		add(tabbedPane, outerConstraint);
 
 		scriptTextArea = new JTextPane();
+		new LinePainter(scriptTextArea);
 
-		final KeywordDocument doc = new KeywordDocument(BeanshellKeySetManager.getKeySet());
+		final KeywordDocument doc = new KeywordDocument(keys);
 		// NOTE: Due to T2-1145 - always set editor kit BEFORE setDocument
 		scriptTextArea.setEditorKit( new NoWrapEditorKit() );
 		scriptTextArea.setFont(new Font("Monospaced",Font.PLAIN,14));
@@ -1102,65 +1097,5 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		}
 		return result;
 	}
-	
-	/**
-	 * 
-	 * The following classes are copied from http://forums.sun.com/thread.jspa?threadID=622683
-	 *
-	 */
-	private class NoWrapEditorKit extends StyledEditorKit
-	{
-		public ViewFactory getViewFactory()
-		{
-				return new StyledViewFactory();
-		} 
-	}
-	 
-		static class StyledViewFactory implements ViewFactory
-		{
-			public View create(Element elem)
-			{
-				String kind = elem.getName();
-	 
-				if (kind != null)
-				{
-					if (kind.equals(AbstractDocument.ContentElementName))
-					{
-						return new LabelView(elem);
-					}
-					else if (kind.equals(AbstractDocument.ParagraphElementName))
-					{
-						return new ParagraphView(elem);
-					}
-					else if (kind.equals(AbstractDocument.SectionElementName))
-					{
-						return new NoWrapBoxView(elem, View.Y_AXIS);
-					}
-					else if (kind.equals(StyleConstants.ComponentElementName))
-					{
-						return new ComponentView(elem);
-					}
-					else if (kind.equals(StyleConstants.IconElementName))
-					{
-						return new IconView(elem);
-					}
-				}
-	 
-		 		return new LabelView(elem);
-			}
-		}
-
-		static class NoWrapBoxView extends BoxView {
-	        public NoWrapBoxView(Element elem, int axis) {
-	            super(elem, axis);
-	        }
-	 
-	        public void layout(int width, int height) {
-	            super.layout(32768, height);
-	        }
-	        public float getMinimumSpan(int axis) {
-	            return super.getPreferredSpan(axis);
-	        }
-	    }
 
 }
