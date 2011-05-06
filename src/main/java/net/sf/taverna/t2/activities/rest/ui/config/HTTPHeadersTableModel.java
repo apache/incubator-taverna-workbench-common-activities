@@ -13,7 +13,7 @@ public class HTTPHeadersTableModel extends AbstractTableModel {
     protected ArrayList<ArrayList<String>> data;
 
     public HTTPHeadersTableModel() {
-    	columnNames = new String[] {"HTTP Header", "Value"};
+    	columnNames = new String[] {"HTTP Header Name", "HTTP Header Value"};
     	data = new ArrayList<ArrayList<String>>();
     }
 
