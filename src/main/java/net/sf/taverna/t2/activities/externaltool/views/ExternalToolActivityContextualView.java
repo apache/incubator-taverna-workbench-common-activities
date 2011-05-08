@@ -26,6 +26,8 @@ import java.awt.Frame;
 import javax.swing.Action;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
@@ -75,27 +77,49 @@ public class ExternalToolActivityContextualView extends HTMLBasedActivityContext
 		}
 		html += "<tr><td>Name</td><td>" + name + "</td></tr>";
 		
-		Map<String, ScriptInput> inputs = useCaseDescription.getInputs();
-		if (!inputs.isEmpty()) {
-		    html += "<tr><td colspan=2 align=center><b>Inputs</b></td></tr>";
-		    html += "<tr><td><b>Port name</b></td><td><b>Action</b></td></tr>";
-		    for (String siName : inputs.keySet()) {
-			html += "<tr><td>" + siName + "</td>";
-			ScriptInput si = inputs.get(siName);
-			if (si.isFile()) {
-			    html += "<td>File: " + si.getTag() + "</td>";
-			} else if (si.isTempFile()) {
-			    html += "<td>Temporary file</td>";
+		Map<String, ScriptInput> stringReplacements = new TreeMap<String, ScriptInput> ();
+		Map<String, ScriptInput> fileInputs = new TreeMap<String, ScriptInput>();
+		
+		for (Entry<String, ScriptInput> entry : useCaseDescription.getInputs().entrySet()) {
+			String key = entry.getKey();
+			ScriptInput value = entry.getValue();
+			if (value.isFile()) {
+				fileInputs.put(key, value);
+			} else if (value.isTempFile()) {
+				// Nothing
 			} else {
-			    html += "<td>Replaces: %%" + si.getTag() + "%%</td>";
+				stringReplacements.put(key, value);
 			}
+		}
+
+		if (!stringReplacements.isEmpty()) {
+		    html += "<tr><td colspan=2 align=center><b>String replacements</b></td></tr>";
+		    html += "<tr><td><b>Port name</b></td><td><b>Replaces</b></td></tr>";
+		    for (String siName : stringReplacements.keySet()) {
+			html += "<tr><td>" + siName + "</td>";
+			ScriptInput si = stringReplacements.get(siName);
+			html += "<td>%%" + si.getTag() + "%%</td>";
+
 			html += "</tr>";
 		    }
 		}
+
+		if (!fileInputs.isEmpty()) {
+		    html += "<tr><td colspan=2 align=center><b>File inputs</b></td></tr>";
+		    html += "<tr><td><b>Port name</b></td><td><b>To file</b></td></tr>";
+		    for (String siName : fileInputs.keySet()) {
+			html += "<tr><td>" + siName + "</td>";
+			ScriptInput si = fileInputs.get(siName);
+			html += "<td>" + si.getTag() + "</td>";
+
+			html += "</tr>";
+		    }
+		}
+
 		List<ScriptInputStatic> staticInputs = useCaseDescription.getStatic_inputs();
 		if (!staticInputs.isEmpty()) {
 		    html += "<tr><td colspan=2 align=center><b>Static inputs</b></td></tr>";
-		    html += "<tr><td><b>Type</b></td><td><b>Action</b></td></tr>";
+		    html += "<tr><td><b>Type</b></td><td><b>To file</b></td></tr>";
 		    for (ScriptInputStatic si : staticInputs) {
 			if (si.getUrl() != null) {
 			    html += "<td><b>URL</b></td>";
@@ -103,19 +127,15 @@ public class ExternalToolActivityContextualView extends HTMLBasedActivityContext
 			    html += "<td><b>Explicit content</b></td>";
 			}
 			if (si.isFile()) {
-			    html += "<td>File: " + si.getTag() + "</td>";
-			} else if (si.isTempFile()) {
-			    html += "<td>Temporary file</td>";
-			} else {
-			    html += "<td>Replaces: %%" + si.getTag() + "%%</td>";
+			    html += "<td>" + si.getTag() + "</td>";
 			}
 			html += "</tr>";
 		    }
 		}
 		Map<String, ScriptOutput> outputs = useCaseDescription.getOutputs();
 		if (!outputs.isEmpty()) {
-		    html += "<tr><td colspan=2 align=center><b>Outputs</b></td></tr>";
-		    html += "<tr><td><b>Port name</b></td><td><b>File</b></td></tr>";
+		    html += "<tr><td colspan=2 align=center><b>File outputs</b></td></tr>";
+		    html += "<tr><td><b>Port name</b></td><td><b>From file</b></td></tr>";
 		    for (String soName : outputs.keySet()) {
 			html += "<tr><td>" + soName + "</td>";
 			ScriptOutput so = outputs.get(soName);

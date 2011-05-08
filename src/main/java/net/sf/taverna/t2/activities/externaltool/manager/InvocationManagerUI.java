@@ -4,11 +4,15 @@
 package net.sf.taverna.t2.activities.externaltool.manager;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -18,7 +22,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.apache.log4j.Logger;
 
-import de.uni_luebeck.inb.knowarc.grid.re.RuntimeEnvironmentConstraint;
+import de.uni_luebeck.inb.knowarc.usecases.RuntimeEnvironmentConstraint;
 
 import net.sf.taverna.t2.activities.externaltool.servicedescriptions.ExternalToolActivityIcon;
 
@@ -41,6 +45,10 @@ public class InvocationManagerUI extends JFrame {
 	private GroupListPanel groupsListPanel;
 
 	private GroupEditsPanel groupEditsPanel;
+	
+	private JTabbedPane tabbedPane;
+	
+	private JPanel mechanismsPanel;
 
 	public static InvocationManagerUI getInstance() {
 		if (INSTANCE == null) {
@@ -52,9 +60,9 @@ public class InvocationManagerUI extends JFrame {
 	private InvocationManagerUI() {
 		getContentPane().setLayout(new BorderLayout());
 		
-		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane = new JTabbedPane();
 		JPanel groupsPanel = createGroupsPanel();
-		JPanel mechanismsPanel = createMechanismsPanel();
+		mechanismsPanel = createMechanismsPanel();
 		tabbedPane.add("Groups", groupsPanel);
 		tabbedPane.add("Locations", mechanismsPanel);
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
@@ -76,7 +84,10 @@ public class InvocationManagerUI extends JFrame {
 
 		// Set the frame's title
 		setTitle("Invocation Manager");
+		
+		groupsListPanel.setSelectedGroup(manager.getDefaultGroup());
 
+		this.setMinimumSize(new Dimension(700, 400));
 		logger.info("UI created");
 	}
 
@@ -91,7 +102,7 @@ public class InvocationManagerUI extends JFrame {
 		result.setLayout(new GridLayout(1,2));
 		groupsListPanel = new GroupListPanel();
 		result.add(groupsListPanel);
-		groupEditsPanel = new GroupEditsPanel();
+		groupEditsPanel = new GroupEditsPanel(createCloseButton());
 		groupsListPanel.addListSelectionListener(new ListSelectionListener() {
 
 			@Override
@@ -109,7 +120,7 @@ public class InvocationManagerUI extends JFrame {
 		result.setLayout(new GridLayout(1,2));
 		mechanismListPanel = new MechanismListPanel();
 		result.add(mechanismListPanel);
-		mechanismEditsPanel = new MechanismEditsPanel();
+		mechanismEditsPanel = new MechanismEditsPanel(createCloseButton());
 		
 		mechanismListPanel.addListSelectionListener(new ListSelectionListener() {
 
@@ -137,6 +148,21 @@ public class InvocationManagerUI extends JFrame {
 				mechanismListPanel.setSelectedMechanism(null);
 			}});
 		result.add(mechanismEditsPanel);
+		return result;
+	}
+
+	public void showMechanismForGroup(InvocationGroup selectedGroup) {
+		groupsListPanel.setSelectedGroup(selectedGroup);
+		tabbedPane.setSelectedComponent(mechanismsPanel);
+	}
+	
+	private JButton createCloseButton() {
+		JButton result = new JButton(new AbstractAction("Close") {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				closeFrame();
+			}});
 		return result;
 	}
 

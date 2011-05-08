@@ -6,7 +6,7 @@ package net.sf.taverna.t2.activities.externaltool.views;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
-import de.uni_luebeck.inb.knowarc.grid.re.RuntimeEnvironmentConstraint;
+import de.uni_luebeck.inb.knowarc.usecases.RuntimeEnvironmentConstraint;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInput;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInputUser;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptOutput;

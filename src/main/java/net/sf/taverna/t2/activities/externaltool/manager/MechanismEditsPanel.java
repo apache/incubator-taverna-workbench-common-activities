@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
-import de.uni_luebeck.inb.knowarc.grid.re.RuntimeEnvironmentConstraint;
+import de.uni_luebeck.inb.knowarc.usecases.RuntimeEnvironmentConstraint;
 
 import net.sf.taverna.t2.activities.externaltool.InvocationCreator;
 import net.sf.taverna.t2.spi.SPIRegistry;
@@ -35,16 +35,16 @@ private InvocationMechanism mechanism = null;
 	
 	private JPanel buttonPanel;
 	
-	public MechanismEditsPanel() {
+	public MechanismEditsPanel(JButton closeButton) {
 		this.setLayout(new BorderLayout());
-		buttonPanel = createButtonPanel();
+		buttonPanel = createButtonPanel(closeButton);
 		logger.info("Mechanism Edits Panel created");
 	}
 
-	private JPanel createButtonPanel() {
+	private JPanel createButtonPanel(JButton closeButton) {
 		JPanel result = new JPanel();
 		result.setLayout(new FlowLayout());
-		JButton cancelButton = new JButton(new AbstractAction("Cancel") {
+		JButton cancelButton = new JButton(new AbstractAction("Revert") {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -55,13 +55,14 @@ private InvocationMechanism mechanism = null;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.err.println("Trying to update invocation mechanism");
+				logger.info("Trying to update invocation mechanism");
 				chosenEditor.updateInvocationMechanism();
 				InvocationGroupManager.getInstance().mechanismChanged(mechanism);
 			}
 			
 		});
 		result.add(saveButton);
+		result.add(closeButton);
 		return result;
 	}
 

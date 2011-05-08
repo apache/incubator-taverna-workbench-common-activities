@@ -5,14 +5,11 @@ package net.sf.taverna.t2.activities.externaltool.manager;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -21,10 +18,10 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import net.sf.taverna.t2.lang.ui.ValidatingUserInputDialog;
 import net.sf.taverna.t2.spi.SPIRegistry;
 import net.sf.taverna.t2.workbench.design.ui.DataflowInputPortPanel;
 import net.sf.taverna.t2.workflowmodel.DataflowInputPort;
@@ -37,12 +34,11 @@ public class MechanismListPanel extends JPanel implements InvocationGroupManager
 	
 	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
 	
-	private static SPIRegistry<InvocationMechanismEditor> invocationMechanismEditorRegistry = new SPIRegistry(InvocationMechanismEditor.class);
-	
 	private JList mechanismList = new JList();
 
 	public MechanismListPanel() {
 		super();
+		mechanismList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		manager.addListener(this);
 		this.setLayout(new BorderLayout());
 		
@@ -80,51 +76,35 @@ public class MechanismListPanel extends JPanel implements InvocationGroupManager
 		JPanel result = new JPanel();
 		result.setLayout(new FlowLayout());
 		result.add(addInvocationMechanismButton());
+		result.add(removeInvocationMechanismButton());
 		return result;
 	}
 
-	private JButton addInvocationMechanismButton() {
-		JButton result = new JButton();
-		result.setAction(new AbstractAction("Add location") {
+	private JButton removeInvocationMechanismButton() {
+		JButton result = new JButton(new AbstractAction("Remove location"){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Set<String> usedMechanismNames = new HashSet<String>();
-				for (InvocationMechanism m : manager.getMechanisms()) {
-					usedMechanismNames.add(m.getName());
-				}
-
-				MechanismPanel inputPanel = new MechanismPanel();
-				
-				ValidatingUserInputDialog vuid = new ValidatingUserInputDialog(
-						"Add invocation location", inputPanel);
-				vuid.addTextComponentValidation(inputPanel.getMechanismNameField(),
-						"Set the location name.", usedMechanismNames,
-						"Duplicate mechanism name.", "[\\p{L}\\p{Digit}_.]+",
-						"Invalid mechanism name.");
-				vuid.addMessageComponent(inputPanel.getMechanismTypeSelector(), "Set the location type.");
-				vuid.setSize(new Dimension(400, 250));
-
-				if (vuid.show(null)) {
-					String mechanismName = inputPanel.getMechanismName();
-					String mechanismTypeName = inputPanel.getMechanismTypeName();
-					InvocationMechanismEditor ime = findEditor(mechanismTypeName);
-					InvocationMechanism newMechanism = ime.createMechanism(mechanismName);
-					manager.addMechanism(newMechanism);
-					setSelectedMechanism(newMechanism);
+				InvocationMechanism toRemove = (InvocationMechanism) mechanismList.getSelectedValue();
+				if (!toRemove.equals(manager.getDefaultMechanism())) {
+					manager.removeMechanism(toRemove);
+					mechanismList.setSelectedValue(manager.getDefaultMechanism(), true);
 				}
 			}});
 		return result;
 	}
-
-	InvocationMechanismEditor findEditor(String name) {
-		for (InvocationMechanismEditor ime : invocationMechanismEditorRegistry.getInstances()) {
-			if (ime.getName().equals(name)) {
-				return ime;
+	
+	private JButton addInvocationMechanismButton() {
+		JButton result = new JButton();
+		result.setAction(new AddInvocationMechanismAction(false) {
+			public void actionPerformed(ActionEvent e) {
+				super.actionPerformed(e);
+				setSelectedMechanism(getNewMechanism());
 			}
-		}
-		return null;
+		});
+		return result;
 	}
+
 	@Override
 	public void change() {
 		populateList();

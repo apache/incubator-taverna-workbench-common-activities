@@ -30,6 +30,7 @@ import javax.swing.Icon;
 
 import net.sf.taverna.t2.servicedescriptions.AbstractConfigurableServiceProvider;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
+import net.sf.taverna.t2.workflowmodel.serialization.DeserializationException;
 import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
 
@@ -63,7 +64,6 @@ public class ExternalToolServiceProvider extends AbstractConfigurableServiceProv
 	public void findServiceDescriptionsAsync(FindServiceDescriptionsCallBack callBack) {
 		String repositoryUrl = serviceProviderConfig.getRepositoryUrl();
 		callBack.status("Parsing use case repository:" + repositoryUrl);
-		try {
 			// prepare a list of all use case descriptions which are stored in
 			// the given repository URL
 			List<UseCaseDescription> usecases = UseCaseEnumeration.enumerateXmlFile(
@@ -83,9 +83,6 @@ public class ExternalToolServiceProvider extends AbstractConfigurableServiceProv
 			// results and finish
 			callBack.partialResults(items);
 			callBack.finished();
-		} catch (Exception e) {
-			callBack.fail("error", e);
-		}
 	}
 
 	@Override

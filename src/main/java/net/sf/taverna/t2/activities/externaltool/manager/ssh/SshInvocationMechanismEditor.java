@@ -16,16 +16,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JTextField;
-import javax.swing.border.EtchedBorder;
-
-import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNode;
-import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNodeFactory;
 
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismEditor;
 import net.sf.taverna.t2.activities.externaltool.ssh.ExternalToolSshInvocationMechanism;
+import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNode;
+import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNodeFactory;
 
 /**
  * @author alanrw

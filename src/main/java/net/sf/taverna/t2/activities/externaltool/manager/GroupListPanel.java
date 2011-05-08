@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionListener;
@@ -38,6 +39,7 @@ public class GroupListPanel extends JPanel implements InvocationGroupManagerList
 
 	public GroupListPanel() {
 		super();
+		groupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		manager.addListener(this);
 		this.setLayout(new BorderLayout());
 		
@@ -76,6 +78,21 @@ public class GroupListPanel extends JPanel implements InvocationGroupManagerList
 		JPanel result = new JPanel();
 		result.setLayout(new FlowLayout());
 		result.add(addInvocationGroupButton());
+		result.add(removeInvocationGroupButton());
+		return result;
+	}
+	
+	private JButton removeInvocationGroupButton() {
+		JButton result = new JButton(new AbstractAction("Remove group"){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				InvocationGroup toRemove = (InvocationGroup) groupList.getSelectedValue();
+				if (!toRemove.equals(manager.getDefaultGroup())) {
+					manager.removeInvocationGroup(toRemove);
+				}
+				groupList.setSelectedValue(manager.getDefaultGroup(), true);
+			}});
 		return result;
 	}
 	
@@ -116,6 +133,10 @@ public class GroupListPanel extends JPanel implements InvocationGroupManagerList
 	public void change() {
 		populateList();
 		this.repaint();
+	}
+
+	public void setSelectedGroup(InvocationGroup selectedGroup) {
+		groupList.setSelectedValue(selectedGroup, true);
 	}
 
 }

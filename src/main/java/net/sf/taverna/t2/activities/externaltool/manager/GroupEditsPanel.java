@@ -19,7 +19,7 @@ import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
 
-import de.uni_luebeck.inb.knowarc.grid.re.RuntimeEnvironmentConstraint;
+import de.uni_luebeck.inb.knowarc.usecases.RuntimeEnvironmentConstraint;
 
 /**
  * @author alanrw
@@ -38,11 +38,11 @@ public class GroupEditsPanel extends JPanel implements InvocationGroupManagerLis
 
 	private JPanel buttonPanel;
 	
-	public GroupEditsPanel() {
+	public GroupEditsPanel(JButton closeButton) {
 		super();
 		manager.addListener(this);
 		this.setLayout(new BorderLayout());
-		buttonPanel = createButtonPanel();
+		buttonPanel = createButtonPanel(closeButton);
 		initialise();
 	}
 	
@@ -58,10 +58,10 @@ public class GroupEditsPanel extends JPanel implements InvocationGroupManagerLis
 		this.add(buttonPanel, BorderLayout.SOUTH);
 	}
 
-	private JPanel createButtonPanel() {
+	private JPanel createButtonPanel(JButton closeButton) {
 		JPanel result = new JPanel();
 		result.setLayout(new FlowLayout());
-		JButton cancelButton = new JButton(new AbstractAction("Cancel") {
+		JButton cancelButton = new JButton(new AbstractAction("Revert") {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -81,6 +81,7 @@ public class GroupEditsPanel extends JPanel implements InvocationGroupManagerLis
 			
 		});
 		result.add(saveButton);
+		result.add(closeButton);
 		return result;
 	}
 

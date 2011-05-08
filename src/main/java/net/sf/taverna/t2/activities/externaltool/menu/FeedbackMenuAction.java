@@ -31,7 +31,7 @@ import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
 
-import de.uni_luebeck.inb.knowarc.grid.re.RuntimeEnvironmentConstraint;
+import de.uni_luebeck.inb.knowarc.usecases.RuntimeEnvironmentConstraint;
 
 import net.sf.taverna.t2.ui.menu.AbstractMenuAction;
 import edu.stanford.ejalbert.BrowserLauncher;
