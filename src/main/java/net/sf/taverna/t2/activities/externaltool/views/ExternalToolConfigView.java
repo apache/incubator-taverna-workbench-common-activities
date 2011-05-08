@@ -34,7 +34,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.help.CSH;
 import javax.swing.AbstractAction;
@@ -45,7 +48,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -111,6 +113,8 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 
 
 	private static final String STATIC_URL_DESCRIPTION = "This is a description of what should be done";
+	
+	private static final String VALID_NAME_REGEX = "[\\p{L}\\p{Digit}_]+";
 
 
 	private static Logger logger = Logger.getLogger(ExternalToolConfigView.class);
@@ -740,10 +744,187 @@ public class ExternalToolConfigView extends ActivityConfigurationPanel<ExternalT
 		refreshConfiguration(activity.getConfiguration());
 	}
 
+	static Pattern tagPattern = Pattern.compile("%%([^%]*)%%");
 	@Override
+	/**
+	 * Need to check that the script contains the string replacements and only them - done
+	 * 
+	 * Need to check the input port names are valid and unique - done
+	 * Need to check the output port names are valid and unique - done
+	 * 
+	 * Need to check the input files and static files are unique - done
+	 * Need to check the file names are valid
+	 * Need to check the URLs are valid
+	 * Need to check the replacement tags are unique - done
+	 */
 	public boolean checkValues() {
 		boolean result = true;
-		return result;
+		String text = "";
+		Set<String> stringReplacementPortNames = new HashSet<String>();
+		Set<String> stringReplacementTags = new HashSet<String>();
+		for (ExternalToolStringReplacementViewer v : stringReplacementViewList) {
+			String name = v.getName();
+			if (stringReplacementPortNames.contains(name)) {
+				text += "Two string replacement ports have the name \"" + name + "\"\n";
+				result = false;
+			} else if (!name.matches(VALID_NAME_REGEX)){
+				text += "String replacement port name \"" + name + "\" is invalid\n";
+				result = false;
+			} else {
+				stringReplacementPortNames.add(name);
+			}
+			
+			String tag = v.getValue();
+			if (stringReplacementTags.contains(tag)) {
+				text += "Two string replacement ports replace \"%%" + tag + "%%\"\n";
+				result = false;
+			} else if (!tag.matches(VALID_NAME_REGEX)){
+				text += "String replacement tag \"%%" + name + "%%\" is invalid\n";
+				result = false;
+			} else {
+				stringReplacementTags.add(name);
+			}
+		}
+		
+		Matcher m = tagPattern.matcher(scriptTextArea.getText());
+		Set<String> tags = new HashSet<String>();
+		while(m.find()) {
+			String tag = m.group(1);
+			if (tag != null) {
+				if (tag.isEmpty()) {
+					text += "The command contains an empty tag i.e. %%%%\n";
+					result = false;
+				} else {
+					if (!tag.matches(VALID_NAME_REGEX)) {
+						text += "The command contains an invalid tag \"%%" + tag + "\"%%\n";
+						result = false;
+					} if (!stringReplacementTags.contains(tag)) {
+						text += "There is no string replacement for %%" + tag + "%%\n";
+						result = false;
+					} else {
+						tags.add(tag);
+					}
+				}
+			}
+		}
+		
+		for (String tag : stringReplacementTags) {
+			if (!tags.contains(tag)) {
+				text += "String replacement for %%" + tag + "%% is not used in the command\n";
+				result = false;
+			}
+		}
+		
+		Set<String> inputFilePortNames = new HashSet<String>();
+		Set<String> inputFileNames = new HashSet<String>();
+		for (ExternalToolFileViewer v : inputFileViewList) {
+			String name = v.getName();
+			if (stringReplacementPortNames.contains(name)) {
+				text += "A string replacement port and an input file port have the name \"" + name + "\"\n";
+				result = false;
+			} else if (inputFilePortNames.contains(name)) {
+				text += "Two file input ports have the name \"" + name + "\"\n";
+				result = false;
+			}else if (!name.matches(VALID_NAME_REGEX)){
+				text += "File input port name \"" + name + "\" is invalid\n";
+				result = false;
+			} else {
+				inputFilePortNames.add(name);
+			}
+			
+			String fileName = v.getValue();
+			if (inputFileNames.contains(fileName)) {
+				text += "Two file inputs ports write to the same file \"" + fileName + "\"\n";
+				result = false;
+			} else {
+				inputFileNames.add(fileName);
+			}
+		}
+		
+		Set<String> fileListPortNames = new HashSet<String>();
+		Set<String> fileListFileNames = new HashSet<String>();
+		for (ExternalToolFileViewer v : fileListViewList) {
+			String name = v.getName();
+			if (stringReplacementPortNames.contains(name)) {
+				text += "A string replacement port and a file list port have the name \"" + name + "\"\n";
+				result = false;
+			} else if (inputFilePortNames.contains(name)) {
+				text += "A file input port and a file list port have the name \"" + name + "\"\n";
+				result = false;
+			} else if (fileListPortNames.contains(name)) {
+				text += "Two file list ports have the name \"" + name + "\"\n";
+				result = false;
+			}else if (!name.matches(VALID_NAME_REGEX)){
+				text += "File list port name \"" + name + "\" is invalid\n";
+				result = false;
+			} else {
+				fileListPortNames.add(name);
+			}
+			
+			String fileName = v.getValue();
+			if (fileListFileNames.contains(fileName)) {
+				text += "Two file list ports write to the same file \"" + fileName + "\"\n";
+				result = false;
+			} else if (inputFileNames.contains(fileName)) {
+				text += "A file input port and a file list port write to the same file \"" + fileName + "\"\n";
+				result = false;
+			} else {
+				fileListFileNames.add(fileName);
+			}		
+		}
+
+		Set<String> staticStringFileNames = new HashSet<String> ();
+		for (ExternalToolStaticStringViewer v : staticStringViewList) {
+			String fileName = v.getValue();
+			if (staticStringFileNames.contains(fileName)) {
+				text += "Two static strings write to the same file \"" + fileName + "\"\n";
+				result = false;
+			} else if (inputFileNames.contains(fileName)) {
+				text += "A file input port and a static string write to the same file \"" + fileName + "\"\n";
+				result = false;
+			} else if (fileListFileNames.contains(fileName)) {
+				text += "A file list port and a static string write to the same file \"" + fileName + "\"\n";
+				result = false;
+			} else {
+				staticStringFileNames.add(fileName);
+			}		
+		}
+		
+		Set<String> staticUrlFileNames = new HashSet<String> ();
+		for (ExternalToolStaticUrlViewer v : staticUrlViewList) {
+			String fileName = v.getValue();
+			if (staticUrlFileNames.contains(fileName)) {
+				text += "Two static URLss write to the same file \"" + fileName + "\"\n";
+				result = false;
+			} else if (inputFileNames.contains(fileName)) {
+				text += "A file input port and a static URL write to the same file \"" + fileName + "\"\n";
+				result = false;
+			} else if (fileListFileNames.contains(fileName)) {
+				text += "A file list port and a static URL write to the same file \"" + fileName + "\"\n";
+				result = false;
+			} else if (staticStringFileNames.contains(fileName)) {
+				text += "A static string and a static URL write to the same file \"" + fileName + "\"\n";
+				result = false;
+			} else {
+				staticUrlFileNames.add(fileName);
+			}					
+		}
+		Set<String> outputPortNames = new HashSet<String>();
+		for (ExternalToolFileViewer v : outputViewList) {
+			String name = v.getName();
+			if (outputPortNames.contains(name)) {
+				text += "Two output file ports have the name \"" + name + "\"\n";
+				result = false;
+			} else if (!name.matches(VALID_NAME_REGEX)){
+				text += "Output file port name \"" + name + "\" is invalid\n";
+				result = false;
+			} else {
+				outputPortNames.add(name);
+			}
+		}
+		if (!result) {
+			JOptionPane.showMessageDialog(this, text, "Problems", JOptionPane.ERROR_MESSAGE);
+		}		return result;
 	}
 	
 
