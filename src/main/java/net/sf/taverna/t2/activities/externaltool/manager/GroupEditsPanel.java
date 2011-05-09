@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import javax.swing.AbstractAction;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -35,6 +36,8 @@ public class GroupEditsPanel extends JPanel implements InvocationGroupManagerLis
 	private InvocationGroup group = null;
 	
 	private JList mechanismList = new JList();
+	
+	private DefaultListModel mechanismListModel = new DefaultListModel();
 
 	private JPanel buttonPanel;
 	
@@ -49,6 +52,7 @@ public class GroupEditsPanel extends JPanel implements InvocationGroupManagerLis
 	private void initialise() {
 		this.clear();
 		populateList();
+		mechanismList.setModel(mechanismListModel);
 		this.add(new JLabel("Associated location"), BorderLayout.NORTH);
 		JScrollPane mechanismListPane = new JScrollPane(mechanismList);
 		this.add(mechanismListPane, BorderLayout.CENTER);
@@ -86,6 +90,7 @@ public class GroupEditsPanel extends JPanel implements InvocationGroupManagerLis
 	}
 
 	private void populateList() {
+		InvocationMechanism currentSelection = (InvocationMechanism) mechanismList.getSelectedValue();
 		ArrayList<InvocationMechanism> mechanisms = new ArrayList<InvocationMechanism>();
 		mechanisms.addAll(manager.getMechanisms());
 		Collections.sort(mechanisms, new Comparator<InvocationMechanism>() {
@@ -94,7 +99,13 @@ public class GroupEditsPanel extends JPanel implements InvocationGroupManagerLis
 			public int compare(InvocationMechanism o1, InvocationMechanism o2) {
 				return o1.getName().compareTo(o2.getName());
 			}});
-		mechanismList.setListData(mechanisms.toArray());
+		mechanismListModel.clear();
+		for (InvocationMechanism m : mechanisms) {
+			mechanismListModel.addElement(m);
+		}
+		if (currentSelection != null) {
+			mechanismList.setSelectedValue(currentSelection, true);
+		}
 		
 	}
 
@@ -115,10 +126,17 @@ public class GroupEditsPanel extends JPanel implements InvocationGroupManagerLis
 	}
 
 	@Override
-	public void change() {
-		populateList();
-//		showGroup(group);
-		this.repaint();
+	public void invocationManagerChange(InvocationManagerEvent event) {
+		if (event instanceof InvocationMechanismRemovedEvent) {
+			InvocationMechanism removedMechanism = ((InvocationMechanismRemovedEvent) event).getRemovedMechanism();
+			InvocationMechanism currentSelection = (InvocationMechanism) mechanismList.getSelectedValue();
+			mechanismListModel.removeElement(removedMechanism);
+			if (currentSelection.equals(removedMechanism)) {
+				showGroup(this.group);
+			}
+		} else if (event instanceof InvocationMechanismAddedEvent) {
+			populateList();
+		}
 	}
 
 }

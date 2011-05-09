@@ -4,7 +4,6 @@
 package net.sf.taverna.t2.activities.externaltool.manager;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -12,19 +11,14 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import javax.swing.AbstractAction;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import net.sf.taverna.t2.spi.SPIRegistry;
-import net.sf.taverna.t2.workbench.design.ui.DataflowInputPortPanel;
-import net.sf.taverna.t2.workflowmodel.DataflowInputPort;
 
 /**
  * @author alanrw
@@ -35,10 +29,12 @@ public class MechanismListPanel extends JPanel implements InvocationGroupManager
 	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
 	
 	private JList mechanismList = new JList();
+	private DefaultListModel mechanismListModel = new DefaultListModel();
 
 	public MechanismListPanel() {
 		super();
 		mechanismList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		mechanismList.setModel(mechanismListModel);
 		manager.addListener(this);
 		this.setLayout(new BorderLayout());
 		
@@ -51,6 +47,7 @@ public class MechanismListPanel extends JPanel implements InvocationGroupManager
 	}
 	
 	private void populateList() {
+		InvocationMechanism currentSelection = (InvocationMechanism) mechanismList.getSelectedValue();
 		ArrayList<InvocationMechanism> mechanisms = new ArrayList<InvocationMechanism>();
 		mechanisms.addAll(manager.getMechanisms());
 		Collections.sort(mechanisms, new Comparator<InvocationMechanism>() {
@@ -59,7 +56,13 @@ public class MechanismListPanel extends JPanel implements InvocationGroupManager
 			public int compare(InvocationMechanism o1, InvocationMechanism o2) {
 				return o1.getName().compareTo(o2.getName());
 			}});
-		mechanismList.setListData(mechanisms.toArray());
+		mechanismListModel.clear();
+		for (InvocationMechanism m : mechanisms) {
+			mechanismListModel.addElement(m);
+		}
+		if (currentSelection != null) {
+			mechanismList.setSelectedValue(currentSelection, true);
+		}
 		
 	}
 
@@ -106,9 +109,12 @@ public class MechanismListPanel extends JPanel implements InvocationGroupManager
 	}
 
 	@Override
-	public void change() {
-		populateList();
-		this.repaint();
+	public void invocationManagerChange(InvocationManagerEvent event) {
+		if (event instanceof InvocationMechanismRemovedEvent) {
+			mechanismListModel.removeElement(((InvocationMechanismRemovedEvent) event).getRemovedMechanism());
+		} else if (event instanceof InvocationMechanismAddedEvent) {
+			populateList();
+		}
 	}
 
 	public void setSelectedMechanism(InvocationMechanism m) {

@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -36,16 +37,18 @@ public class GroupListPanel extends JPanel implements InvocationGroupManagerList
 	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
 
 	private JList groupList = new JList();
+	private DefaultListModel groupListModel = new DefaultListModel();
 
 	public GroupListPanel() {
 		super();
-		groupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		manager.addListener(this);
 		this.setLayout(new BorderLayout());
 		
 		this.add(new JLabel("Groups"), BorderLayout.NORTH);
 
 		populateList();
+		groupList.setModel(groupListModel);
+		groupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane groupListPane = new JScrollPane(groupList);
 		
 		this.add(groupListPane, BorderLayout.CENTER);
@@ -54,6 +57,7 @@ public class GroupListPanel extends JPanel implements InvocationGroupManagerList
 	}
 
 	private void populateList() {
+		InvocationGroup currentSelection = (InvocationGroup) groupList.getSelectedValue();
 		ArrayList<InvocationGroup> groups = new ArrayList<InvocationGroup>();
 		groups.addAll(manager.getInvocationGroups());
 		Collections.sort(groups, new Comparator<InvocationGroup>() {
@@ -62,9 +66,15 @@ public class GroupListPanel extends JPanel implements InvocationGroupManagerList
 			public int compare(InvocationGroup o1, InvocationGroup o2) {
 				return o1.getInvocationGroupName().compareTo(o2.getInvocationGroupName());
 			}});
-		groupList.setListData(groups.toArray());
-		
+		groupListModel.clear();
+		for (InvocationGroup g : groups) {
+			groupListModel.addElement(g);
+		}
+		if (currentSelection != null) {
+			groupList.setSelectedValue(currentSelection, true);
+		}
 	}
+	
 	public void addListSelectionListener(
 			ListSelectionListener listSelectionListener) {
 		groupList.addListSelectionListener(listSelectionListener);
@@ -130,9 +140,12 @@ public class GroupListPanel extends JPanel implements InvocationGroupManagerList
 	}
 
 	@Override
-	public void change() {
-		populateList();
-		this.repaint();
+	public void invocationManagerChange(InvocationManagerEvent event) {
+		if (event instanceof InvocationGroupRemovedEvent) {
+			groupListModel.removeElement(((InvocationGroupRemovedEvent) event).getRemovedGroup());
+		} else {
+			populateList();
+		}
 	}
 
 	public void setSelectedGroup(InvocationGroup selectedGroup) {

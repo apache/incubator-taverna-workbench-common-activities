@@ -46,6 +46,7 @@ import java.util.regex.Pattern;
 
 import javax.help.CSH;
 import javax.swing.AbstractAction;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -69,8 +70,11 @@ import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.manager.AddInvocationMechanismAction;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroup;
+import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupAddedEvent;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManager;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManagerListener;
+import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupRemovedEvent;
+import net.sf.taverna.t2.activities.externaltool.manager.InvocationManagerEvent;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationManagerUI;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismEditor;
 import net.sf.taverna.t2.activities.externaltool.manager.MechanismEditsPanel;
@@ -113,7 +117,7 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 @SuppressWarnings("serial")
 public class ExternalToolConfigView
 		extends
-		ActivityConfigurationPanel<ExternalToolActivity, ExternalToolActivityConfigurationBean> {
+		ActivityConfigurationPanel<ExternalToolActivity, ExternalToolActivityConfigurationBean> implements InvocationGroupManagerListener {
 
 	private static final String STRING_REPLACEMENT_DESCRIPTION = "You can use a string replacement to " +
 			"feed data into the service via an input port and have that data replace part of the " +
@@ -173,7 +177,7 @@ public class ExternalToolConfigView
 
 	private List<ExternalToolRuntimeEnvironmentViewer> runtimeEnvironmentViewList = new ArrayList<ExternalToolRuntimeEnvironmentViewer>();
 
-	private JComboBox invocationSelection;
+	private JComboBox invocationSelection = new JComboBox();
 
 	private JTextField nameField = new JTextField(20);
 	private JTextArea descriptionArea = new JTextArea(6, 40);
@@ -187,6 +191,8 @@ public class ExternalToolConfigView
 	private JCheckBox stdInCheckBox = new JCheckBox("Show STDIN");
 	private JCheckBox stdOutCheckBox = new JCheckBox("Show STDOUT");
 	private JCheckBox stdErrCheckBox = new JCheckBox("Show STDERR");
+	
+	private DefaultComboBoxModel invocationSelectionModel = new DefaultComboBoxModel();
 
 	/**
 	 * Stores the {@link ExternalToolActivity}, gets its
@@ -201,6 +207,9 @@ public class ExternalToolConfigView
 		configuration = (ExternalToolActivityConfigurationBean) cloneBean(activity
 				.getConfiguration());
 		setLayout(new GridBagLayout());
+		populateGroupList();
+		invocationSelection.setModel(invocationSelectionModel);
+		InvocationGroupManager.getInstance().addListener(this);
 		initialise(configuration);
 	}
 
@@ -811,14 +820,6 @@ public class ExternalToolConfigView
 	private JPanel createInvocationPanel() {
 		invocationPanel = new JPanel();
 		populateInvocationPanel();
-		InvocationGroupManager.getInstance().addListener(
-				new InvocationGroupManagerListener() {
-
-					@Override
-					public void change() {
-						populateInvocationPanel();
-					}
-				});
 
 		return invocationPanel;
 	}
@@ -842,7 +843,7 @@ public class ExternalToolConfigView
 				SwingConstants.RIGHT);
 		selectionLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
 		invocationSelectionPanel.add(selectionLabel);
-		invocationSelection = new JComboBox();
+
 		invocationSelection.setRenderer(new DefaultListCellRenderer() {
 
 			@Override
@@ -858,20 +859,6 @@ public class ExternalToolConfigView
 			}
 		});
 
-		InvocationGroup[] groups = InvocationGroupManager.getInstance()
-				.getInvocationGroups().toArray(new InvocationGroup[] {});
-		Arrays.sort(groups, new Comparator<InvocationGroup>() {
-
-			@Override
-			public int compare(InvocationGroup arg0, InvocationGroup arg1) {
-				return arg0.getInvocationGroupName().compareTo(
-						arg1.getInvocationGroupName());
-			}
-		});
-		for (InvocationGroup group : groups) {
-			logger.info("Adding group" + group.hashCode());
-			invocationSelection.addItem(group);
-		}
 		invocationSelectionPanel.add(invocationSelection);
 
 		subPanel.add(invocationSelectionPanel, BorderLayout.NORTH);
@@ -885,7 +872,6 @@ public class ExternalToolConfigView
 					public void actionPerformed(ActionEvent e) {
 						super.actionPerformed(e);
 						if (getNewGroup() != null) {
-							invocationSelection.addItem(getNewGroup());
 							invocationSelection.setSelectedItem(getNewGroup());
 							InvocationMechanismEditor chosenEditor = null;
 							for (InvocationMechanismEditor ime : invocationMechanismEditorRegistry
@@ -1633,6 +1619,41 @@ public class ExternalToolConfigView
 		panel.add(removePanel, staticConstraint);
 		staticGridy++;
 
+	}
+	
+	private void populateGroupList() {
+		InvocationGroup currentSelection = (InvocationGroup) invocationSelection.getSelectedItem();
+		InvocationGroup[] groups = InvocationGroupManager.getInstance()
+				.getInvocationGroups().toArray(new InvocationGroup[] {});
+		Arrays.sort(groups, new Comparator<InvocationGroup>() {
+
+			@Override
+			public int compare(InvocationGroup arg0, InvocationGroup arg1) {
+				return arg0.getInvocationGroupName().compareTo(
+						arg1.getInvocationGroupName());
+			}
+		});
+		invocationSelectionModel.removeAllElements();
+		for (InvocationGroup group : groups) {
+			invocationSelectionModel.addElement(group);
+		}
+		if (currentSelection != null) {
+			invocationSelection.setSelectedItem(currentSelection);
+		}
+		
+	}
+
+	@Override
+	public void invocationManagerChange(InvocationManagerEvent event) {
+		if (event instanceof InvocationGroupRemovedEvent) {
+			InvocationGroup removedGroup = ((InvocationGroupRemovedEvent) event).getRemovedGroup();
+			if (invocationSelection.getSelectedItem().equals(removedGroup)) {
+				invocationSelection.setSelectedItem(InvocationGroupManager.getInstance().getDefaultGroup());
+			}
+			invocationSelectionModel.removeElement(removedGroup);
+		} else if (event instanceof InvocationGroupAddedEvent) {
+			populateGroupList();
+		}
 	}
 
 }
