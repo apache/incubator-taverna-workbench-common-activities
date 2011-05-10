@@ -49,6 +49,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
+import java.awt.Dialog;
 
 //import org.apache.log4j.Logger;
 
@@ -120,6 +121,8 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 	}
 
 	private void initComponents() {
+		
+		this.setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
 		
 		int gridy = 0;
 		
