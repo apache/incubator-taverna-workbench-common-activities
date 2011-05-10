@@ -898,7 +898,7 @@ public class ExternalToolConfigView
 						}
 					}
 				});
-		JButton manageInvocation = new JButton(new AbstractAction(
+/*		JButton manageInvocation = new JButton(new AbstractAction(
 				"Edit locations") {
 
 			@Override
@@ -908,9 +908,9 @@ public class ExternalToolConfigView
 						.getSelectedItem());
 				ui.setVisible(true);
 			}
-		});
+		}); */
 		buttonPanel.add(addLocation);
-		buttonPanel.add(manageInvocation);
+/*		buttonPanel.add(manageInvocation); */
 		subPanel.add(buttonPanel, BorderLayout.SOUTH);
 		invocationPanel.add(subPanel, BorderLayout.CENTER);
 		invocationPanel.repaint();
