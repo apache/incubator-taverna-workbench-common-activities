@@ -549,7 +549,7 @@ public class ExternalToolConfigView
 		outerConstraint.weightx = 0.1;
 		add(tabbedPane, outerConstraint);
 
-		setPreferredSize(new Dimension(600, 500));
+		setPreferredSize(new Dimension(700, 500));
 		this.validate();
 	}
 
@@ -884,10 +884,10 @@ public class ExternalToolConfigView
 							if (chosenEditor != null) {
 								chosenEditor.show(getNewMechanism());
 								chosenEditor.setPreferredSize(new Dimension(
-										400, 500));
+										550, 500));
 								int answer = JOptionPane.showConfirmDialog(
 										null, chosenEditor, "New location",
-										JOptionPane.OK_CANCEL_OPTION);
+										JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 								if (answer == JOptionPane.OK_OPTION) {
 									chosenEditor.updateInvocationMechanism();
 									InvocationGroupManager
