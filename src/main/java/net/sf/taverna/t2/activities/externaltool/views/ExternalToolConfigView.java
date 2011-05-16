@@ -554,7 +554,9 @@ public class ExternalToolConfigView
 	}
 
 	public void whenOpened() {
-		scriptTextArea.requestFocus();
+		if (scriptTextArea != null) {
+			scriptTextArea.requestFocus();
+		}
 	}
 
 	private boolean isFromRepository() {
