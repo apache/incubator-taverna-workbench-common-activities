@@ -175,8 +175,8 @@ public class ExternalToolConfigView
 
 	private List<ExternalToolStaticStringViewer> staticStringViewList = new ArrayList<ExternalToolStaticStringViewer>();
 
-	private List<ExternalToolRuntimeEnvironmentViewer> runtimeEnvironmentViewList = new ArrayList<ExternalToolRuntimeEnvironmentViewer>();
-
+/*	private List<ExternalToolRuntimeEnvironmentViewer> runtimeEnvironmentViewList = new ArrayList<ExternalToolRuntimeEnvironmentViewer>();
+*/
 	private JComboBox invocationSelection = new JComboBox();
 
 	private JTextField nameField = new JTextField(20);
@@ -300,14 +300,14 @@ public class ExternalToolConfigView
 				}
 			}
 
-			synchronized (runtimeEnvironmentViewList) {
+/*			synchronized (runtimeEnvironmentViewList) {
 				ucd.getREs().clear();
 				for (ExternalToolRuntimeEnvironmentViewer viewer : runtimeEnvironmentViewList) {
 					RuntimeEnvironmentConstraint newConstraint = new RuntimeEnvironmentConstraint(
 							viewer.getId(), viewer.getRelation());
 					ucd.getREs().add(newConstraint);
 				}
-			}
+			}*/
 		}
 		InvocationGroup group = (InvocationGroup) invocationSelection
 				.getSelectedItem();
@@ -354,7 +354,7 @@ public class ExternalToolConfigView
 			outputViewList = new ArrayList<ExternalToolFileViewer>();
 			staticUrlViewList = new ArrayList<ExternalToolStaticUrlViewer>();
 			staticStringViewList = new ArrayList<ExternalToolStaticStringViewer>();
-			runtimeEnvironmentViewList = new ArrayList<ExternalToolRuntimeEnvironmentViewer>();
+/*			runtimeEnvironmentViewList = new ArrayList<ExternalToolRuntimeEnvironmentViewer>();*/
 
 			for (Entry<String, ScriptInput> entry : useCaseDescription
 					.getInputs().entrySet()) {
@@ -471,7 +471,7 @@ public class ExternalToolConfigView
 						}
 					});
 
-			for (RuntimeEnvironmentConstraint rec : useCaseDescription.getREs()) {
+/*			for (RuntimeEnvironmentConstraint rec : useCaseDescription.getREs()) {
 				final ExternalToolRuntimeEnvironmentViewer newView = new ExternalToolRuntimeEnvironmentViewer(
 						rec.getID(), rec.getRelation());
 				runtimeEnvironmentViewList.add(newView);
@@ -485,7 +485,7 @@ public class ExternalToolConfigView
 								ExternalToolRuntimeEnvironmentViewer o2) {
 							return o1.getId().compareTo(o2.getId());
 						}
-					});
+					});*/
 
 			scriptTextArea = new JTextPane();
 			new LinePainter(scriptTextArea);
@@ -530,8 +530,8 @@ public class ExternalToolConfigView
 							"in", FILE_LIST_DESCRIPTION));
 			advancedTab.addTab("Static strings", createStaticStringPanel());
 			advancedTab.addTab("Static URLs", createStaticUrlPanel());
-			advancedTab.addTab("Runtime environments",
-					createRuntimeEnvironmentPanel(runtimeEnvironmentViewList));
+/*			advancedTab.addTab("Runtime environments",
+					createRuntimeEnvironmentPanel(runtimeEnvironmentViewList));*/
 			advancedPanel.add(advancedTab, advancedConstraint);
 			tabbedPane.addTab("Advanced", advancedPanel);
 		}
@@ -1302,7 +1302,7 @@ public class ExternalToolConfigView
 
 	}
 
-	private JPanel createRuntimeEnvironmentPanel(
+/*	private JPanel createRuntimeEnvironmentPanel(
 			final List<ExternalToolRuntimeEnvironmentViewer> viewList) {
 		final JPanel outerREPanel = new JPanel(new BorderLayout());
 		final JPanel runtimeEnvironmentEditPanel = new JPanel(
@@ -1365,7 +1365,7 @@ public class ExternalToolConfigView
 		outerREPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		return outerREPanel;
-	}
+	}*/
 
 	private void addEnvironmentViewer(
 			final List<ExternalToolRuntimeEnvironmentViewer> viewList,
