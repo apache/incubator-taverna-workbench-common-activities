@@ -139,9 +139,9 @@ public class ExternalToolConfigView
 			"installed. You can specify a description of the software and what constraint the " +
 			"installed software must satisfy.";
 
-	private static final String STATIC_STRING_DESCRIPTION = "A static string can be used to write a constant string to the specified file.";
+	private static final String STATIC_STRING_DESCRIPTION = "A fixed string can be written to the specified file.";
 
-	private static final String STATIC_URL_DESCRIPTION = "A static URL can be used to download data from a URL and store it in the specified file.";
+	private static final String STATIC_URL_DESCRIPTION = "The data at a URL can be downloaded and stored in the specified file.";
 
 	private static final String VALID_NAME_REGEX = "[\\p{L}\\p{Digit}_]+";
 
@@ -522,14 +522,14 @@ public class ExternalToolConfigView
 			advancedConstraint.weighty = 0.1;
 			advancedConstraint.weightx = 0.1;
 			JTabbedPane advancedTab = new JTabbedPane();
-			advancedTab.addTab("Annotation", createAnnotationPanel());
+			advancedTab.addTab("Strings", createStaticStringPanel());
+			advancedTab.addTab("URLs", createStaticUrlPanel());
 			advancedTab.addTab(
 					"File lists",
 					createFilePanel(fileListViewList,
 							"To file containing list", "Individual file type",
 							"in", FILE_LIST_DESCRIPTION));
-			advancedTab.addTab("Static strings", createStaticStringPanel());
-			advancedTab.addTab("Static URLs", createStaticUrlPanel());
+			advancedTab.addTab("Annotation", createAnnotationPanel());
 /*			advancedTab.addTab("Runtime environments",
 					createRuntimeEnvironmentPanel(runtimeEnvironmentViewList));*/
 			advancedPanel.add(advancedTab, advancedConstraint);
