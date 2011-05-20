@@ -25,6 +25,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionListener;
 
+import net.sf.taverna.t2.lang.observer.Observable;
+import net.sf.taverna.t2.lang.observer.Observer;
 import net.sf.taverna.t2.lang.ui.ValidatingUserInputDialog;
 
 
@@ -32,7 +34,7 @@ import net.sf.taverna.t2.lang.ui.ValidatingUserInputDialog;
  * @author alanrw
  *
  */
-public class GroupListPanel extends JPanel implements InvocationGroupManagerListener {
+public class GroupListPanel extends JPanel implements Observer<InvocationManagerEvent> {
 	
 	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
 
@@ -41,7 +43,7 @@ public class GroupListPanel extends JPanel implements InvocationGroupManagerList
 
 	public GroupListPanel() {
 		super();
-		manager.addListener(this);
+		manager.addObserver(this);
 		this.setLayout(new BorderLayout());
 		
 		this.add(new JLabel("Groups"), BorderLayout.NORTH);
@@ -139,17 +141,18 @@ public class GroupListPanel extends JPanel implements InvocationGroupManagerList
 		return result;
 	}
 
-	@Override
-	public void invocationManagerChange(InvocationManagerEvent event) {
-		if (event instanceof InvocationGroupRemovedEvent) {
-			groupListModel.removeElement(((InvocationGroupRemovedEvent) event).getRemovedGroup());
-		} else {
-			populateList();
-		}
-	}
-
 	public void setSelectedGroup(InvocationGroup selectedGroup) {
 		groupList.setSelectedValue(selectedGroup, true);
+	}
+
+	@Override
+	public void notify(Observable<InvocationManagerEvent> sender,
+			InvocationManagerEvent message) throws Exception {
+		if (message instanceof InvocationGroupRemovedEvent) {
+			groupListModel.removeElement(((InvocationGroupRemovedEvent) message).getRemovedGroup());
+		} else if (message instanceof InvocationGroupAddedEvent) {
+			populateList();
+		}
 	}
 
 }

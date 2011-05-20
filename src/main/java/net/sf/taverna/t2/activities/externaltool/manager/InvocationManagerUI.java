@@ -25,18 +25,23 @@ import org.apache.log4j.Logger;
 import de.uni_luebeck.inb.knowarc.usecases.RuntimeEnvironmentConstraint;
 
 import net.sf.taverna.t2.activities.externaltool.servicedescriptions.ExternalToolActivityIcon;
+import net.sf.taverna.t2.lang.observer.Observable;
+import net.sf.taverna.t2.lang.observer.Observer;
+import net.sf.taverna.t2.workbench.file.FileManager;
+import net.sf.taverna.t2.workbench.file.events.AbstractDataflowEvent;
+import net.sf.taverna.t2.workbench.file.events.FileManagerEvent;
+import net.sf.taverna.t2.workbench.file.events.OpenedDataflowEvent;
+import net.sf.taverna.t2.workflowmodel.Dataflow;
 
 /**
  * @author alanrw
  *
  */
-public class InvocationManagerUI extends JFrame {
+public class InvocationManagerUI extends JFrame implements Observer<FileManagerEvent> {
 	
 	private static Logger logger = Logger.getLogger(InvocationManagerUI.class);
-
-	private static InvocationManagerUI INSTANCE = null;
 	
-	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
+	private InvocationGroupManager manager = InvocationGroupManager.getInstance();
 
 	private MechanismEditsPanel mechanismEditsPanel;
 
@@ -49,15 +54,20 @@ public class InvocationManagerUI extends JFrame {
 	private JTabbedPane tabbedPane;
 	
 	private JPanel mechanismsPanel;
+	
+	private FileManager fileManager = FileManager.getInstance();
+	
+	private static class Singleton {
+		private static InvocationManagerUI instance = new InvocationManagerUI();		
+	}
+
 
 	public static InvocationManagerUI getInstance() {
-		if (INSTANCE == null) {
-			INSTANCE = new InvocationManagerUI();
-		}
-		return INSTANCE;
+		return Singleton.instance;
 	}
 	
 	private InvocationManagerUI() {
+		fileManager.addObserver(this);
 		getContentPane().setLayout(new BorderLayout());
 		
 		tabbedPane = new JTabbedPane();
@@ -164,6 +174,15 @@ public class InvocationManagerUI extends JFrame {
 				closeFrame();
 			}});
 		return result;
+	}
+
+	@Override
+	public void notify(Observable<FileManagerEvent> sender,
+			FileManagerEvent message) throws Exception {
+		if (message instanceof OpenedDataflowEvent) {
+			Dataflow d = ((AbstractDataflowEvent) message).getDataflow();
+			DataflowInvocationChecker checker = new DataflowInvocationChecker(d);
+		}
 	}
 
 }

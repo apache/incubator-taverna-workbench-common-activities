@@ -20,11 +20,14 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 
+import net.sf.taverna.t2.lang.observer.Observable;
+import net.sf.taverna.t2.lang.observer.Observer;
+
 /**
  * @author alanrw
  *
  */
-public class MechanismListPanel extends JPanel implements InvocationGroupManagerListener {
+public class MechanismListPanel extends JPanel implements Observer<InvocationManagerEvent> {
 	
 	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
 	
@@ -35,7 +38,7 @@ public class MechanismListPanel extends JPanel implements InvocationGroupManager
 		super();
 		mechanismList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		mechanismList.setModel(mechanismListModel);
-		manager.addListener(this);
+		manager.addObserver(this);
 		this.setLayout(new BorderLayout());
 		
 		this.add(new JLabel("Locations"), BorderLayout.NORTH);
@@ -108,20 +111,21 @@ public class MechanismListPanel extends JPanel implements InvocationGroupManager
 		return result;
 	}
 
-	@Override
-	public void invocationManagerChange(InvocationManagerEvent event) {
-		if (event instanceof InvocationMechanismRemovedEvent) {
-			mechanismListModel.removeElement(((InvocationMechanismRemovedEvent) event).getRemovedMechanism());
-		} else if (event instanceof InvocationMechanismAddedEvent) {
-			populateList();
-		}
-	}
-
 	public void setSelectedMechanism(InvocationMechanism m) {
 		if (m == null) {
 			mechanismList.clearSelection();
 		} else {
 			mechanismList.setSelectedValue(m, true);
+		}
+	}
+
+	@Override
+	public void notify(Observable<InvocationManagerEvent> sender,
+			InvocationManagerEvent message) throws Exception {
+		if (message instanceof InvocationMechanismRemovedEvent) {
+			mechanismListModel.removeElement(((InvocationMechanismRemovedEvent) message).getRemovedMechanism());
+		} else if (message instanceof InvocationMechanismAddedEvent) {
+			populateList();
 		}
 	}
 }

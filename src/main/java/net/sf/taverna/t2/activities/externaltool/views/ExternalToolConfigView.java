@@ -21,20 +21,13 @@
 package net.sf.taverna.t2.activities.externaltool.views;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -46,15 +39,10 @@ import java.util.regex.Pattern;
 
 import javax.help.CSH;
 import javax.swing.AbstractAction;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -62,40 +50,20 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.ListCellRenderer;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
-import net.sf.taverna.t2.activities.externaltool.manager.AddInvocationMechanismAction;
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroup;
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupAddedEvent;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManager;
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManagerListener;
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupRemovedEvent;
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationManagerEvent;
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationManagerUI;
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismEditor;
-import net.sf.taverna.t2.activities.externaltool.manager.MechanismEditsPanel;
-import net.sf.taverna.t2.lang.ui.FileTools;
+import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
 import net.sf.taverna.t2.lang.ui.KeywordDocument;
-import net.sf.taverna.t2.lang.ui.LineEnabledTextPanel;
 import net.sf.taverna.t2.lang.ui.LinePainter;
 import net.sf.taverna.t2.lang.ui.NoWrapEditorKit;
 import net.sf.taverna.t2.lang.ui.ReadOnlyTextArea;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
 
 import org.apache.log4j.Logger;
-import org.jdom.Document;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
 
-import com.thoughtworks.xstream.XStream;
-
-import de.uni_luebeck.inb.knowarc.usecases.RuntimeEnvironmentConstraint;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInput;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInputStatic;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInputUser;
@@ -117,7 +85,7 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 @SuppressWarnings("serial")
 public class ExternalToolConfigView
 		extends
-		ActivityConfigurationPanel<ExternalToolActivity, ExternalToolActivityConfigurationBean> implements InvocationGroupManagerListener {
+		ActivityConfigurationPanel<ExternalToolActivity, ExternalToolActivityConfigurationBean> {
 
 	private static final String STRING_REPLACEMENT_DESCRIPTION = "You can use a string replacement to " +
 			"feed data into the service via an input port and have that data replace part of the " +
@@ -144,8 +112,6 @@ public class ExternalToolConfigView
 	private static final String STATIC_URL_DESCRIPTION = "The data at a URL can be downloaded and stored in the specified file.";
 
 	private static final String VALID_NAME_REGEX = "[\\p{L}\\p{Digit}_]+";
-
-	private static final String LOCATION_DESCRIPTION = "The location specifies where the tool will be run.";
 
 	private static Logger logger = Logger
 			.getLogger(ExternalToolConfigView.class);
@@ -177,22 +143,17 @@ public class ExternalToolConfigView
 
 /*	private List<ExternalToolRuntimeEnvironmentViewer> runtimeEnvironmentViewList = new ArrayList<ExternalToolRuntimeEnvironmentViewer>();
 */
-	private JComboBox invocationSelection = new JComboBox();
 
 	private JTextField nameField = new JTextField(20);
 	private JTextArea descriptionArea = new JTextArea(6, 40);
 
 	private JEditorPane scriptTextArea;
 
-	private JPanel invocationPanel;
-
-	private static SAXBuilder builder = new SAXBuilder();
+	private InvocationPanel invocationPanel;
 
 	private JCheckBox stdInCheckBox = new JCheckBox("Show STDIN");
 	private JCheckBox stdOutCheckBox = new JCheckBox("Show STDOUT");
 	private JCheckBox stdErrCheckBox = new JCheckBox("Show STDERR");
-	
-	private DefaultComboBoxModel invocationSelectionModel = new DefaultComboBoxModel();
 
 	/**
 	 * Stores the {@link ExternalToolActivity}, gets its
@@ -207,9 +168,6 @@ public class ExternalToolConfigView
 		configuration = (ExternalToolActivityConfigurationBean) cloneBean(activity
 				.getConfiguration());
 		setLayout(new GridBagLayout());
-		populateGroupList();
-		invocationSelection.setModel(invocationSelectionModel);
-		InvocationGroupManager.getInstance().addListener(this);
 		initialise(configuration);
 	}
 
@@ -217,7 +175,7 @@ public class ExternalToolConfigView
 		configuration = makeConfiguration();
 	}
 
-	private ExternalToolActivityConfigurationBean makeConfiguration() {
+	public ExternalToolActivityConfigurationBean makeConfiguration() {
 		ExternalToolActivityConfigurationBean newConfiguration = (ExternalToolActivityConfigurationBean) cloneBean(configuration);
 
 		if (!isFromRepository()) {
@@ -309,9 +267,9 @@ public class ExternalToolConfigView
 				}
 			}*/
 		}
-		InvocationGroup group = (InvocationGroup) invocationSelection
-				.getSelectedItem();
-		newConfiguration.setInvocationGroup(group);
+		InvocationMechanism mechanism = invocationPanel.getSelectedMechanism();
+
+		newConfiguration.setMechanism(mechanism);
 		return newConfiguration;
 	}
 
@@ -500,16 +458,16 @@ public class ExternalToolConfigView
 			scriptTextArea.setCaretPosition(0);
 			scriptTextArea.setPreferredSize(new Dimension(200, 100));
 
-			tabbedPane.addTab("Command", createScriptPanel());
+			tabbedPane.addTab("Command", new ScriptPanel(this, scriptTextArea, stdInCheckBox, stdOutCheckBox, stdErrCheckBox));
 			tabbedPane.addTab("String replacements",
 					createStringReplacementPanel());
 			tabbedPane.addTab(
 					"File inputs",
-					createFilePanel(inputFileViewList, "To file", "File type",
+					new FilePanel(this, inputFileViewList, "To file", "File type",
 							"in", FILE_INPUT_DESCRIPTION));
 			tabbedPane.addTab(
 					"File outputs",
-					createFilePanel(outputViewList, "From file", "File type",
+					new FilePanel(this, outputViewList, "From file", "File type",
 							"out", FILE_OUTPUT_DESCRIPTION));
 			JPanel advancedPanel = new JPanel();
 			advancedPanel.setLayout(new GridBagLayout());
@@ -526,18 +484,20 @@ public class ExternalToolConfigView
 			advancedTab.addTab("URLs", createStaticUrlPanel());
 			advancedTab.addTab(
 					"File lists",
-					createFilePanel(fileListViewList,
+					new FilePanel(this, fileListViewList,
 							"To file containing list", "Individual file type",
 							"in", FILE_LIST_DESCRIPTION));
-			advancedTab.addTab("Annotation", createAnnotationPanel());
+			advancedTab.addTab("Annotation", new AnnotationPanel(nameField, descriptionArea));
 /*			advancedTab.addTab("Runtime environments",
 					createRuntimeEnvironmentPanel(runtimeEnvironmentViewList));*/
 			advancedPanel.add(advancedTab, advancedConstraint);
 			tabbedPane.addTab("Advanced", advancedPanel);
 		}
-		tabbedPane.addTab("Location", createInvocationPanel());
+		invocationPanel = new InvocationPanel(configuration);
+		
+		tabbedPane.addTab("Location", invocationPanel);
 		if (isFromRepository()) {
-			tabbedPane.addTab("Edit", createEditablePanel());
+			tabbedPane.addTab("Edit", new EditablePanel(this));
 		}
 		GridBagConstraints outerConstraint = new GridBagConstraints();
 		outerConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -563,142 +523,6 @@ public class ExternalToolConfigView
 		String repositoryUrl = this.configuration.getRepositoryUrl();
 		return (!this.configuration.isEdited() && (repositoryUrl != null) && !repositoryUrl
 				.isEmpty());
-	}
-
-	private JPanel createEditablePanel() {
-		JPanel result = new JPanel();
-		JButton makeEditable = new JButton("Edit tool description");
-		makeEditable.setToolTipText("Edit the tool description");
-		makeEditable.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				ExternalToolActivityConfigurationBean newConfig = (ExternalToolActivityConfigurationBean) cloneBean(configuration);
-				newConfig.setEdited(true);
-				refreshConfiguration(newConfig);
-			}
-		});
-		result.add(makeEditable);
-		return result;
-	}
-
-	private JPanel createAnnotationPanel() {
-		JPanel result = new JPanel();
-		result.setLayout(new BorderLayout());
-		JPanel namePanel = new JPanel();
-		namePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		namePanel.add(new JLabel("Name: "));
-		namePanel.add(nameField);
-		result.add(namePanel, BorderLayout.NORTH);
-		JPanel descriptionPanel = new JPanel();
-		descriptionPanel.setLayout(new BorderLayout());
-		descriptionPanel.add(new JLabel("Description:"), BorderLayout.NORTH);
-		descriptionPanel.add(descriptionArea, BorderLayout.CENTER);
-		result.add(descriptionPanel, BorderLayout.CENTER);
-		return result;
-	}
-
-	private JPanel createScriptPanel() {
-		JPanel scriptEditPanel = new JPanel(new BorderLayout());
-		scriptEditPanel.add(new LineEnabledTextPanel(scriptTextArea),
-				BorderLayout.CENTER);
-
-		JButton loadScriptButton = new JButton("Load description");
-		loadScriptButton.setToolTipText("Load tool description from a file");
-		loadScriptButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String newScript = FileTools.readStringFromFile(
-						ExternalToolConfigView.this, "Load tool description",
-						".xml");
-				if (newScript != null) {
-					String errorMessage = null;
-					try {
-						Document doc = builder
-								.build(new StringReader(newScript));
-						UseCaseDescription newDescription = new UseCaseDescription(
-								doc.getRootElement());
-						configuration.setUseCaseDescription(newDescription);
-						refreshConfiguration(configuration);
-					} catch (JDOMException e1) {
-						errorMessage = e1.getMessage();
-					} catch (IOException e1) {
-						errorMessage = e1.getMessage();
-					} catch (Exception e1) {
-						errorMessage = e1.getMessage();
-					}
-					if (errorMessage != null) {
-						JOptionPane.showMessageDialog(null, errorMessage,
-								"Tool description load error",
-								JOptionPane.ERROR_MESSAGE);
-					}
-				}
-			}
-		});
-
-		JButton saveScriptButton = new JButton("Save description");
-		saveScriptButton.setToolTipText("Save the tool description to a file");
-		saveScriptButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				XMLOutputter outputter = new XMLOutputter(Format
-						.getPrettyFormat());
-				FileTools.saveStringToFile(ExternalToolConfigView.this,
-						"Save tool description", ".xml", outputter
-								.outputString(makeConfiguration()
-										.getUseCaseDescription()
-										.writeToXMLElement()));
-			}
-		});
-
-		JButton clearScriptButton = new JButton("Clear script");
-		clearScriptButton.setToolTipText("Clear the script from the edit area");
-		clearScriptButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				clearScript();
-			}
-
-		});
-
-		stdInCheckBox.setSelected(configuration.getUseCaseDescription()
-				.isIncludeStdIn());
-		stdOutCheckBox.setSelected(configuration.getUseCaseDescription()
-				.isIncludeStdOut());
-		stdErrCheckBox.setSelected(configuration.getUseCaseDescription()
-				.isIncludeStdErr());
-
-		JPanel streamPanel = new JPanel();
-		streamPanel.setLayout(new FlowLayout());
-		streamPanel.add(stdInCheckBox);
-		streamPanel.add(stdOutCheckBox);
-		streamPanel.add(stdErrCheckBox);
-
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new FlowLayout());
-		buttonPanel.add(loadScriptButton);
-		buttonPanel.add(saveScriptButton);
-		buttonPanel.add(clearScriptButton);
-
-		JPanel subPanel = new JPanel(new BorderLayout());
-		subPanel.add(streamPanel, BorderLayout.NORTH);
-		subPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-		scriptEditPanel.add(subPanel, BorderLayout.SOUTH);
-
-		return scriptEditPanel;
-
-	}
-
-	/**
-	 * Method for clearing the script
-	 * 
-	 */
-	private void clearScript() {
-		if (JOptionPane.showConfirmDialog(this,
-				"Do you really want to clear the tool description?",
-				"Clearing the tool description", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-			scriptTextArea.setText("");
-		}
-
 	}
 
 	private JPanel createStringReplacementPanel() {
@@ -817,105 +641,6 @@ public class ExternalToolConfigView
 		panel.add(removeButton, inputConstraint);
 		inputConstraint.gridy = ++stringReplacementGridy;
 
-	}
-
-	private JPanel createInvocationPanel() {
-		invocationPanel = new JPanel();
-		populateInvocationPanel();
-
-		return invocationPanel;
-	}
-
-	private void populateInvocationPanel() {
-		invocationPanel.removeAll();
-		invocationPanel.setLayout(new BorderLayout());
-
-		JTextArea descriptionText = new JTextArea(
-				LOCATION_DESCRIPTION);
-		descriptionText.setEditable(false);
-		descriptionText.setFocusable(false);
-		descriptionText.setBorder(new EmptyBorder(5, 5, 10, 5));
-		descriptionText.setLineWrap(true);
-		descriptionText.setWrapStyleWord(true);
-		invocationPanel.add(descriptionText, BorderLayout.NORTH);
-
-		JPanel subPanel = new JPanel(new BorderLayout());
-		JPanel invocationSelectionPanel = new JPanel(new GridLayout(1, 2));
-		JLabel selectionLabel = new JLabel("Select a location:",
-				SwingConstants.RIGHT);
-		selectionLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
-		invocationSelectionPanel.add(selectionLabel);
-
-		invocationSelection.setRenderer(new DefaultListCellRenderer() {
-
-			@Override
-			public Component getListCellRendererComponent(JList arg0,
-					Object arg1, int arg2, boolean arg3, boolean arg4) {
-				if (arg1 instanceof InvocationGroup) {
-					return super.getListCellRendererComponent(arg0,
-							((InvocationGroup) arg1).getInvocationGroupName(),
-							arg2, arg3, arg4);
-				}
-				return super.getListCellRendererComponent(arg0, arg1, arg2,
-						arg3, arg4);
-			}
-		});
-
-		invocationSelectionPanel.add(invocationSelection);
-
-		subPanel.add(invocationSelectionPanel, BorderLayout.NORTH);
-		logger.info("used group is "
-				+ configuration.getInvocationGroup().hashCode());
-		invocationSelection.setSelectedItem(configuration.getInvocationGroup());
-
-		JPanel buttonPanel = new JPanel(new FlowLayout());
-		JButton addLocation = new JButton(
-				new AddInvocationMechanismAction(true) {
-					public void actionPerformed(ActionEvent e) {
-						super.actionPerformed(e);
-						if (getNewGroup() != null) {
-							invocationSelection.setSelectedItem(getNewGroup());
-							InvocationMechanismEditor chosenEditor = null;
-							for (InvocationMechanismEditor ime : invocationMechanismEditorRegistry
-									.getInstances()) {
-								if (ime.canShow(getNewMechanism().getClass())) {
-									chosenEditor = ime;
-									break;
-								}
-							}
-							if (chosenEditor != null) {
-								chosenEditor.show(getNewMechanism());
-								chosenEditor.setPreferredSize(new Dimension(
-										550, 500));
-								int answer = JOptionPane.showConfirmDialog(
-										null, chosenEditor, "New location",
-										JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-								if (answer == JOptionPane.OK_OPTION) {
-									chosenEditor.updateInvocationMechanism();
-									InvocationGroupManager
-											.getInstance()
-											.mechanismChanged(getNewMechanism());
-								}
-							}
-						}
-					}
-				});
-/*		JButton manageInvocation = new JButton(new AbstractAction(
-				"Edit locations") {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				InvocationManagerUI ui = InvocationManagerUI.getInstance();
-				ui.showMechanismForGroup((InvocationGroup) invocationSelection
-						.getSelectedItem());
-				ui.setVisible(true);
-			}
-		}); */
-		buttonPanel.add(addLocation);
-/*		buttonPanel.add(manageInvocation); */
-		subPanel.add(buttonPanel, BorderLayout.SOUTH);
-		invocationPanel.add(subPanel, BorderLayout.CENTER);
-		invocationPanel.repaint();
 	}
 
 	@Override
@@ -1157,7 +882,7 @@ public class ExternalToolConfigView
 	 * 
 	 * @return
 	 */
-	private boolean portNameExists(String name) {
+	public boolean portNameExists(String name) {
 		for (ExternalToolFileViewer v : inputFileViewList) {
 			if (name.equals(v.getName())) {
 				return true;
@@ -1179,236 +904,6 @@ public class ExternalToolConfigView
 			}
 		}
 		return false;
-	}
-
-	private JPanel createFilePanel(final List<ExternalToolFileViewer> viewList,
-			String fileHeader, String typeHeader, final String portPrefix,
-			final String description) {
-		final JPanel outerFilePanel = new JPanel();
-		outerFilePanel.setLayout(new BorderLayout());
-		final JPanel fileEditPanel = new JPanel(new GridBagLayout());
-
-		final GridBagConstraints fileConstraint = new GridBagConstraints();
-		fileConstraint.insets = new Insets(5, 5, 5, 5);
-		fileConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-		fileConstraint.gridx = 0;
-		fileConstraint.gridy = 0;
-		fileConstraint.weightx = 0.1;
-		fileConstraint.fill = GridBagConstraints.BOTH;
-
-		fileEditPanel.add(new JLabel("Taverna port name"), fileConstraint);
-		fileConstraint.gridx++;
-		fileEditPanel.add(new JLabel(fileHeader), fileConstraint);
-		fileConstraint.gridx++;
-		fileEditPanel.add(new JLabel(typeHeader), fileConstraint);
-
-		fileConstraint.gridx = 0;
-		synchronized (viewList) {
-			for (ExternalToolFileViewer outputView : viewList) {
-				addFileViewer(viewList, outerFilePanel, fileEditPanel,
-						outputView);
-			}
-		}
-		JButton addFilePortButton = new JButton(new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-
-				int portNumber = 1;
-
-				String name2 = portPrefix + portNumber++;
-				boolean nameExists = true;
-				while (nameExists == true) {
-					nameExists = portNameExists(name2);
-					if (nameExists) {
-						name2 = portPrefix + portNumber++;
-					}
-				}
-
-				ExternalToolFileViewer newViewer = new ExternalToolFileViewer(
-						name2);
-				synchronized (viewList) {
-					viewList.add(newViewer);
-					addFileViewer(viewList, outerFilePanel, fileEditPanel,
-							newViewer);
-					fileEditPanel.revalidate();
-					fileEditPanel.repaint();
-				}
-			}
-
-		});
-		JTextArea descriptionText = new ReadOnlyTextArea(description);
-		descriptionText.setEditable(false);
-		descriptionText.setFocusable(false);
-		descriptionText.setBorder(new EmptyBorder(5, 5, 10, 5));
-
-		outerFilePanel.add(descriptionText, BorderLayout.NORTH);
-
-		outerFilePanel.add(new JScrollPane(fileEditPanel), BorderLayout.CENTER);
-
-		addFilePortButton.setText("Add Port");
-		JPanel buttonPanel = new JPanel(new BorderLayout());
-
-		buttonPanel.add(addFilePortButton, BorderLayout.EAST);
-
-		outerFilePanel.add(buttonPanel, BorderLayout.SOUTH);
-
-		return outerFilePanel;
-	}
-
-	private void addFileViewer(final List<ExternalToolFileViewer> viewList,
-			final JPanel outerPanel, final JPanel panel,
-			ExternalToolFileViewer viewer) {
-		final GridBagConstraints fileConstraint = new GridBagConstraints();
-		fileConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-		fileConstraint.weightx = 0.1;
-		fileConstraint.fill = GridBagConstraints.BOTH;
-
-		fileConstraint.gridy = outputGridy;
-		fileConstraint.gridx = 0;
-		final JTextField nameField = viewer.getNameField();
-		panel.add(nameField, fileConstraint);
-
-		fileConstraint.weightx = 0.0;
-		fileConstraint.gridx++;
-
-		final JTextField valueField = viewer.getValueField();
-		panel.add(valueField, fileConstraint);
-		fileConstraint.gridx++;
-
-		final JComboBox typeSelector = viewer.getTypeSelector();
-		panel.add(typeSelector, fileConstraint);
-
-		fileConstraint.gridx++;
-		final JButton removeButton = new JButton("Remove");
-		final ExternalToolFileViewer v = viewer;
-		removeButton.addActionListener(new AbstractAction() {
-
-			public void actionPerformed(ActionEvent e) {
-				synchronized (viewList) {
-					viewList.remove(v);
-				}
-				panel.remove(nameField);
-				panel.remove(valueField);
-				panel.remove(typeSelector);
-				panel.remove(removeButton);
-				panel.revalidate();
-				panel.repaint();
-				outerPanel.revalidate();
-				outerPanel.repaint();
-			}
-
-		});
-		panel.add(removeButton, fileConstraint);
-		outputGridy++;
-
-	}
-
-/*	private JPanel createRuntimeEnvironmentPanel(
-			final List<ExternalToolRuntimeEnvironmentViewer> viewList) {
-		final JPanel outerREPanel = new JPanel(new BorderLayout());
-		final JPanel runtimeEnvironmentEditPanel = new JPanel(
-				new GridBagLayout());
-
-		final GridBagConstraints reConstraint = new GridBagConstraints();
-		reConstraint.insets = new Insets(5, 5, 5, 5);
-		reConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-		reConstraint.gridx = 0;
-		reConstraint.gridy = 0;
-		reConstraint.weightx = 0.1;
-		reConstraint.fill = GridBagConstraints.BOTH;
-
-		runtimeEnvironmentEditPanel.add(new JLabel("Environment description"),
-				reConstraint);
-		reConstraint.gridx++;
-		runtimeEnvironmentEditPanel.add(new JLabel("Relationship"),
-				reConstraint);
-		reConstraint.gridx++;
-
-		reConstraint.gridx = 0;
-		synchronized (viewList) {
-			for (ExternalToolRuntimeEnvironmentViewer outputView : viewList) {
-				addEnvironmentViewer(viewList, outerREPanel,
-						runtimeEnvironmentEditPanel, outputView);
-			}
-		}
-
-		JTextArea descriptionText = new ReadOnlyTextArea(
-				RUNTIME_ENVIRONMENT_DESCRIPTION);
-		descriptionText.setEditable(false);
-		descriptionText.setFocusable(false);
-		descriptionText.setBorder(new EmptyBorder(5, 5, 10, 5));
-
-		outerREPanel.add(descriptionText, BorderLayout.NORTH);
-
-		outerREPanel.add(new JScrollPane(runtimeEnvironmentEditPanel),
-				BorderLayout.CENTER);
-
-		JButton addRuntimeEnvironmentButton = new JButton(new AbstractAction() {
-			// FIXME refactor this into a method
-			public void actionPerformed(ActionEvent e) {
-
-				ExternalToolRuntimeEnvironmentViewer newViewer = new ExternalToolRuntimeEnvironmentViewer();
-				synchronized (viewList) {
-					viewList.add(newViewer);
-					addEnvironmentViewer(viewList, outerREPanel,
-							runtimeEnvironmentEditPanel, newViewer);
-					runtimeEnvironmentEditPanel.revalidate();
-					runtimeEnvironmentEditPanel.repaint();
-				}
-			}
-
-		});
-		addRuntimeEnvironmentButton.setText("Add runtime environment");
-		JPanel buttonPanel = new JPanel(new BorderLayout());
-
-		buttonPanel.add(addRuntimeEnvironmentButton, BorderLayout.EAST);
-
-		outerREPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-		return outerREPanel;
-	}*/
-
-	private void addEnvironmentViewer(
-			final List<ExternalToolRuntimeEnvironmentViewer> viewList,
-			final JPanel outerPanel, final JPanel panel,
-			ExternalToolRuntimeEnvironmentViewer viewer) {
-		final GridBagConstraints fileConstraint = new GridBagConstraints();
-		fileConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-		fileConstraint.weightx = 0.1;
-		fileConstraint.fill = GridBagConstraints.BOTH;
-
-		fileConstraint.gridy = outputGridy;
-		fileConstraint.gridx = 0;
-		final JTextField idField = viewer.getIdField();
-		panel.add(idField, fileConstraint);
-
-		fileConstraint.weightx = 0.0;
-		fileConstraint.gridx++;
-
-		final JComboBox relationSelector = viewer.getRelationSelector();
-		panel.add(relationSelector, fileConstraint);
-
-		fileConstraint.gridx++;
-		final JButton removeButton = new JButton("Remove");
-		final ExternalToolRuntimeEnvironmentViewer v = viewer;
-		removeButton.addActionListener(new AbstractAction() {
-
-			public void actionPerformed(ActionEvent e) {
-				synchronized (viewList) {
-					viewList.remove(v);
-				}
-				panel.remove(idField);
-				panel.remove(relationSelector);
-				panel.remove(removeButton);
-				panel.revalidate();
-				panel.repaint();
-				outerPanel.revalidate();
-				outerPanel.repaint();
-			}
-
-		});
-		panel.add(removeButton, fileConstraint);
-		outputGridy++;
-
 	}
 
 	private JPanel createStaticUrlPanel() {
@@ -1623,39 +1118,11 @@ public class ExternalToolConfigView
 
 	}
 	
-	private void populateGroupList() {
-		InvocationGroup currentSelection = (InvocationGroup) invocationSelection.getSelectedItem();
-		InvocationGroup[] groups = InvocationGroupManager.getInstance()
-				.getInvocationGroups().toArray(new InvocationGroup[] {});
-		Arrays.sort(groups, new Comparator<InvocationGroup>() {
 
-			@Override
-			public int compare(InvocationGroup arg0, InvocationGroup arg1) {
-				return arg0.getInvocationGroupName().compareTo(
-						arg1.getInvocationGroupName());
-			}
-		});
-		invocationSelectionModel.removeAllElements();
-		for (InvocationGroup group : groups) {
-			invocationSelectionModel.addElement(group);
-		}
-		if (currentSelection != null) {
-			invocationSelection.setSelectedItem(currentSelection);
-		}
-		
-	}
-
-	@Override
-	public void invocationManagerChange(InvocationManagerEvent event) {
-		if (event instanceof InvocationGroupRemovedEvent) {
-			InvocationGroup removedGroup = ((InvocationGroupRemovedEvent) event).getRemovedGroup();
-			if (invocationSelection.getSelectedItem().equals(removedGroup)) {
-				invocationSelection.setSelectedItem(InvocationGroupManager.getInstance().getDefaultGroup());
-			}
-			invocationSelectionModel.removeElement(removedGroup);
-		} else if (event instanceof InvocationGroupAddedEvent) {
-			populateGroupList();
-		}
+	public void makeEditable() {
+		ExternalToolActivityConfigurationBean newConfig = (ExternalToolActivityConfigurationBean) cloneBean(configuration);
+		newConfig.setEdited(true);
+		refreshConfiguration(newConfig);		
 	}
 
 }

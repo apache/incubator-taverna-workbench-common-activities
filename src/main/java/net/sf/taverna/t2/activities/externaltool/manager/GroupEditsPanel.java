@@ -18,6 +18,9 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import net.sf.taverna.t2.lang.observer.Observable;
+import net.sf.taverna.t2.lang.observer.Observer;
+
 import org.apache.log4j.Logger;
 
 import de.uni_luebeck.inb.knowarc.usecases.RuntimeEnvironmentConstraint;
@@ -26,7 +29,7 @@ import de.uni_luebeck.inb.knowarc.usecases.RuntimeEnvironmentConstraint;
  * @author alanrw
  *
  */
-public class GroupEditsPanel extends JPanel implements InvocationGroupManagerListener {
+public class GroupEditsPanel extends JPanel implements Observer<InvocationManagerEvent> {
 	
 	private static Logger logger = Logger.getLogger(GroupEditsPanel.class);
 	
@@ -43,7 +46,7 @@ public class GroupEditsPanel extends JPanel implements InvocationGroupManagerLis
 	
 	public GroupEditsPanel(JButton closeButton) {
 		super();
-		manager.addListener(this);
+		manager.addObserver(this);
 		this.setLayout(new BorderLayout());
 		buttonPanel = createButtonPanel(closeButton);
 		initialise();
@@ -80,6 +83,7 @@ public class GroupEditsPanel extends JPanel implements InvocationGroupManagerLis
 				if ((mechanism != null) && (group != null)) {
 					logger.info("Changing mechanism for " + group.getInvocationGroupName() + " from " + group.getMechanism().getName() + " to " + mechanism.getName());
 					group.setMechanism(mechanism);
+					manager.groupChanged(group);
 				}
 			}
 			
@@ -126,15 +130,16 @@ public class GroupEditsPanel extends JPanel implements InvocationGroupManagerLis
 	}
 
 	@Override
-	public void invocationManagerChange(InvocationManagerEvent event) {
-		if (event instanceof InvocationMechanismRemovedEvent) {
-			InvocationMechanism removedMechanism = ((InvocationMechanismRemovedEvent) event).getRemovedMechanism();
+	public void notify(Observable<InvocationManagerEvent> sender,
+			InvocationManagerEvent message) throws Exception {
+		if (message instanceof InvocationMechanismRemovedEvent) {
+			InvocationMechanism removedMechanism = ((InvocationMechanismRemovedEvent) message).getRemovedMechanism();
 			InvocationMechanism currentSelection = (InvocationMechanism) mechanismList.getSelectedValue();
 			mechanismListModel.removeElement(removedMechanism);
 			if (currentSelection.equals(removedMechanism)) {
 				showGroup(this.group);
 			}
-		} else if (event instanceof InvocationMechanismAddedEvent) {
+		} else if (message instanceof InvocationMechanismAddedEvent) {
 			populateList();
 		}
 	}
