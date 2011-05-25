@@ -6,15 +6,14 @@ package net.sf.taverna.t2.activities.externaltool.manager;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.apache.log4j.Logger;
-
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
-import net.sf.taverna.t2.activities.externaltool.views.ExternalToolConfigView;
 import net.sf.taverna.t2.workflowmodel.Dataflow;
 import net.sf.taverna.t2.workflowmodel.Processor;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 import net.sf.taverna.t2.workflowmodel.processor.activity.NestedDataflow;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author alanrw
@@ -68,9 +67,9 @@ public class DataflowInvocationChecker {
 	}
 	
 	private void checkInvocationGroup(InvocationGroup invocationGroup) {
-		String invocationGroupName = invocationGroup.getInvocationGroupName();
+		String invocationGroupName = invocationGroup.getName();
 		if (!consideredGroupNames.contains(invocationGroupName)) {
-			InvocationGroup existingGroup = manager.getInvocationGroup(invocationGroup.getInvocationGroupName());
+			InvocationGroup existingGroup = manager.getInvocationGroup(invocationGroup.getName());
 			if (existingGroup == null) {
 				logger.info("Unknown group " + invocationGroupName);
 				unknownGroups.put(invocationGroupName, invocationGroup);

@@ -81,7 +81,7 @@ public class GroupEditsPanel extends JPanel implements Observer<InvocationManage
 			public void actionPerformed(ActionEvent e) {
 				InvocationMechanism mechanism = (InvocationMechanism) mechanismList.getSelectedValue();
 				if ((mechanism != null) && (group != null)) {
-					logger.info("Changing mechanism for " + group.getInvocationGroupName() + " from " + group.getMechanism().getName() + " to " + mechanism.getName());
+					logger.info("Changing mechanism for " + group.getName() + " from " + group.getMechanism().getName() + " to " + mechanism.getName());
 					group.setMechanism(mechanism);
 					manager.groupChanged(group);
 				}

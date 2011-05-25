@@ -66,7 +66,7 @@ public class GroupListPanel extends JPanel implements Observer<InvocationManager
 
 			@Override
 			public int compare(InvocationGroup o1, InvocationGroup o2) {
-				return o1.getInvocationGroupName().compareTo(o2.getInvocationGroupName());
+				return o1.getName().compareTo(o2.getName());
 			}});
 		groupListModel.clear();
 		for (InvocationGroup g : groups) {
@@ -116,7 +116,7 @@ public class GroupListPanel extends JPanel implements Observer<InvocationManager
 			public void actionPerformed(ActionEvent e) {
 				Set<String> usedGroupNames = new HashSet<String>();
 				for (InvocationGroup g : manager.getInvocationGroups()) {
-					usedGroupNames.add(g.getInvocationGroupName());
+					usedGroupNames.add(g.getName());
 				}
 
 				GroupPanel inputPanel = new GroupPanel();
@@ -132,7 +132,7 @@ public class GroupListPanel extends JPanel implements Observer<InvocationManager
 				if (vuid.show(null)) {
 					String groupName = inputPanel.getGroupName();
 					InvocationGroup newGroup = new InvocationGroup();
-					newGroup.setInvocationGroupName(groupName);
+					newGroup.setName(groupName);
 					newGroup.setMechanism(manager.getDefaultMechanism());
 					manager.addInvocationGroup(newGroup);
 					groupList.setSelectedValue(newGroup, true);

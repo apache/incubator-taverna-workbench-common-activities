@@ -19,8 +19,6 @@ public class AddInvocationMechanismAction extends AbstractAction {
 	private InvocationMechanism newMechanism;
 	private InvocationGroup newGroup;
 
-	private final boolean addGroup;
-
 	public InvocationMechanism getNewMechanism() {
 		return newMechanism;
 	}
@@ -29,9 +27,8 @@ public class AddInvocationMechanismAction extends AbstractAction {
 	 * 
 	 */
 
-	public AddInvocationMechanismAction(boolean addGroup) {
+	public AddInvocationMechanismAction() {
 		super("Add location");
-		this.addGroup = addGroup;
 	}
 
 	@Override
@@ -42,11 +39,6 @@ public class AddInvocationMechanismAction extends AbstractAction {
 		Set<String> usedNames = new HashSet<String>();
 		for (InvocationMechanism m : manager.getMechanisms()) {
 			usedNames.add(m.getName());
-		}
-		if (addGroup) {
-			for (InvocationGroup g : manager.getInvocationGroups()) {
-				usedNames.add(g.getInvocationGroupName());
-			}
 		}
 
 		MechanismPanel inputPanel = new MechanismPanel();
@@ -66,13 +58,6 @@ public class AddInvocationMechanismAction extends AbstractAction {
 			InvocationMechanismEditor ime = findEditor(mechanismTypeName);
 			newMechanism = ime.createMechanism(mechanismName);
 			manager.addMechanism(newMechanism);
-			if (addGroup) {
-				newGroup = new InvocationGroup();
-				newGroup.setInvocationGroupName(mechanismName);
-				newGroup.setMechanism(newMechanism);
-				manager.addInvocationGroup(newGroup);
-			}
-//			setSelectedMechanism(newMechanism);
 		}
 	}
 	

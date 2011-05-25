@@ -37,7 +37,7 @@ import net.sf.taverna.t2.workflowmodel.Dataflow;
  * @author alanrw
  *
  */
-public class InvocationManagerUI extends JFrame implements Observer<FileManagerEvent> {
+public class InvocationManagerUI extends JFrame {
 	
 	private static Logger logger = Logger.getLogger(InvocationManagerUI.class);
 	
@@ -55,7 +55,7 @@ public class InvocationManagerUI extends JFrame implements Observer<FileManagerE
 	
 	private JPanel mechanismsPanel;
 	
-	private FileManager fileManager = FileManager.getInstance();
+	private static FileManager fileManager = FileManager.getInstance();
 	
 	private static class Singleton {
 		private static InvocationManagerUI instance = new InvocationManagerUI();		
@@ -67,7 +67,6 @@ public class InvocationManagerUI extends JFrame implements Observer<FileManagerE
 	}
 	
 	private InvocationManagerUI() {
-		fileManager.addObserver(this);
 		getContentPane().setLayout(new BorderLayout());
 		
 		tabbedPane = new JTabbedPane();
@@ -174,15 +173,6 @@ public class InvocationManagerUI extends JFrame implements Observer<FileManagerE
 				closeFrame();
 			}});
 		return result;
-	}
-
-	@Override
-	public void notify(Observable<FileManagerEvent> sender,
-			FileManagerEvent message) throws Exception {
-		if (message instanceof OpenedDataflowEvent) {
-			Dataflow d = ((AbstractDataflowEvent) message).getDataflow();
-			DataflowInvocationChecker checker = new DataflowInvocationChecker(d);
-		}
 	}
 
 }

@@ -54,6 +54,7 @@ import javax.swing.border.EmptyBorder;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
+import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityHealthChecker;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManager;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
 import net.sf.taverna.t2.lang.ui.KeywordDocument;
@@ -87,10 +88,6 @@ public class ExternalToolConfigView
 		extends
 		ActivityConfigurationPanel<ExternalToolActivity, ExternalToolActivityConfigurationBean> {
 
-	private static final String STRING_REPLACEMENT_DESCRIPTION = "You can use a string replacement to " +
-			"feed data into the service via an input port and have that data replace part of the " +
-			"command.";
-
 	private static final String FILE_INPUT_DESCRIPTION = "You can use a file input to feed data into " +
 			"the service via an input port and have that data written to the specified file.";
 
@@ -101,15 +98,6 @@ public class ExternalToolConfigView
 			"input, then each data item is written to a temporary file. A file is produced containing " +
 			"the names of those temporary file. That index file can then be used as part of the tool " +
 			"command.";
-
-	private static final String RUNTIME_ENVIRONMENT_DESCRIPTION = "A runtime environment can be used " +
-			"to state that the machine on which the command is executed must have certain software " +
-			"installed. You can specify a description of the software and what constraint the " +
-			"installed software must satisfy.";
-
-	private static final String STATIC_STRING_DESCRIPTION = "A fixed string can be written to the specified file.";
-
-	private static final String STATIC_URL_DESCRIPTION = "The data at a URL can be downloaded and stored in the specified file.";
 
 	private static final String VALID_NAME_REGEX = "[\\p{L}\\p{Digit}_]+";
 
@@ -167,6 +155,7 @@ public class ExternalToolConfigView
 		this.activity = activity;
 		configuration = (ExternalToolActivityConfigurationBean) cloneBean(activity
 				.getConfiguration());
+		ExternalToolActivityHealthChecker.updateLocation(configuration);
 		setLayout(new GridBagLayout());
 		initialise(configuration);
 	}
@@ -177,6 +166,8 @@ public class ExternalToolConfigView
 
 	public ExternalToolActivityConfigurationBean makeConfiguration() {
 		ExternalToolActivityConfigurationBean newConfiguration = (ExternalToolActivityConfigurationBean) cloneBean(configuration);
+		ExternalToolActivityHealthChecker.updateLocation(newConfiguration);
+		
 
 		if (!isFromRepository()) {
 			UseCaseDescription ucd = newConfiguration.getUseCaseDescription();
@@ -267,9 +258,8 @@ public class ExternalToolConfigView
 				}
 			}*/
 		}
-		InvocationMechanism mechanism = invocationPanel.getSelectedMechanism();
+		invocationPanel.fillInConfiguration(newConfiguration);
 
-		newConfiguration.setMechanism(mechanism);
 		return newConfiguration;
 	}
 
@@ -460,7 +450,7 @@ public class ExternalToolConfigView
 
 			tabbedPane.addTab("Command", new ScriptPanel(this, scriptTextArea, stdInCheckBox, stdOutCheckBox, stdErrCheckBox));
 			tabbedPane.addTab("String replacements",
-					createStringReplacementPanel());
+					new StringReplacementPanel(this, stringReplacementViewList));
 			tabbedPane.addTab(
 					"File inputs",
 					new FilePanel(this, inputFileViewList, "To file", "File type",
@@ -480,8 +470,8 @@ public class ExternalToolConfigView
 			advancedConstraint.weighty = 0.1;
 			advancedConstraint.weightx = 0.1;
 			JTabbedPane advancedTab = new JTabbedPane();
-			advancedTab.addTab("Strings", createStaticStringPanel());
-			advancedTab.addTab("URLs", createStaticUrlPanel());
+			advancedTab.addTab("Strings", new StaticStringPanel(staticStringViewList));
+			advancedTab.addTab("URLs", new StaticUrlPanel(staticUrlViewList));
 			advancedTab.addTab(
 					"File lists",
 					new FilePanel(this, fileListViewList,
@@ -525,123 +515,6 @@ public class ExternalToolConfigView
 				.isEmpty());
 	}
 
-	private JPanel createStringReplacementPanel() {
-		final JPanel outerInputPanel = new JPanel();
-		outerInputPanel.setLayout(new BorderLayout());
-
-		final JPanel inputEditPanel = new JPanel(new GridBagLayout());
-
-		final GridBagConstraints inputConstraint = new GridBagConstraints();
-
-		inputConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-		inputConstraint.gridx = 0;
-		inputConstraint.gridy = 0;
-		inputConstraint.weightx = 0.1;
-		inputConstraint.fill = GridBagConstraints.BOTH;
-
-		inputEditPanel.add(new JLabel("Taverna port name"), inputConstraint);
-		inputConstraint.gridx++;
-		inputEditPanel.add(new JLabel("String to replace"), inputConstraint);
-
-		inputConstraint.gridx = 0;
-		synchronized (stringReplacementViewList) {
-			for (ExternalToolStringReplacementViewer inputView : stringReplacementViewList) {
-				addStringReplacementViewer(outerInputPanel, inputEditPanel,
-						inputView);
-
-			}
-		}
-
-		JTextArea descriptionText = new JTextArea(
-				STRING_REPLACEMENT_DESCRIPTION);
-		descriptionText.setEditable(false);
-		descriptionText.setFocusable(false);
-		descriptionText.setBorder(new EmptyBorder(5, 5, 10, 5));
-		descriptionText.setLineWrap(true);
-		descriptionText.setWrapStyleWord(true);
-
-		outerInputPanel.add(descriptionText, BorderLayout.NORTH);
-		outerInputPanel.add(new JScrollPane(inputEditPanel),
-				BorderLayout.CENTER);
-		JButton addInputPortButton = new JButton(new AbstractAction() {
-
-			public void actionPerformed(ActionEvent e) {
-
-				int portNumber = 1;
-				String name2 = "in" + portNumber++;
-				boolean nameExists = true;
-				while (nameExists == true) {
-					nameExists = portNameExists(name2);
-					if (nameExists) {
-						name2 = "in" + portNumber++;
-					}
-				}
-
-				ExternalToolStringReplacementViewer newViewer = new ExternalToolStringReplacementViewer(
-						name2);
-				synchronized (stringReplacementViewList) {
-					stringReplacementViewList.add(newViewer);
-					addStringReplacementViewer(outerInputPanel, inputEditPanel,
-							newViewer);
-					inputEditPanel.revalidate();
-					inputEditPanel.repaint();
-				}
-
-			}
-
-		});
-
-		addInputPortButton.setText("Add string replacement");
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new BorderLayout());
-
-		buttonPanel.add(addInputPortButton, BorderLayout.EAST);
-
-		outerInputPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-		return outerInputPanel;
-	}
-
-	private void addStringReplacementViewer(final JPanel outerPanel,
-			final JPanel panel, ExternalToolStringReplacementViewer viewer) {
-		final GridBagConstraints inputConstraint = new GridBagConstraints();
-		inputConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-		inputConstraint.weightx = 0.1;
-		inputConstraint.fill = GridBagConstraints.BOTH;
-
-		inputConstraint.gridy = stringReplacementGridy;
-		inputConstraint.gridx = 0;
-
-		final JTextField nameField = viewer.getNameField();
-		panel.add(nameField, inputConstraint);
-		inputConstraint.gridx++;
-
-		final JTextField valueField = viewer.getValueField();
-		panel.add(valueField, inputConstraint);
-		inputConstraint.gridx++;
-
-		final JButton removeButton = new JButton("Remove");
-		final ExternalToolStringReplacementViewer v = viewer;
-		removeButton.addActionListener(new AbstractAction() {
-
-			public void actionPerformed(ActionEvent e) {
-				synchronized (stringReplacementViewList) {
-					stringReplacementViewList.remove(v);
-				}
-				panel.remove(nameField);
-				panel.remove(valueField);
-				panel.remove(removeButton);
-				panel.revalidate();
-				panel.repaint();
-				outerPanel.revalidate();
-				outerPanel.repaint();
-			}
-
-		});
-		panel.add(removeButton, inputConstraint);
-		inputConstraint.gridy = ++stringReplacementGridy;
-
-	}
 
 	@Override
 	public ExternalToolActivityConfigurationBean getConfiguration() {
@@ -906,221 +779,10 @@ public class ExternalToolConfigView
 		return false;
 	}
 
-	private JPanel createStaticUrlPanel() {
-		final JPanel outerStaticPanel = new JPanel(new BorderLayout());
-		final JPanel staticEditPanel = new JPanel(new GridBagLayout());
-
-		final GridBagConstraints staticConstraint = new GridBagConstraints();
-		staticConstraint.insets = new Insets(5, 5, 5, 5);
-		staticConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-		staticConstraint.gridx = 0;
-		staticConstraint.gridy = 0;
-		staticConstraint.weightx = 0.1;
-		staticConstraint.fill = GridBagConstraints.BOTH;
-
-		staticEditPanel.add(new JLabel("Copy from URL"), staticConstraint);
-		staticConstraint.gridx++;
-		staticEditPanel.add(new JLabel("To file"), staticConstraint);
-		staticConstraint.gridx++;
-
-		staticConstraint.gridx = 0;
-		synchronized (staticUrlViewList) {
-			for (ExternalToolStaticUrlViewer staticView : staticUrlViewList) {
-				addStaticUrlViewer(outerStaticPanel, staticEditPanel,
-						staticView);
-			}
-		}
-
-		outerStaticPanel.add(new JScrollPane(staticEditPanel),
-				BorderLayout.CENTER);
-
-		JTextArea descriptionText = new ReadOnlyTextArea(
-				STATIC_URL_DESCRIPTION);
-		descriptionText.setEditable(false);
-		descriptionText.setFocusable(false);
-		descriptionText.setBorder(new EmptyBorder(5, 5, 10, 5));
-
-		outerStaticPanel.add(descriptionText, BorderLayout.NORTH);
-
-		JButton addstaticPortButton = new JButton(new AbstractAction() {
-			// FIXME refactor this into a method
-			public void actionPerformed(ActionEvent e) {
-
-				ExternalToolStaticUrlViewer newViewer = new ExternalToolStaticUrlViewer();
-				synchronized (staticUrlViewList) {
-					staticUrlViewList.add(newViewer);
-					addStaticUrlViewer(outerStaticPanel, staticEditPanel,
-							newViewer);
-					staticEditPanel.revalidate();
-					staticEditPanel.repaint();
-				}
-			}
-
-		});
-		addstaticPortButton.setText("Add Static");
-		JPanel buttonPanel = new JPanel(new BorderLayout());
-
-		buttonPanel.add(addstaticPortButton, BorderLayout.EAST);
-
-		outerStaticPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-		return outerStaticPanel;
-	}
-
-	private void addStaticUrlViewer(final JPanel outerPanel,
-			final JPanel panel, ExternalToolStaticUrlViewer viewer) {
-		final GridBagConstraints staticConstraint = new GridBagConstraints();
-		staticConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-		staticConstraint.weightx = 0.1;
-		staticConstraint.fill = GridBagConstraints.BOTH;
-
-		staticConstraint.gridy = staticGridy;
-		staticConstraint.gridx = 0;
-		staticConstraint.weightx = 0.1;
-
-		final JTextField contentField = viewer.getContentField();
-		panel.add(contentField, staticConstraint);
-
-		staticConstraint.gridx++;
-		final JTextField valueField = viewer.getValueField();
-		panel.add(valueField, staticConstraint);
-
-		staticConstraint.gridx++;
-
-		final JButton removeButton = new JButton("Remove");
-		final ExternalToolStaticUrlViewer v = viewer;
-		removeButton.addActionListener(new AbstractAction() {
-
-			public void actionPerformed(ActionEvent e) {
-				synchronized (staticUrlViewList) {
-					staticUrlViewList.remove(v);
-				}
-				panel.remove(contentField);
-				panel.remove(valueField);
-				panel.remove(removeButton);
-				panel.revalidate();
-				panel.repaint();
-				outerPanel.revalidate();
-				outerPanel.repaint();
-			}
-
-		});
-		panel.add(removeButton, staticConstraint);
-		staticGridy++;
-
-	}
-
-	private JPanel createStaticStringPanel() {
-		final JPanel outerStaticPanel = new JPanel(new BorderLayout());
-		final JPanel staticEditPanel = new JPanel(new GridBagLayout());
-
-		final GridBagConstraints staticConstraint = new GridBagConstraints();
-		staticConstraint.insets = new Insets(5, 5, 5, 5);
-		staticConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-		staticConstraint.gridx = 0;
-		staticConstraint.gridy = 0;
-		staticConstraint.weightx = 0.1;
-		staticConstraint.fill = GridBagConstraints.BOTH;
-
-		staticEditPanel.add(new JLabel("String to copy"), staticConstraint);
-		staticConstraint.gridx++;
-		staticEditPanel.add(new JLabel("To file"), staticConstraint);
-
-		staticConstraint.gridx = 0;
-		synchronized (staticUrlViewList) {
-			for (ExternalToolStaticStringViewer staticView : staticStringViewList) {
-				addStaticStringViewer(outerStaticPanel, staticEditPanel,
-						staticView);
-			}
-		}
-
-		JTextArea descriptionText = new ReadOnlyTextArea(
-				STATIC_STRING_DESCRIPTION);
-		descriptionText.setEditable(false);
-		descriptionText.setFocusable(false);
-		descriptionText.setBorder(new EmptyBorder(5, 5, 10, 5));
-		outerStaticPanel.add(descriptionText, BorderLayout.NORTH);
-
-		outerStaticPanel.add(new JScrollPane(staticEditPanel),
-				BorderLayout.CENTER);
-		JButton addStaticStringButton = new JButton(new AbstractAction() {
-			// FIXME refactor this into a method
-			public void actionPerformed(ActionEvent e) {
-
-				ExternalToolStaticStringViewer newViewer = new ExternalToolStaticStringViewer();
-				synchronized (staticUrlViewList) {
-					staticStringViewList.add(newViewer);
-					addStaticStringViewer(outerStaticPanel, staticEditPanel,
-							newViewer);
-					staticEditPanel.revalidate();
-					staticEditPanel.repaint();
-				}
-			}
-
-		});
-		addStaticStringButton.setText("Add static string");
-		JPanel buttonPanel = new JPanel(new BorderLayout());
-
-		buttonPanel.add(addStaticStringButton, BorderLayout.EAST);
-
-		outerStaticPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-		return outerStaticPanel;
-	}
-
-	private void addStaticStringViewer(final JPanel outerPanel,
-			final JPanel panel, ExternalToolStaticStringViewer viewer) {
-		final GridBagConstraints staticConstraint = new GridBagConstraints();
-		staticConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-		staticConstraint.weightx = 0.1;
-		staticConstraint.fill = GridBagConstraints.BOTH;
-
-		staticConstraint.gridy = staticGridy;
-		staticConstraint.gridx = 0;
-		staticConstraint.weightx = 0.1;
-
-		final JTextArea contentField = viewer.getContentField();
-		panel.add(contentField, staticConstraint);
-
-		staticConstraint.gridx++;
-
-		final JPanel valuePanel = new JPanel();
-		valuePanel.setLayout(new BorderLayout());
-		final JTextField valueField = viewer.getValueField();
-		valuePanel.add(valueField, BorderLayout.NORTH);
-		panel.add(valuePanel, staticConstraint);
-
-		staticConstraint.gridx++;
-
-		final JPanel removePanel = new JPanel();
-		removePanel.setLayout(new BorderLayout());
-		final JButton removeButton = new JButton("Remove");
-		removePanel.add(removeButton, BorderLayout.NORTH);
-		final ExternalToolStaticStringViewer v = viewer;
-		removeButton.addActionListener(new AbstractAction() {
-
-			public void actionPerformed(ActionEvent e) {
-				synchronized (staticStringViewList) {
-					staticStringViewList.remove(v);
-				}
-				panel.remove(contentField);
-				panel.remove(valuePanel);
-				panel.remove(removePanel);
-				panel.revalidate();
-				panel.repaint();
-				outerPanel.revalidate();
-				outerPanel.repaint();
-			}
-
-		});
-		panel.add(removePanel, staticConstraint);
-		staticGridy++;
-
-	}
-	
 
 	public void makeEditable() {
 		ExternalToolActivityConfigurationBean newConfig = (ExternalToolActivityConfigurationBean) cloneBean(configuration);
+		ExternalToolActivityHealthChecker.updateLocation(newConfig);
 		newConfig.setEdited(true);
 		refreshConfiguration(newConfig);		
 	}

@@ -29,6 +29,7 @@ import javax.swing.Icon;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
+import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManager;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
@@ -40,6 +41,8 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
  * @author Hajo Nils Krabbenhoeft
  */
 public class ExternalToolServiceDescription extends ServiceDescription<ExternalToolActivityConfigurationBean> {
+	
+	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
 
 	private String repositoryUrl;
 	private String externaltoolid;
@@ -74,6 +77,8 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 		bean.setRepositoryUrl(repositoryUrl);
 		bean.setExternaltoolid(externaltoolid);
 		bean.setUseCaseDescription(useCaseDescription);
+		bean.setMechanism(manager.getDefaultMechanism());
+
 		return bean;
 	}
 

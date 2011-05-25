@@ -16,7 +16,7 @@ public class InvocationGroupManagerShutdownHook implements ShutdownSPI {
 	 */
 	@Override
 	public int positionHint() {
-		return 210;
+		return 710;
 	}
 
 	/* (non-Javadoc)
@@ -24,7 +24,9 @@ public class InvocationGroupManagerShutdownHook implements ShutdownSPI {
 	 */
 	@Override
 	public boolean shutdown() {
-		InvocationGroupManager.getInstance().saveConfiguration();
+		InvocationGroupManager manager = InvocationGroupManager.getInstance();
+		manager.saveConfiguration();
+		manager.persistInvocations();
 		return true;
 	}
 

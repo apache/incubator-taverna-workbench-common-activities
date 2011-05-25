@@ -102,7 +102,7 @@ public class MechanismListPanel extends JPanel implements Observer<InvocationMan
 	
 	private JButton addInvocationMechanismButton() {
 		JButton result = new JButton();
-		result.setAction(new AddInvocationMechanismAction(false) {
+		result.setAction(new AddInvocationMechanismAction() {
 			public void actionPerformed(ActionEvent e) {
 				super.actionPerformed(e);
 				setSelectedMechanism(getNewMechanism());
