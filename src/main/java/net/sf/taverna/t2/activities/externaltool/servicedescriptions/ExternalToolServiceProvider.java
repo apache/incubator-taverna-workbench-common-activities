@@ -66,7 +66,7 @@ public class ExternalToolServiceProvider extends AbstractConfigurableServiceProv
 		callBack.status("Parsing use case repository:" + repositoryUrl);
 			// prepare a list of all use case descriptions which are stored in
 			// the given repository URL
-			List<UseCaseDescription> usecases = UseCaseEnumeration.enumerateXmlFile(
+			List<UseCaseDescription> usecases = UseCaseEnumeration.readDescriptionsFromUrl(
 					repositoryUrl);
 			callBack.status("Found " + usecases.size() + " use cases:" + repositoryUrl);
 			// convert all the UseCaseDescriptions in the XML file into

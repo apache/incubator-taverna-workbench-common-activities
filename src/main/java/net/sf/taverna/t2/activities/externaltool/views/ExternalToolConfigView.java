@@ -51,6 +51,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
@@ -482,6 +484,27 @@ public class ExternalToolConfigView
 							"in", FILE_LIST_DESCRIPTION));
 			annotationPanel = new AnnotationPanel(nameField, descriptionArea);
 			advancedTab.addTab("Annotation", annotationPanel);
+			final ToolXMLPanel toolXMLPanel = new ToolXMLPanel(configuration.getUseCaseDescription());
+			advancedTab.addTab("XML", toolXMLPanel);
+			advancedTab.addChangeListener(new ChangeListener() {
+
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					if (advancedTab.getSelectedComponent() == toolXMLPanel) {
+						toolXMLPanel.regenerateTree(makeConfiguration().getUseCaseDescription());
+					}
+				}});
+			tabbedPane.addChangeListener(new ChangeListener() {
+
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					if ((tabbedPane.getSelectedComponent() == advancedPanel) &&
+							(advancedTab.getSelectedComponent() == toolXMLPanel)) {
+						toolXMLPanel.regenerateTree(makeConfiguration().getUseCaseDescription());						
+					}
+				}
+				
+			});
 /*			advancedTab.addTab("Runtime environments",
 					createRuntimeEnvironmentPanel(runtimeEnvironmentViewList));*/
 			advancedPanel.add(advancedTab, advancedConstraint);
