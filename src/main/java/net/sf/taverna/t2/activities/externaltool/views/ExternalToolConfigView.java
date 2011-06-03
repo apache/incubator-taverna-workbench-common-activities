@@ -111,7 +111,10 @@ public class ExternalToolConfigView
 	private ExternalToolActivityConfigurationBean configuration;
 
 	private JTabbedPane tabbedPane = null;
-
+	private JPanel advancedPanel = null;
+	private JTabbedPane advancedTab = null;
+	private AnnotationPanel annotationPanel = null;
+	
 	private int stringReplacementGridy = 1;
 	private List<ExternalToolStringReplacementViewer> stringReplacementViewList = new ArrayList<ExternalToolStringReplacementViewer>();
 
@@ -459,7 +462,7 @@ public class ExternalToolConfigView
 					"File outputs",
 					new FilePanel(this, outputViewList, "From file", "File type",
 							"out", FILE_OUTPUT_DESCRIPTION));
-			JPanel advancedPanel = new JPanel();
+			advancedPanel = new JPanel();
 			advancedPanel.setLayout(new GridBagLayout());
 			GridBagConstraints advancedConstraint = new GridBagConstraints();
 			advancedConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -469,7 +472,7 @@ public class ExternalToolConfigView
 			advancedConstraint.fill = GridBagConstraints.BOTH;
 			advancedConstraint.weighty = 0.1;
 			advancedConstraint.weightx = 0.1;
-			JTabbedPane advancedTab = new JTabbedPane();
+			advancedTab = new JTabbedPane();
 			advancedTab.addTab("Strings", new StaticStringPanel(staticStringViewList));
 			advancedTab.addTab("URLs", new StaticUrlPanel(staticUrlViewList));
 			advancedTab.addTab(
@@ -477,7 +480,8 @@ public class ExternalToolConfigView
 					new FilePanel(this, fileListViewList,
 							"To file containing list", "Individual file type",
 							"in", FILE_LIST_DESCRIPTION));
-			advancedTab.addTab("Annotation", new AnnotationPanel(nameField, descriptionArea));
+			annotationPanel = new AnnotationPanel(nameField, descriptionArea);
+			advancedTab.addTab("Annotation", annotationPanel);
 /*			advancedTab.addTab("Runtime environments",
 					createRuntimeEnvironmentPanel(runtimeEnvironmentViewList));*/
 			advancedPanel.add(advancedTab, advancedConstraint);
@@ -524,14 +528,26 @@ public class ExternalToolConfigView
 	public void refreshConfiguration(
 			ExternalToolActivityConfigurationBean config) {
 		int visibleTab = -1;
+		int secondaryTab = -1;
 		if (tabbedPane != null) {
 			visibleTab = tabbedPane.getSelectedIndex();
+			if (tabbedPane.getSelectedComponent().equals(advancedTab)) {
+				secondaryTab = advancedTab.getSelectedIndex();
+			}
 		}
 		this.removeAll();
 		initialise(config);
 		if (visibleTab != -1) {
 			tabbedPane.setSelectedIndex(visibleTab);
 		}
+		if (secondaryTab != -1) {
+			advancedTab.setSelectedIndex(secondaryTab);
+		}
+	}
+	
+	public void showAnnotationPanel() {
+		tabbedPane.setSelectedComponent(advancedPanel);
+		advancedTab.setSelectedComponent(annotationPanel);
 	}
 
 	@Override
