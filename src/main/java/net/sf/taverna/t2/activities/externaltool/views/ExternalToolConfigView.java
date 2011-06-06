@@ -620,11 +620,11 @@ public class ExternalToolConfigView
 						+ "%%\"\n";
 				result = false;
 			} else if (!tag.matches(VALID_NAME_REGEX)) {
-				text += "String replacement tag \"%%" + name
+				text += "String replacement tag \"%%" + tag
 						+ "%%\" is invalid\n";
 				result = false;
 			} else {
-				stringReplacementTags.add(name);
+				stringReplacementTags.add(tag);
 			}
 		}
 

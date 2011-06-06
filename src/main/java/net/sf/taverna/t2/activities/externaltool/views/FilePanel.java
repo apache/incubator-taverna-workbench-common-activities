@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -49,6 +50,8 @@ public class FilePanel extends JPanel {
 		fileConstraint.fill = GridBagConstraints.BOTH;
 
 		fileEditPanel.add(new JLabel("Taverna port name"), fileConstraint);
+		fileConstraint.gridx++;
+		fileEditPanel.add(new JLabel("Use port name for file"), fileConstraint);
 		fileConstraint.gridx++;
 		fileEditPanel.add(new JLabel(fileHeader), fileConstraint);
 		fileConstraint.gridx++;
@@ -121,6 +124,10 @@ public class FilePanel extends JPanel {
 		fileConstraint.weightx = 0.0;
 		fileConstraint.gridx++;
 
+		final JCheckBox valueFromField = viewer.getValueFromField();
+		panel.add(valueFromField, fileConstraint);
+		fileConstraint.gridx++;
+
 		final JTextField valueField = viewer.getValueField();
 		panel.add(valueField, fileConstraint);
 		fileConstraint.gridx++;
@@ -138,6 +145,7 @@ public class FilePanel extends JPanel {
 					viewList.remove(v);
 				}
 				panel.remove(nameField);
+				panel.remove(valueFromField);
 				panel.remove(valueField);
 				panel.remove(typeSelector);
 				panel.remove(removeButton);

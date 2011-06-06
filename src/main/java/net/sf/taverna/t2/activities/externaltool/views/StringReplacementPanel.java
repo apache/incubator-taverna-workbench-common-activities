@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -47,6 +48,8 @@ public class StringReplacementPanel extends JPanel {
 		inputConstraint.fill = GridBagConstraints.BOTH;
 
 		inputEditPanel.add(new JLabel("Taverna port name"), inputConstraint);
+		inputConstraint.gridx++;
+		inputEditPanel.add(new JLabel("Replace port name"), inputConstraint);
 		inputConstraint.gridx++;
 		inputEditPanel.add(new JLabel("String to replace"), inputConstraint);
 
@@ -120,6 +123,10 @@ public class StringReplacementPanel extends JPanel {
 		final JTextField nameField = viewer.getNameField();
 		panel.add(nameField, inputConstraint);
 		inputConstraint.gridx++;
+		
+		final JCheckBox valueFromField = viewer.getValueFromField();
+		panel.add(valueFromField, inputConstraint);
+		inputConstraint.gridx++;
 
 		final JTextField valueField = viewer.getValueField();
 		panel.add(valueField, inputConstraint);
@@ -134,6 +141,7 @@ public class StringReplacementPanel extends JPanel {
 					stringReplacementViewList.remove(v);
 				}
 				panel.remove(nameField);
+				panel.remove(valueFromField);
 				panel.remove(valueField);
 				panel.remove(removeButton);
 				panel.revalidate();

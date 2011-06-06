@@ -3,9 +3,12 @@
  */
 package net.sf.taverna.t2.activities.externaltool.views;
 
+import java.awt.event.ActionEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.AbstractAction;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
@@ -24,12 +27,17 @@ public class ExternalToolStringReplacementViewer {
 	private JTextField nameField;
 	private String name;
 	private JTextField valueField;
+	private JCheckBox valueFromField;
 
 	public ExternalToolStringReplacementViewer(String name, ScriptInputUser input) {
 		this(name);
 		this.input = input;
 		nameField.setText(name);
-		valueField.setText(PERCENTS + input.getTag() + PERCENTS);
+		if (!input.getTag().equals(name)) {
+			valueFromField.setSelected(false);
+			valueField.setText(PERCENTS + input.getTag() + PERCENTS);
+			valueField.setEnabled(true);
+		}
 	}
 
 	public ExternalToolStringReplacementViewer(String name) {
@@ -37,7 +45,20 @@ public class ExternalToolStringReplacementViewer {
 		nameField = new JTextField(20);
 		nameField.setText(name);
 		valueField = new JTextField(20);
-		valueField.setText(PERCENTS + name + PERCENTS);
+		valueFromField = new JCheckBox(new AbstractAction() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (valueFromField.isSelected()) {
+					valueField.setText("");
+					valueField.setEnabled(false);
+				} else {
+					valueField.setText(PERCENTS + getName() + PERCENTS);
+					valueField.setEnabled(true);
+				}
+			}});
+		valueFromField.setSelected(true);
+		valueField.setEnabled(false);
 	}
 
 	public JTextField getNameField() {
@@ -53,6 +74,9 @@ public class ExternalToolStringReplacementViewer {
 	}
 
 	public String getValue() {
+		if (valueFromField.isSelected()) {
+			return getName();
+		}
 		String enteredValue = valueField.getText();
 
 		Matcher m = p.matcher(enteredValue);
@@ -61,6 +85,13 @@ public class ExternalToolStringReplacementViewer {
 			result = m.group();
 		}
 		return result;
+	}
+
+	/**
+	 * @return the valueFromField
+	 */
+	public JCheckBox getValueFromField() {
+		return valueFromField;
 	}
 
 }
