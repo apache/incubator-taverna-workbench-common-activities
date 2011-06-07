@@ -8,15 +8,20 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.text.JTextComponent;
 
+import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.lang.ui.LineEnabledTextPanel;
 
 import org.jdom.input.SAXBuilder;
+
+import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
+import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
 
 
 /**
@@ -35,7 +40,43 @@ public class ScriptPanel extends JPanel {
 		this.setLayout(new BorderLayout());
 		this.add(new LineEnabledTextPanel(scriptTextArea),
 				BorderLayout.CENTER);
+		
 
+		stdInCheckBox.setSelected(view.getConfiguration().getUseCaseDescription()
+				.isIncludeStdIn());
+		stdOutCheckBox.setSelected(view.getConfiguration().getUseCaseDescription()
+				.isIncludeStdOut());
+		stdErrCheckBox.setSelected(view.getConfiguration().getUseCaseDescription()
+				.isIncludeStdErr());
+
+		JPanel streamPanel = new JPanel();
+		streamPanel.setLayout(new FlowLayout());
+		streamPanel.add(stdInCheckBox);
+		streamPanel.add(stdOutCheckBox);
+		streamPanel.add(stdErrCheckBox);
+
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new FlowLayout());
+		if (view.isOriginallyFromRepository()) {
+			JButton revertButton = new JButton(new AbstractAction("Revert to original description"){
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					ExternalToolActivityConfigurationBean bean = view.makeConfiguration();
+					String repositoryUrl = bean.getRepositoryUrl();
+					String id = bean.getExternaltoolid();
+					UseCaseDescription usecase = UseCaseEnumeration.readDescriptionFromUrl(
+							repositoryUrl, id);
+					if (usecase != null) {
+						bean.setUseCaseDescription(usecase);
+						view.setEditable(false, bean);
+					} else {
+						JOptionPane.showMessageDialog(view, "Unable to find tool description " + id, "Missing tool description", JOptionPane.ERROR_MESSAGE);
+					}
+				}});
+			revertButton.setToolTipText("Revert to the tool description from the repository");
+			buttonPanel.add(revertButton);
+		}
 		JButton loadScriptButton = new JButton("Load description");
 		loadScriptButton.setToolTipText("Load tool description from a file");
 		loadScriptButton.addActionListener(new LoadDescriptionAction(this, view));
@@ -53,22 +94,6 @@ public class ScriptPanel extends JPanel {
 			}
 
 		});
-
-		stdInCheckBox.setSelected(view.getConfiguration().getUseCaseDescription()
-				.isIncludeStdIn());
-		stdOutCheckBox.setSelected(view.getConfiguration().getUseCaseDescription()
-				.isIncludeStdOut());
-		stdErrCheckBox.setSelected(view.getConfiguration().getUseCaseDescription()
-				.isIncludeStdErr());
-
-		JPanel streamPanel = new JPanel();
-		streamPanel.setLayout(new FlowLayout());
-		streamPanel.add(stdInCheckBox);
-		streamPanel.add(stdOutCheckBox);
-		streamPanel.add(stdErrCheckBox);
-
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new FlowLayout());
 		buttonPanel.add(loadScriptButton);
 		buttonPanel.add(saveScriptButton);
 		buttonPanel.add(clearScriptButton);

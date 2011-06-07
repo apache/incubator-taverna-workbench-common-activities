@@ -537,9 +537,14 @@ public class ExternalToolConfigView
 	}
 
 	private boolean isFromRepository() {
+		return (!this.configuration.isEdited() && isOriginallyFromRepository());
+	}
+	
+	public boolean isOriginallyFromRepository() {
 		String repositoryUrl = this.configuration.getRepositoryUrl();
-		return (!this.configuration.isEdited() && (repositoryUrl != null) && !repositoryUrl
+		return ((repositoryUrl != null) && !repositoryUrl
 				.isEmpty());
+		
 	}
 
 
@@ -819,10 +824,10 @@ public class ExternalToolConfigView
 	}
 
 
-	public void makeEditable() {
-		ExternalToolActivityConfigurationBean newConfig = (ExternalToolActivityConfigurationBean) cloneBean(configuration);
+	public void setEditable(boolean editable, ExternalToolActivityConfigurationBean config) {
+		ExternalToolActivityConfigurationBean newConfig = (ExternalToolActivityConfigurationBean) cloneBean(config);
 		ExternalToolActivityHealthChecker.updateLocation(newConfig);
-		newConfig.setEdited(true);
+		newConfig.setEdited(editable);
 		refreshConfiguration(newConfig);		
 	}
 
