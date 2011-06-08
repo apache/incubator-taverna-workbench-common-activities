@@ -158,9 +158,9 @@ public class ExternalToolConfigView
 	 */
 	public ExternalToolConfigView(ExternalToolActivity activity) {
 		this.activity = activity;
+		ExternalToolActivityHealthChecker.updateLocation(activity.getConfiguration());
 		configuration = (ExternalToolActivityConfigurationBean) cloneBean(activity
 				.getConfiguration());
-		ExternalToolActivityHealthChecker.updateLocation(configuration);
 		setLayout(new GridBagLayout());
 		initialise(configuration);
 	}

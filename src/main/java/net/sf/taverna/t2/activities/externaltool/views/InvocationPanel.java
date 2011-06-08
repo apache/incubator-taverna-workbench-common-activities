@@ -32,7 +32,9 @@ import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurati
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityHealthChecker;
 import net.sf.taverna.t2.activities.externaltool.manager.AddInvocationMechanismAction;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroup;
+import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupAddedEvent;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManager;
+import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupRemovedEvent;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationManagerEvent;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationManagerUI;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
@@ -373,12 +375,23 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 			InvocationManagerEvent message) throws Exception {
 		if (message instanceof InvocationMechanismRemovedEvent) {
 			InvocationMechanism removedMechanism = ((InvocationMechanismRemovedEvent) message).getRemovedMechanism();
+			InvocationMechanism replacementMechanism = ((InvocationMechanismRemovedEvent) message).getReplacementMechanism();
 			if (mechanismSelection.getSelectedItem().equals(removedMechanism)) {
-				mechanismSelection.setSelectedItem(InvocationGroupManager.getInstance().getDefaultMechanism());
+				mechanismSelection.setSelectedItem(replacementMechanism);
 			}
 			mechanismSelectionModel.removeElement(removedMechanism);
 		} else if (message instanceof InvocationMechanismAddedEvent) {
 			populateMechanismList();
+		}
+		else if (message instanceof InvocationGroupRemovedEvent) {
+			InvocationGroup removedGroup = ((InvocationGroupRemovedEvent) message).getRemovedGroup();
+			InvocationGroup replacementGroup = ((InvocationGroupRemovedEvent) message).getReplacementGroup();
+			if (groupSelection.getSelectedItem().equals(removedGroup)) {
+				groupSelection.setSelectedItem(replacementGroup);
+			}
+			groupSelectionModel.removeElement(removedGroup);
+		} else if (message instanceof InvocationGroupAddedEvent) {
+			populateGroupList();
 		}
 	}
 
