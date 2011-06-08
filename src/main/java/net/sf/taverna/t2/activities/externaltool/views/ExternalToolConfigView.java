@@ -147,6 +147,8 @@ public class ExternalToolConfigView
 	private JCheckBox stdInCheckBox = new JCheckBox("Show STDIN");
 	private JCheckBox stdOutCheckBox = new JCheckBox("Show STDOUT");
 	private JCheckBox stdErrCheckBox = new JCheckBox("Show STDERR");
+	
+	private JTextField returnCodesField = new JTextField(20);
 
 	/**
 	 * Stores the {@link ExternalToolActivity}, gets its
@@ -180,6 +182,7 @@ public class ExternalToolConfigView
 			ucd.setUsecaseid(nameField.getText());
 			ucd.setDescription(descriptionArea.getText());
 			ucd.setCommand(scriptTextArea.getText());
+			ucd.setReturnCodesAsText(returnCodesField.getText());
 			ucd.setIncludeStdIn(stdInCheckBox.isSelected());
 			ucd.setIncludeStdOut(stdOutCheckBox.isSelected());
 			ucd.setIncludeStdErr(stdErrCheckBox.isSelected());
@@ -453,7 +456,7 @@ public class ExternalToolConfigView
 			scriptTextArea.setCaretPosition(0);
 			scriptTextArea.setPreferredSize(new Dimension(200, 100));
 
-			tabbedPane.addTab("Command", new ScriptPanel(this, scriptTextArea, stdInCheckBox, stdOutCheckBox, stdErrCheckBox));
+			tabbedPane.addTab("Command", new ScriptPanel(this, scriptTextArea, stdInCheckBox, stdOutCheckBox, stdErrCheckBox, returnCodesField));
 			tabbedPane.addTab("String replacements",
 					new StringReplacementPanel(this, stringReplacementViewList));
 			tabbedPane.addTab(

@@ -5,14 +5,17 @@ package net.sf.taverna.t2.activities.externaltool.views;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
@@ -33,7 +36,7 @@ public class ScriptPanel extends JPanel {
 	static SAXBuilder builder = new SAXBuilder();
 	private final JTextComponent scriptTextArea;
 	
-	public ScriptPanel(final ExternalToolConfigView view, JTextComponent scriptTextArea, JCheckBox stdInCheckBox, JCheckBox stdOutCheckBox, JCheckBox stdErrCheckBox) {
+	public ScriptPanel(final ExternalToolConfigView view, JTextComponent scriptTextArea, JCheckBox stdInCheckBox, JCheckBox stdOutCheckBox, JCheckBox stdErrCheckBox, JTextField returnCodesField) {
 		super();
 		this.scriptTextArea = scriptTextArea;
 		
@@ -42,21 +45,22 @@ public class ScriptPanel extends JPanel {
 				BorderLayout.CENTER);
 		
 
-		stdInCheckBox.setSelected(view.getConfiguration().getUseCaseDescription()
-				.isIncludeStdIn());
-		stdOutCheckBox.setSelected(view.getConfiguration().getUseCaseDescription()
-				.isIncludeStdOut());
-		stdErrCheckBox.setSelected(view.getConfiguration().getUseCaseDescription()
-				.isIncludeStdErr());
+		UseCaseDescription useCaseDescription = view.getConfiguration().getUseCaseDescription();
+		stdInCheckBox.setSelected(useCaseDescription.isIncludeStdIn());
+		stdOutCheckBox.setSelected(useCaseDescription.isIncludeStdOut());
+		stdErrCheckBox.setSelected(useCaseDescription.isIncludeStdErr());
+		returnCodesField.setText(useCaseDescription.getReturnCodesAsText());
+		
+		JPanel codesPanel = new JPanel(new FlowLayout());
+		codesPanel.add(new JLabel("Valid return codes:"));
+		codesPanel.add(returnCodesField);
 
-		JPanel streamPanel = new JPanel();
-		streamPanel.setLayout(new FlowLayout());
+		JPanel streamPanel = new JPanel(new FlowLayout());
 		streamPanel.add(stdInCheckBox);
 		streamPanel.add(stdOutCheckBox);
 		streamPanel.add(stdErrCheckBox);
 
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new FlowLayout());
+		JPanel buttonPanel = new JPanel(new FlowLayout());
 		if (view.isOriginallyFromRepository()) {
 			JButton revertButton = new JButton(new AbstractAction("Revert to original description"){
 
@@ -98,9 +102,10 @@ public class ScriptPanel extends JPanel {
 		buttonPanel.add(saveScriptButton);
 		buttonPanel.add(clearScriptButton);
 
-		JPanel subPanel = new JPanel(new BorderLayout());
-		subPanel.add(streamPanel, BorderLayout.NORTH);
-		subPanel.add(buttonPanel, BorderLayout.SOUTH);
+		JPanel subPanel = new JPanel(new GridLayout(3,1));
+		subPanel.add(codesPanel);
+		subPanel.add(streamPanel);
+		subPanel.add(buttonPanel);
 
 		this.add(subPanel, BorderLayout.SOUTH);
 	}
