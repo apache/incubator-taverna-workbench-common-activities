@@ -5,7 +5,6 @@ package net.sf.taverna.t2.activities.externaltool.views;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -20,30 +19,28 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
-import org.apache.log4j.Logger;
-
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityHealthChecker;
-import net.sf.taverna.t2.activities.externaltool.manager.AddInvocationMechanismAction;
+import net.sf.taverna.t2.activities.externaltool.configuration.ToolInvocationConfiguration;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroup;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupAddedEvent;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManager;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupRemovedEvent;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationManagerEvent;
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationManagerUI;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismAddedEvent;
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismEditor;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismRemovedEvent;
+import net.sf.taverna.t2.activities.externaltool.manager.ToolInvocationConfigurationPanel;
 import net.sf.taverna.t2.lang.observer.Observable;
 import net.sf.taverna.t2.lang.observer.Observer;
-import net.sf.taverna.t2.workflowmodel.processor.activity.AbstractActivity;
+import net.sf.taverna.t2.workbench.ui.impl.configuration.ui.T2ConfigurationFrame;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author alanrw
@@ -51,7 +48,7 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.AbstractActivity;
  */
 public class InvocationPanel extends JPanel implements Observer<InvocationManagerEvent> {
 	
-	private static final String LOCATION_DESCRIPTION = "The location specifies where the tool will be run.";
+	private static final String LOCATION_DESCRIPTION = ToolInvocationConfigurationPanel.HEADER_TEXT;
 	private final JComboBox mechanismSelection;
 	private final JComboBox groupSelection;
 	
@@ -66,7 +63,6 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 	private JRadioButton unmanagedLocation;
 	private JRadioButton groupSelected;
 	private JRadioButton mechanismSelected;
-	private JButton addMechanism;
 	private JButton manageInvocation;
 	private ButtonGroup mechanismOrGroup;
 	private ExternalToolActivityConfigurationBean configuration;
@@ -191,9 +187,11 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 			unmanagedShown = true;
 		}
 		
-		createMechanismPanel(subPanel);
+		subPanel.add(createMechanismPanel());
 		
-		createGroupPanel(subPanel);
+		subPanel.add(createGroupPanel());
+		
+		subPanel.add(createButtonPanel());
 		
 		initializeSelectability();
 		this.add(subPanel, BorderLayout.CENTER);
@@ -233,23 +231,21 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 
 	private void setGroupSelectability(boolean b) {
 		groupSelection.setEnabled(b);
-		manageInvocation.setEnabled(b);
 	}
 
 	private void setMechanismSelectability(boolean b) {
 		mechanismSelection.setEnabled(b);
-		addMechanism.setEnabled(b);
 	}
 
 	private void setUnmanagedLocationSelectability(boolean b) {
 		// Nothing to do
 	}
 
-	private void createGroupPanel(JPanel subPanel) {
+	private JPanel createGroupPanel() {
 		JPanel groupPanel = new JPanel(new BorderLayout());
 		
 		JPanel groupSelectionPanel = new JPanel(new GridLayout(1, 2));
-		groupSelected = new JRadioButton("Select a group");
+		groupSelected = new JRadioButton("Select a symbolic location");
 		mechanismOrGroup.add(groupSelected);
 		groupSelected.setBorder(new EmptyBorder(10, 10, 10, 10));
 		groupSelectionPanel.add(groupSelected);
@@ -279,25 +275,13 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 			groupSelection.setSelectedItem(manager.getDefaultGroup());
 		}
 
-		JPanel groupButtonPanel = new JPanel(new FlowLayout());
-		manageInvocation = new JButton(new AbstractAction(
-				"Edit locations") {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				InvocationManagerUI ui = InvocationManagerUI.getInstance();
-				ui.setVisible(true);
-			}
-		}); 
-		groupButtonPanel.add(manageInvocation); 
-		groupPanel.add(groupButtonPanel, BorderLayout.SOUTH);
-		subPanel.add(groupPanel);
+		return groupPanel;
 	}
 
-	private void createMechanismPanel(JPanel subPanel) {
+	private JPanel createMechanismPanel() {
 		JPanel mechanismPanel = new JPanel(new BorderLayout());
 		JPanel mechanismSelectionPanel = new JPanel(new GridLayout(1, 3));
-		mechanismSelected = new JRadioButton("Select a location");
+		mechanismSelected = new JRadioButton("Select an explicit location");
 		mechanismOrGroup.add(mechanismSelected);
 		mechanismSelected.setBorder(new EmptyBorder(10, 10, 10, 10));
 		mechanismSelectionPanel.add(mechanismSelected);
@@ -325,43 +309,20 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 		} else {
 			mechanismSelection.setSelectedItem(manager.getDefaultMechanism());
 		}
+		return mechanismPanel;
 
+	}
+	
+	private JPanel createButtonPanel() {
 		JPanel buttonPanel = new JPanel(new FlowLayout());
-		addMechanism = new JButton(
-				new AddInvocationMechanismAction() {
-					public void actionPerformed(ActionEvent e) {
-						super.actionPerformed(e);
-						if (getNewMechanism() != null) {
-							mechanismSelection.setSelectedItem(getNewMechanism());
-							InvocationMechanismEditor chosenEditor = null;
-							for (InvocationMechanismEditor ime : invocationMechanismEditorRegistry
-									.getInstances()) {
-								if (ime.canShow(getNewMechanism().getClass())) {
-									chosenEditor = ime;
-									break;
-								}
-							}
-							if (chosenEditor != null) {
-								chosenEditor.show(getNewMechanism());
-								chosenEditor.setPreferredSize(new Dimension(
-										550, 500));
-								int answer = JOptionPane.showConfirmDialog(
-										null, chosenEditor, "New location",
-										JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-								if (answer == JOptionPane.OK_OPTION) {
-									chosenEditor.updateInvocationMechanism();
-									InvocationGroupManager
-											.getInstance()
-											.mechanismChanged(getNewMechanism());
-								}
-							}
-						}
-					}
-				});
-		buttonPanel.add(addMechanism);
-		mechanismPanel.add(buttonPanel, BorderLayout.SOUTH);
-		subPanel.add(mechanismPanel);
+		manageInvocation = new JButton(new AbstractAction("Manage locations") {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				T2ConfigurationFrame.showConfiguration(ToolInvocationConfiguration.getInstance().getDisplayName());
+			}});
+		buttonPanel.add(manageInvocation); 
+		return buttonPanel;		
 	}
 
 	private void createUnmanagedLocation(JPanel subPanel) {

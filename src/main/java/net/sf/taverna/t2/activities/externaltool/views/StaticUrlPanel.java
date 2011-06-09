@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,6 +20,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import net.sf.taverna.t2.activities.externaltool.utils.Tools;
 import net.sf.taverna.t2.lang.ui.ReadOnlyTextArea;
 
 /**
@@ -31,7 +33,9 @@ public class StaticUrlPanel extends JPanel {
 	private final List<ExternalToolStaticUrlViewer> staticUrlViewList;
 	private int staticGridy = 1;
 
+	private static String[] elementLabels = new String[] {"Copy from URL", "To file"};
 	
+
 	public StaticUrlPanel(final List<ExternalToolStaticUrlViewer> staticUrlViewList) {
 	
 	super(new BorderLayout());
@@ -45,11 +49,6 @@ public class StaticUrlPanel extends JPanel {
 	staticConstraint.gridy = 0;
 	staticConstraint.weightx = 0.1;
 	staticConstraint.fill = GridBagConstraints.BOTH;
-
-	staticEditPanel.add(new JLabel("Copy from URL"), staticConstraint);
-	staticConstraint.gridx++;
-	staticEditPanel.add(new JLabel("To file"), staticConstraint);
-	staticConstraint.gridx++;
 
 	staticConstraint.gridx = 0;
 	synchronized (staticUrlViewList) {
@@ -85,7 +84,7 @@ public class StaticUrlPanel extends JPanel {
 		}
 
 	});
-	addstaticPortButton.setText("Add Static");
+	addstaticPortButton.setText("Add URL");
 	JPanel buttonPanel = new JPanel(new BorderLayout());
 
 	buttonPanel.add(addstaticPortButton, BorderLayout.EAST);
@@ -96,45 +95,12 @@ public class StaticUrlPanel extends JPanel {
 	
 	private void addStaticUrlViewer(final JPanel outerPanel,
 			final JPanel panel, ExternalToolStaticUrlViewer viewer) {
-		final GridBagConstraints staticConstraint = new GridBagConstraints();
-		staticConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-		staticConstraint.weightx = 0.1;
-		staticConstraint.fill = GridBagConstraints.BOTH;
-
-		staticConstraint.gridy = staticGridy ;
-		staticConstraint.gridx = 0;
-		staticConstraint.weightx = 0.1;
-
-		final JTextField contentField = viewer.getContentField();
-		panel.add(contentField, staticConstraint);
-
-		staticConstraint.gridx++;
-		final JTextField valueField = viewer.getValueField();
-		panel.add(valueField, staticConstraint);
-
-		staticConstraint.gridx++;
-
-		final JButton removeButton = new JButton("Remove");
-		final ExternalToolStaticUrlViewer v = viewer;
-		removeButton.addActionListener(new AbstractAction() {
-
-			public void actionPerformed(ActionEvent e) {
-				synchronized (staticUrlViewList) {
-					staticUrlViewList.remove(v);
-				}
-				panel.remove(contentField);
-				panel.remove(valueField);
-				panel.remove(removeButton);
-				panel.revalidate();
-				panel.repaint();
-				outerPanel.revalidate();
-				outerPanel.repaint();
-			}
-
-		});
-		panel.add(removeButton, staticConstraint);
-		staticGridy++;
-
+		Tools.addViewer(panel,
+				elementLabels,
+				new JComponent[] {viewer.getContentField(), viewer.getValueField()},
+				staticUrlViewList,
+				viewer,
+				outerPanel);
 	}
 
 

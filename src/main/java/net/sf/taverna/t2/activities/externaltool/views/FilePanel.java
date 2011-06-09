@@ -14,6 +14,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -21,6 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import net.sf.taverna.t2.activities.externaltool.utils.Tools;
 import net.sf.taverna.t2.lang.ui.ReadOnlyTextArea;
 
 /**
@@ -35,7 +37,7 @@ public class FilePanel extends JPanel {
 	public FilePanel(final ExternalToolConfigView view,
 			final List<ExternalToolFileViewer> viewList,
 			String fileHeader, String typeHeader, final String portPrefix,
-			final String description) {
+			final String description, String addText) {
 		super();
 		this.view = view;
 		this.setLayout(new BorderLayout());
@@ -48,20 +50,18 @@ public class FilePanel extends JPanel {
 		fileConstraint.gridy = 0;
 		fileConstraint.weightx = 0.1;
 		fileConstraint.fill = GridBagConstraints.BOTH;
-
-		fileEditPanel.add(new JLabel("Taverna port name"), fileConstraint);
-		fileConstraint.gridx++;
-		fileEditPanel.add(new JLabel("Use port name for file"), fileConstraint);
-		fileConstraint.gridx++;
-		fileEditPanel.add(new JLabel(fileHeader), fileConstraint);
-		fileConstraint.gridx++;
-		fileEditPanel.add(new JLabel(typeHeader), fileConstraint);
+		
+		final String[] elementLabels = new String[] {"Taverna port name",
+				"Use port name for file",
+				fileHeader,
+				typeHeader
+		};
 
 		fileConstraint.gridx = 0;
 		synchronized (viewList) {
 			for (ExternalToolFileViewer outputView : viewList) {
 				addFileViewer(viewList, this, fileEditPanel,
-						outputView);
+						outputView, elementLabels);
 			}
 		}
 		JButton addFilePortButton = new JButton(new AbstractAction() {
@@ -83,7 +83,7 @@ public class FilePanel extends JPanel {
 				synchronized (viewList) {
 					viewList.add(newViewer);
 					addFileViewer(viewList, FilePanel.this, fileEditPanel,
-							newViewer);
+							newViewer, elementLabels);
 					fileEditPanel.revalidate();
 					fileEditPanel.repaint();
 				}
@@ -99,7 +99,7 @@ public class FilePanel extends JPanel {
 
 		this.add(new JScrollPane(fileEditPanel), BorderLayout.CENTER);
 
-		addFilePortButton.setText("Add Port");
+		addFilePortButton.setText(addText);
 		JPanel buttonPanel = new JPanel(new BorderLayout());
 
 		buttonPanel.add(addFilePortButton, BorderLayout.EAST);
@@ -110,55 +110,13 @@ public class FilePanel extends JPanel {
 	
 	private void addFileViewer(final List<ExternalToolFileViewer> viewList,
 			final JPanel outerPanel, final JPanel panel,
-			ExternalToolFileViewer viewer) {
-		final GridBagConstraints fileConstraint = new GridBagConstraints();
-		fileConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-		fileConstraint.weightx = 0.1;
-		fileConstraint.fill = GridBagConstraints.BOTH;
-
-		fileConstraint.gridy = outputGridy;
-		fileConstraint.gridx = 0;
-		final JTextField nameField = viewer.getNameField();
-		panel.add(nameField, fileConstraint);
-
-		fileConstraint.weightx = 0.0;
-		fileConstraint.gridx++;
-
-		final JCheckBox valueFromField = viewer.getValueFromField();
-		panel.add(valueFromField, fileConstraint);
-		fileConstraint.gridx++;
-
-		final JTextField valueField = viewer.getValueField();
-		panel.add(valueField, fileConstraint);
-		fileConstraint.gridx++;
-
-		final JComboBox typeSelector = viewer.getTypeSelector();
-		panel.add(typeSelector, fileConstraint);
-
-		fileConstraint.gridx++;
-		final JButton removeButton = new JButton("Remove");
-		final ExternalToolFileViewer v = viewer;
-		removeButton.addActionListener(new AbstractAction() {
-
-			public void actionPerformed(ActionEvent e) {
-				synchronized (viewList) {
-					viewList.remove(v);
-				}
-				panel.remove(nameField);
-				panel.remove(valueFromField);
-				panel.remove(valueField);
-				panel.remove(typeSelector);
-				panel.remove(removeButton);
-				panel.revalidate();
-				panel.repaint();
-				outerPanel.revalidate();
-				outerPanel.repaint();
-			}
-
-		});
-		panel.add(removeButton, fileConstraint);
-		outputGridy++;
-
+			ExternalToolFileViewer viewer, String[] elementLabels) {
+		Tools.addViewer(panel,
+				elementLabels,
+				new JComponent[] {viewer.getNameField(), viewer.getValueFromField(), viewer.getValueField(), viewer.getTypeSelector()},
+				viewList,
+				viewer,
+				outerPanel);
 	}
 
 }

@@ -15,7 +15,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
@@ -33,14 +35,25 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
  */
 public class ScriptPanel extends JPanel {
 	
+	private static final String SCRIPT_DESCRIPTION = "Specify the commands that you want to run. You can replace use data arriving at an input port to replace parts of the command or to write to a file. You can also take data written to a file and send it to an output port.";
 	static SAXBuilder builder = new SAXBuilder();
 	private final JTextComponent scriptTextArea;
 	
 	public ScriptPanel(final ExternalToolConfigView view, JTextComponent scriptTextArea, JCheckBox stdInCheckBox, JCheckBox stdOutCheckBox, JCheckBox stdErrCheckBox, JTextField returnCodesField) {
 		super();
+		this.setLayout(new BorderLayout());
+	
+		JTextArea descriptionText = new JTextArea(
+				SCRIPT_DESCRIPTION);
+		descriptionText.setEditable(false);
+		descriptionText.setFocusable(false);
+		descriptionText.setBorder(new EmptyBorder(5, 5, 10, 5));
+		descriptionText.setLineWrap(true);
+		descriptionText.setWrapStyleWord(true);
+		this.add(descriptionText, BorderLayout.NORTH);
+
 		this.scriptTextArea = scriptTextArea;
 		
-		this.setLayout(new BorderLayout());
 		this.add(new LineEnabledTextPanel(scriptTextArea),
 				BorderLayout.CENTER);
 		

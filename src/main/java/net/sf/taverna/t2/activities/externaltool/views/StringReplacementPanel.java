@@ -4,20 +4,28 @@
 package net.sf.taverna.t2.activities.externaltool.views;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+
+import net.sf.taverna.t2.activities.externaltool.manager.ssh.ExternalToolSshNodeViewer;
+import net.sf.taverna.t2.activities.externaltool.utils.Tools;
 
 /**
  * @author alanrw
@@ -31,6 +39,13 @@ public class StringReplacementPanel extends JPanel {
 	private final List<ExternalToolStringReplacementViewer> stringReplacementViewList;
 	private int stringReplacementGridy = 1;
 	private final ExternalToolConfigView view;
+	
+	private static Insets insets = new Insets(1,5,1,5);
+	
+	private static String[] elementLabels = new String[] {"Taverna port name", "Replace port name", "String to replace"};
+	
+	private static CompoundBorder border = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5,5,5,5), BorderFactory.createLineBorder(Color.BLACK, 1));
+
 	
 	public StringReplacementPanel(final ExternalToolConfigView view, final List<ExternalToolStringReplacementViewer> stringReplacementViewList) {
 		super(new BorderLayout());
@@ -47,17 +62,11 @@ public class StringReplacementPanel extends JPanel {
 		inputConstraint.weightx = 0.1;
 		inputConstraint.fill = GridBagConstraints.BOTH;
 
-		inputEditPanel.add(new JLabel("Taverna port name"), inputConstraint);
-		inputConstraint.gridx++;
-		inputEditPanel.add(new JLabel("Replace port name"), inputConstraint);
-		inputConstraint.gridx++;
-		inputEditPanel.add(new JLabel("String to replace"), inputConstraint);
-
 		inputConstraint.gridx = 0;
 		synchronized (stringReplacementViewList) {
 			for (ExternalToolStringReplacementViewer inputView : stringReplacementViewList) {
 				addStringReplacementViewer(this, inputEditPanel,
-						inputView);
+						inputView, elementLabels);
 
 			}
 		}
@@ -92,7 +101,7 @@ public class StringReplacementPanel extends JPanel {
 				synchronized (stringReplacementViewList) {
 					stringReplacementViewList.add(newViewer);
 					addStringReplacementViewer(StringReplacementPanel.this, inputEditPanel,
-							newViewer);
+							newViewer, elementLabels);
 					inputEditPanel.revalidate();
 					inputEditPanel.repaint();
 				}
@@ -111,49 +120,13 @@ public class StringReplacementPanel extends JPanel {
 	}
 	
 	private void addStringReplacementViewer(final JPanel outerPanel,
-			final JPanel panel, ExternalToolStringReplacementViewer viewer) {
-		final GridBagConstraints inputConstraint = new GridBagConstraints();
-		inputConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-		inputConstraint.weightx = 0.1;
-		inputConstraint.fill = GridBagConstraints.BOTH;
-
-		inputConstraint.gridy = stringReplacementGridy ;
-		inputConstraint.gridx = 0;
-
-		final JTextField nameField = viewer.getNameField();
-		panel.add(nameField, inputConstraint);
-		inputConstraint.gridx++;
-		
-		final JCheckBox valueFromField = viewer.getValueFromField();
-		panel.add(valueFromField, inputConstraint);
-		inputConstraint.gridx++;
-
-		final JTextField valueField = viewer.getValueField();
-		panel.add(valueField, inputConstraint);
-		inputConstraint.gridx++;
-
-		final JButton removeButton = new JButton("Remove");
-		final ExternalToolStringReplacementViewer v = viewer;
-		removeButton.addActionListener(new AbstractAction() {
-
-			public void actionPerformed(ActionEvent e) {
-				synchronized (stringReplacementViewList) {
-					stringReplacementViewList.remove(v);
-				}
-				panel.remove(nameField);
-				panel.remove(valueFromField);
-				panel.remove(valueField);
-				panel.remove(removeButton);
-				panel.revalidate();
-				panel.repaint();
-				outerPanel.revalidate();
-				outerPanel.repaint();
-			}
-
-		});
-		panel.add(removeButton, inputConstraint);
-		inputConstraint.gridy = ++stringReplacementGridy;
-
+			final JPanel innerPanel, final ExternalToolStringReplacementViewer viewer, String[] elementLabels) {
+		Tools.addViewer(innerPanel,
+				elementLabels,
+				new JComponent[] {viewer.getNameField(), viewer.getValueFromField(), viewer.getValueField()},
+				stringReplacementViewList,
+				viewer,
+				outerPanel);
 	}
 
 

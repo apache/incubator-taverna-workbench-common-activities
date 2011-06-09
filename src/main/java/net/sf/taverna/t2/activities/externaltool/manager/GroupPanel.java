@@ -49,8 +49,12 @@ public class GroupPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private JTextField groupNameField;
+	
+	private JComboBox mechanismComboBox;
+	
+	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
 
-	public GroupPanel() {
+	public GroupPanel(Object[] mechanisms) {
 		super(new GridBagLayout());
 
 		groupNameField = new JTextField();
@@ -72,7 +76,23 @@ public class GroupPanel extends JPanel {
 		constraints.weightx = 1d;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		add(groupNameField, constraints);
+		
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.weightx = 0d;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.ipadx = 10;
+		constraints.insets = new Insets(10, 0, 0, 0);
+		add(new JLabel("Explicit location:"), constraints);
 
+		mechanismComboBox = new JComboBox(mechanisms);
+		mechanismComboBox.setSelectedItem(manager.getDefaultMechanism());
+
+		constraints.gridx = 1;
+		constraints.gridwidth = 2;
+		constraints.ipadx = 0;
+		add(mechanismComboBox, constraints);
 	}
 
 	/**
@@ -91,6 +111,10 @@ public class GroupPanel extends JPanel {
 	 */
 	public String getGroupName() {
 		return groupNameField.getText();
+	}
+	
+	public InvocationMechanism getSelectedMechanism() {
+		return (InvocationMechanism) mechanismComboBox.getSelectedItem();
 	}
 
 }

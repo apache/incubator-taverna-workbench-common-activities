@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,6 +20,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import net.sf.taverna.t2.activities.externaltool.utils.Tools;
 import net.sf.taverna.t2.lang.ui.ReadOnlyTextArea;
 
 /**
@@ -32,6 +34,8 @@ public class StaticStringPanel extends JPanel {
 	
 	int staticGridy = 1;
 	
+	private static String[] elementLabels = new String[] {"String to copy", "To file"};
+	
 	public StaticStringPanel(final List<ExternalToolStaticStringViewer> staticStringViewList) {
 		super(new BorderLayout());
 		this.staticStringViewList = staticStringViewList;
@@ -44,10 +48,6 @@ public class StaticStringPanel extends JPanel {
 		staticConstraint.gridy = 0;
 		staticConstraint.weightx = 0.1;
 		staticConstraint.fill = GridBagConstraints.BOTH;
-
-		staticEditPanel.add(new JLabel("String to copy"), staticConstraint);
-		staticConstraint.gridx++;
-		staticEditPanel.add(new JLabel("To file"), staticConstraint);
 
 		staticConstraint.gridx = 0;
 		synchronized (staticStringViewList) {
@@ -81,7 +81,7 @@ public class StaticStringPanel extends JPanel {
 			}
 
 		});
-		addStaticStringButton.setText("Add static string");
+		addStaticStringButton.setText("Add string");
 		JPanel buttonPanel = new JPanel(new BorderLayout());
 
 		buttonPanel.add(addStaticStringButton, BorderLayout.EAST);
@@ -92,52 +92,12 @@ public class StaticStringPanel extends JPanel {
 	
 	private void addStaticStringViewer(final JPanel outerPanel,
 			final JPanel panel, ExternalToolStaticStringViewer viewer) {
-		final GridBagConstraints staticConstraint = new GridBagConstraints();
-		staticConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
-		staticConstraint.weightx = 0.1;
-		staticConstraint.fill = GridBagConstraints.BOTH;
-
-		staticConstraint.gridy = staticGridy;
-		staticConstraint.gridx = 0;
-		staticConstraint.weightx = 0.1;
-
-		final JTextArea contentField = viewer.getContentField();
-		panel.add(contentField, staticConstraint);
-
-		staticConstraint.gridx++;
-
-		final JPanel valuePanel = new JPanel();
-		valuePanel.setLayout(new BorderLayout());
-		final JTextField valueField = viewer.getValueField();
-		valuePanel.add(valueField, BorderLayout.NORTH);
-		panel.add(valuePanel, staticConstraint);
-
-		staticConstraint.gridx++;
-
-		final JPanel removePanel = new JPanel();
-		removePanel.setLayout(new BorderLayout());
-		final JButton removeButton = new JButton("Remove");
-		removePanel.add(removeButton, BorderLayout.NORTH);
-		final ExternalToolStaticStringViewer v = viewer;
-		removeButton.addActionListener(new AbstractAction() {
-
-			public void actionPerformed(ActionEvent e) {
-				synchronized (staticStringViewList) {
-					staticStringViewList.remove(v);
-				}
-				panel.remove(contentField);
-				panel.remove(valuePanel);
-				panel.remove(removePanel);
-				panel.revalidate();
-				panel.repaint();
-				outerPanel.revalidate();
-				outerPanel.repaint();
-			}
-
-		});
-		panel.add(removePanel, staticConstraint);
-		staticGridy++;
-
+		Tools.addViewer(panel,
+				elementLabels,
+				new JComponent[] {new JScrollPane(viewer.getContentField()), viewer.getValueField()},
+				staticStringViewList,
+				viewer,
+				outerPanel);
 	}
 
 

@@ -6,6 +6,7 @@ package net.sf.taverna.t2.activities.externaltool.manager.ssh;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.border.CompoundBorder;
 
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismEditor;
@@ -35,6 +37,10 @@ public final class SshInvocationMechanismEditor extends
 	private int inputGridy = 0;
 	
 	private ExternalToolSshInvocationMechanism mechanism = null;
+	
+	private static Insets insets = new Insets(1,5,1,5);
+	
+	private static CompoundBorder border = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5,5,5,5), BorderFactory.createLineBorder(Color.BLACK, 1));
 
 	@Override
 	public boolean canShow(Class<?> c) {
@@ -115,8 +121,9 @@ public final class SshInvocationMechanismEditor extends
 			ExternalToolSshNodeViewer viewer) {
 		final JPanel subPanel = new JPanel();
 		subPanel.setLayout(new GridBagLayout());
-		subPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+		subPanel.setBorder(border);
 		final GridBagConstraints inputConstraint = new GridBagConstraints();
+		inputConstraint.insets = insets;
 		inputConstraint.anchor = GridBagConstraints.FIRST_LINE_START;
 		inputConstraint.weightx = 0.1;
 		inputConstraint.fill = GridBagConstraints.BOTH;
@@ -158,7 +165,9 @@ public final class SshInvocationMechanismEditor extends
 		subPanel.add(copyCommandField ,inputConstraint);
 
 		inputConstraint.gridy++ ;
-		inputConstraint.gridx = 0;
+		inputConstraint.gridx = 1;
+		inputConstraint.fill = GridBagConstraints.NONE;
+		inputConstraint.anchor = GridBagConstraints.EAST;
 		final JButton removeButton = new JButton("Remove");
 		final ExternalToolSshNodeViewer v = viewer;
 		subPanel.add(removeButton, inputConstraint);

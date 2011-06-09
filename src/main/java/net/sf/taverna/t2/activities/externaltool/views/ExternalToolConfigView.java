@@ -462,11 +462,11 @@ public class ExternalToolConfigView
 			tabbedPane.addTab(
 					"File inputs",
 					new FilePanel(this, inputFileViewList, "To file", "File type",
-							"in", FILE_INPUT_DESCRIPTION));
+							"in", FILE_INPUT_DESCRIPTION, "Add file input"));
 			tabbedPane.addTab(
 					"File outputs",
 					new FilePanel(this, outputViewList, "From file", "File type",
-							"out", FILE_OUTPUT_DESCRIPTION));
+							"out", FILE_OUTPUT_DESCRIPTION, "Add file output"));
 			advancedPanel = new JPanel();
 			advancedPanel.setLayout(new GridBagLayout());
 			GridBagConstraints advancedConstraint = new GridBagConstraints();
@@ -484,7 +484,7 @@ public class ExternalToolConfigView
 					"File lists",
 					new FilePanel(this, fileListViewList,
 							"To file containing list", "Individual file type",
-							"in", FILE_LIST_DESCRIPTION));
+							"in", FILE_LIST_DESCRIPTION, "Add file list"));
 			annotationPanel = new AnnotationPanel(nameField, descriptionArea);
 			advancedTab.addTab("Annotation", annotationPanel);
 			final ToolXMLPanel toolXMLPanel = new ToolXMLPanel(configuration.getUseCaseDescription());
