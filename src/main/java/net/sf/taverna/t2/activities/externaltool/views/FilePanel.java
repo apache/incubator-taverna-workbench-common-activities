@@ -12,17 +12,14 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import net.sf.taverna.t2.activities.externaltool.utils.Tools;
+import net.sf.taverna.t2.lang.ui.DeselectingButton;
 import net.sf.taverna.t2.lang.ui.ReadOnlyTextArea;
 
 /**
@@ -64,7 +61,8 @@ public class FilePanel extends JPanel {
 						outputView, elementLabels);
 			}
 		}
-		JButton addFilePortButton = new JButton(new AbstractAction() {
+		JButton addFilePortButton = new DeselectingButton(addText,
+				new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 
 				int portNumber = 1;
@@ -99,7 +97,6 @@ public class FilePanel extends JPanel {
 
 		this.add(new JScrollPane(fileEditPanel), BorderLayout.CENTER);
 
-		addFilePortButton.setText(addText);
 		JPanel buttonPanel = new JPanel(new BorderLayout());
 
 		buttonPanel.add(addFilePortButton, BorderLayout.EAST);

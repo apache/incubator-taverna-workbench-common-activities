@@ -19,6 +19,7 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.servicedescriptions.ExternalToolServiceDescription;
+import net.sf.taverna.t2.lang.ui.DeselectingButton;
 
 /**
  * @author alanrw
@@ -28,7 +29,8 @@ public class EditablePanel extends JPanel {
 	public EditablePanel(final ExternalToolConfigView view) {
 		super(new FlowLayout());
 		
-		JButton update = new JButton(new AbstractAction("Update tool description") {
+		JButton update = new DeselectingButton("Update tool description",
+				new AbstractAction() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -46,9 +48,8 @@ public class EditablePanel extends JPanel {
 			}});
 		this.add(update);
 		
-		JButton makeEditable = new JButton("Edit tool description");
-		makeEditable.setToolTipText("Edit the tool description");
-		makeEditable.addActionListener(new ActionListener() {
+		JButton makeEditable = new DeselectingButton("Edit tool description",
+				new AbstractAction() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -57,6 +58,7 @@ public class EditablePanel extends JPanel {
 				
 			}
 		});
+		makeEditable.setToolTipText("Edit the tool description");
 		this.add(makeEditable);	
 		
 	}

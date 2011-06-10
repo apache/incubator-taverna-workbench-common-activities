@@ -4,8 +4,6 @@
 package net.sf.taverna.t2.activities.externaltool.views;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringBufferInputStream;
 import java.io.StringReader;
@@ -13,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import net.sf.taverna.t2.lang.ui.FileTools;
@@ -23,7 +22,7 @@ import org.jdom.JDOMException;
 import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
 
-final class LoadDescriptionAction implements ActionListener {
+final class LoadDescriptionAction extends AbstractAction {
 	/**
 	 * 
 	 */

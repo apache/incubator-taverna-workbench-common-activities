@@ -21,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
+import net.sf.taverna.t2.lang.ui.DeselectingButton;
 import net.sf.taverna.t2.lang.ui.LineEnabledTextPanel;
 
 import org.jdom.input.SAXBuilder;
@@ -75,7 +76,8 @@ public class ScriptPanel extends JPanel {
 
 		JPanel buttonPanel = new JPanel(new FlowLayout());
 		if (view.isOriginallyFromRepository()) {
-			JButton revertButton = new JButton(new AbstractAction("Revert to original description"){
+			JButton revertButton = new DeselectingButton("Revert to original description",
+					new AbstractAction(){
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -94,23 +96,24 @@ public class ScriptPanel extends JPanel {
 			revertButton.setToolTipText("Revert to the tool description from the repository");
 			buttonPanel.add(revertButton);
 		}
-		JButton loadScriptButton = new JButton("Load description");
+		JButton loadScriptButton = new DeselectingButton("Load description",
+				new LoadDescriptionAction(this, view));
 		loadScriptButton.setToolTipText("Load tool description from a file");
-		loadScriptButton.addActionListener(new LoadDescriptionAction(this, view));
 
-		JButton saveScriptButton = new JButton("Export description");
+		JButton saveScriptButton = new DeselectingButton("Export description",
+				new SaveDescriptionAction(this, view));
 		saveScriptButton.setToolTipText("Export the tool description to a file");
-		saveScriptButton.addActionListener(new SaveDescriptionAction(this, view));
 
-		JButton clearScriptButton = new JButton("Clear script");
-		clearScriptButton.setToolTipText("Clear the script from the edit area");
-		clearScriptButton.addActionListener(new ActionListener() {
+		JButton clearScriptButton = new DeselectingButton("Clear script",
+				new AbstractAction() {
 
 			public void actionPerformed(ActionEvent e) {
 				clearScript();
 			}
 
 		});
+		clearScriptButton.setToolTipText("Clear the script from the edit area");
+
 		buttonPanel.add(loadScriptButton);
 		buttonPanel.add(saveScriptButton);
 		buttonPanel.add(clearScriptButton);

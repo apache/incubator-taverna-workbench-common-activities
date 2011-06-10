@@ -5,7 +5,6 @@ package net.sf.taverna.t2.activities.externaltool.views;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,10 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 
+import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.lang.ui.ExtensionFileFilter;
 import net.sf.taverna.t2.lang.ui.FileTools;
 
@@ -30,7 +29,7 @@ import org.jdom.output.XMLOutputter;
 import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
 
-final class SaveDescriptionAction implements ActionListener {
+final class SaveDescriptionAction extends AbstractAction {
 	/**
 	 * 
 	 */

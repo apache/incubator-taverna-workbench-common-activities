@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import net.sf.taverna.t2.activities.externaltool.utils.Tools;
+import net.sf.taverna.t2.lang.ui.DeselectingButton;
 import net.sf.taverna.t2.lang.ui.ReadOnlyTextArea;
 
 /**
@@ -66,7 +67,8 @@ public class StaticStringPanel extends JPanel {
 
 		this.add(new JScrollPane(staticEditPanel),
 				BorderLayout.CENTER);
-		JButton addStaticStringButton = new JButton(new AbstractAction() {
+		JButton addStaticStringButton = new DeselectingButton("Add string",
+				new AbstractAction() {
 			// FIXME refactor this into a method
 			public void actionPerformed(ActionEvent e) {
 
@@ -81,7 +83,7 @@ public class StaticStringPanel extends JPanel {
 			}
 
 		});
-		addStaticStringButton.setText("Add string");
+
 		JPanel buttonPanel = new JPanel(new BorderLayout());
 
 		buttonPanel.add(addStaticStringButton, BorderLayout.EAST);

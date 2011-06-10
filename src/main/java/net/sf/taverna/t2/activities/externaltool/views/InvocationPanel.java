@@ -22,6 +22,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
@@ -38,6 +39,7 @@ import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismRemo
 import net.sf.taverna.t2.activities.externaltool.manager.ToolInvocationConfigurationPanel;
 import net.sf.taverna.t2.lang.observer.Observable;
 import net.sf.taverna.t2.lang.observer.Observer;
+import net.sf.taverna.t2.lang.ui.DeselectingButton;
 import net.sf.taverna.t2.workbench.ui.impl.configuration.ui.T2ConfigurationFrame;
 
 import org.apache.log4j.Logger;
@@ -315,7 +317,8 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 	
 	private JPanel createButtonPanel() {
 		JPanel buttonPanel = new JPanel(new FlowLayout());
-		manageInvocation = new JButton(new AbstractAction("Manage locations") {
+		manageInvocation = new DeselectingButton("Manage locations",
+				new AbstractAction() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -331,9 +334,7 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 		mechanismOrGroup.add(unmanagedLocation);
 	}
 
-	@Override
-	public void notify(Observable<InvocationManagerEvent> sender,
-			InvocationManagerEvent message) throws Exception {
+	private void handleInvocationManagerMessage(InvocationManagerEvent message) {
 		if (message instanceof InvocationMechanismRemovedEvent) {
 			InvocationMechanism removedMechanism = ((InvocationMechanismRemovedEvent) message).getRemovedMechanism();
 			InvocationMechanism replacementMechanism = ((InvocationMechanismRemovedEvent) message).getReplacementMechanism();
@@ -353,8 +354,21 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 			groupSelectionModel.removeElement(removedGroup);
 		} else if (message instanceof InvocationGroupAddedEvent) {
 			populateGroupList();
-		}
+		}	
 	}
+	
+	@Override
+	public void notify(Observable<InvocationManagerEvent> sender,
+			final InvocationManagerEvent message) throws Exception {
+		if (SwingUtilities.isEventDispatchThread()) {
+			handleInvocationManagerMessage(message);
+		} else {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					handleInvocationManagerMessage(message);
+				}
+			});
+		}	}
 
 	public void fillInConfiguration(
 			ExternalToolActivityConfigurationBean newConfiguration) {

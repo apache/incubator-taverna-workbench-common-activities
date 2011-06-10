@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import net.sf.taverna.t2.activities.externaltool.utils.Tools;
+import net.sf.taverna.t2.lang.ui.DeselectingButton;
 import net.sf.taverna.t2.lang.ui.ReadOnlyTextArea;
 
 /**
@@ -69,7 +70,8 @@ public class StaticUrlPanel extends JPanel {
 
 	this.add(descriptionText, BorderLayout.NORTH);
 
-	JButton addstaticPortButton = new JButton(new AbstractAction() {
+	JButton addstaticPortButton = new DeselectingButton("Add URL",
+			new AbstractAction() {
 		// FIXME refactor this into a method
 		public void actionPerformed(ActionEvent e) {
 
@@ -84,7 +86,6 @@ public class StaticUrlPanel extends JPanel {
 		}
 
 	});
-	addstaticPortButton.setText("Add URL");
 	JPanel buttonPanel = new JPanel(new BorderLayout());
 
 	buttonPanel.add(addstaticPortButton, BorderLayout.EAST);

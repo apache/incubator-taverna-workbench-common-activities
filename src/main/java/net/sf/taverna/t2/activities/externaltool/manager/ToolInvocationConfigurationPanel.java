@@ -30,6 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroup;
@@ -38,6 +39,7 @@ import net.sf.taverna.t2.activities.externaltool.manager.InvocationManagerEvent;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
 import net.sf.taverna.t2.lang.observer.Observable;
 import net.sf.taverna.t2.lang.observer.Observer;
+import net.sf.taverna.t2.lang.ui.DeselectingButton;
 import net.sf.taverna.t2.lang.ui.ValidatingUserInputDialog;
 import net.sf.taverna.t2.spi.SPIRegistry;
 import net.sf.taverna.t2.workbench.helper.Helper;
@@ -125,7 +127,8 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 		locationPanel.add(subPanel, BorderLayout.NORTH);
 		
 		JPanel buttonPanel = new JPanel(new FlowLayout());
-		JButton helpButton = new JButton(new AbstractAction("Help") {
+		JButton helpButton = new DeselectingButton("Help",
+				new AbstractAction() {
 
 			public void actionPerformed(ActionEvent e) {
 				Helper.showHelp(ToolInvocationConfigurationPanel.this);
@@ -203,8 +206,8 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 	}
 	
 	private JButton addLocationButton() {
-		final JButton result = new JButton();
-		result.setAction(new AbstractAction("Add") {
+		final JButton result = new DeselectingButton("Add",
+				new AbstractAction() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -224,7 +227,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 							"[\\p{L}\\p{Digit}_.]+", "Invalid symbolic location name.");
 					vuid.setSize(new Dimension(400, 250));
 
-					if (vuid.show(result)) {
+					if (vuid.show(ToolInvocationConfigurationPanel.this)) {
 						String groupName = inputPanel.getGroupName();
 						InvocationGroup newGroup = new InvocationGroup();
 						newGroup.setName(groupName);
@@ -250,7 +253,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 					vuid.addMessageComponent(inputPanel.getMechanismTypeSelector(), "Set the location type.");
 					vuid.setSize(new Dimension(400, 250));
 
-					if (vuid.show(result)) {
+					if (vuid.show(ToolInvocationConfigurationPanel.this)) {
 						String mechanismName = inputPanel.getMechanismName();
 						String mechanismTypeName = inputPanel.getMechanismTypeName();
 						InvocationMechanismEditor ime = findEditor(mechanismTypeName);
@@ -260,7 +263,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 						ime.setPreferredSize(new Dimension(
 								550, 500));
 						int answer = JOptionPane.showConfirmDialog(
-								result, ime, "New explicit location",
+								ToolInvocationConfigurationPanel.this, ime, "New explicit location",
 								JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 						if (answer == JOptionPane.OK_OPTION) {
 							ime.updateInvocationMechanism();
@@ -277,8 +280,8 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 	}
 	
 	private JButton removeLocationButton() {
-		JButton result = new JButton();
-		result.setAction(new AbstractAction("Remove") {
+		JButton result = new DeselectingButton("Remove",
+				new AbstractAction() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -305,8 +308,8 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 	}
 
 	private JButton editLocationButton() {
-		final JButton result = new JButton();
-		result.setAction(new AbstractAction("Edit") {
+		final JButton result = new DeselectingButton("Edit",
+				new AbstractAction() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -315,7 +318,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 					.getSelectedValue();
 					if (toEdit != null) {
 						InvocationMechanism chosenMechanism =
-							(InvocationMechanism) JOptionPane.showInputDialog(result, "Select an explicit location", "Edit symbolic location", JOptionPane.PLAIN_MESSAGE,
+							(InvocationMechanism) JOptionPane.showInputDialog(ToolInvocationConfigurationPanel.this, "Select an explicit location", "Edit symbolic location", JOptionPane.PLAIN_MESSAGE,
 								null, mechanismListModel.toArray(), toEdit.getMechanism());
 						if (chosenMechanism != null) {
 							toEdit.setMechanism(chosenMechanism);
@@ -331,7 +334,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 					ime.setPreferredSize(new Dimension(
 							550, 500));
 					int answer = JOptionPane.showConfirmDialog(
-							result, ime, "Edit explicit location",
+							ToolInvocationConfigurationPanel.this, ime, "Edit explicit location",
 							JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 					if (answer == JOptionPane.OK_OPTION) {
 						ime.updateInvocationMechanism();
@@ -362,10 +365,20 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 		}
 		return null;
 	}
+	
+	
 
 	@Override
 	public void notify(Observable<InvocationManagerEvent> arg0,
 			InvocationManagerEvent arg1) throws Exception {
-		populateLists();
+		if (SwingUtilities.isEventDispatchThread()) {
+			populateLists();
+		} else {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					populateLists();
+				}
+			});
+		}
 	}
 }

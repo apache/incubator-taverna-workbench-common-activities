@@ -26,6 +26,7 @@ import javax.swing.border.EmptyBorder;
 
 import net.sf.taverna.t2.activities.externaltool.manager.ssh.ExternalToolSshNodeViewer;
 import net.sf.taverna.t2.activities.externaltool.utils.Tools;
+import net.sf.taverna.t2.lang.ui.DeselectingButton;
 
 /**
  * @author alanrw
@@ -82,7 +83,8 @@ public class StringReplacementPanel extends JPanel {
 		this.add(descriptionText, BorderLayout.NORTH);
 		this.add(new JScrollPane(inputEditPanel),
 				BorderLayout.CENTER);
-		JButton addInputPortButton = new JButton(new AbstractAction() {
+		JButton addInputPortButton = new DeselectingButton("Add string replacement",
+				new AbstractAction() {
 
 			public void actionPerformed(ActionEvent e) {
 
@@ -110,7 +112,6 @@ public class StringReplacementPanel extends JPanel {
 
 		});
 
-		addInputPortButton.setText("Add string replacement");
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BorderLayout());
 

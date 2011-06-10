@@ -18,7 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.CompoundBorder;
 
-import net.sf.taverna.t2.activities.externaltool.views.ExternalToolStringReplacementViewer;
+import net.sf.taverna.t2.lang.ui.DeselectingButton;
 
 /**
  * @author alanrw
@@ -79,10 +79,8 @@ public class Tools {
 		}
 		
 		removeConstraint.gridy = labelConstraint.gridy + 1;
-		final JButton removeButton = new JButton("Remove");
-		subPanel.add(removeButton, removeConstraint);
-		innerPanel.add(subPanel, subPanelConstraint);
-		removeButton.addActionListener(new AbstractAction() {
+		final JButton removeButton = new DeselectingButton("Remove",
+				new AbstractAction() {
 
 			public void actionPerformed(ActionEvent e) {
 				synchronized (viewerList) {
@@ -96,6 +94,8 @@ public class Tools {
 			}
 
 		});
+		subPanel.add(removeButton, removeConstraint);
+		innerPanel.add(subPanel, subPanelConstraint);
 	}
 
 }

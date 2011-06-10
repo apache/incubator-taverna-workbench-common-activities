@@ -20,13 +20,10 @@
  ******************************************************************************/
 package net.sf.taverna.t2.activities.externaltool.views;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,31 +35,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.help.CSH;
-import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JEditorPane;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityHealthChecker;
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManager;
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
 import net.sf.taverna.t2.lang.ui.KeywordDocument;
 import net.sf.taverna.t2.lang.ui.LinePainter;
 import net.sf.taverna.t2.lang.ui.NoWrapEditorKit;
-import net.sf.taverna.t2.lang.ui.ReadOnlyTextArea;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
 
 import org.apache.log4j.Logger;

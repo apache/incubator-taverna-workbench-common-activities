@@ -23,6 +23,7 @@ import javax.swing.border.CompoundBorder;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismEditor;
 import net.sf.taverna.t2.activities.externaltool.ssh.ExternalToolSshInvocationMechanism;
+import net.sf.taverna.t2.lang.ui.DeselectingButton;
 import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNode;
 import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNodeFactory;
 
@@ -78,7 +79,8 @@ public final class SshInvocationMechanismEditor extends
 		this.add(new JScrollPane(innerPanel),
 				outerPanelConstraint);
 		outerPanelConstraint.weighty = 0;
-		JButton addHostButton = new JButton(new AbstractAction() {
+		final JButton addHostButton = new DeselectingButton("Add host",
+				new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 
 				ExternalToolSshNodeViewer newViewer = new ExternalToolSshNodeViewer();
@@ -86,11 +88,9 @@ public final class SshInvocationMechanismEditor extends
 					addNodeViewer(SshInvocationMechanismEditor.this, innerPanel, newViewer);
 					innerPanel.revalidate();
 					innerPanel.repaint();
-
 			}
 
 		});
-		addHostButton.setText("Add host");
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridBagLayout());
 
@@ -168,14 +168,9 @@ public final class SshInvocationMechanismEditor extends
 		inputConstraint.gridx = 1;
 		inputConstraint.fill = GridBagConstraints.NONE;
 		inputConstraint.anchor = GridBagConstraints.EAST;
-		final JButton removeButton = new JButton("Remove");
 		final ExternalToolSshNodeViewer v = viewer;
-		subPanel.add(removeButton, inputConstraint);
-		
-		inputConstraint.gridy = ++inputGridy;
-		innerPanel.add(subPanel, inputConstraint);
-
-		removeButton.addActionListener(new AbstractAction() {
+		final JButton removeButton = new DeselectingButton("Remove",
+				new AbstractAction() {
 
 			public void actionPerformed(ActionEvent e) {
 				synchronized(nodeViewers) {
@@ -189,6 +184,10 @@ public final class SshInvocationMechanismEditor extends
 			}
 
 		});
+		subPanel.add(removeButton, inputConstraint);
+		
+		inputConstraint.gridy = ++inputGridy;
+		innerPanel.add(subPanel, inputConstraint);
 
 		nodeViewers.add(viewer);
 		inputGridy++;		
