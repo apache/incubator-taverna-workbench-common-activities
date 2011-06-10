@@ -297,6 +297,10 @@ public class ExternalToolConfigView
 				new java.awt.Font("Lucida Grande", 1, 12)));
 
 		tabbedPane = new JTabbedPane();
+		
+		if (invocationPanel != null) {
+			invocationPanel.stopObserving();
+		}
 
 		if (!isFromRepository()) {
 			UseCaseDescription useCaseDescription = configuration
@@ -832,6 +836,12 @@ public class ExternalToolConfigView
 		ExternalToolActivityHealthChecker.updateLocation(newConfig);
 		newConfig.setEdited(editable);
 		refreshConfiguration(newConfig);		
+	}
+	
+	public void whenClosed() {
+		if (invocationPanel != null) {
+			invocationPanel.stopObserving();
+		}
 	}
 
 }

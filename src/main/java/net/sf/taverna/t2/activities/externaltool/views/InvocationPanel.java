@@ -367,4 +367,8 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 		}
 		newConfiguration.setInvocationGroup((InvocationGroup) groupSelection.getSelectedItem());	
 	}
+
+	public void stopObserving() {
+		manager.removeObserver(this);
+	}
 }
