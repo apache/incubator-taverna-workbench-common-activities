@@ -46,7 +46,7 @@ public class ExternalToolServiceProvider extends AbstractConfigurableServiceProv
 	.create("http://taverna.sf.net/2010/service-provider/externaltool");
 	
 	public ExternalToolServiceProvider() {
-		super(new ExternalToolServiceProviderConfig("http://somehost/service?externaltool"));
+		super(new ExternalToolServiceProviderConfig("http://taverna.nordugrid.org/sharedRepository/xml.php"));
 	}
 
 	public String getName() {
@@ -55,9 +55,8 @@ public class ExternalToolServiceProvider extends AbstractConfigurableServiceProv
 
 	public List<ExternalToolServiceProviderConfig> getDefaultConfigurations() {
 		List<ExternalToolServiceProviderConfig> defaults = new ArrayList<ExternalToolServiceProviderConfig>();
-		// the default use case repository is our shared repository on
-		// taverna.nordugrid.org
-		defaults.add(new ExternalToolServiceProviderConfig("http://taverna.nordugrid.org/sharedRepository/xml.php"));
+		// Disabled as it should not be included in Taverna
+		//defaults.add(new ExternalToolServiceProviderConfig("http://taverna.nordugrid.org/sharedRepository/xml.php"));
 		return defaults;
 	}
 
