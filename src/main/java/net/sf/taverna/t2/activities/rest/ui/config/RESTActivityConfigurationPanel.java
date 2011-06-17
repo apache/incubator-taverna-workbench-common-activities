@@ -11,9 +11,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -30,15 +34,14 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-import net.sf.taverna.t2.workbench.MainWindow;
-import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
-
 import net.sf.taverna.t2.activities.rest.RESTActivity;
-import net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean;
-import net.sf.taverna.t2.activities.rest.URISignatureHandler;
 import net.sf.taverna.t2.activities.rest.RESTActivity.DATA_FORMAT;
 import net.sf.taverna.t2.activities.rest.RESTActivity.HTTP_METHOD;
+import net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean;
+import net.sf.taverna.t2.activities.rest.URISignatureHandler;
 import net.sf.taverna.t2.activities.rest.URISignatureHandler.URISignatureParsingException;
+import net.sf.taverna.t2.workbench.MainWindow;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
 
 @SuppressWarnings("serial")
 public class RESTActivityConfigurationPanel extends
@@ -80,6 +83,8 @@ public class RESTActivityConfigurationPanel extends
 	private JButton removeHeaderButton;
 	private JTable httpHeadersTable;
 	private HTTPHeadersTableModel httpHeadersTableModel;
+
+	private String[] mediaTypes;
 
 	public RESTActivityConfigurationPanel(RESTActivity activity) {
 		//this.thisPanel = this;
@@ -232,7 +237,7 @@ public class RESTActivityConfigurationPanel extends
 		c.insets = new Insets(3, 3, 3, 7);
 		c.weightx = 1.0;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		cbAccepts = new JComboBox(RESTActivity.MIME_TYPES);
+		cbAccepts = new JComboBox(getMediaTypes());
 		cbAccepts.setEditable(true);
 		cbAccepts.getEditor().getEditorComponent().addFocusListener(
 				new FocusListener() {
@@ -272,7 +277,7 @@ public class RESTActivityConfigurationPanel extends
 		c.insets = new Insets(3, 3, 3, 7);
 		c.weightx = 1.0;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		cbContentType = new JComboBox(RESTActivity.MIME_TYPES);
+		cbContentType = new JComboBox(getMediaTypes());
 		cbContentType.setEditable(true);
 		cbContentType.getEditor().getEditorComponent().addFocusListener(
 				new FocusListener() {
@@ -370,6 +375,31 @@ public class RESTActivityConfigurationPanel extends
 		JPanel finalPanel = new JPanel(new BorderLayout());
 		finalPanel.add(jpGeneral, BorderLayout.NORTH);
 		return (finalPanel);
+	}
+
+	private String[] getMediaTypes() {
+		if (mediaTypes != null) {
+			return mediaTypes;
+		}
+		List<String> types = new ArrayList<String>();
+		InputStream typesStream = getClass().getResourceAsStream(
+				"mediatypes.txt");
+		try {
+			// media types must be ASCII and can't have whitespace
+			Scanner scanner = new Scanner(typesStream, "ascii");
+			while (scanner.hasNext()) {
+				types.add(scanner.next());
+			}
+			scanner.close();
+		} finally {
+			try {
+				typesStream.close();
+			} catch (IOException ex) {
+			}
+		}
+		mediaTypes = types.toArray(new String[0]);
+
+		return mediaTypes;
 	}
 
 	private JPanel createAdvancedTab() {
