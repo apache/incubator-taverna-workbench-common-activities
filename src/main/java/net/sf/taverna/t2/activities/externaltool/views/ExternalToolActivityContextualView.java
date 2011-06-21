@@ -148,7 +148,7 @@ public class ExternalToolActivityContextualView extends HTMLBasedActivityContext
 
 	@Override
 	public String getViewTitle() {
-		return "External Tool service";
+		return "Tool service";
 	}
 
 	@Override

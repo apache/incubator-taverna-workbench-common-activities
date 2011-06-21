@@ -48,7 +48,7 @@ import org.apache.log4j.Logger;
 @SuppressWarnings("serial")
 public class AddExternalToolMenuAction extends AbstractMenuAction {
 
-	private static final String ADD_EXTERNAL_TOOL = "External tool";
+	private static final String ADD_EXTERNAL_TOOL = "Tool";
 
 	private static final URI ADD_EXTERNAL_TOOL_URI = URI
 	.create("http://taverna.sf.net/2008/t2workbench/menu#graphMenuAddExternalTool");
@@ -72,7 +72,7 @@ public class AddExternalToolMenuAction extends AbstractMenuAction {
 			putValue(SMALL_ICON, ActivityIconManager.getInstance().iconForActivity(
 					new ExternalToolActivity()));
 			putValue(NAME, ADD_EXTERNAL_TOOL);	
-			putValue(SHORT_DESCRIPTION, "External tool");	
+			putValue(SHORT_DESCRIPTION, "Tool");	
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_DOWN_MASK));
 		}

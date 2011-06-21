@@ -27,7 +27,7 @@ public class ExternalToolTemplateServiceDescription extends
 	private static final URI providerId = URI
 	.create("http://taverna.sf.net/2010/service-provider/external-tool");
 	
-	private static final String EXTERNAL_TOOL = "ExternalTool";
+	private static final String EXTERNAL_TOOL = "Tool";
 	
 	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
 

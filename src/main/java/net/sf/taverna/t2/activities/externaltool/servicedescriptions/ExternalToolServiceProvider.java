@@ -50,7 +50,7 @@ public class ExternalToolServiceProvider extends AbstractConfigurableServiceProv
 	}
 
 	public String getName() {
-		return "ExternalTool Service";
+		return "Tool service";
 	}
 
 	public List<ExternalToolServiceProviderConfig> getDefaultConfigurations() {

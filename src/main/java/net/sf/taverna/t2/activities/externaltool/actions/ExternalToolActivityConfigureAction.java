@@ -48,7 +48,7 @@ public class ExternalToolActivityConfigureAction extends ActivityConfigurationAc
 
 	public ExternalToolActivityConfigureAction(ExternalToolActivity activity, Frame owner) {
 		super(activity);
-		putValue(Action.NAME, "Configure ExternalTool invocation");
+		putValue(Action.NAME, "Configure tool invocation");
 		this.owner = owner;
 	}
 

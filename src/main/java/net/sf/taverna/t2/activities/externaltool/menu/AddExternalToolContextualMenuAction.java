@@ -50,7 +50,7 @@ import org.apache.log4j.Logger;
 @SuppressWarnings("serial")
 public class AddExternalToolContextualMenuAction extends AbstractContextualMenuAction {
 
-	private static final String ADD_EXTERNAL_TOOL = "External tool";
+	private static final String ADD_EXTERNAL_TOOL = "Tool";
 
 	private static final URI insertSection = URI
 			.create("http://taverna.sf.net/2009/contextMenu/insert");

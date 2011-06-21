@@ -39,7 +39,7 @@ public class ExternalToolServiceProviderConfig extends PropertyAnnotated {
 		this.repositoryUrl = repositoryUrl;
 	}
 
-	@PropertyAnnotation(displayName = "ExternalTool repository location", preferred = true)
+	@PropertyAnnotation(displayName = "Tool repository location", preferred = true)
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}

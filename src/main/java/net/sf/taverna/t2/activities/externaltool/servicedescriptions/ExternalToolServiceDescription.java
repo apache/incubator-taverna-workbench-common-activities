@@ -88,7 +88,7 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 
 	@SuppressWarnings("unchecked")
 	public List<? extends Comparable> getPath() {
-		return Collections.singletonList("ExternalTool @ " + repositoryUrl);
+		return Collections.singletonList("Tools @ " + repositoryUrl);
 	}
 
 	protected List<Object> getIdentifyingData() {
