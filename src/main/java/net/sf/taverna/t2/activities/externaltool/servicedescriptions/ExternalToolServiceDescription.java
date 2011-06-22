@@ -21,15 +21,22 @@
 
 package net.sf.taverna.t2.activities.externaltool.servicedescriptions;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
+import org.apache.log4j.Logger;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManager;
+import net.sf.taverna.t2.activities.externaltool.views.ExternalToolConfigView;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
@@ -41,6 +48,10 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
  * @author Hajo Nils Krabbenhoeft
  */
 public class ExternalToolServiceDescription extends ServiceDescription<ExternalToolActivityConfigurationBean> {
+	
+	private static Logger logger = Logger
+	.getLogger(ExternalToolServiceDescription.class);
+
 	
 	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
 
@@ -65,6 +76,18 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 	}
 
 	public Icon getIcon() {
+		if (useCaseDescription != null) {
+			String icon_url = useCaseDescription.getIcon_url();
+			if ((icon_url != null) && !icon_url.isEmpty() && !icon_url.endsWith(".ico"))
+				try {
+					ImageIcon result = new ImageIcon(new URL(icon_url));
+					if ((result != null) && (result.getIconHeight() != 0) && (result.getIconWidth() != 0)){
+						return result;
+					}
+				} catch (MalformedURLException e) {
+					logger.error("Problematic URL" + icon_url, e);
+				}
+		}
 		return ExternalToolActivityIcon.getExternalToolIcon();
 	}
 
@@ -88,7 +111,16 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 
 	@SuppressWarnings("unchecked")
 	public List<? extends Comparable> getPath() {
-		return Collections.singletonList("Tools @ " + repositoryUrl);
+		List<String> result = new ArrayList<String>();
+		result.add("Tools @ " + repositoryUrl);
+		String group = useCaseDescription.getGroup();
+		if ((group != null) && !group.isEmpty()) {
+			String[] groups = group.split(":");
+			for (String g : groups) {
+				result.add(g);
+			}
+		}
+		return result;
 	}
 
 	protected List<Object> getIdentifyingData() {
@@ -96,6 +128,17 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 		// means every externaltool is uniquely identified by its repository URL and
 		// its use case ID.
 		return Arrays.<Object> asList(repositoryUrl, externaltoolid);
+	}
+	
+	public String getDescription() {
+		if (useCaseDescription != null) {
+			String description = useCaseDescription.getDescription();
+			if (description == null) {
+				return "";
+			}
+			return description;
+		}
+		return "";
 	}
 
 	public void setUseCaseDescription(UseCaseDescription usecase) {

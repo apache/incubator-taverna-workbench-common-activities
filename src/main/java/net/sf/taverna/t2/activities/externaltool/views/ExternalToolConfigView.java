@@ -128,6 +128,7 @@ public class ExternalToolConfigView
 */
 
 	private JTextField nameField = new JTextField(20);
+	private JTextField groupField = new JTextField(20);
 	private JTextArea descriptionArea = new JTextArea(6, 40);
 
 	private JEditorPane scriptTextArea;
@@ -170,6 +171,11 @@ public class ExternalToolConfigView
 			UseCaseDescription ucd = newConfiguration.getUseCaseDescription();
 
 			ucd.setUsecaseid(nameField.getText());
+			if (groupField.getText().isEmpty()) {
+				ucd.setGroup(null);
+			} else {
+				ucd.setGroup(groupField.getText());
+			}
 			ucd.setDescription(descriptionArea.getText());
 			ucd.setCommand(scriptTextArea.getText());
 			ucd.setReturnCodesAsText(returnCodesField.getText());
@@ -297,6 +303,9 @@ public class ExternalToolConfigView
 					.getUseCaseDescription();
 
 			nameField.setText(useCaseDescription.getUsecaseid());
+			if (useCaseDescription.getGroup() != null) {
+				groupField.setText(useCaseDescription.getGroup());
+			}
 			descriptionArea.setText(useCaseDescription.getDescription());
 			stringReplacementViewList = new ArrayList<ExternalToolStringReplacementViewer>();
 			inputFileViewList = new ArrayList<ExternalToolFileViewer>();
@@ -479,7 +488,7 @@ public class ExternalToolConfigView
 					new FilePanel(this, fileListViewList,
 							"To file containing list", "Individual file type",
 							"in", FILE_LIST_DESCRIPTION, "Add file list"));
-			annotationPanel = new AnnotationPanel(nameField, descriptionArea);
+			annotationPanel = new AnnotationPanel(nameField, descriptionArea, groupField);
 			advancedTab.addTab("Annotation", annotationPanel);
 			final ToolXMLPanel toolXMLPanel = new ToolXMLPanel(configuration.getUseCaseDescription());
 			advancedTab.addTab("XML", toolXMLPanel);

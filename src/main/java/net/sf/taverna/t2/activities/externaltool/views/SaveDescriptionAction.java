@@ -50,7 +50,8 @@ final class SaveDescriptionAction extends AbstractAction {
 		UseCaseDescription currentDescription = view.makeConfiguration().getUseCaseDescription();
 		String usecaseid = currentDescription.getUsecaseid();
 		String description = currentDescription.getDescription();
-		if ((usecaseid == null) || usecaseid.isEmpty() || (description == null) || description.isEmpty()) {
+		String group = currentDescription.getGroup();
+		if ((usecaseid == null) || usecaseid.isEmpty() || (description == null) || description.isEmpty() || (group == null) || group.isEmpty()) {
 			JOptionPane.showMessageDialog(view, "Please fill in the tool annotation and\nthen re-export the description", "Missing annotation", JOptionPane.PLAIN_MESSAGE, null);
 			view.showAnnotationPanel();
 		} else {
