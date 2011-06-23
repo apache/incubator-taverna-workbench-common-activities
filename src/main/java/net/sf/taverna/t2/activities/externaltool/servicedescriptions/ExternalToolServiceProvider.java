@@ -55,8 +55,8 @@ public class ExternalToolServiceProvider extends AbstractConfigurableServiceProv
 
 	public List<ExternalToolServiceProviderConfig> getDefaultConfigurations() {
 		List<ExternalToolServiceProviderConfig> defaults = new ArrayList<ExternalToolServiceProviderConfig>();
-		// Re-enabled as we will use groups to provide sensible appearance
-		defaults.add(new ExternalToolServiceProviderConfig("http://taverna.nordugrid.org/sharedRepository/xml.php"));
+		// Disabled until sensible set
+//		defaults.add(new ExternalToolServiceProviderConfig("http://taverna.nordugrid.org/sharedRepository/xml.php"));
 		return defaults;
 	}
 
