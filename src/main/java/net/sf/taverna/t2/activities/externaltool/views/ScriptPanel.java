@@ -8,6 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -84,8 +85,14 @@ public class ScriptPanel extends JPanel {
 					ExternalToolActivityConfigurationBean bean = view.makeConfiguration();
 					String repositoryUrl = bean.getRepositoryUrl();
 					String id = bean.getExternaltoolid();
-					UseCaseDescription usecase = UseCaseEnumeration.readDescriptionFromUrl(
+					UseCaseDescription usecase = null;
+					try {
+						usecase = UseCaseEnumeration.readDescriptionFromUrl(
 							repositoryUrl, id);
+					}
+					catch (IOException ex) {
+						// Already logged
+					}
 					if (usecase != null) {
 						bean.setUseCaseDescription(usecase);
 						view.setEditable(false, bean);

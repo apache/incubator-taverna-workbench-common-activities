@@ -21,6 +21,7 @@
 
 package net.sf.taverna.t2.activities.externaltool.servicedescriptions;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,8 +30,8 @@ import java.util.List;
 import javax.swing.Icon;
 
 import net.sf.taverna.t2.servicedescriptions.AbstractConfigurableServiceProvider;
+import net.sf.taverna.t2.servicedescriptions.CustomizedConfigurePanelProvider;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
-import net.sf.taverna.t2.workflowmodel.serialization.DeserializationException;
 import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
 
@@ -40,7 +41,8 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
  * 
  * @author Hajo Nils Krabbenhoeft
  */
-public class ExternalToolServiceProvider extends AbstractConfigurableServiceProvider<ExternalToolServiceProviderConfig> {
+public class ExternalToolServiceProvider extends AbstractConfigurableServiceProvider<ExternalToolServiceProviderConfig>  implements
+CustomizedConfigurePanelProvider<ExternalToolServiceProviderConfig>{
 
 	private static final URI providerId = URI
 	.create("http://taverna.sf.net/2010/service-provider/externaltool");
@@ -65,8 +67,13 @@ public class ExternalToolServiceProvider extends AbstractConfigurableServiceProv
 		callBack.status("Parsing use case repository:" + repositoryUrl);
 			// prepare a list of all use case descriptions which are stored in
 			// the given repository URL
-			List<UseCaseDescription> usecases = UseCaseEnumeration.readDescriptionsFromUrl(
-					repositoryUrl);
+			List<UseCaseDescription> usecases = new ArrayList<UseCaseDescription> ();
+			try {
+				usecases = UseCaseEnumeration.readDescriptionsFromUrl(
+						repositoryUrl);
+			} catch (IOException e) {
+				callBack.fail("Unable to read tool descriptions", e);
+			}
 			callBack.status("Found " + usecases.size() + " use cases:" + repositoryUrl);
 			// convert all the UseCaseDescriptions in the XML file into
 			// ExternalToolServiceDescription items
@@ -103,6 +110,21 @@ public class ExternalToolServiceProvider extends AbstractConfigurableServiceProv
 
 	public void setServiceDescriptionRegistry(ServiceDescriptionRegistry registry) {
 	}
+	
+	@SuppressWarnings("serial")
+	public void createCustomizedConfigurePanel(final CustomizedConfigureCallBack<ExternalToolServiceProviderConfig> callBack) {
+			
+		AddExternalToolServiceDialog addWSDLServiceDialog = new AddExternalToolServiceDialog() {
+				@Override
+				protected void addRegistry(String externalToolURL) {
+					
+					ExternalToolServiceProviderConfig providerConfig = new ExternalToolServiceProviderConfig(externalToolURL);					
+					callBack.newProviderConfiguration(providerConfig);
+				}
+			};
+			addWSDLServiceDialog.setVisible(true);		
+	}
+
 
 	public String getId() {
 		return providerId.toString();

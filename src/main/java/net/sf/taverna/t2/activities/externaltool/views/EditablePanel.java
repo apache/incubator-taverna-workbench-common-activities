@@ -6,6 +6,7 @@ package net.sf.taverna.t2.activities.externaltool.views;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +38,14 @@ public class EditablePanel extends JPanel {
 				ExternalToolActivityConfigurationBean bean = view.getConfiguration();
 				String repositoryUrl = bean.getRepositoryUrl();
 				String id = bean.getExternaltoolid();
-				UseCaseDescription usecase = UseCaseEnumeration.readDescriptionFromUrl(
+				UseCaseDescription usecase = null;
+				try {
+					usecase = UseCaseEnumeration.readDescriptionFromUrl(
 						repositoryUrl, id);
+				}
+				catch (IOException ex) {
+					// Already logged
+				}
 				if (usecase != null) {
 					bean.setUseCaseDescription(usecase);
 					view.refreshConfiguration(bean);
