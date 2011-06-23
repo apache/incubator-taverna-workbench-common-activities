@@ -112,7 +112,7 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 	@SuppressWarnings("unchecked")
 	public List<? extends Comparable> getPath() {
 		List<String> result = new ArrayList<String>();
-		result.add("Tools @ " + repositoryUrl);
+		result.add("Tools decribed @ " + repositoryUrl);
 		String group = useCaseDescription.getGroup();
 		if ((group != null) && !group.isEmpty()) {
 			String[] groups = group.split(":");
