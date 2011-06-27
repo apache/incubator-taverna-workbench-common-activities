@@ -219,7 +219,7 @@ public final class SshInvocationMechanismEditor extends
 
 	@Override
 	public String getName() {
-		return ("Ssh");
+		return ("SSH");
 	}
 
 }

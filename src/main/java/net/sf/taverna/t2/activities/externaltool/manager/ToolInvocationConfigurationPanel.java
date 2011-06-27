@@ -250,7 +250,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 							"Set the explicit location name.", usedNames,
 							"Duplicate explicit location name.", "[\\p{L}\\p{Digit}_.]+",
 							"Invalid explicit location name.");
-					vuid.addMessageComponent(inputPanel.getMechanismTypeSelector(), "Set the location type.");
+					vuid.addMessageComponent(inputPanel.getMechanismTypeSelector(), "Set the location name and type.");
 					vuid.setSize(new Dimension(400, 250));
 
 					if (vuid.show(ToolInvocationConfigurationPanel.this)) {
@@ -350,7 +350,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 	}
 	protected InvocationMechanismEditor findEditor(String name) {
 		for (InvocationMechanismEditor ime : invocationMechanismEditorRegistry.getInstances()) {
-			if (ime.getName().equals(name)) {
+			if (ime.getName().equalsIgnoreCase(name)) {
 				return ime;
 			}
 		}
