@@ -23,6 +23,7 @@ if (encoding == null) {
   reader = new BufferedReader(new InputStreamReader(in, encoding));
 }
 String line = null;
+String NEWLINE = System.getProperty("line.separator");
 while ((line = reader.readLine()) != null) {
 	result.append(line);
 	result.append(NEWLINE);
