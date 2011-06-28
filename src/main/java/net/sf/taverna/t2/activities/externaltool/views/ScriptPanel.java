@@ -37,7 +37,7 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
  */
 public class ScriptPanel extends JPanel {
 	
-	private static final String SCRIPT_DESCRIPTION = "Specify the commands that you want to run. You can replace use data arriving at an input port to replace parts of the command or to write to a file. You can also take data written to a file and send it to an output port.";
+	private static final String SCRIPT_DESCRIPTION = "Specify the commands that you want to run. You can use data arriving at an input port to replace parts of the command or to write to a file. You can also take data written to a file and send it to an output port.";
 	static SAXBuilder builder = new SAXBuilder();
 	private final JTextComponent scriptTextArea;
 	
