@@ -59,7 +59,7 @@ public class AddExternalToolContextualMenuAction extends AbstractContextualMenuA
 			.getLogger(AddExternalToolMenuAction.class);
 
 	public AddExternalToolContextualMenuAction() {
-		super(insertSection, 55);
+		super(insertSection, 900);
 	}
 
 	@Override

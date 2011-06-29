@@ -57,7 +57,7 @@ public class AddExternalToolMenuAction extends AbstractMenuAction {
 			.getLogger(AddExternalToolMenuAction.class);
 
 	public AddExternalToolMenuAction() {
-		super(InsertMenu.INSERT, 21, ADD_EXTERNAL_TOOL_URI);
+		super(InsertMenu.INSERT, 900, ADD_EXTERNAL_TOOL_URI);
 	}
 
 	@Override
