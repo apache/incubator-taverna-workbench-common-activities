@@ -57,7 +57,7 @@ public class AddRESTTemplateMenuAction extends AbstractMenuAction {
 			.getLogger(AddRESTTemplateMenuAction.class);
 
 	public AddRESTTemplateMenuAction() {
-		super(InsertMenu.INSERT, 29, ADD_REST_URI);
+		super(InsertMenu.INSERT, 500, ADD_REST_URI);
 	}
 
 	@Override

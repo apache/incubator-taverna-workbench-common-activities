@@ -58,7 +58,7 @@ public class AddRESTTemplateAction extends AbstractContextualMenuAction {
 			.getLogger(AddRESTTemplateAction.class);
 
 	public AddRESTTemplateAction() {
-		super(insertSection, 32);
+		super(insertSection, 500);
 	}
 
 	@Override
