@@ -57,7 +57,7 @@ public class AddBeanshellTemplateMenuAction extends AbstractMenuAction {
 			.getLogger(AddBeanshellTemplateMenuAction.class);
 
 	public AddBeanshellTemplateMenuAction() {
-		super(InsertMenu.INSERT, 21, ADD_BEANSHELL_URI);
+		super(InsertMenu.INSERT, 300, ADD_BEANSHELL_URI);
 	}
 
 	@Override
