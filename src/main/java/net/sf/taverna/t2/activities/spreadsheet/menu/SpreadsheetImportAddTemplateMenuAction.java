@@ -61,7 +61,7 @@ public class SpreadsheetImportAddTemplateMenuAction extends AbstractMenuAction {
 	.getString("SpreadsheetImportAddTemplateAction.addMenu");
 
 	public SpreadsheetImportAddTemplateMenuAction(){
-		super(InsertMenu.INSERT, 24, ADD_SPREADSHEET_IMPORT_URI);
+		super(InsertMenu.INSERT, 700, ADD_SPREADSHEET_IMPORT_URI);
 	}
 
 	@Override
