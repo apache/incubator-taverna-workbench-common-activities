@@ -58,7 +58,7 @@ public class AddXPathTemplateAction extends AbstractContextualMenuAction {
 			.getLogger(AddXPathTemplateAction.class);
 
 	public AddXPathTemplateAction() {
-		super(insertSection, 33);
+		super(insertSection, 1000);
 	}
 
 	@Override

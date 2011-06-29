@@ -57,7 +57,7 @@ public class AddXPathTemplateMenuAction extends AbstractMenuAction {
 			.getLogger(AddXPathTemplateMenuAction.class);
 
 	public AddXPathTemplateMenuAction() {
-		super(InsertMenu.INSERT, 29, ADD_XPATH_URI);
+		super(InsertMenu.INSERT, 1000, ADD_XPATH_URI);
 	}
 
 	@Override
