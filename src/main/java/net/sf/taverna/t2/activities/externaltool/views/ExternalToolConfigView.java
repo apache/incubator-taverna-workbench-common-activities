@@ -50,6 +50,7 @@ import javax.swing.event.ChangeListener;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityHealthChecker;
+import net.sf.taverna.t2.activities.externaltool.utils.Tools;
 import net.sf.taverna.t2.lang.ui.KeywordDocument;
 import net.sf.taverna.t2.lang.ui.LinePainter;
 import net.sf.taverna.t2.lang.ui.NoWrapEditorKit;
@@ -319,7 +320,7 @@ public class ExternalToolConfigView
 					.getInputs().entrySet()) {
 				String name = entry.getKey();
 				ScriptInputUser si = (ScriptInputUser) entry.getValue();
-				if (!si.isList() && !si.isFile() && !si.isTempFile()) {
+				if (Tools.isStringReplacement(si)) {
 					final ExternalToolStringReplacementViewer inputView = new ExternalToolStringReplacementViewer(
 							name, si);
 					stringReplacementViewList.add(inputView);
@@ -341,7 +342,7 @@ public class ExternalToolConfigView
 					.getInputs().entrySet()) {
 				String name = entry.getKey();
 				ScriptInputUser si = (ScriptInputUser) entry.getValue();
-				if (!si.isList() && si.isFile()) {
+				if (Tools.isInputFile(si)) {
 					final ExternalToolFileViewer inputView = new ExternalToolFileViewer(
 							name, si.getTag(), si.isBinary());
 					inputFileViewList.add(inputView);
@@ -362,7 +363,7 @@ public class ExternalToolConfigView
 					.getInputs().entrySet()) {
 				String name = entry.getKey();
 				ScriptInputUser si = (ScriptInputUser) entry.getValue();
-				if (si.isList() && si.isFile()) {
+				if (Tools.isFileList(si)) {
 					final ExternalToolFileViewer inputView = new ExternalToolFileViewer(
 							name, si.getTag(), si.isBinary());
 					fileListViewList.add(inputView);

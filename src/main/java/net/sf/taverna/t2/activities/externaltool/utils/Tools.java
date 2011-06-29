@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -17,6 +18,9 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.CompoundBorder;
+
+import de.uni_luebeck.inb.knowarc.usecases.ScriptInput;
+import de.uni_luebeck.inb.knowarc.usecases.ScriptInputUser;
 
 import net.sf.taverna.t2.lang.ui.DeselectingButton;
 
@@ -97,5 +101,29 @@ public class Tools {
 		subPanel.add(removeButton, removeConstraint);
 		innerPanel.add(subPanel, subPanelConstraint);
 	}
+	
+	public static boolean isStringReplacement(ScriptInputUser si) {
+		return !si.isList() && !si.isFile() && !si.isTempFile();
+	}
+	
+	public static boolean isInputFile(ScriptInputUser si) {
+		return !si.isList() && si.isFile();
+	}
 
+	public static boolean isFileList(ScriptInputUser si) {
+		return si.isList() && si.isFile();
+	}
+	
+	public static boolean isUnderstood(ScriptInputUser si) {
+		return isStringReplacement(si) || isInputFile(si) || isFileList(si);
+	}
+	
+	public static boolean areAllUnderstood(Map<String, ScriptInput> inputs) {
+		for (ScriptInput si : inputs.values()) {
+			if ((si instanceof ScriptInputUser) && !isUnderstood((ScriptInputUser) si)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

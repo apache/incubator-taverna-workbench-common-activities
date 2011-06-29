@@ -20,6 +20,7 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.servicedescriptions.ExternalToolServiceDescription;
+import net.sf.taverna.t2.activities.externaltool.utils.Tools;
 import net.sf.taverna.t2.lang.ui.DeselectingButton;
 
 /**
@@ -66,7 +67,9 @@ public class EditablePanel extends JPanel {
 			}
 		});
 		makeEditable.setToolTipText("Edit the tool description");
-		this.add(makeEditable);	
+		if (Tools.areAllUnderstood(view.getConfiguration().getUseCaseDescription().getInputs())) {
+		this.add(makeEditable);
+		}
 		
 	}
 
