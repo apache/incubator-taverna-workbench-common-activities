@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import javax.swing.AbstractAction;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
@@ -178,11 +180,14 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 		descriptionText.setBorder(new EmptyBorder(5, 5, 10, 5));
 		descriptionText.setLineWrap(true);
 		descriptionText.setWrapStyleWord(true);
+		descriptionText.setRows(3);
 		this.add(descriptionText, BorderLayout.NORTH);
+		
+		JPanel innerPanel = new JPanel(new BorderLayout());
 		
 		mechanismOrGroup = new ButtonGroup();
 
-		JPanel subPanel = new JPanel(new GridLayout(3,1));
+		JPanel subPanel = new JPanel(new GridLayout(4,1));
 		
 		if (isUnmanaged(configuration)) {
 			createUnmanagedLocation(subPanel);
@@ -195,8 +200,11 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 		
 		subPanel.add(createButtonPanel());
 		
+		innerPanel.add(subPanel, BorderLayout.NORTH);
+		innerPanel.add(new JPanel(), BorderLayout.CENTER);
+		
 		initializeSelectability();
-		this.add(subPanel, BorderLayout.CENTER);
+		this.add(innerPanel, BorderLayout.CENTER);
 		this.repaint();
 	}
 
