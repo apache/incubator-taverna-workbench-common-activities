@@ -29,12 +29,18 @@ public class ExternalToolSshNodeViewer {
 		portField.setText(Integer.toString(node.getPort()));
 		if (node.getDirectory() != null) {
 			directoryField.setText(node.getDirectory());
+		} else {
+			directoryField.setText("");
 		}
 		if (node.getLinkCommand() != null) {
 			linkCommandField.setText(node.getLinkCommand());
+		} else {
+			linkCommandField.setText("");
 		}
 		if (node.getCopyCommand() != null) {
 			copyCommandField.setText(node.getCopyCommand());
+		} else {
+			copyCommandField.setText("");
 		}
 	}
 
