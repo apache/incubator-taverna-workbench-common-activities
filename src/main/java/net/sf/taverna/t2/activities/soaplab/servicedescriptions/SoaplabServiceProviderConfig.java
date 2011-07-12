@@ -26,7 +26,13 @@ public class SoaplabServiceProviderConfig extends PropertyAnnotated {
 	}
 
 	public void setEndpoint(URI endpoint) {
-		this.endpoint = endpoint;
+		String uriString = endpoint.toString();
+		if (!uriString.endsWith("/")) {
+			uriString = uriString + "/";
+			this.endpoint = URI.create(uriString);
+		} else {
+			this.endpoint = endpoint;
+		}
 	}
 	
 }
