@@ -24,17 +24,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,6 +50,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -59,6 +58,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -71,11 +71,14 @@ import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityHealthChecker;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity.ClassLoaderSharing;
+import net.sf.taverna.t2.lang.ui.EditorKeySetUtil;
 import net.sf.taverna.t2.lang.ui.FileTools;
+import net.sf.taverna.t2.lang.ui.KeywordDocument;
 import net.sf.taverna.t2.lang.ui.LineEnabledTextPanel;
+import net.sf.taverna.t2.lang.ui.LinePainter;
+import net.sf.taverna.t2.lang.ui.NoWrapEditorKit;
 import net.sf.taverna.t2.reference.ExternalReferenceSPI;
 import net.sf.taverna.t2.visit.VisitReport;
-import net.sf.taverna.t2.visit.VisitReport.Status;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
 import net.sf.taverna.t2.workflowmodel.OutputPort;
 import net.sf.taverna.t2.workflowmodel.Port;
@@ -85,12 +88,7 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityInputPort;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
 
-import org.apache.log4j.Logger;
-import org.syntax.jedit.JEditTextArea;
-import org.syntax.jedit.tokenmarker.JavaTokenMarker;
-
-import bsh.ParseException;
-import bsh.Parser;
+//import org.apache.log4j.Logger;
 
 /**
  * Provides the configurable view for a {@link BeanshellActivity} through it's
@@ -109,9 +107,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 
 	private static final String VALID_NAME_REGEX = "[\\p{L}\\p{Digit}_]+";
 
-
-	private static Logger logger = Logger.getLogger(BeanshellConfigView.class);
-
+	//private static Logger logger = Logger.getLogger(BeanshellConfigView.class);
 	
 	/** The activity which this view describes */
 	protected BeanshellActivity activity;
@@ -121,7 +117,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	
 	///////// Beanshell properties that can be configured ////////
 	/** The beanshell script */
-	private JEditTextArea scriptText;
+	private JEditorPane scriptTextArea;
 	
 	/** A list of views over the input ports */
 	private List<BeanshellInputViewer> inputViewList;
@@ -169,9 +165,10 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	private boolean inputsChanged = false;
 
 	private JTabbedPane tabbedPane = null;
+	
+	private static Set<String> keys = EditorKeySetUtil.loadKeySet(BeanshellConfigView.class.getResourceAsStream("keys.txt"));
 
-
-	private File currentDirectory = null;
+	//private File currentDirectory = null;
 
 
 	/**
@@ -189,7 +186,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	}
 
     public void whenOpened() {
-	scriptText.requestFocus();
+	scriptTextArea.requestFocus();
     }
 
 	public void noteConfiguration() {			
@@ -249,7 +246,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		
 		BeanshellActivityConfigurationBean newConfiguration =
 			(BeanshellActivityConfigurationBean) cloneBean (configuration);
-		newConfiguration.setScript(scriptText
+		newConfiguration.setScript(scriptTextArea
 				.getText());
 		newConfiguration
 				.setInputPortDefinitions(inputBeanList);
@@ -263,11 +260,9 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	}
 
 	public boolean isConfigurationChanged() {
-		String newScriptText = scriptText.getText();
-		String configText = configuration.getScript();
 		return !((!inputsChanged)
 		&& (!outputsChanged)
-		&& scriptText.getText().equals(configuration.getScript()) 
+		&& scriptTextArea.getText().equals(configuration.getScript()) 
 		&& classLoaderSharing.equals(configuration.getClassLoaderSharing())
 		&& localDependencies.equals(configuration.getLocalDependencies()));
 	}
@@ -316,12 +311,28 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		outerConstraint.weightx = 0.1;
 		add(tabbedPane, outerConstraint);
 
-		scriptText = new JEditTextArea();
-		scriptText.setText(configBean.getScript());
-		scriptText.setTokenMarker(new JavaTokenMarker());
-		scriptText.setCaretPosition(0);
-		scriptText.setPreferredSize(new Dimension(0, 0));
-		scriptEditPanel.add(new LineEnabledTextPanel(scriptText), BorderLayout.CENTER);
+		scriptTextArea = new JTextPane();
+		new LinePainter(scriptTextArea);
+
+		final KeywordDocument doc = new KeywordDocument(keys);
+		// NOTE: Due to T2-1145 - always set editor kit BEFORE setDocument
+		scriptTextArea.setEditorKit( new NoWrapEditorKit() );
+		scriptTextArea.setFont(new Font("Monospaced",Font.PLAIN,14));
+		scriptTextArea.setDocument(doc);
+		scriptTextArea.setText(configBean.getScript());
+		scriptTextArea.setCaretPosition(0);
+		scriptTextArea.setPreferredSize(new Dimension(200, 100));
+
+		for (ActivityInputPortDefinitionBean ip : configuration.getInputPortDefinitions()) {
+			String name = ip.getName();
+			doc.addPort(name);
+		}
+		for (ActivityOutputPortDefinitionBean op : configuration.getOutputPortDefinitions()) {
+			String name = op.getName();
+			doc.addPort(name);
+		}
+		
+		scriptEditPanel.add(new LineEnabledTextPanel(scriptTextArea), BorderLayout.CENTER);
 		
 		final JButton checkScriptButton = new JButton("Check script");
 		checkScriptButton.setToolTipText("Check the beanshell script");
@@ -338,15 +349,18 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 				}
 				
 				VisitReport visit = healthChecker.visit(fakeActivity, Collections.emptyList());
-				int messageType;
-				if (visit.getStatus().equals(Status.OK)) {
-					messageType = JOptionPane.INFORMATION_MESSAGE;
-				} else if (visit.getStatus().equals(Status.WARNING)) {
-					messageType = JOptionPane.WARNING_MESSAGE;
-				} else { // SEVERE
-					messageType = JOptionPane.ERROR_MESSAGE;
+				boolean invalidScript = false;
+                                for (VisitReport subReport : visit.getSubReports()) {
+                                    if (subReport.getResultId() == HealthCheck.INVALID_SCRIPT) {
+					invalidScript = true;
+					String message = subReport.getMessage();
+					JOptionPane.showMessageDialog(BeanshellConfigView.this, message, "Beanshell script check", JOptionPane.ERROR_MESSAGE);
+					break;
+				    }
 				}
-				JOptionPane.showMessageDialog(BeanshellConfigView.this, visit.toString(), "Beanshell script check", messageType);
+				if (!invalidScript) {
+				    JOptionPane.showMessageDialog(BeanshellConfigView.this, "No problem found", "Beanshell script check", JOptionPane.INFORMATION_MESSAGE);
+				}
 			}
 			
 		});
@@ -354,9 +368,9 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		loadScriptButton.setToolTipText("Load a beanshell script from a file");
 		loadScriptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String newScript = FileTools.readStringFromFile(BeanshellConfigView.this);
+			    String newScript = FileTools.readStringFromFile(BeanshellConfigView.this, "Load Beanshell script", ".bsh");
 				if (newScript != null) {
-					scriptText.setText(newScript);
+					scriptTextArea.setText(newScript);
 				}
 			}
 		});
@@ -365,7 +379,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		saveRScriptButton.setToolTipText("Save the Beanshell script to a file");
 		saveRScriptButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FileTools.saveStringToFile(BeanshellConfigView.this, "Save Beanshell script", ".bsh", scriptText.getText());
+				FileTools.saveStringToFile(BeanshellConfigView.this, "Save Beanshell script", ".bsh", scriptTextArea.getText());
 			}
 		});
 
@@ -1025,7 +1039,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		if (JOptionPane.showConfirmDialog(this,
 				"Do you really want to clear the script?",
 				"Clearing the script", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-			scriptText.setText("");
+			scriptTextArea.setText("");
 		}
 
 	}

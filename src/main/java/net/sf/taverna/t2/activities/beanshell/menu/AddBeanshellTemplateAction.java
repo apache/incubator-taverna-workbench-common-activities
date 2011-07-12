@@ -58,7 +58,7 @@ public class AddBeanshellTemplateAction extends AbstractContextualMenuAction {
 			.getLogger(AddBeanshellTemplateAction.class);
 
 	public AddBeanshellTemplateAction() {
-		super(insertSection, 30);
+		super(insertSection, 300);
 	}
 
 	@Override
