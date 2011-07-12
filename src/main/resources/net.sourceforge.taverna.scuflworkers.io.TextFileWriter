@@ -1,6 +1,14 @@
 <activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
-  <script>BufferedWriter out = new BufferedWriter(new FileWriter(outputFile));
+  <script>
+  BufferedWriter out;
+  if (encoding == void) {
+  	out = new BufferedWriter(new FileWriter(outputFile));
+  }
+  else {
+  	out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), encoding)); 
+  }
 out.write(filecontents);
+out.flush();
 out.close();
 outputFile = filecontents;
 </script>
@@ -26,7 +34,16 @@ outputFile = filecontents;
         <string>'text/plain'</string>
       </mimeTypes>
     </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
-  </inputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <handledReferenceSchemes />
+      <translatedElementType>java.lang.String</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+      <name>encoding</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/plain'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>  </inputs>
   <outputs>
     <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
       <granularDepth>0</granularDepth>

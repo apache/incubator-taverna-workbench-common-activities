@@ -3,6 +3,10 @@
 import org.biojava.bio.seq.RNATools;
 import org.biojava.bio.symbol.SymbolList;
 
+if ((dna_seq == void) || (dna_seq == null)) {
+	throw new RuntimeException("The dna_seq must be specified");
+}
+
 // make a DNA SymbolList
 SymbolList symL = DNATools.createDNA(dna_seq);
 

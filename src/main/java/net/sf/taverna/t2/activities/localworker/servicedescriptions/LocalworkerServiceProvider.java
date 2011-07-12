@@ -127,6 +127,9 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 		localWorkerToScript.put(
 				"net.sourceforge.taverna.scuflworkers.xml.XSLTWorker",
 				"Transform XML");
+		localWorkerToScript.put(
+				"net.sourceforge.taverna.scuflworkers.xml.XSLTWorkerWithParameters",
+				"Transform XML with parameters");
 
 		// biojava
 		localWorkerToScript

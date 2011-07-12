@@ -76,7 +76,8 @@ Templates template = factory.newTemplates(new StreamSource(getReader(xslFilename
 Transformer xformer = template.newTransformer();
 
 // Prepare the input and output files
-Source source = new StreamSource(getReader(inFileURL));
+Reader sourceReader = getReader(inFileURL);
+Source source = new StreamSource(sourceReader);
 StringWriter resultStr = new StringWriter();
 Result result = new StreamResult(resultStr);
 
@@ -92,7 +93,9 @@ if ((outFilename != null) &amp;&amp; !outFilename.equals("")) {
 
 	out.write(outputStr);
 	out.close();
-}</script>
+}
+sourceReader.close();
+</script>
   <dependencies />
   <inputs>
     <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>

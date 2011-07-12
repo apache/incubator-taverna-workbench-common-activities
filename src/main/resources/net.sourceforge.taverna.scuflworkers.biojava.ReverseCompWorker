@@ -2,6 +2,10 @@
   <script>import org.biojava.bio.seq.DNATools;
 import org.biojava.bio.symbol.SymbolList;
 
+if ((rawSeq == void) || (rawSeq == null)) {
+    throw new RuntimeException("The rawSeq must be specified");
+}
+
 // make a DNA SymbolListbena
 SymbolList symL = DNATools.createDNA(rawSeq);
 
