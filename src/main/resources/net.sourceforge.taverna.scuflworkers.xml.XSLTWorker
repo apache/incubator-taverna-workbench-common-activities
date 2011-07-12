@@ -1,0 +1,152 @@
+<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap><map from="outputStr" to="outputStr" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
+  <script>import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.SourceLocator;
+import javax.xml.transform.Templates;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+BufferedReader getReader (String fileUrl) throws IOException {
+		InputStreamReader reader;
+		try {
+			reader = new FileReader(fileUrl);
+		}
+		catch (FileNotFoundException e) {
+			// try a real URL instead
+			URL url = new URL(fileUrl);
+			reader = new InputStreamReader (url.openStream());
+		}
+		return new BufferedReader(reader);
+	}
+	
+BufferedWriter getWriter (String fileUrl) throws IOException {
+		Writer writer;
+		try {
+			writer = new FileWriter(fileUrl);
+		}
+		catch (FileNotFoundException e) {
+			// try a real URL instead
+			URL url = new URL(fileUrl);
+			writer = new OutputStreamWriter (url.openConnection().getOutputStream());
+		}
+		return new BufferedWriter(writer);
+	}
+	
+String xslFilename = xslFileURL;
+String outFilename;
+if (outFileURL != void) {
+    outFilename = outFileURL;
+}
+
+String ext;
+if (outputExt != void) {
+    ext = outputExt;
+}
+
+if (((outFilename == null) || outFilename.equals("")) &amp;&amp; (ext != null)) {
+		outFilename = inFileURL.substring(0, inFileURL.indexOf(".")+1) + ext;
+}
+
+// Create transformer factory
+TransformerFactory factory = TransformerFactory.newInstance();
+
+// Use the factory to create a template containing the xsl file
+Templates template = factory.newTemplates(new StreamSource(getReader(xslFilename)));
+
+// Use the template to create a transformer
+Transformer xformer = template.newTransformer();
+
+// Prepare the input and output files
+Reader sourceReader = getReader(inFileURL);
+Source source = new StreamSource(sourceReader);
+StringWriter resultStr = new StringWriter();
+Result result = new StreamResult(resultStr);
+
+// Apply the xsl file to the source file and write the result to the
+// output file
+xformer.transform(source, result);
+
+outputStr = resultStr.toString();
+
+if ((outFilename != null) &amp;&amp; !outFilename.equals("")) {
+
+	BufferedWriter out = getWriter(outFilename);
+
+	out.write(outputStr);
+	out.close();
+}
+sourceReader.close();
+</script>
+  <dependencies />
+  <inputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <handledReferenceSchemes />
+      <translatedElementType>java.lang.String</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+      <name>xslFileURL</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/plain'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <handledReferenceSchemes />
+      <translatedElementType>java.lang.String</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+      <name>outFileURL</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/plain'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <handledReferenceSchemes />
+      <translatedElementType>java.lang.String</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+      <name>inFileURL</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/plain'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <handledReferenceSchemes />
+      <translatedElementType>java.lang.String</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+      <name>outputExt</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/plain'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+  </inputs>
+  <outputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+      <granularDepth>0</granularDepth>
+      <name>outputStr</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/xml'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+  </outputs>
+</net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean></configBean></activity>

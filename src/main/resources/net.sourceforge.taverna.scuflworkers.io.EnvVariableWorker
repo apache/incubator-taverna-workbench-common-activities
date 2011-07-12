@@ -1,0 +1,33 @@
+<activity  xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap><map from="properties" to="properties" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
+  <script>import java.net.URLEncoder;
+
+Properties sysProps = System.getProperties();
+Set keys = sysProps.keySet();
+Iterator it = keys.iterator();
+String currKey = null;
+StringBuffer sb = new StringBuffer();
+sb.append("&lt;?xml version=\"1.0\"?&gt;\n");
+sb.append("&lt;property-list&gt;\n");
+while (it.hasNext()) {
+	currKey = (String) it.next();
+	sb.append("&lt;property ");
+	sb.append(" name=\"" + URLEncoder.encode(currKey) + "\"");
+	sb.append(" value=\"" + URLEncoder.encode(sysProps.getProperty(currKey)) + "\"/&gt;\n");
+}
+sb.append("&lt;/property-list&gt;");
+
+properties = sb.toString();
+</script>
+  <dependencies />
+  <inputs />
+  <outputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+      <granularDepth>0</granularDepth>
+      <name>properties</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/xml'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+  </outputs>
+</net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean></configBean></activity>
