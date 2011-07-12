@@ -52,7 +52,7 @@ public class SpreadsheetImportAddTemplateAction extends AbstractContextualMenuAc
 	private static Logger logger = Logger.getLogger(SpreadsheetImportAddTemplateAction.class);
 
 	public SpreadsheetImportAddTemplateAction() {
-		super(insertSection, 60);
+		super(insertSection, 700);
 	}
 
 	@Override
