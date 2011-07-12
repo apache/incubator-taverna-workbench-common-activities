@@ -41,7 +41,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -50,6 +49,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
+import java.awt.Dialog;
 
 //import org.apache.log4j.Logger;
 
@@ -121,6 +121,8 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 	}
 
 	private void initComponents() {
+		
+		this.setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
 		
 		int gridy = 0;
 		
