@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                      http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="XPathActivityIcon" class="net.sf.taverna.t2.activities.xpath.ui.servicedescription.XPathActivityIcon" />
+
+	<bean id="XPathTemplateService" class="net.sf.taverna.t2.activities.xpath.ui.servicedescription.XPathTemplateService" />
+
+	<bean id="ConfigureXPathActivityMenuAction" class="net.sf.taverna.t2.activities.xpath.ui.contextualview.ConfigureXPathActivityMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+	</bean>
+	<bean id="AddXPathTemplateAction" class="net.sf.taverna.t2.activities.xpath.ui.menu.AddXPathTemplateAction">
+			<property name="editManager" ref="editManager" />
+			<property name="menuManager" ref="menuManager" />
+			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+	</bean>
+	<bean id="AddXPathTemplateMenuAction" class="net.sf.taverna.t2.activities.xpath.ui.menu.AddXPathTemplateMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="menuManager" ref="menuManager" />
+			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+	</bean>
+
+	<bean id="XPathActivityMainContextViewFactory" class="net.sf.taverna.t2.activities.xpath.ui.contextualview.XPathActivityMainContextViewFactory">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+	</bean>
+
+</beans>

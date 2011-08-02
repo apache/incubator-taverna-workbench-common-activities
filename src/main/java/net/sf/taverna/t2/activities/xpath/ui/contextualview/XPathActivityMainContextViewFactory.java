@@ -3,25 +3,38 @@ package net.sf.taverna.t2.activities.xpath.ui.contextualview;
 import java.util.Arrays;
 import java.util.List;
 
+import net.sf.taverna.t2.activities.xpath.XPathActivity;
+import net.sf.taverna.t2.workbench.edits.EditManager;
+import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
 
-import net.sf.taverna.t2.activities.xpath.XPathActivity;
-
 /**
- * 
+ *
  * @author Sergejs Aleksejevs
  */
 public class XPathActivityMainContextViewFactory implements
-		ContextualViewFactory<XPathActivity>
-{
+		ContextualViewFactory<XPathActivity> {
+
+	private EditManager editManager;
+	private FileManager fileManager;
 
 	public boolean canHandle(Object selection) {
 		return selection instanceof XPathActivity;
 	}
 
 	public List<ContextualView> getViews(XPathActivity selection) {
-		return Arrays.<ContextualView>asList(new XPathActivityMainContextualView(selection));
+		return Arrays
+				.<ContextualView> asList(new XPathActivityMainContextualView(
+						selection, editManager, fileManager));
 	}
-	
+
+	public void setEditManager(EditManager editManager) {
+		this.editManager = editManager;
+	}
+
+	public void setFileManager(FileManager fileManager) {
+		this.fileManager = fileManager;
+	}
+
 }
