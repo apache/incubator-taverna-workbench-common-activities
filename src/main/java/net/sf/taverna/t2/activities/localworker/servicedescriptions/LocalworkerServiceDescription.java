@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.swing.Icon;
+
 import net.sf.taverna.raven.repository.BasicArtifact;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
@@ -16,7 +17,7 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPo
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
 
 public class LocalworkerServiceDescription extends ServiceDescription<BeanshellActivityConfigurationBean>{
-	
+
 	private static final String LOCALWORKER = ServiceDescription.LOCAL_SERVICES;
 
 	private String script;
@@ -25,7 +26,7 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 	private String operation;
 	private String category;
 	private String provider;
-	
+
 	private String localworkerName;
 	public String getLocalworkerName() {
 		return localworkerName;
@@ -70,15 +71,15 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 		// different bean for each type of localworker, get xml version of bean
 		// and create BeanshellConfig
 		LocalworkerActivityConfigurationBean bean = new LocalworkerActivityConfigurationBean();
-				
+
 		bean.setScript(this.script);
 		bean.setInputPortDefinitions(this.inputPorts);
 		bean.setOutputPortDefinitions(this.outputPorts);
 		bean.setDependencies(this.dependencies); // this field is deprecated (replaced by artifactDependencies), but for backward compatibility we leave it here
 		// Local worker only has artifact dependencies
-		bean.setArtifactDependencies(artifactDependencies);
+//		bean.setArtifactDependencies(artifactDependencies);
 		bean.setLocalworkerName(getLocalworkerName());
-		
+
 		// FIXME needs some mime types from the annotations (done as strings
 		// inside the port at the moment)
 		return bean;
@@ -101,7 +102,7 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 		return result;
 	}
 
-	
+
 	@PropertyAnnotation(hidden=true)
 	public String getScript() {
 		return script;
@@ -161,7 +162,7 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 	public LinkedHashSet<BasicArtifact> getArtifactDependencies() {
 		return artifactDependencies;
 	}
-	
+
 	/**
 	 * @param artifactDependencies the artifactDependencies to set
 	 */

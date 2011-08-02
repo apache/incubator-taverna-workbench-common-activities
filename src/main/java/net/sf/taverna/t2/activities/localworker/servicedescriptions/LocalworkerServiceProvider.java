@@ -32,14 +32,14 @@ import org.jdom.input.SAXBuilder;
 public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 
 	private static final String LOCALWORKER_NAMES = "/localworker_names";
-	
+
 	private static final String LOCALWORKER_SERVICE = "Local service";
 
 	private static Logger logger = Logger.getLogger(Logger.class);
 
 	private static final URI providerId = URI
 	.create("http://taverna.sf.net/2010/service-provider/localworker");
-	
+
 	/** Used to deserialize the Activities stored on disk */
 	private ActivityXMLDeserializer deserializer = ActivityXMLDeserializer.getInstance();;
 
@@ -235,7 +235,7 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 		localWorkerToScript.put(
 				"net.sourceforge.taverna.scuflworkers.ncbi.PubMedEFetchWorker",
 				"Get PubMed XML By PMID");
-		
+
 		localWorkerToScript.put(
 				"net.sourceforge.taverna.scuflworkers.jdbc.SQLQueryWorker",
 				"Execute SQL Query");
@@ -263,7 +263,7 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 	public void findServiceDescriptionsAsync(FindServiceDescriptionsCallBack callBack) {
 
 		List<ServiceDescription> items = new ArrayList <ServiceDescription>();
-		
+
 		InputStream inputStream = getClass().getResourceAsStream(
 				LOCALWORKER_NAMES);
 		if (inputStream == null) {
@@ -325,7 +325,7 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 	/**
 	 * Loads the deserialised local worker from disk and creates a
 	 * {@link LocalworkerActivityItem} with the correct ports and script from it
-	 * 
+	 *
 	 * @param line
 	 * @return a LocalWorker with the appropriate Input/Output ports and script
 	 * @throws ItemCreationException
@@ -366,7 +366,7 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 		List<ActivityInputPortDefinitionBean> inputPortBeans = new ArrayList<ActivityInputPortDefinitionBean>();
 		LocalworkerActivityConfigurationBean configuration = (LocalworkerActivityConfigurationBean) activity
 				.getConfiguration();
-		
+
 		// Translate the old dependencies field into artifactDependencies field
 		// The local worker definition xml files still have the old dependencies field
 		LinkedHashSet<BasicArtifact> artifactDependencies = new LinkedHashSet<BasicArtifact>();
@@ -377,7 +377,7 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 						artifactParts[2]));
 			}
 		}
-		configuration.setArtifactDependencies(artifactDependencies);
+//		configuration.setArtifactDependencies(artifactDependencies);
 
 		for (ActivityInputPortDefinitionBean bean : configuration
 				.getInputPortDefinitions()) {
@@ -412,7 +412,7 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 		item.setOperation(operationName);
 		item.setDependencies(((BeanshellActivity) activity).getConfiguration()
 				.getDependencies()); // this property is not in use any more
-		item.setArtifactDependencies(configuration.getArtifactDependencies());
+//		item.setArtifactDependencies(configuration.getArtifactDependencies());
 //		item.setOperation(operation);
 		return item;
 
@@ -421,12 +421,12 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 	public Icon getIcon() {
 		return LocalworkerActivityIcon.getLocalworkerIcon();
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Local workers provider";
 	}
-	
+
 	public static String getServiceNameFromClassname(String classname) {
 		return (localWorkerToScript.get(classname));
 	}
