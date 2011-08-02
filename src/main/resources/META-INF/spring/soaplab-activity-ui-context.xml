@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
                       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="SoaplabActivityIcon" class="net.sf.taverna.t2.activities.soaplab.servicedescriptions.SoaplabActivityIcon" />
 
 	<bean id="SoaplabServiceProvider" class="net.sf.taverna.t2.activities.soaplab.servicedescriptions.SoaplabServiceProvider" />
 
-	<bean id="ConfigureSoaplabActivityMenuAction" class="net.sf.taverna.t2.activities.soaplab.menu.ConfigureSoaplabActivityMenuAction" />
+	<bean id="ConfigureSoaplabActivityMenuAction" class="net.sf.taverna.t2.activities.soaplab.menu.ConfigureSoaplabActivityMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+	</bean>
 
-	<bean id="SoaplabActivityViewFactory" class="net.sf.taverna.t2.activities.soaplab.views.SoaplabActivityViewFactory" />
+	<bean id="SoaplabActivityViewFactory" class="net.sf.taverna.t2.activities.soaplab.views.SoaplabActivityViewFactory" >
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+	</bean>
 
 </beans>

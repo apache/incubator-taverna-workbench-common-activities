@@ -1,19 +1,19 @@
 /*******************************************************************************
- * Copyright (C) 2007 The University of Manchester   
- * 
+ * Copyright (C) 2007 The University of Manchester
+ *
  *  Modifications to the initial code base are copyright of their
  *  respective authors, or their employers as appropriate.
- * 
+ *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public License
  *  as published by the Free Software Foundation; either version 2.1 of
  *  the License, or (at your option) any later version.
- *    
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *    
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
@@ -27,6 +27,8 @@ import javax.swing.Action;
 
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivity;
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivityConfigurationBean;
+import net.sf.taverna.t2.workbench.edits.EditManager;
+import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
 
@@ -36,9 +38,13 @@ public class SoaplabActivityConfigurationAction extends
 	private static final long serialVersionUID = 5076721332542691094L;
 	private final Frame owner;
 	public static final String CONFIGURE_SOAPLAB_ACTIVITY = "Configure Soaplab";
+	private final EditManager editManager;
+	private final FileManager fileManager;
 
-	public SoaplabActivityConfigurationAction(SoaplabActivity activity,Frame owner) {
+	public SoaplabActivityConfigurationAction(SoaplabActivity activity,Frame owner, EditManager editManager, FileManager fileManager) {
 		super(activity);
+		this.editManager = editManager;
+		this.fileManager = fileManager;
 		putValue(Action.NAME, CONFIGURE_SOAPLAB_ACTIVITY);
 		this.owner = owner;
 	}
@@ -54,9 +60,9 @@ public class SoaplabActivityConfigurationAction extends
 		final SoaplabConfigurationPanel panel = new SoaplabConfigurationPanel(
 				getActivity());
 		final ActivityConfigurationDialog<SoaplabActivity, SoaplabActivityConfigurationBean> dialog =
-			new ActivityConfigurationDialog<SoaplabActivity, SoaplabActivityConfigurationBean>(getActivity(), panel);
+			new ActivityConfigurationDialog<SoaplabActivity, SoaplabActivityConfigurationBean>(getActivity(), panel, editManager, fileManager);
 
-		ActivityConfigurationAction.setDialog(getActivity(), dialog);
+		ActivityConfigurationAction.setDialog(getActivity(), dialog, fileManager);
 	}
 
 }
