@@ -15,12 +15,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import net.sf.taverna.t2.workbench.ui.impl.configuration.colour.ColourManager;
-import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
-
 import net.sf.taverna.t2.activities.rest.RESTActivity;
 import net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean;
 import net.sf.taverna.t2.activities.rest.ui.config.RESTActivityConfigureAction;
+import net.sf.taverna.t2.workbench.edits.EditManager;
+import net.sf.taverna.t2.workbench.file.FileManager;
+import net.sf.taverna.t2.workbench.ui.impl.configuration.colour.ColourManager;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 
 @SuppressWarnings("serial")
 public class RESTActivityMainContextualView extends ContextualView {
@@ -38,8 +39,14 @@ public class RESTActivityMainContextualView extends ContextualView {
 	private JLabel jlSendHTTPExpectRequestHeader;
 	private JTextField tfSendHTTPExpectRequestHeader;
 
-	public RESTActivityMainContextualView(RESTActivity activity) {
+	private final EditManager editManager;
+
+	private final FileManager fileManager;
+
+	public RESTActivityMainContextualView(RESTActivity activity, EditManager editManager, FileManager fileManager) {
 		this.activity = activity;
+		this.editManager = editManager;
+		this.fileManager = fileManager;
 		initView();
 	}
 
@@ -194,7 +201,7 @@ public class RESTActivityMainContextualView extends ContextualView {
 	@Override
 	public Action getConfigureAction(final Frame owner) {
 		// "Configure" button appears because of this action being returned
-		return new RESTActivityConfigureAction(activity, owner);
+		return new RESTActivityConfigureAction(activity, owner, editManager, fileManager);
 	}
 
 }

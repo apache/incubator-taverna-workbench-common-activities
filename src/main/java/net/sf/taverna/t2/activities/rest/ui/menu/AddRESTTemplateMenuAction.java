@@ -1,19 +1,19 @@
 /*******************************************************************************
- * Copyright (C) 2007-2009 The University of Manchester   
- * 
+ * Copyright (C) 2007-2009 The University of Manchester
+ *
  *  Modifications to the initial code base are copyright of their
  *  respective authors, or their employers as appropriate.
- * 
+ *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public License
  *  as published by the Free Software Foundation; either version 2.1 of
  *  the License, or (at your option) any later version.
- *    
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *    
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
@@ -31,7 +31,10 @@ import javax.swing.KeyStroke;
 import net.sf.taverna.t2.activities.rest.RESTActivity;
 import net.sf.taverna.t2.activities.rest.ui.servicedescription.GenericRESTTemplateService;
 import net.sf.taverna.t2.ui.menu.AbstractMenuAction;
+import net.sf.taverna.t2.ui.menu.MenuManager;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
+import net.sf.taverna.t2.workbench.edits.EditManager;
+import net.sf.taverna.t2.workbench.ui.DataflowSelectionManager;
 import net.sf.taverna.t2.workbench.ui.workflowview.WorkflowView;
 import net.sf.taverna.t2.workbench.views.graph.actions.DesignOnlyAction;
 import net.sf.taverna.t2.workbench.views.graph.menu.InsertMenu;
@@ -40,10 +43,10 @@ import org.apache.log4j.Logger;
 
 /**
  * An action to add a REST activity + a wrapping processor to the workflow.
- * 
+ *
  * @author Alex Nenadic
  * @author alanrw
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class AddRESTTemplateMenuAction extends AbstractMenuAction {
@@ -56,6 +59,10 @@ public class AddRESTTemplateMenuAction extends AbstractMenuAction {
 	private static Logger logger = Logger
 			.getLogger(AddRESTTemplateMenuAction.class);
 
+	private EditManager editManager;
+	private MenuManager menuManager;
+	private DataflowSelectionManager dataflowSelectionManager;
+
 	public AddRESTTemplateMenuAction() {
 		super(InsertMenu.INSERT, 500, ADD_REST_URI);
 	}
@@ -65,22 +72,34 @@ public class AddRESTTemplateMenuAction extends AbstractMenuAction {
 
 		return new AddRESTMenuAction();
 	}
-	
+
 	protected class AddRESTMenuAction extends DesignOnlyAction {
 		AddRESTMenuAction () {
 			super ();
 			putValue(SMALL_ICON, ActivityIconManager.getInstance().iconForActivity(
 					new RESTActivity()));
-			putValue(NAME, ADD_REST);	
-			putValue(SHORT_DESCRIPTION, "REST service");	
+			putValue(NAME, ADD_REST);
+			putValue(SHORT_DESCRIPTION, "REST service");
 			putValue(Action.ACCELERATOR_KEY,
 					KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_DOWN_MASK));
 		}
 
 		public void actionPerformed(ActionEvent e) {
 			WorkflowView.importServiceDescription(GenericRESTTemplateService.getServiceDescription(),
-			false);
+			false, editManager, menuManager, dataflowSelectionManager);
 		}
+	}
+
+	public void setEditManager(EditManager editManager) {
+		this.editManager = editManager;
+	}
+
+	public void setMenuManager(MenuManager menuManager) {
+		this.menuManager = menuManager;
+	}
+
+	public void setDataflowSelectionManager(DataflowSelectionManager dataflowSelectionManager) {
+		this.dataflowSelectionManager = dataflowSelectionManager;
 	}
 
 }

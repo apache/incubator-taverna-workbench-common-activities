@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                      http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="RESTActivityIcon" class="net.sf.taverna.t2.activities.rest.ui.servicedescription.RESTActivityIcon" />
+
+	<bean id="GenericRESTTemplateService" class="net.sf.taverna.t2.activities.rest.ui.servicedescription.GenericRESTTemplateService" />
+
+	<bean id="ConfigureRESTActivityMenuAction" class="net.sf.taverna.t2.activities.rest.ui.view.ConfigureRESTActivityMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+	</bean>
+	<bean id="AddRESTTemplateAction" class="net.sf.taverna.t2.activities.rest.ui.menu.AddRESTTemplateAction">
+			<property name="editManager" ref="editManager" />
+			<property name="menuManager" ref="menuManager" />
+			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+	</bean>
+	<bean id="AddRESTTemplateMenuAction" class="net.sf.taverna.t2.activities.rest.ui.menu.AddRESTTemplateMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="menuManager" ref="menuManager" />
+			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+	</bean>
+
+	<bean id="RESTActivityMainContextViewFactory" class="net.sf.taverna.t2.activities.rest.ui.view.RESTActivityMainContextViewFactory">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+	</bean>
+
+</beans>
