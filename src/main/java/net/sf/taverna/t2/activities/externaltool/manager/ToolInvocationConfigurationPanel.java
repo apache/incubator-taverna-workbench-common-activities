@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package net.sf.taverna.t2.activities.externaltool.manager;
 
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
@@ -49,39 +50,42 @@ import net.sf.taverna.t2.workbench.helper.Helper;
  *
  */
 public class ToolInvocationConfigurationPanel extends JPanel  implements Observer<InvocationManagerEvent> {
-	
+
 	public static final String HEADER_TEXT = "A tool can be set to run at an explicit location (e.g. on a specificic machine or one of a set of machines). Alternatively, it can be set to run at a symbolic location, which means the tool will then be run at the explicit location pointed to by the symbolic location.";
 
 	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
-	
+
 	protected static SPIRegistry<InvocationMechanismEditor> invocationMechanismEditorRegistry = new SPIRegistry(InvocationMechanismEditor.class);
-	
+
 	private JTextArea headerText;
-	
+
 	private static String EXPLICIT_LOCATIONS = "explicit locations";
 	private static String SYMBOLIC_LOCATIONS = "symbolic locations";
-	
+
+	private List<MechanismCreator> mechanismCreators;
+
 	JList locationList = new JList();
-	
+
 	DefaultListModel groupListModel = new DefaultListModel();
 	DefaultListModel mechanismListModel = new DefaultListModel();
 	JComboBox locationTypeCombo = new JComboBox(new String[] {EXPLICIT_LOCATIONS, SYMBOLIC_LOCATIONS});
-	
-	public ToolInvocationConfigurationPanel() {
+
+	public ToolInvocationConfigurationPanel(List<MechanismCreator> mechanismCreators) {
 		super();
+		this.mechanismCreators = mechanismCreators;
 		manager.addObserver(this);
 
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
-		
+
 		headerText = new JTextArea(HEADER_TEXT);
 		headerText.setLineWrap(true);
 		headerText.setWrapStyleWord(true);
 		headerText.setEditable(false);
 		headerText.setFocusable(false);
 		headerText.setBorder(new EmptyBorder(10, 10, 10, 10));
-		
+
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(0, 0, 10, 0);
 		gbc.gridx = 0;
@@ -91,11 +95,11 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 	        gbc.weighty = 0.0;
 	        gbc.fill = GridBagConstraints.HORIZONTAL;
 		add(headerText, gbc);
-		
+
 		JPanel locationPanel = new JPanel(new BorderLayout());
 		JPanel subPanel = new JPanel(new FlowLayout());
 		JLabel modify = new JLabel("Modify:");
-		
+
 		locationTypeCombo.setSelectedItem(EXPLICIT_LOCATIONS);
 		locationTypeCombo.addActionListener(new ActionListener() {
 
@@ -105,7 +109,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 			}});
 		subPanel.add(modify);
 		subPanel.add(locationTypeCombo);
-		
+
 		populateLists();
 		switchList();
 		locationList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -125,7 +129,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 		});
 		locationPanel.add(new JScrollPane(locationList), BorderLayout.CENTER);
 		locationPanel.add(subPanel, BorderLayout.NORTH);
-		
+
 		JPanel buttonPanel = new JPanel(new FlowLayout());
 		JButton helpButton = new DeselectingButton("Help",
 				new AbstractAction() {
@@ -133,17 +137,17 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 			public void actionPerformed(ActionEvent e) {
 				Helper.showHelp(ToolInvocationConfigurationPanel.this);
 			}});
-		
+
 		buttonPanel.add(helpButton);
 
 		buttonPanel.add(addLocationButton());
 		buttonPanel.add(removeLocationButton());
 		buttonPanel.add(editLocationButton());
 		locationPanel.add(buttonPanel, BorderLayout.SOUTH);
-		
+
 		gbc.gridy++;
 	    gbc.weighty = 1;
-	        
+
         gbc.fill = GridBagConstraints.BOTH;
 	    gbc.anchor = GridBagConstraints.SOUTH;
 	    gbc.insets = new Insets(10, 0, 0, 0);
@@ -204,7 +208,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 	private boolean isShowingGroups() {
 		return (locationTypeCombo.getSelectedItem().equals(SYMBOLIC_LOCATIONS));
 	}
-	
+
 	private JButton addLocationButton() {
 		final JButton result = new DeselectingButton("Add",
 				new AbstractAction() {
@@ -229,7 +233,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 
 					if (vuid.show(ToolInvocationConfigurationPanel.this)) {
 						String groupName = inputPanel.getGroupName();
-						InvocationGroup newGroup = new InvocationGroup();
+						InvocationGroup newGroup = new InvocationGroup(mechanismCreators);
 						newGroup.setName(groupName);
 						newGroup.setMechanism(inputPanel.getSelectedMechanism());
 						manager.addInvocationGroup(newGroup);
@@ -243,7 +247,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 					}
 
 					MechanismPanel inputPanel = new MechanismPanel();
-					
+
 					ValidatingUserInputDialog vuid = new ValidatingUserInputDialog(
 							"Add explicit location", inputPanel);
 					vuid.addTextComponentValidation(inputPanel.getMechanismNameField(),
@@ -278,7 +282,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 		});
 		return result;
 	}
-	
+
 	private JButton removeLocationButton() {
 		JButton result = new DeselectingButton("Remove",
 				new AbstractAction() {
@@ -356,7 +360,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 		}
 		return null;
 	}
-	
+
 	protected InvocationMechanismEditor findEditor(Class c) {
 		for (InvocationMechanismEditor ime : invocationMechanismEditorRegistry.getInstances()) {
 			if (ime.canShow(c)) {
@@ -365,8 +369,8 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 		}
 		return null;
 	}
-	
-	
+
+
 
 	@Override
 	public void notify(Observable<InvocationManagerEvent> arg0,

@@ -1,7 +1,9 @@
 /**
- * 
+ *
  */
 package net.sf.taverna.t2.activities.externaltool.manager;
+
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -16,7 +18,9 @@ import net.sf.taverna.t2.workbench.configuration.ConfigurationUIFactory;
 public class ToolInvocationConfigurationUIFactory implements
 		ConfigurationUIFactory {
 
-	ToolInvocationConfigurationPanel configPanel = new ToolInvocationConfigurationPanel();
+	private List<MechanismCreator> mechanismCreators;
+
+	private ToolInvocationConfigurationPanel configPanel;
 
 	/* (non-Javadoc)
 	 * @see net.sf.taverna.t2.workbench.configuration.ConfigurationUIFactory#canHandle(java.lang.String)
@@ -39,7 +43,14 @@ public class ToolInvocationConfigurationUIFactory implements
 	 */
 	@Override
 	public JPanel getConfigurationPanel() {
+		if (configPanel == null) {
+			configPanel = new ToolInvocationConfigurationPanel(mechanismCreators);
+		}
 		return configPanel;
+	}
+
+	public void setMechanismCreators(List<MechanismCreator> mechanismCreators) {
+		this.mechanismCreators = mechanismCreators;
 	}
 
 }

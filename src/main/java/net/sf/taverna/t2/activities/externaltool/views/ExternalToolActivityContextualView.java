@@ -1,19 +1,19 @@
 /*******************************************************************************
- * Copyright (C) 2010 Hajo Nils Krabbenhoeft, INB, University of Luebeck   
- * 
+ * Copyright (C) 2010 Hajo Nils Krabbenhoeft, INB, University of Luebeck
+ *
  *  Modifications to the initial code base are copyright of their
  *  respective authors, or their employers as appropriate.
- * 
+ *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public License
  *  as published by the Free Software Foundation; either version 2.1 of
  *  the License, or (at your option) any later version.
- *    
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *    
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
@@ -22,19 +22,20 @@
 package net.sf.taverna.t2.activities.externaltool.views;
 
 import java.awt.Frame;
-
-import javax.swing.Action;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import javax.swing.Action;
+
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.actions.ExternalToolActivityConfigureAction;
 import net.sf.taverna.t2.activities.externaltool.servicedescriptions.ExternalToolActivityIcon;
+import net.sf.taverna.t2.workbench.edits.EditManager;
+import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
-import net.sf.taverna.t2.workbench.ui.impl.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInput;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInputStatic;
@@ -44,14 +45,18 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 /**
  * ExternalToolActivityContextualView displays the use case information in a HTML table.
  * Currently, this is only the use case ID.
- * 
+ *
  * @author Hajo Nils Krabbenhoeft
  */
 public class ExternalToolActivityContextualView extends HTMLBasedActivityContextualView<ExternalToolActivityConfigurationBean> {
 	private static final long serialVersionUID = 1L;
+	private final EditManager editManager;
+	private final FileManager fileManager;
 
-	public ExternalToolActivityContextualView(Activity<?> activity) {
+	public ExternalToolActivityContextualView(Activity<?> activity, EditManager editManager, FileManager fileManager) {
 		super(activity);
+		this.editManager = editManager;
+		this.fileManager = fileManager;
 	}
 
 	@Override
@@ -69,17 +74,17 @@ public class ExternalToolActivityContextualView extends HTMLBasedActivityContext
 		    id = "<b>Not specified</b>";
 		}
 		html += "<tr><td>Id</td><td>" + id + "</td></tr>";
-		
+
 		UseCaseDescription useCaseDescription = bean.getUseCaseDescription();
 		String name = useCaseDescription.getUsecaseid();
 		if ((name == null) || name.isEmpty()){
 		    name = "<b>Not specified</b>";
 		}
 		html += "<tr><td>Name</td><td>" + name + "</td></tr>";
-		
+
 		Map<String, ScriptInput> stringReplacements = new TreeMap<String, ScriptInput> ();
 		Map<String, ScriptInput> fileInputs = new TreeMap<String, ScriptInput>();
-		
+
 		for (Entry<String, ScriptInput> entry : useCaseDescription.getInputs().entrySet()) {
 			String key = entry.getKey();
 			ScriptInput value = entry.getValue();
@@ -153,11 +158,11 @@ public class ExternalToolActivityContextualView extends HTMLBasedActivityContext
 
 	@Override
 	public Action getConfigureAction(final Frame owner) {
-		return new ExternalToolActivityConfigureAction((ExternalToolActivity) getActivity(), owner);
+		return new ExternalToolActivityConfigureAction((ExternalToolActivity) getActivity(), owner, editManager, fileManager);
 	}
-	
+
 	public String getBackgroundColour() {
-		
+
 		return ExternalToolActivityIcon.getColourString();
 	}
 
