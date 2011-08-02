@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
                       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="SpreadsheetImportActivityIcon" class="net.sf.taverna.t2.activities.spreadsheet.servicedescriptions.SpreadsheetImportActivityIcon" />
 
 	<bean id="SpreadsheetImportTemplateService" class="net.sf.taverna.t2.activities.spreadsheet.servicedescriptions.SpreadsheetImportTemplateService" />
 
-	<bean id="SpreadsheetImportAddTemplateAction" class="net.sf.taverna.t2.activities.spreadsheet.menu.SpreadsheetImportAddTemplateAction" />
-	<bean id="SpreadsheetImportConfigureMenuAction" class="net.sf.taverna.t2.activities.spreadsheet.menu.SpreadsheetImportConfigureMenuAction" />
-	<bean id="SpreadsheetImportAddTemplateMenuAction" class="net.sf.taverna.t2.activities.spreadsheet.menu.SpreadsheetImportAddTemplateMenuAction" />
+	<bean id="SpreadsheetImportAddTemplateAction" class="net.sf.taverna.t2.activities.spreadsheet.menu.SpreadsheetImportAddTemplateAction">
+			<property name="editManager" ref="editManager" />
+			<property name="menuManager" ref="menuManager" />
+			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+	</bean>
+	<bean id="SpreadsheetImportConfigureMenuAction" class="net.sf.taverna.t2.activities.spreadsheet.menu.SpreadsheetImportConfigureMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+	</bean>
+	<bean id="SpreadsheetImportAddTemplateMenuAction" class="net.sf.taverna.t2.activities.spreadsheet.menu.SpreadsheetImportAddTemplateMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="menuManager" ref="menuManager" />
+			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+	</bean>
 
-	<bean id="SpreadsheetImportContextualViewFactory" class="net.sf.taverna.t2.activities.spreadsheet.views.SpreadsheetImportContextualViewFactory" />
+	<bean id="SpreadsheetImportContextualViewFactory" class="net.sf.taverna.t2.activities.spreadsheet.views.SpreadsheetImportContextualViewFactory">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+	</bean>
 
 </beans>
