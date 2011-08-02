@@ -1,20 +1,20 @@
 package net.sf.taverna.t2.activities.wsdl.actions;
 /*******************************************************************************
- * Copyright (C) 2008 The University of Manchester   
- * 
+ * Copyright (C) 2008 The University of Manchester
+ *
  *  Modifications to the initial code base are copyright of their
  *  respective authors, or their employers as appropriate.
- * 
+ *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public License
  *  as published by the Free Software Foundation; either version 2.1 of
  *  the License, or (at your option) any later version.
- *    
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *    
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
@@ -53,25 +53,28 @@ import org.apache.log4j.Logger;
  * Pops up a {@link JOptionPane} with the names of all the wsdl ports. The one
  * that is selected is added as an input/output splitter to the currently open
  * dataflow using the {@link AddXMLSplitterEdit}
- * 
+ *
  * @author Ian Dunlop
  * @author Stian Soiland-Reyes
  * @author Stuart Owen
- * 
+ *
  */
 @SuppressWarnings("unchecked")
 public abstract class AbstractAddXMLSplitterAction<ActivityType> extends AbstractAction {
 
 	private static Logger logger = Logger
 			.getLogger(AddXMLOutputSplitterAction.class);
-	private EditManager editManager = EditManager.getInstance();
 	protected final JComponent owner;
 	protected final ActivityType activity;
+	private final EditManager editManager;
+	private final FileManager fileManager;
 
 	public AbstractAddXMLSplitterAction(ActivityType activity,
-			JComponent owner) {
+			JComponent owner, EditManager editManager, FileManager fileManager) {
 		this.activity = activity;
 		this.owner = owner;
+		this.editManager = editManager;
+		this.fileManager = fileManager;
 	}
 
 	public void actionPerformed(ActionEvent ev) {
@@ -88,30 +91,29 @@ public abstract class AbstractAddXMLSplitterAction<ActivityType> extends Abstrac
 					+ activity, ex);
 			return;
 		}
-		
+
 		typeDescriptors = filterDescriptors(typeDescriptors);
-		
+
 		possibilities = new ArrayList<String>(typeDescriptors.keySet());
 		if (possibilities.isEmpty()) {
 			logger.warn("No type descriptors found for activity " + activity);
 			return;
 		}
 		Collections.sort(possibilities);
-		
+
 		String portName = (String) JOptionPane.showInputDialog(owner,
 				"Select the port to add the splitter to",
 				"Add output XML splitter", JOptionPane.PLAIN_MESSAGE, null,
 				possibilities.toArray(), possibilities.get(0));
 
-		Dataflow currentDataflow = FileManager.getInstance()
-				.getCurrentDataflow();
+		Dataflow currentDataflow = fileManager.getCurrentDataflow();
 		TypeDescriptor typeDescriptorForOutputPort = typeDescriptors
 				.get(portName);
 
 		if (typeDescriptorForOutputPort instanceof ArrayTypeDescriptor
 				|| typeDescriptorForOutputPort instanceof ComplexTypeDescriptor) {
 			AddXMLSplitterEdit edit = new AddXMLSplitterEdit(currentDataflow,
-					(Activity)activity, portName, isInput());
+					(Activity)activity, portName, isInput(), editManager.getEdits());
 			try {
 				editManager.doDataflowEdit(currentDataflow, edit);
 			} catch (EditException ex) {
@@ -131,7 +133,7 @@ public abstract class AbstractAddXMLSplitterAction<ActivityType> extends Abstrac
 				filtered.put(entry.getKey(), descriptor);
 			}
 		}
-		return filtered;		
+		return filtered;
 	}
 
 	protected abstract boolean isInput();

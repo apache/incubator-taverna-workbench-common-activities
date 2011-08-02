@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
                       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="WSDLActivityIcon" class="net.sf.taverna.t2.activities.wsdl.servicedescriptions.WSDLActivityIcon" />
@@ -9,13 +9,34 @@
 
 	<bean id="WSDLServiceProvider" class="net.sf.taverna.t2.activities.wsdl.servicedescriptions.WSDLServiceProvider" />
 
-	<bean id="AddXMLInputSplitterForWSDLActivityMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.AddXMLInputSplitterForWSDLActivityMenuAction" />
-	<bean id="AddXMLInputSplitterForXMLInputSplitterMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.AddXMLInputSplitterForXMLInputSplitterMenuAction" />
-	<bean id="AddXMLOutputSplitterForWSDLActivityMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.AddXMLOutputSplitterForWSDLActivityMenuAction" />
-	<bean id="AddXMLOutputSplitterForXMLOutputSplitterMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.AddXMLOutputSplitterForXMLOutputSplitterMenuAction" />
-	<bean id="ConfigureWSDLMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.ConfigureWSDLMenuAction" />
+	<bean id="AddXMLInputSplitterForWSDLActivityMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.AddXMLInputSplitterForWSDLActivityMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+	</bean>
+	<bean id="AddXMLInputSplitterForXMLInputSplitterMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.AddXMLInputSplitterForXMLInputSplitterMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+	</bean>
+	<bean id="AddXMLOutputSplitterForWSDLActivityMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.AddXMLOutputSplitterForWSDLActivityMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+	</bean>
+	<bean id="AddXMLOutputSplitterForXMLOutputSplitterMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.AddXMLOutputSplitterForXMLOutputSplitterMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+	</bean>
+	<bean id="ConfigureWSDLMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.ConfigureWSDLMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+	</bean>
 
-	<bean id="WSDLActivityViewFactory" class="net.sf.taverna.t2.activities.wsdl.views.WSDLActivityViewFactory" />
-	<bean id="XMLSplitterViewFactory" class="net.sf.taverna.t2.activities.wsdl.views.XMLSplitterViewFactory" />
+	<bean id="WSDLActivityViewFactory" class="net.sf.taverna.t2.activities.wsdl.views.WSDLActivityViewFactory>
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+	</bean>
+	<bean id="XMLSplitterViewFactory" class="net.sf.taverna.t2.activities.wsdl.views.XMLSplitterViewFactory">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+	</bean>
 
 </beans>

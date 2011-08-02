@@ -1,19 +1,19 @@
 /*********************************************************************
- * Copyright (C) 2007-2009 The University of Manchester   
- * 
+ * Copyright (C) 2007-2009 The University of Manchester
+ *
  *  Modifications to the initial code base are copyright of their
  *  respective authors, or their employers as appropriate.
- * 
+ *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public License
  *  as published by the Free Software Foundation; either version 2.1 of
  *  the License, or (at your option) any later version.
- *    
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *    
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
@@ -99,15 +99,15 @@ public class WSDLServiceDescription extends
 
 	public WSDLActivityConfigurationBean getActivityConfiguration() {
 		WSDLActivityConfigurationBean bean = new WSDLActivityConfigurationBean();
-		bean.setWsdl(getURI().toASCIIString());
-		bean.setOperation(getOperation());
+		bean.getOperation().setWsdl(getURI());
+		bean.getOperation().setOperationName(getOperation());
 		return bean;
 	}
 
 	public String getName() {
 		return getOperation();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<? extends Comparable> getPath() {
 		return Collections.singletonList(WSDL + getURI());
@@ -116,7 +116,7 @@ public class WSDLServiceDescription extends
 	protected List<Object> getIdentifyingData() {
 		return Arrays.<Object> asList(getURI(), getOperation());
 	}
-	
+
 	@Override
 	public boolean isTemplateService() {
 		return needsSecurity();
@@ -128,13 +128,13 @@ public class WSDLServiceDescription extends
 			// We don't know if it needs security or not
 			return false;
 		}
-		// A match is a good indicator that security configuration is needed 
+		// A match is a good indicator that security configuration is needed
 		try {
 			return credMan.hasUsernamePasswordForService(getURI());
 		} catch (CMException e) {
 			logger.warn("Could not check if credential manager has username/password for " + getURI(), e);
 			return false;
-		}		
+		}
 	}
 
 
