@@ -8,7 +8,7 @@
   <groupId>net.sf.taverna.t2.ui-activities</groupId>
   <artifactId>xpath-activity-ui</artifactId>
   <name>XPath Activity - UI bindings</name>
-  
+
   <dependencies>
   	<dependency>
   		<groupId>net.sf.taverna.t2.activities</groupId>
@@ -17,7 +17,7 @@
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
-  	
+
   	<dependency>
   		<groupId>dom4j</groupId>
   		<artifactId>dom4j</artifactId>
@@ -30,7 +30,7 @@
   		<type>jar</type>
   		<scope>compile</scope>
   	</dependency>
-  	
+
   	<dependency>
   		<groupId>net.sf.taverna.t2.ui-api</groupId>
   		<artifactId>activity-icons-api</artifactId>
@@ -47,14 +47,14 @@
 			<artifactId>menu-api</artifactId>
 			<version>${t2.ui.api.version}</version>
 		</dependency>
-	
+
 		<!-- for AbstractConfigureActivityMenuAction -->
 		<dependency>
-      <groupId>net.sf.taverna.t2.ui-impl</groupId>
+      <groupId>net.sf.taverna.t2.ui-api</groupId>
       <artifactId>activity-tools</artifactId>
-      <version>${t2.ui.impl.version}</version>
+      <version>${t2.ui.api.version}</version>
     </dependency>
-    
+
         		<dependency>
 			<groupId>net.sf.taverna.t2.ui-components</groupId>
 			<artifactId>workflow-view</artifactId>
@@ -65,15 +65,15 @@
 			<artifactId>graph-view</artifactId>
 			<version>${t2.ui.components.version}</version>
 		</dependency>
- 
-    
+
+
     <!-- for ColourManager -->
     <dependency>
       <groupId>net.sf.taverna.t2.ui-impl</groupId>
       <artifactId>configuration-impl</artifactId>
       <version>${t2.ui.impl.version}</version>
     </dependency>
-    
+
   </dependencies>
-  
+
 </project>
