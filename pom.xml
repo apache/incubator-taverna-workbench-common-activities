@@ -69,9 +69,9 @@
 		</dependency>
 		<!-- taverna ui-impl -->
 		<dependency>
-			<groupId>net.sf.taverna.t2.ui-impl</groupId>
+			<groupId>net.sf.taverna.t2.ui-api</groupId>
 			<artifactId>activity-tools</artifactId>
-			<version>${t2.ui.impl.version}</version>
+			<version>${t2.ui.api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.taverna.t2.ui-impl</groupId>
@@ -99,7 +99,7 @@
 			<groupId>net.sf.taverna.t2.ui-components</groupId>
 			<artifactId>graph-view</artifactId>
 			<version>${t2.ui.components.version}</version>
-		</dependency>		
+		</dependency>
 
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -116,7 +116,7 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.13</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
