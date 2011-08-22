@@ -1,43 +1,28 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>net.sf.taverna.t2</groupId>
 		<artifactId>ui-activities</artifactId>
 		<version>2.0-SNAPSHOT</version>
 	</parent>
-  <groupId>net.sf.taverna.t2.ui-activities</groupId>
-  <artifactId>xpath-activity-ui</artifactId>
-  <name>XPath Activity - UI bindings</name>
+	<groupId>net.sf.taverna.t2.ui-activities</groupId>
+	<artifactId>xpath-activity-ui</artifactId>
+	<name>XPath Activity - UI bindings</name>
 
-  <dependencies>
-  	<dependency>
-  		<groupId>net.sf.taverna.t2.activities</groupId>
-  		<artifactId>xpath-activity</artifactId>
-  		<version>${t2.activities.version}</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
-
-  	<dependency>
-  		<groupId>dom4j</groupId>
-  		<artifactId>dom4j</artifactId>
-  		<version>${dom4j.version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>jaxen</groupId>
-  		<artifactId>jaxen</artifactId>
-  		<version>${jaxen.version}</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
-  	</dependency>
-
-  	<dependency>
-  		<groupId>net.sf.taverna.t2.ui-api</groupId>
-  		<artifactId>activity-icons-api</artifactId>
-  		<version>${t2.ui.api.version}</version>
-  		<type>jar</type>
-  	</dependency>
-  	<dependency>
+	<dependencies>
+		<dependency>
+			<groupId>net.sf.taverna.t2.activities</groupId>
+			<artifactId>xpath-activity</artifactId>
+			<version>${t2.activities.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.ui-api</groupId>
+			<artifactId>activity-icons-api</artifactId>
+			<version>${t2.ui.api.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
 			<groupId>net.sf.taverna.t2.ui-api</groupId>
 			<artifactId>contextual-views-api</artifactId>
 			<version>${t2.ui.api.version}</version>
@@ -47,15 +32,17 @@
 			<artifactId>menu-api</artifactId>
 			<version>${t2.ui.api.version}</version>
 		</dependency>
-
-		<!-- for AbstractConfigureActivityMenuAction -->
 		<dependency>
-      <groupId>net.sf.taverna.t2.ui-api</groupId>
-      <artifactId>activity-tools</artifactId>
-      <version>${t2.ui.api.version}</version>
-    </dependency>
-
-        		<dependency>
+			<groupId>net.sf.taverna.t2.ui-api</groupId>
+			<artifactId>report-api</artifactId>
+			<version>${t2.ui.api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.ui-api</groupId>
+			<artifactId>activity-tools</artifactId>
+			<version>${t2.ui.api.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>net.sf.taverna.t2.ui-components</groupId>
 			<artifactId>workflow-view</artifactId>
 			<version>${t2.ui.components.version}</version>
@@ -65,15 +52,32 @@
 			<artifactId>graph-view</artifactId>
 			<version>${t2.ui.components.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.ui-components</groupId>
+			<artifactId>report-view</artifactId>
+			<version>${t2.ui.components.version}</version>
+		</dependency>
 
+		<!-- for ColourManager -->
+		<dependency>
+			<groupId>net.sf.taverna.t2.ui-impl</groupId>
+			<artifactId>configuration-impl</artifactId>
+			<version>${t2.ui.impl.version}</version>
+		</dependency>
 
-    <!-- for ColourManager -->
-    <dependency>
-      <groupId>net.sf.taverna.t2.ui-impl</groupId>
-      <artifactId>configuration-impl</artifactId>
-      <version>${t2.ui.impl.version}</version>
-    </dependency>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>${dom4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>jaxen</groupId>
+			<artifactId>jaxen</artifactId>
+			<version>${jaxen.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
 
-  </dependencies>
+	</dependencies>
 
 </project>

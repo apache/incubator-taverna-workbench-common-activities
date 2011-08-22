@@ -27,4 +27,6 @@
 			<property name="fileManager" ref="fileManager" />
 	</bean>
 
+	<bean id="XPathActivityHealthCheckVisitExplainer" class="net.sf.taverna.t2.activities.xpath.ui.explainer.XPathActivityHealthCheckVisitExplainer" />
+
 </beans>
