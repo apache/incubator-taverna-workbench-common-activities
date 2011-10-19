@@ -105,6 +105,8 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputP
 @SuppressWarnings("serial")
 public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellActivity, BeanshellActivityConfigurationBean> {
 
+	private static final Color LINE_COLOR = new Color(225,225,225);
+
 	private static final String VALID_NAME_REGEX = "[\\p{L}\\p{Digit}_]+";
 
 	//private static Logger logger = Logger.getLogger(BeanshellConfigView.class);
@@ -312,7 +314,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		add(tabbedPane, outerConstraint);
 
 		scriptTextArea = new JTextPane();
-		new LinePainter(scriptTextArea);
+		new LinePainter(scriptTextArea, LINE_COLOR);
 
 		final KeywordDocument doc = new KeywordDocument(keys);
 		// NOTE: Due to T2-1145 - always set editor kit BEFORE setDocument
