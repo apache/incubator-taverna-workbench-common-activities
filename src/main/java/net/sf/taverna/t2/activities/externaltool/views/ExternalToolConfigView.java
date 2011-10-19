@@ -20,6 +20,7 @@
  ******************************************************************************/
 package net.sf.taverna.t2.activities.externaltool.views;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -80,6 +81,8 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 public class ExternalToolConfigView
 		extends
 		ActivityConfigurationPanel<ExternalToolActivity, ExternalToolActivityConfigurationBean> {
+	
+	private static final Color LINE_COLOR = new Color(225,225,225);
 
 	private static final String FILE_INPUT_DESCRIPTION = "You can use a file input to feed data into " +
 			"the service via an input port and have that data written to the specified file.";
@@ -448,7 +451,7 @@ public class ExternalToolConfigView
 					});*/
 
 			scriptTextArea = new JTextPane();
-			new LinePainter(scriptTextArea);
+			new LinePainter(scriptTextArea, LINE_COLOR);
 
 			final KeywordDocument doc = new KeywordDocument(
 					new HashSet<String>());
