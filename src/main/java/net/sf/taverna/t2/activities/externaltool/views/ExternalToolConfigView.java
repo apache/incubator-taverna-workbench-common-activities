@@ -617,7 +617,11 @@ public class ExternalToolConfigView
 		Set<String> stringReplacementTags = new HashSet<String>();
 		for (ExternalToolStringReplacementViewer v : stringReplacementViewList) {
 			String name = v.getName();
-			if (stringReplacementPortNames.contains(name)) {
+			if (name.equalsIgnoreCase("stdin") || name.equalsIgnoreCase("stdout") || name.equalsIgnoreCase("stderr")) {
+				text += "A string replacement port has a reserved name \"" + name + "\"\n";
+				result = false;
+			}
+			else if (stringReplacementPortNames.contains(name)) {
 				text += "Two string replacement ports have the name \"" + name
 						+ "\"\n";
 				result = false;
@@ -680,7 +684,11 @@ public class ExternalToolConfigView
 		Set<String> inputFileNames = new HashSet<String>();
 		for (ExternalToolFileViewer v : inputFileViewList) {
 			String name = v.getName();
-			if (stringReplacementPortNames.contains(name)) {
+			if (name.equalsIgnoreCase("stdin") || name.equalsIgnoreCase("stdout") || name.equalsIgnoreCase("stderr")) {
+				text += "An input file port has a reserved name \"" + name + "\"\n";
+				result = false;
+			}
+			else if (stringReplacementPortNames.contains(name)) {
 				text += "A string replacement port and an input file port have the name \""
 						+ name + "\"\n";
 				result = false;
@@ -708,7 +716,10 @@ public class ExternalToolConfigView
 		Set<String> fileListFileNames = new HashSet<String>();
 		for (ExternalToolFileViewer v : fileListViewList) {
 			String name = v.getName();
-			if (stringReplacementPortNames.contains(name)) {
+			if (name.equalsIgnoreCase("stdin") || name.equalsIgnoreCase("stdout") || name.equalsIgnoreCase("stderr")) {
+				text += "A file list port has a reserved name \"" + name + "\"\n";
+				result = false;
+			} else if (stringReplacementPortNames.contains(name)) {
 				text += "A string replacement port and a file list port have the name \""
 						+ name + "\"\n";
 				result = false;
@@ -786,7 +797,10 @@ public class ExternalToolConfigView
 		Set<String> outputPortNames = new HashSet<String>();
 		for (ExternalToolFileViewer v : outputViewList) {
 			String name = v.getName();
-			if (outputPortNames.contains(name)) {
+			if (name.equalsIgnoreCase("stdin") || name.equalsIgnoreCase("stdout") || name.equalsIgnoreCase("stderr")) {
+				text += "An output port has a reserved name \"" + name + "\"\n";
+				result = false;
+			} else if (outputPortNames.contains(name)) {
 				text += "Two output file ports have the name \"" + name
 						+ "\"\n";
 				result = false;
@@ -810,6 +824,10 @@ public class ExternalToolConfigView
 	 * @return
 	 */
 	public boolean portNameExists(String name) {
+		if (name.equalsIgnoreCase("stdin") || name.equalsIgnoreCase("stdout") || name.equalsIgnoreCase("stderr")) {
+			return true;
+		}
+		
 		for (ExternalToolFileViewer v : inputFileViewList) {
 			if (name.equals(v.getName())) {
 				return true;

@@ -14,6 +14,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -165,6 +166,13 @@ public final class SshInvocationMechanismEditor extends
 		subPanel.add(copyCommandField ,inputConstraint);
 
 		inputConstraint.gridy++ ;
+		inputConstraint.gridx = 0;
+		subPanel.add(new JLabel("Fetch data: "), inputConstraint);
+		inputConstraint.gridx++;
+		final JCheckBox retrieveDataField = viewer.getRetrieveDataField();
+		subPanel.add(retrieveDataField ,inputConstraint);
+
+		inputConstraint.gridy++ ;
 		inputConstraint.gridx = 1;
 		inputConstraint.fill = GridBagConstraints.NONE;
 		inputConstraint.anchor = GridBagConstraints.EAST;
@@ -199,6 +207,7 @@ public final class SshInvocationMechanismEditor extends
 			SshNode node = SshNodeFactory.getInstance().getSshNode(viewer.getHostname(), viewer.getPort(), viewer.getDirectory());
 			node.setLinkCommand(viewer.getLinkCommand());
 			node.setCopyCommand(viewer.getCopyCommand());
+			node.setRetrieveData(viewer.getRetrieveDataField().isSelected());
 			result.add(node);
 		}
 		return result;

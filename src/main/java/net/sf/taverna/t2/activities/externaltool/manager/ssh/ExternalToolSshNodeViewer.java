@@ -3,6 +3,7 @@
  */
 package net.sf.taverna.t2.activities.externaltool.manager.ssh;
 
+import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
@@ -22,6 +23,7 @@ public class ExternalToolSshNodeViewer {
 	private JTextField directoryField;
 	private JTextField linkCommandField;
 	private JTextField copyCommandField;
+	private JCheckBox retrieveDataField;
 
 	public ExternalToolSshNodeViewer(SshNode node) {
 		this();
@@ -42,6 +44,7 @@ public class ExternalToolSshNodeViewer {
 		} else {
 			copyCommandField.setText("");
 		}
+		retrieveDataField.setSelected(node.isRetrieveData());
 	}
 
 	public ExternalToolSshNodeViewer() {
@@ -55,6 +58,7 @@ public class ExternalToolSshNodeViewer {
 		linkCommandField.setText(InvocationMechanism.UNIX_LINK);
 		copyCommandField = new JTextField(30);
 		copyCommandField.setText(InvocationMechanism.UNIX_COPY);
+		retrieveDataField = new JCheckBox();
 	}
 
 	public JTextField getHostnameField() {
@@ -95,5 +99,12 @@ public class ExternalToolSshNodeViewer {
 	
 	public String getCopyCommand() {
 		return copyCommandField.getText();
+	}
+
+	/**
+	 * @return the retrieveDataField
+	 */
+	public JCheckBox getRetrieveDataField() {
+		return retrieveDataField;
 	}
 }
