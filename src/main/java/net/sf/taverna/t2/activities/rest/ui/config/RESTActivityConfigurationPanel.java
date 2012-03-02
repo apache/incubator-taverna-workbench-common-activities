@@ -78,6 +78,8 @@ public class RESTActivityConfigurationPanel extends
 	// ADVANCED tab
 	private JCheckBox cbSendHTTPExpectHeader;
 	private JCheckBox cbShowRedirectionOutputPort;
+	private JCheckBox cbShowActualUrlPort;
+	private JCheckBox cbShowResponseHeadersPort;
 	private JCheckBox cbEscapeParameters;
 	private JButton addHeaderButton;
 	private JButton removeHeaderButton;
@@ -449,6 +451,40 @@ public class RESTActivityConfigurationPanel extends
 		c.gridy++;
 		c.weightx = 0;
 		c.insets = new Insets(2, 10, 5, 4);
+		JLabel jlShowActualUrlPortInfoIcon = new JLabel(infoIcon);
+		jlShowActualUrlPortInfoIcon
+				.setToolTipText("<html>\"Actual URL\" output port displays the URL used by the REST service<br>"
+						+ "with the actual parameter values.</html>");
+		jpAdvanced.add(jlShowActualUrlPortInfoIcon, c);
+
+		c.gridx++;
+		c.weightx = 1.0;
+		c.insets = new Insets(2, 0, 5, 8);
+		cbShowActualUrlPort = new JCheckBox(
+				"Show \"Actual URL\" output port");
+		jpAdvanced.add(cbShowActualUrlPort, c);
+		
+		c.gridx = 0;
+		c.gridy++;
+		c.weightx = 0;
+		c.insets = new Insets(2, 10, 5, 4);
+		JLabel jlShowResponseHeadersPortInfoIcon = new JLabel(infoIcon);
+		jlShowResponseHeadersPortInfoIcon
+				.setToolTipText("<html>\"Response headers\" output port displays the HTTP headers<br>"
+						+ "received from the final (after redirection) HTTP call.</html>");
+		jpAdvanced.add(jlShowResponseHeadersPortInfoIcon, c);
+
+		c.gridx++;
+		c.weightx = 1.0;
+		c.insets = new Insets(2, 0, 5, 8);
+		cbShowResponseHeadersPort = new JCheckBox(
+				"Show \"Response headers\" output port");
+		jpAdvanced.add(cbShowResponseHeadersPort, c);
+		
+		c.gridx = 0;
+		c.gridy++;
+		c.weightx = 0;
+		c.insets = new Insets(2, 10, 5, 4);
 		JLabel jlEscapeParametersInfoIcon = new JLabel(infoIcon);
 		jlEscapeParametersInfoIcon
 				.setToolTipText("<html>Determines if parameters you pass to form the full URL<br>" +
@@ -663,6 +699,9 @@ public class RESTActivityConfigurationPanel extends
 				.getSendHTTPExpectRequestHeader();
 		boolean originalShowRedirectionOutputPort = configBean
 				.getShowRedirectionOutputPort();
+		boolean originalShowActualUrlPort = configBean
+		.getShowActualUrlPort();
+		boolean originalShowResponseHeadersPort = configBean.getShowResponseHeadersPort();
 		boolean originalEscapeParameters = configBean.getEscapeParameters();
 
 		boolean contentTypeHasNotChanged = (originalContentType == null && ((String) cbContentType
@@ -709,6 +748,8 @@ public class RESTActivityConfigurationPanel extends
 						.getSelectedItem()
 				&& originalSendHTTPExpectRequestHeader == cbSendHTTPExpectHeader.isSelected() 
 				&& originalShowRedirectionOutputPort == cbShowRedirectionOutputPort.isSelected()
+				&& originalShowActualUrlPort == cbShowActualUrlPort.isSelected()
+				&& originalShowResponseHeadersPort == cbShowResponseHeadersPort.isSelected()
 				&& originalEscapeParameters == cbEscapeParameters.isSelected()
 				&& otherHTTPHeadersNotChanged);
 		
@@ -735,6 +776,9 @@ public class RESTActivityConfigurationPanel extends
 				.isSelected());
 		configBean.setShowRedirectionOutputPort(cbShowRedirectionOutputPort
 				.isSelected());
+		configBean.setShowActualUrlPort(cbShowActualUrlPort.isSelected());
+		configBean.setShowResponseHeadersPort(cbShowResponseHeadersPort.isSelected());
+
 		configBean.setEscapeParameters(cbEscapeParameters.isSelected());
 		configBean.setOtherHTTPHeaders(httpHeadersTableModel.getHTTPHeaderData());
 	}
@@ -756,6 +800,8 @@ public class RESTActivityConfigurationPanel extends
 				.getSendHTTPExpectRequestHeader());
 		cbShowRedirectionOutputPort.setSelected(configBean
 				.getShowRedirectionOutputPort());
+		cbShowActualUrlPort.setSelected(configBean.getShowActualUrlPort());
+		cbShowResponseHeadersPort.setSelected(configBean.getShowResponseHeadersPort());
 		cbEscapeParameters.setSelected(configBean.getEscapeParameters());
 		httpHeadersTableModel.setHTTPHeaderData(configBean.getOtherHTTPHeaders());
 	}
