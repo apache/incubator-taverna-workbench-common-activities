@@ -242,6 +242,13 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 		localWorkerToScript.put(
 				"net.sourceforge.taverna.scuflworkers.jdbc.SQLUpdateWorker",
 				"Execute SQL Update");
+		
+		localWorkerToScript.put(
+				"net.sourceforge.taverna.scuflworkers.net.BrowseUrl",
+				"Open web browser at a URL");
+		localWorkerToScript.put(
+				"net.sourceforge.taverna.scuflworkers.net.ExtractHeader",
+				"Extract the specified header from a HTTP response");
 	}
 
 	public String getName() {
