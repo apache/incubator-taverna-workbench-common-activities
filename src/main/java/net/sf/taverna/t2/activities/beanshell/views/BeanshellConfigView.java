@@ -373,6 +373,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 			    String newScript = FileTools.readStringFromFile(BeanshellConfigView.this, "Load Beanshell script", ".bsh");
 				if (newScript != null) {
 					scriptTextArea.setText(newScript);
+					scriptTextArea.setCaretPosition(0);
 				}
 			}
 		});
