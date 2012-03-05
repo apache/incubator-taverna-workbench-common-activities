@@ -248,7 +248,7 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 				"Open web browser at a URL");
 		localWorkerToScript.put(
 				"net.sourceforge.taverna.scuflworkers.net.ExtractHeader",
-				"Extract the specified header from a HTTP response");
+				"Extract HTTP Header");
 	}
 
 	public String getName() {
