@@ -7,10 +7,8 @@ Runtime rt = Runtime.getRuntime();
 
 String osName = System.getProperty("os.name");
 String[] cmdArray = null;
-if (osName.equals("Windows NT") || osName.equals("Windows XP")) {
+if (osName.contains("Windows")) {
 	cmdArray = new String[] { "cmd.exe", "/c", command };
-} else if (osName.equals("Windows 95")) {
-	cmdArray = new String[] { "command.exe", "/c", command };
 } else {// TODO: investigate if this will work in Linux and OSX
 	cmdArray = new String[] { command };
 }
