@@ -14,6 +14,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import net.sf.taverna.t2.activities.wsdl.WSDLActivityHealthChecker;
 import net.sf.taverna.t2.lang.observer.Observable;
 import net.sf.taverna.t2.lang.observer.Observer;
+import net.sf.taverna.t2.security.credentialmanager.CredentialManager;
 import net.sf.taverna.t2.servicedescriptions.AbstractConfigurableServiceProvider;
 import net.sf.taverna.t2.servicedescriptions.CustomizedConfigurePanelProvider;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
@@ -34,7 +35,9 @@ public class WSDLServiceProvider extends
 
 	private static final URI providerId = URI
 	.create("http://taverna.sf.net/2010/service-provider/wsdl");
-	
+
+	private CredentialManager credentialManager;
+
 	public static class FlushWSDLCacheOnRemovalObserver implements
 			Observer<ServiceDescriptionRegistryEvent> {
 		public void notify(
@@ -58,7 +61,9 @@ public class WSDLServiceProvider extends
 	private static final String WSDL_SERVICE = "WSDL service";
 
 	private static FlushWSDLCacheOnRemovalObserver flushObserver = new FlushWSDLCacheOnRemovalObserver();
-	
+
+	private ServiceDescriptionRegistry serviceDescriptionRegistry;
+
 	public WSDLServiceProvider() {
 		super(new WSDLServiceProviderConfig("http://somehost/service?wsdl"));
 	}
@@ -68,12 +73,11 @@ public class WSDLServiceProvider extends
 	}
 
 	public List<WSDLServiceProviderConfig> getDefaultConfigurations() {
-		
+
 		List<WSDLServiceProviderConfig> defaults = new ArrayList<WSDLServiceProviderConfig>();
-		
-		ServiceDescriptionRegistryImpl serviceRegistry = ServiceDescriptionRegistryImpl.getInstance();
+
 		// If defaults have failed to load from a configuration file then load them here.
-		if (!serviceRegistry.isDefaultSystemConfigurableProvidersLoaded()){
+		if (!serviceDescriptionRegistry.isDefaultSystemConfigurableProvidersLoaded()){
 			defaults.add(new WSDLServiceProviderConfig(
 					"http://www.ebi.ac.uk/xembl/XEMBL.wsdl"));
 			defaults.add(new WSDLServiceProviderConfig(
@@ -86,15 +90,15 @@ public class WSDLServiceProvider extends
 			defaults.add(new WSDLServiceProviderConfig(
 					"http://www.ebi.ac.uk/ws/services/urn:Dbfetch?wsdl"));
 		} // else return an empty list
-		
+
 		return defaults;
 	}
 
 	public void findServiceDescriptionsAsync(
 			FindServiceDescriptionsCallBack callBack) {
-		
-		URI wsdl = serviceProviderConfig.getURI();	
-		
+
+		URI wsdl = serviceProviderConfig.getURI();
+
 		callBack.status("Parsing wsdl:" + wsdl);
 		WSDLParser parser = null;
 		try {
@@ -104,7 +108,7 @@ public class WSDLServiceProvider extends
 					+ wsdl);
 			List<WSDLServiceDescription> items = new ArrayList<WSDLServiceDescription>();
 			for (Operation op : operations) {
-				WSDLServiceDescription item = new WSDLServiceDescription();
+				WSDLServiceDescription item = new WSDLServiceDescription(credentialManager);
 				try {
 					String name = op.getName();
 					item.setOperation(name);
@@ -166,41 +170,42 @@ public class WSDLServiceProvider extends
 		result = Arrays.asList(getConfiguration().getURI().toString());
 		return result;
 	}
-	
+
 	/**
-	 * Will be set by ServiceDescriptionRegistryImpl 
-	 * 
+	 * Will be set by ServiceDescriptionRegistryImpl
+	 *
 	 * @param registry Registry this provider has been added to
 	 */
-	public void setServiceDescriptionRegistry(
-			ServiceDescriptionRegistry registry) {
+	public void setServiceDescriptionRegistry(ServiceDescriptionRegistry serviceDescriptionRegistry) {
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
 		synchronized (flushObserver) {
-			// Add the (static common) observer if the registry does not have it			
-			if (!registry.getObservers().contains(flushObserver)) {
-				registry.addObserver(flushObserver);
+			// Add the (static common) observer if the registry does not have it
+			if (!serviceDescriptionRegistry.getObservers().contains(flushObserver)) {
+				serviceDescriptionRegistry.addObserver(flushObserver);
 			}
 		}
 	}
 
 	@SuppressWarnings("serial")
 	public void createCustomizedConfigurePanel(final CustomizedConfigureCallBack<WSDLServiceProviderConfig> callBack) {
-			
+
 		AddWSDLServiceDialog addWSDLServiceDialog = new AddWSDLServiceDialog() {
 				@Override
 				protected void addRegistry(String wsdlURL) {
-					
-					WSDLServiceProviderConfig providerConfig = new WSDLServiceProviderConfig(wsdlURL);					
+
+					WSDLServiceProviderConfig providerConfig = new WSDLServiceProviderConfig(wsdlURL);
 					callBack.newProviderConfiguration(providerConfig);
 				}
 			};
-			addWSDLServiceDialog.setVisible(true);		
+			addWSDLServiceDialog.setVisible(true);
 	}
 
 	public String getId() {
 		return providerId.toString();
 	}
 
-	
-	
+	public void setCredentialManager(CredentialManager credentialManager) {
+		this.credentialManager = credentialManager;
+	}
 
 }

@@ -31,18 +31,24 @@ import javax.swing.JPanel;
 import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
 import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
 import net.sf.taverna.t2.activities.wsdl.actions.WSDLActivityConfigureAction;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
+import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 public class WSDLActivityContextualView extends
-	AbstractXMLSplitterActionView<WSDLActivityConfigurationBean> {
+		AbstractXMLSplitterActionView<WSDLActivityConfigurationBean> {
 
 	private static final long serialVersionUID = -4329643934083676113L;
+	private final ActivityIconManager activityIconManager;
 
-	public WSDLActivityContextualView(Activity<?> activity, EditManager editManager, FileManager fileManager) {
-		super(activity, editManager, fileManager);
+	public WSDLActivityContextualView(Activity<?> activity, EditManager editManager,
+			FileManager fileManager, ActivityIconManager activityIconManager,
+			ColourManager colourManager) {
+		super(activity, editManager, fileManager, colourManager);
+		this.activityIconManager = activityIconManager;
 	}
 
 	@Override
@@ -51,8 +57,8 @@ public class WSDLActivityContextualView extends
 	}
 
 	/**
-	 * Gets the component from the {@link HTMLBasedActivityContextualView} and
-	 * adds buttons to it allowing XML splitters to be added
+	 * Gets the component from the {@link HTMLBasedActivityContextualView} and adds buttons to it
+	 * allowing XML splitters to be added
 	 */
 	@Override
 	public JComponent getMainFrame() {
@@ -74,11 +80,10 @@ public class WSDLActivityContextualView extends
 	@Override
 	protected String getRawTableRowsHtml() {
 		String summary = "<tr><td>WSDL</td><td>" + getConfigBean().getOperation().getWsdl();
-		summary += "</td></tr><tr><td>Operation</td><td>"
-				+ getConfigBean().getOperation() + "</td></tr>";
+		summary += "</td></tr><tr><td>Operation</td><td>" + getConfigBean().getOperation()
+				+ "</td></tr>";
 		boolean securityConfigured = getConfigBean().getSecurityProfile() != null;
-		summary += "<tr><td>Secure</td><td>"
-				+ securityConfigured + "</td></tr>";
+		summary += "<tr><td>Secure</td><td>" + securityConfigured + "</td></tr>";
 		summary += "</tr>";
 		summary += describePorts();
 		return summary;
@@ -86,8 +91,8 @@ public class WSDLActivityContextualView extends
 
 	@Override
 	public Action getConfigureAction(Frame owner) {
-		//return null;
-		return new WSDLActivityConfigureAction(getActivity(),owner, editManager, fileManager);
+		// return null;
+		return new WSDLActivityConfigureAction(getActivity(), owner, editManager, fileManager, activityIconManager);
 	}
 
 	@Override

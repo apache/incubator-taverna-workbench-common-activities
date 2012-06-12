@@ -50,6 +50,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import java.awt.Dialog;
+import java.net.URI;
 
 //import org.apache.log4j.Logger;
 
@@ -194,11 +195,10 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 		ActionListener usernamePasswordListener = new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-
 				// Get Credential Manager UI to get the username and password for the service
 				CredentialManagerUI credManagerUI = CredentialManagerUI.getInstance();
 				if (credManagerUI != null)
-					credManagerUI.newPasswordForService(oldBean.getOperation().getWsdl().toASCIIString());
+					credManagerUI.newPasswordForService(oldBean.getOperation().getWsdl());
 			}
 		};
 
@@ -290,7 +290,7 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 		okCancelPanel.add(okButton);
 
 		// Enable/disable controls based on what is the current security profiles
-	    String securityProfile = oldBean.getSecurityProfile();
+	    URI securityProfile = oldBean.getSecurityProfile();
 		if (securityProfile == null){
 	    	noSecurityRadioButton.setSelected(true);
 	    }

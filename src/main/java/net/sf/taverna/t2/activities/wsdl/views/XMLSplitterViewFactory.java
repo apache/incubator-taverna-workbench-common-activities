@@ -26,24 +26,28 @@ import java.util.List;
 import net.sf.taverna.t2.activities.wsdl.xmlsplitter.XMLInputSplitterActivity;
 import net.sf.taverna.t2.activities.wsdl.xmlsplitter.XMLOutputSplitterActivity;
 import net.sf.taverna.t2.activities.wsdl.xmlsplitter.XMLSplitterConfigurationBean;
+import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
-public class XMLSplitterViewFactory implements ContextualViewFactory<Activity<XMLSplitterConfigurationBean>>{
+public class XMLSplitterViewFactory implements
+		ContextualViewFactory<Activity<XMLSplitterConfigurationBean>> {
 
 	private EditManager editManager;
 	private FileManager fileManager;
+	private ColourManager colourManager;
 
 	public boolean canHandle(Object object) {
-		return object instanceof XMLInputSplitterActivity || object instanceof XMLOutputSplitterActivity;
+		return object instanceof XMLInputSplitterActivity
+				|| object instanceof XMLOutputSplitterActivity;
 	}
 
-	public List<ContextualView> getViews(
-			Activity<XMLSplitterConfigurationBean> activity) {
-		return Arrays.asList(new ContextualView[] {new XMLSplitterContextualView(activity, editManager, fileManager)});
+	public List<ContextualView> getViews(Activity<XMLSplitterConfigurationBean> activity) {
+		return Arrays.asList(new ContextualView[] { new XMLSplitterContextualView(activity,
+				editManager, fileManager, colourManager) });
 	}
 
 	public void setEditManager(EditManager editManager) {
@@ -52,6 +56,10 @@ public class XMLSplitterViewFactory implements ContextualViewFactory<Activity<XM
 
 	public void setFileManager(FileManager fileManager) {
 		this.fileManager = fileManager;
+	}
+
+	public void setColourManager(ColourManager colourManager) {
+		this.colourManager = colourManager;
 	}
 
 }

@@ -45,8 +45,13 @@ public class WSDLServiceDescription extends
 	private URI uri;
 	private String style;
 	private String operation;
+	private final CredentialManager credentialManager;
 
 	private static Logger logger = Logger.getLogger(WSDLServiceDescription.class);
+
+	public WSDLServiceDescription(CredentialManager credentialManager) {
+		this.credentialManager = credentialManager;
+	}
 
 	public String getUse() {
 		return use;
@@ -123,14 +128,13 @@ public class WSDLServiceDescription extends
 	}
 
 	protected boolean needsSecurity() {
-		CredentialManager credMan = CredentialManager.getInstanceIfInitialized();
-		if (credMan == null) {
+		if (credentialManager == null) {
 			// We don't know if it needs security or not
 			return false;
 		}
 		// A match is a good indicator that security configuration is needed
 		try {
-			return credMan.hasUsernamePasswordForService(getURI());
+			return credentialManager.hasUsernamePasswordForService(getURI());
 		} catch (CMException e) {
 			logger.warn("Could not check if credential manager has username/password for " + getURI(), e);
 			return false;

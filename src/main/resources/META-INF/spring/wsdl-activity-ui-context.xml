@@ -7,7 +7,10 @@
 	<bean id="XMLInputSplitterActivityIcon" class="net.sf.taverna.t2.activities.wsdl.servicedescriptions.XMLInputSplitterActivityIcon" />
 	<bean id="XMLOutputSplitterActivityIcon" class="net.sf.taverna.t2.activities.wsdl.servicedescriptions.XMLOutputSplitterActivityIcon" />
 
-	<bean id="WSDLServiceProvider" class="net.sf.taverna.t2.activities.wsdl.servicedescriptions.WSDLServiceProvider" />
+	<bean id="WSDLServiceProvider" class="net.sf.taverna.t2.activities.wsdl.servicedescriptions.WSDLServiceProvider">
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+			<property name="credentialManager" ref="credentialManager" />
+	</bean>
 
 	<bean id="AddXMLInputSplitterForWSDLActivityMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.AddXMLInputSplitterForWSDLActivityMenuAction">
 			<property name="editManager" ref="editManager" />
@@ -28,15 +31,19 @@
 	<bean id="ConfigureWSDLMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.ConfigureWSDLMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 
-	<bean id="WSDLActivityViewFactory" class="net.sf.taverna.t2.activities.wsdl.views.WSDLActivityViewFactory>
+	<bean id="WSDLActivityViewFactory" class="net.sf.taverna.t2.activities.wsdl.views.WSDLActivityViewFactory">
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="colourManager" ref="colourManager" />
 	</bean>
 	<bean id="XMLSplitterViewFactory" class="net.sf.taverna.t2.activities.wsdl.views.XMLSplitterViewFactory">
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
+			<property name="colourManager" ref="colourManager" />
 	</bean>
 
 </beans>

@@ -27,6 +27,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import net.sf.taverna.t2.activities.wsdl.xmlsplitter.XMLSplitterConfigurationBean;
+import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
@@ -39,16 +40,16 @@ public class XMLSplitterContextualView extends
 
 	private static final long serialVersionUID = -4329643934083676113L;
 
-	public XMLSplitterContextualView(
-			Activity<XMLSplitterConfigurationBean> activity, EditManager editManager, FileManager fileManager) {
-		super(activity, editManager, fileManager);
+	public XMLSplitterContextualView(Activity<XMLSplitterConfigurationBean> activity,
+			EditManager editManager, FileManager fileManager, ColourManager colourManager) {
+		super(activity, editManager, fileManager, colourManager);
 	}
 
 	static Logger logger = Logger.getLogger(XMLSplitterContextualView.class);
 
 	/**
-	 * Gets the component from the {@link HTMLBasedActivityContextualView} and
-	 * adds buttons to it allowing XML splitters to be added
+	 * Gets the component from the {@link HTMLBasedActivityContextualView} and adds buttons to it
+	 * allowing XML splitters to be added
 	 */
 	@Override
 	public JComponent getMainFrame() {

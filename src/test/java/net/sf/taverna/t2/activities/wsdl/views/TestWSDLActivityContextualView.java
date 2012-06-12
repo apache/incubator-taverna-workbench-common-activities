@@ -21,19 +21,14 @@
 package net.sf.taverna.t2.activities.wsdl.views;
 
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
-import java.util.List;
 
 import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
 import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
-import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
-import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactoryRegistry;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 import org.junit.Before;
-import org.junit.Test;
 
 public class TestWSDLActivityContextualView {
 
@@ -41,7 +36,7 @@ public class TestWSDLActivityContextualView {
 
 	@Before
 	public void setUp() throws Exception {
-		a=new WSDLActivity();
+		a=new WSDLActivity(null);
 		WSDLActivityConfigurationBean b=new WSDLActivityConfigurationBean();
 		b.getOperation().setOperationName("getReport");
 		String wsdlUrl=TestWSDLActivityContextualView.class.getResource("/GMService.wsdl").toExternalForm();
@@ -49,22 +44,8 @@ public class TestWSDLActivityContextualView {
 		((WSDLActivity)a).configure(b);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testDisovery() throws Exception {
-		List<ContextualViewFactory> viewFactoriesForBeanType = ContextualViewFactoryRegistry.getInstance().getViewFactoriesForObject(a);
-		assertTrue("The WSDL view factory should not be empty", !viewFactoriesForBeanType.isEmpty());
-		WSDLActivityViewFactory factory = null;
-		for (ContextualViewFactory cvf : viewFactoriesForBeanType) {
-			if (cvf instanceof WSDLActivityViewFactory) {
-				factory = (WSDLActivityViewFactory) cvf;
-			}
-		}
-		assertTrue("No WSDL view factory", factory != null);
-	}
-
 	public void testConfigurationAction() {
-		WSDLActivityContextualView view = new WSDLActivityContextualView(a, null, null);
+		WSDLActivityContextualView view = new WSDLActivityContextualView(a, null, null, null, null);
 		assertNull("WSDL has no configure action, so should be null",view.getConfigureAction(null));
 	}
 }

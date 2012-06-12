@@ -24,6 +24,7 @@ import javax.swing.Action;
 
 import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
 import net.sf.taverna.t2.activities.wsdl.actions.WSDLActivityConfigureAction;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.activitytools.AbstractConfigureActivityMenuAction;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
@@ -33,6 +34,7 @@ public class ConfigureWSDLMenuAction extends
 
 	private EditManager editManager;
 	private FileManager fileManager;
+	private ActivityIconManager activityIconManager;
 
 	public ConfigureWSDLMenuAction() {
 		super(WSDLActivity.class);
@@ -41,7 +43,7 @@ public class ConfigureWSDLMenuAction extends
 	@Override
 	protected Action createAction() {
 		WSDLActivityConfigureAction configAction = new WSDLActivityConfigureAction(
-				findActivity(), getParentFrame(), editManager, fileManager);
+				findActivity(), getParentFrame(), editManager, fileManager, activityIconManager);
 		addMenuDots(configAction);
 		return configAction;
 	}
@@ -52,6 +54,10 @@ public class ConfigureWSDLMenuAction extends
 
 	public void setFileManager(FileManager fileManager) {
 		this.fileManager = fileManager;
+	}
+
+	public void setActivityIconManager(ActivityIconManager activityIconManager) {
+		this.activityIconManager = activityIconManager;
 	}
 
 }
