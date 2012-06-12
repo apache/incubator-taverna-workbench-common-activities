@@ -49,25 +49,10 @@ public class TestSoaplabActivityContextualView {
 		((SoaplabActivity)a).configure(sb);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Test
-	@Ignore("Integration test")
-	public void testDisovery() throws Exception {
-		List<ContextualViewFactory> viewFactoriesForBeanType = ContextualViewFactoryRegistry.getInstance().getViewFactoriesForObject(a);
-		assertTrue("The soaplab view factory should not be empty", !viewFactoriesForBeanType.isEmpty());
-		SoaplabActivityViewFactory factory = null;
-		for (ContextualViewFactory cvf : viewFactoriesForBeanType) {
-			if (cvf instanceof SoaplabActivityViewFactory) {
-				factory = (SoaplabActivityViewFactory) cvf;
-			}
-		}
-		assertTrue("No Soaplab view factory", factory != null);
-	}
-
 	@Test
 	@Ignore("Integration test")
 	public void testConfigureAction() throws Exception {
-		ContextualView view = new SoaplabActivityContextualView(a, null, null);
+		ContextualView view = new SoaplabActivityContextualView(a, null, null, null, null);
 		assertNotNull("the action should not be null",view.getConfigureAction(null));
 		assertTrue("The action should be a SoaplabAcitivyConfigurationAction",view.getConfigureAction(null) instanceof SoaplabActivityConfigurationAction);
 	}
@@ -75,7 +60,7 @@ public class TestSoaplabActivityContextualView {
 	private void run() throws Exception
 	{
 		setup();
-		ContextualView view = new SoaplabActivityContextualView(a, null, null);
+		ContextualView view = new SoaplabActivityContextualView(a, null, null, null, null);
 		view.setVisible(true);
 	}
 

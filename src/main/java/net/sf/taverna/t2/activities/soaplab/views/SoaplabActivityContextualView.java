@@ -36,6 +36,8 @@ import javax.xml.transform.stream.StreamSource;
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivity;
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivityConfigurationBean;
 import net.sf.taverna.t2.activities.soaplab.actions.SoaplabActivityConfigurationAction;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
+import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
@@ -56,10 +58,15 @@ public class SoaplabActivityContextualView extends
 
 	private final FileManager fileManager;
 
-	public SoaplabActivityContextualView(Activity<?> activity, EditManager editManager, FileManager fileManager) {
-		super(activity);
+	private final ActivityIconManager activityIconManager;
+
+	public SoaplabActivityContextualView(Activity<?> activity, EditManager editManager,
+			FileManager fileManager, ActivityIconManager activityIconManager,
+			ColourManager colourManager) {
+		super(activity, colourManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
+		this.activityIconManager = activityIconManager;
 	}
 
 	@Override
@@ -70,30 +77,27 @@ public class SoaplabActivityContextualView extends
 	@Override
 	protected String getRawTableRowsHtml() {
 		SoaplabActivityConfigurationBean bean = getConfigBean();
-		String html = "<tr><td>Endpoint</td><td>" + bean.getEndpoint()
+		String html = "<tr><td>Endpoint</td><td>" + bean.getEndpoint() + "</td></tr>";
+		html += "<tr><td>Polling interval</td><td>" + bean.getPollingInterval() + "</td></tr>";
+		html += "<tr><td>Polling backoff</td><td>" + bean.getPollingBackoff() + "</td></tr>";
+		html += "<tr><td>Polling interval max</td><td>" + bean.getPollingIntervalMax()
 				+ "</td></tr>";
-		html += "<tr><td>Polling interval</td><td>" + bean.getPollingInterval()
-				+ "</td></tr>";
-		html += "<tr><td>Polling backoff</td><td>" + bean.getPollingBackoff()
-				+ "</td></tr>";
-		html += "<tr><td>Polling interval max</td><td>"
-				+ bean.getPollingIntervalMax() + "</td></tr>";
-//		html += "<tr><td>SOAPLAB Metadata</td><td>" + getMetadata()
-//				+ "</td></tr>";
+		// html += "<tr><td>SOAPLAB Metadata</td><td>" + getMetadata()
+		// + "</td></tr>";
 		return html;
 	}
 
 	@SuppressWarnings("serial")
 	@Override
 	public Action getConfigureAction(Frame owner) {
-		return new SoaplabActivityConfigurationAction(
-				(SoaplabActivity) getActivity(), owner, editManager, fileManager);
+		return new SoaplabActivityConfigurationAction((SoaplabActivity) getActivity(), owner,
+				editManager, fileManager, activityIconManager);
 	}
 
 	private String getMetadata() {
 		try {
-			String endpoint = ((SoaplabActivityConfigurationBean) getActivity()
-					.getConfiguration()).getEndpoint();
+			String endpoint = ((SoaplabActivityConfigurationBean) getActivity().getConfiguration())
+					.getEndpoint();
 			Call call = (Call) new Service().createCall();
 			call.setTimeout(new Integer(0));
 			call.setTargetEndpointAddress(endpoint);
@@ -104,14 +108,13 @@ public class SoaplabActivityContextualView extends
 			// ColXMLTree tree = new ColXMLTree(metadata);
 			URL sheetURL = SoaplabActivityContextualView.class
 					.getResource("/analysis_metadata_2_html.xsl");
-			TransformerFactory transformerFactory = TransformerFactory
-					.newInstance();
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			logger.info(sheetURL.toString());
-			Templates stylesheet = transformerFactory
-					.newTemplates(new StreamSource(sheetURL.openStream()));
+			Templates stylesheet = transformerFactory.newTemplates(new StreamSource(sheetURL
+					.openStream()));
 			Transformer transformer = stylesheet.newTransformer();
-			StreamSource inputStream = new StreamSource(
-					new ByteArrayInputStream(metadata.getBytes()));
+			StreamSource inputStream = new StreamSource(new ByteArrayInputStream(
+					metadata.getBytes()));
 			ByteArrayOutputStream transformedStream = new ByteArrayOutputStream();
 			StreamResult result = new StreamResult(transformedStream);
 			transformer.transform(inputStream, result);

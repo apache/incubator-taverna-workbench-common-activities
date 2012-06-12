@@ -27,6 +27,7 @@ import javax.swing.Action;
 
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivity;
 import net.sf.taverna.t2.activities.soaplab.SoaplabActivityConfigurationBean;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
@@ -41,8 +42,9 @@ public class SoaplabActivityConfigurationAction extends
 	private final EditManager editManager;
 	private final FileManager fileManager;
 
-	public SoaplabActivityConfigurationAction(SoaplabActivity activity,Frame owner, EditManager editManager, FileManager fileManager) {
-		super(activity);
+	public SoaplabActivityConfigurationAction(SoaplabActivity activity, Frame owner,
+			EditManager editManager, FileManager fileManager, ActivityIconManager activityIconManager) {
+		super(activity, activityIconManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
 		putValue(Action.NAME, CONFIGURE_SOAPLAB_ACTIVITY);
@@ -50,17 +52,16 @@ public class SoaplabActivityConfigurationAction extends
 	}
 
 	public void actionPerformed(ActionEvent action) {
-		ActivityConfigurationDialog<SoaplabActivity, SoaplabActivityConfigurationBean> currentDialog =
-			ActivityConfigurationAction.getDialog(getActivity());
+		ActivityConfigurationDialog<SoaplabActivity, SoaplabActivityConfigurationBean> currentDialog = ActivityConfigurationAction
+				.getDialog(getActivity());
 		if (currentDialog != null) {
 			currentDialog.toFront();
 			return;
 		}
 
-		final SoaplabConfigurationPanel panel = new SoaplabConfigurationPanel(
-				getActivity());
-		final ActivityConfigurationDialog<SoaplabActivity, SoaplabActivityConfigurationBean> dialog =
-			new ActivityConfigurationDialog<SoaplabActivity, SoaplabActivityConfigurationBean>(getActivity(), panel, editManager, fileManager);
+		final SoaplabConfigurationPanel panel = new SoaplabConfigurationPanel(getActivity());
+		final ActivityConfigurationDialog<SoaplabActivity, SoaplabActivityConfigurationBean> dialog = new ActivityConfigurationDialog<SoaplabActivity, SoaplabActivityConfigurationBean>(
+				getActivity(), panel, editManager, fileManager);
 
 		ActivityConfigurationAction.setDialog(getActivity(), dialog, fileManager);
 	}

@@ -5,16 +5,21 @@
 
 	<bean id="SoaplabActivityIcon" class="net.sf.taverna.t2.activities.soaplab.servicedescriptions.SoaplabActivityIcon" />
 
-	<bean id="SoaplabServiceProvider" class="net.sf.taverna.t2.activities.soaplab.servicedescriptions.SoaplabServiceProvider" />
+	<bean id="SoaplabServiceProvider" class="net.sf.taverna.t2.activities.soaplab.servicedescriptions.SoaplabServiceProvider">
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+	</bean>
 
 	<bean id="ConfigureSoaplabActivityMenuAction" class="net.sf.taverna.t2.activities.soaplab.menu.ConfigureSoaplabActivityMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 
 	<bean id="SoaplabActivityViewFactory" class="net.sf.taverna.t2.activities.soaplab.views.SoaplabActivityViewFactory" >
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="colourManager" ref="colourManager" />
 	</bean>
 
 </beans>

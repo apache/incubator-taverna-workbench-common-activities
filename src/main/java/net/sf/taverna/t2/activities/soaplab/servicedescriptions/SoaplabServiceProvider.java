@@ -14,6 +14,7 @@ import javax.xml.rpc.ServiceException;
 import net.sf.taverna.t2.activities.soaplab.Soap;
 // import net.sf.taverna.t2.activities.soaplab.query.MissingSoaplabException;
 import net.sf.taverna.t2.servicedescriptions.AbstractConfigurableServiceProvider;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.servicedescriptions.impl.ServiceDescriptionRegistryImpl;
 
 import org.apache.log4j.Logger;
@@ -33,7 +34,9 @@ public class SoaplabServiceProvider extends
 
 	private static final URI providerId = URI
 	.create("http://taverna.sf.net/2010/service-provider/soaplab");
-	
+
+	private ServiceDescriptionRegistry serviceDescriptionRegistry;
+
 	public SoaplabServiceProvider() {
 		super(new SoaplabServiceProviderConfig(
 				"http://somehost/soaplab/services/"));
@@ -46,7 +49,7 @@ public class SoaplabServiceProvider extends
 			return;
 		}
 		callBack.partialResults(descriptions);
-		
+
 		if (FIND_DETAILS) {
 			if (findSoaplabDetails(descriptions, callBack)) {
 				callBack.finished();
@@ -57,16 +60,15 @@ public class SoaplabServiceProvider extends
 	}
 
 	public List<SoaplabServiceProviderConfig> getDefaultConfigurations() {
-		
+
 		List<SoaplabServiceProviderConfig> defaults = new ArrayList<SoaplabServiceProviderConfig>();
-		
-		ServiceDescriptionRegistryImpl serviceRegistry = ServiceDescriptionRegistryImpl.getInstance();
+
 		// If defaults have failed to load from a configuration file then load them here.
-		if (!serviceRegistry.isDefaultSystemConfigurableProvidersLoaded()){
+		if (!serviceDescriptionRegistry.isDefaultSystemConfigurableProvidersLoaded()){
 			defaults.add(new SoaplabServiceProviderConfig(
 			"http://www.ebi.ac.uk/soaplab/services/"));
 		} // else return an empty list
-		
+
 		return defaults;
 	}
 
@@ -174,6 +176,10 @@ public class SoaplabServiceProvider extends
 
 	public String getId() {
 		return providerId.toString();
+	}
+
+	public void setServiceDescriptionRegistry(ServiceDescriptionRegistry serviceDescriptionRegistry) {
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
 	}
 
 }
