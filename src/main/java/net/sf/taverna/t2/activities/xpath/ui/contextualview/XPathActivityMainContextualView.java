@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import net.sf.taverna.t2.activities.xpath.XPathActivity;
 import net.sf.taverna.t2.activities.xpath.XPathActivityConfigurationBean;
 import net.sf.taverna.t2.activities.xpath.ui.config.XPathActivityConfigureAction;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
@@ -46,11 +47,13 @@ public class XPathActivityMainContextualView extends ContextualView {
 	private JScrollPane spXPathNamespaceMappings;
 	private final EditManager editManager;
 	private final FileManager fileManager;
+	private final ActivityIconManager activityIconManager;
 
 	public XPathActivityMainContextualView(XPathActivity activity,
-			EditManager editManager, FileManager fileManager) {
+			EditManager editManager, FileManager fileManager, ActivityIconManager activityIconManager) {
 		this.editManager = editManager;
 		this.fileManager = fileManager;
+		this.activityIconManager = activityIconManager;
 		this.thisContextualView = this;
 		this.activity = activity;
 		initView();
@@ -193,7 +196,7 @@ public class XPathActivityMainContextualView extends ContextualView {
 	@Override
 	public Action getConfigureAction(final Frame owner) {
 		// "Configure" button appears because of this action being returned
-		return new XPathActivityConfigureAction(activity, owner, editManager, fileManager);
+		return new XPathActivityConfigureAction(activity, owner, editManager, fileManager, activityIconManager);
 	}
 
 }

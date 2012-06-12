@@ -65,6 +65,8 @@ public class AddXPathTemplateMenuAction extends AbstractMenuAction {
 
 	private DataflowSelectionManager dataflowSelectionManager;
 
+	private ActivityIconManager activityIconManager;
+
 	public AddXPathTemplateMenuAction() {
 		super(InsertMenu.INSERT, 1000, ADD_XPATH_URI);
 	}
@@ -78,8 +80,7 @@ public class AddXPathTemplateMenuAction extends AbstractMenuAction {
 	protected class AddXPathMenuAction extends DesignOnlyAction {
 		AddXPathMenuAction() {
 			super();
-			putValue(SMALL_ICON, ActivityIconManager.getInstance()
-					.iconForActivity(new XPathActivity()));
+			putValue(SMALL_ICON, activityIconManager.iconForActivity(new XPathActivity()));
 			putValue(NAME, ADD_XPATH);
 			putValue(SHORT_DESCRIPTION, "XPath service");
 			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
@@ -103,6 +104,10 @@ public class AddXPathTemplateMenuAction extends AbstractMenuAction {
 
 	public void setDataflowSelectionManager(DataflowSelectionManager dataflowSelectionManager) {
 		this.dataflowSelectionManager = dataflowSelectionManager;
+	}
+
+	public void setActivityIconManager(ActivityIconManager activityIconManager) {
+		this.activityIconManager = activityIconManager;
 	}
 
 }

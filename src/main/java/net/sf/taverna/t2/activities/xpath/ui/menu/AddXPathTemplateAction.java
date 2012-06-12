@@ -61,6 +61,8 @@ public class AddXPathTemplateAction extends AbstractContextualMenuAction {
 
 	private DataflowSelectionManager dataflowSelectionManager;
 
+	private ActivityIconManager activityIconManager;
+
 	public AddXPathTemplateAction() {
 		super(insertSection, 1000);
 	}
@@ -79,7 +81,7 @@ public class AddXPathTemplateAction extends AbstractContextualMenuAction {
 
 	protected class AddXPathAction extends AbstractAction {
 		AddXPathAction() {
-			super(ADD_XPATH, ActivityIconManager.getInstance().iconForActivity(
+			super(ADD_XPATH, activityIconManager.iconForActivity(
 					new XPathActivity()));
 		}
 
@@ -100,6 +102,10 @@ public class AddXPathTemplateAction extends AbstractContextualMenuAction {
 
 	public void setDataflowSelectionManager(DataflowSelectionManager dataflowSelectionManager) {
 		this.dataflowSelectionManager = dataflowSelectionManager;
+	}
+
+	public void setActivityIconManager(ActivityIconManager activityIconManager) {
+		this.activityIconManager = activityIconManager;
 	}
 
 }
