@@ -32,16 +32,18 @@ import net.sf.taverna.t2.workflowmodel.EditException;
 
 import org.apache.log4j.Logger;
 
-
 @SuppressWarnings("serial")
-public class LocalworkerActivityConfigView extends BeanshellConfigView{
+public class LocalworkerActivityConfigView extends BeanshellConfigView {
 
 	private static Logger logger = Logger.getLogger(LocalworkerActivityConfigView.class);
 	private final EditManager editManager;
+	private final ActivityIconManager activityIconManager;
 
-	public LocalworkerActivityConfigView(LocalworkerActivity activity, EditManager editManager) {
+	public LocalworkerActivityConfigView(LocalworkerActivity activity, EditManager editManager,
+			ActivityIconManager activityIconManager) {
 		super(activity);
 		this.editManager = editManager;
+		this.activityIconManager = activityIconManager;
 		initLocalworker();
 	}
 
@@ -56,9 +58,8 @@ public class LocalworkerActivityConfigView extends BeanshellConfigView{
 	}
 
 	/**
-	 * Annotate the Activity with the name of the Institution or person who
-	 * created the activity. Useful for Localworkers that have been altered by a
-	 * user
+	 * Annotate the Activity with the name of the Institution or person who created the activity.
+	 * Useful for Localworkers that have been altered by a user
 	 */
 	private void addAnnotation() {
 		// FIXME use a more useful name or a different type of annotation, this
@@ -72,11 +73,10 @@ public class LocalworkerActivityConfigView extends BeanshellConfigView{
 			// therefore triggering the localworker to be coloured as a
 			// beanshell
 			editManager.doDataflowEdit(
-					(Dataflow) ModelMap.getInstance().getModel(
-							ModelMapConstants.CURRENT_DATAFLOW),
-							editManager.getEdits().getAddAnnotationChainEdit(
-							activity, hostInstitutionAnnotation));
-			ActivityIconManager.getInstance().resetIcon(activity);
+					(Dataflow) ModelMap.getInstance().getModel(ModelMapConstants.CURRENT_DATAFLOW),
+					editManager.getEdits().getAddAnnotationChainEdit(activity,
+							hostInstitutionAnnotation));
+			activityIconManager.resetIcon(activity);
 		} catch (EditException e) {
 			logger.error(e);
 		}

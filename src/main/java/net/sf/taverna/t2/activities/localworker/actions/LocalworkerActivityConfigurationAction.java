@@ -30,6 +30,7 @@ import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
 import net.sf.taverna.t2.activities.localworker.views.LocalworkerActivityConfigView;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
@@ -38,9 +39,8 @@ import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityCon
 import org.apache.log4j.Logger;
 
 /**
- * The {@link LocalworkerActivity}s have pre-defined scripts, ports etc in a
- * serialised form on disk. So if the user wants to change them they have to do
- * so at own risk.
+ * The {@link LocalworkerActivity}s have pre-defined scripts, ports etc in a serialised form on
+ * disk. So if the user wants to change them they have to do so at own risk.
  *
  * @author Ian Dunlop
  *
@@ -59,19 +59,22 @@ public class LocalworkerActivityConfigurationAction extends
 
 	private final FileManager fileManager;
 
-	public LocalworkerActivityConfigurationAction(LocalworkerActivity activity,
-			Frame owner, EditManager editManager, FileManager fileManager) {
-		super(activity);
+	private final ActivityIconManager activityIconManager;
+
+	public LocalworkerActivityConfigurationAction(LocalworkerActivity activity, Frame owner,
+			EditManager editManager, FileManager fileManager,
+			ActivityIconManager activityIconManager) {
+		super(activity, activityIconManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
+		this.activityIconManager = activityIconManager;
 		putValue(Action.NAME, EDIT_LOCALWORKER_SCRIPT);
 		this.owner = owner;
 	}
 
 	/**
-	 * If the localworker has not been changed it pops up a {@link JOptionPane}
-	 * warning the user that they change things at their own risk. Otherwise
-	 * just show the config view
+	 * If the localworker has not been changed it pops up a {@link JOptionPane} warning the user
+	 * that they change things at their own risk. Otherwise just show the config view
 	 */
 	public void actionPerformed(ActionEvent e) {
 		Object[] options = { "Continue", "Cancel" };
@@ -80,8 +83,8 @@ public class LocalworkerActivityConfigurationAction extends
 					.showOptionDialog(
 							null,
 							"Changing the properties of a Local Worker may affect its behaviour. Do you want to continue?",
-							"WARNING", JOptionPane.YES_NO_OPTION,
-							JOptionPane.QUESTION_MESSAGE, null, // do not use a
+							"WARNING", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+							null, // do not use a
 							// custom Icon
 							options, options[0]);
 
@@ -97,18 +100,18 @@ public class LocalworkerActivityConfigurationAction extends
 	}
 
 	private void openDialog() {
-		ActivityConfigurationDialog<LocalworkerActivity, LocalworkerActivityConfigurationBean> currentDialog = ActivityConfigurationAction.getDialog(getActivity());
+		ActivityConfigurationDialog<LocalworkerActivity, LocalworkerActivityConfigurationBean> currentDialog = ActivityConfigurationAction
+				.getDialog(getActivity());
 		if (currentDialog != null) {
 			currentDialog.toFront();
 			return;
 		}
 		final LocalworkerActivity activity = (LocalworkerActivity) getActivity();
-		final LocalworkerActivityConfigView localworkerConfigView =
-			new LocalworkerActivityConfigView(activity, editManager);
-		final ActivityConfigurationDialog dialog =
-			new ActivityConfigurationDialog (getActivity(), localworkerConfigView, editManager, fileManager);
+		final LocalworkerActivityConfigView localworkerConfigView = new LocalworkerActivityConfigView(
+				activity, editManager, activityIconManager);
+		final ActivityConfigurationDialog dialog = new ActivityConfigurationDialog(getActivity(),
+				localworkerConfigView, editManager, fileManager);
 		ActivityConfigurationAction.setDialog(getActivity(), dialog, fileManager);
-
 
 	}
 }

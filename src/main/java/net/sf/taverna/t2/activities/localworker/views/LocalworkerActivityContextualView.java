@@ -31,6 +31,8 @@ import net.sf.taverna.t2.activities.localworker.servicedescriptions.LocalworkerS
 import net.sf.taverna.t2.annotation.AnnotationAssertion;
 import net.sf.taverna.t2.annotation.AnnotationChain;
 import net.sf.taverna.t2.annotation.annotationbeans.HostInstitution;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
+import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
@@ -44,28 +46,29 @@ public class LocalworkerActivityContextualView extends
 
 	private final EditManager editManager;
 	private final FileManager fileManager;
+	private final ActivityIconManager activityIconManager;
 
-	public LocalworkerActivityContextualView(Activity<?> activity, EditManager editManager, FileManager fileManager) {
-		super(activity);
+	public LocalworkerActivityContextualView(Activity<?> activity, EditManager editManager,
+			FileManager fileManager, ColourManager colourManager, ActivityIconManager activityIconManager) {
+		super(activity, colourManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
+		this.activityIconManager = activityIconManager;
 	}
 
 	@Override
 	protected String getRawTableRowsHtml() {
 		String html = "<tr><th>Input Port Name</th><th>Depth</th></tr>";
-		for (ActivityInputPortDefinitionBean bean : getConfigBean()
-				.getInputPortDefinitions()) {
-			html = html + "<tr><td>" + bean.getName() + "</td><td>"
-					+ bean.getDepth() + "</td></tr>";
+		for (ActivityInputPortDefinitionBean bean : getConfigBean().getInputPortDefinitions()) {
+			html = html + "<tr><td>" + bean.getName() + "</td><td>" + bean.getDepth()
+					+ "</td></tr>";
 		}
-		html = html
-				+ "<tr><th>Output Port Name</th><th>Depth</th></tr>";
-		for (ActivityOutputPortDefinitionBean bean : getConfigBean()
-				.getOutputPortDefinitions()) {
-			html = html + "<tr></td>" + bean.getName() + "</td><td>"
-					+ bean.getDepth() + "</td>" //<td>" + bean.getGranularDepth()
-					//+ "</td>"
+		html = html + "<tr><th>Output Port Name</th><th>Depth</th></tr>";
+		for (ActivityOutputPortDefinitionBean bean : getConfigBean().getOutputPortDefinitions()) {
+			html = html + "<tr></td>" + bean.getName() + "</td><td>" + bean.getDepth() + "</td>" // <td>"
+																									// +
+																									// bean.getGranularDepth()
+					// + "</td>"
 					+ "</tr>";
 		}
 		return html;
@@ -77,13 +80,17 @@ public class LocalworkerActivityContextualView extends
 		LocalworkerActivity localActivity = (LocalworkerActivity) getActivity();
 		if (localActivity.isAltered()) {
 			result = "Altered local worker service";
-			String workerName = LocalworkerServiceProvider.getServiceNameFromClassname(localActivity.getConfiguration().getLocalworkerName());
+			String workerName = LocalworkerServiceProvider
+					.getServiceNameFromClassname(localActivity.getConfiguration()
+							.getLocalworkerName());
 			if ((workerName != null) && !workerName.equals("")) {
 				result += " - originally " + workerName;
 			}
 		} else {
 			result = "Local worker service";
-			String workerName = LocalworkerServiceProvider.getServiceNameFromClassname(localActivity.getConfiguration().getLocalworkerName());
+			String workerName = LocalworkerServiceProvider
+					.getServiceNameFromClassname(localActivity.getConfiguration()
+							.getLocalworkerName());
 			if ((workerName != null) && !workerName.equals("")) {
 				result += " - " + workerName;
 			}
@@ -105,8 +112,8 @@ public class LocalworkerActivityContextualView extends
 
 	@Override
 	public Action getConfigureAction(Frame owner) {
-		return new LocalworkerActivityConfigurationAction(
-				(LocalworkerActivity) getActivity(), owner, editManager, fileManager);
+		return new LocalworkerActivityConfigurationAction((LocalworkerActivity) getActivity(),
+				owner, editManager, fileManager, activityIconManager);
 	}
 
 	@Override

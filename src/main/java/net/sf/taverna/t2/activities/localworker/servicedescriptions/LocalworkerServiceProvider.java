@@ -22,7 +22,7 @@ import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
-import net.sf.taverna.t2.workflowmodel.serialization.xml.ActivityXMLDeserializer;
+import net.sf.taverna.t2.workflowmodel.serialization.xml.impl.ActivityXMLDeserializer;
 
 import org.apache.log4j.Logger;
 import org.jdom.Element;
