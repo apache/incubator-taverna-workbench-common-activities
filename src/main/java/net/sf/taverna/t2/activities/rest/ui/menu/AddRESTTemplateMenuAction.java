@@ -54,14 +54,14 @@ public class AddRESTTemplateMenuAction extends AbstractMenuAction {
 	private static final String ADD_REST = "REST";
 
 	private static final URI ADD_REST_URI = URI
-	.create("http://taverna.sf.net/2008/t2workbench/menu#graphMenuAddREST");
+			.create("http://taverna.sf.net/2008/t2workbench/menu#graphMenuAddREST");
 
-	private static Logger logger = Logger
-			.getLogger(AddRESTTemplateMenuAction.class);
+	private static Logger logger = Logger.getLogger(AddRESTTemplateMenuAction.class);
 
 	private EditManager editManager;
 	private MenuManager menuManager;
 	private DataflowSelectionManager dataflowSelectionManager;
+	private ActivityIconManager activityIconManager;
 
 	public AddRESTTemplateMenuAction() {
 		super(InsertMenu.INSERT, 500, ADD_REST_URI);
@@ -74,19 +74,21 @@ public class AddRESTTemplateMenuAction extends AbstractMenuAction {
 	}
 
 	protected class AddRESTMenuAction extends DesignOnlyAction {
-		AddRESTMenuAction () {
-			super ();
-			putValue(SMALL_ICON, ActivityIconManager.getInstance().iconForActivity(
-					new RESTActivity()));
+		AddRESTMenuAction() {
+			super();
+			putValue(SMALL_ICON, activityIconManager.iconForActivity(new RESTActivity(null)));
 			putValue(NAME, ADD_REST);
 			putValue(SHORT_DESCRIPTION, "REST service");
-			putValue(Action.ACCELERATOR_KEY,
-					KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_DOWN_MASK));
+			putValue(
+					Action.ACCELERATOR_KEY,
+					KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.SHIFT_DOWN_MASK
+							| InputEvent.ALT_DOWN_MASK));
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			WorkflowView.importServiceDescription(GenericRESTTemplateService.getServiceDescription(),
-			false, editManager, menuManager, dataflowSelectionManager);
+			WorkflowView.importServiceDescription(
+					GenericRESTTemplateService.getServiceDescription(), false, editManager,
+					menuManager, dataflowSelectionManager);
 		}
 	}
 
@@ -100,6 +102,10 @@ public class AddRESTTemplateMenuAction extends AbstractMenuAction {
 
 	public void setDataflowSelectionManager(DataflowSelectionManager dataflowSelectionManager) {
 		this.dataflowSelectionManager = dataflowSelectionManager;
+	}
+
+	public void setActivityIconManager(ActivityIconManager activityIconManager) {
+		this.activityIconManager = activityIconManager;
 	}
 
 }

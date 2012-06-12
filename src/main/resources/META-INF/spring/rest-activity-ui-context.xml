@@ -3,28 +3,35 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
                       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="RESTActivityIcon" class="net.sf.taverna.t2.activities.rest.ui.servicedescription.RESTActivityIcon" />
+	<bean id="RESTActivityIcon" class="net.sf.taverna.t2.activities.rest.ui.servicedescription.RESTActivityIcon">
+			<property name="colourManager" ref="colourManager" />
+	</bean>
 
 	<bean id="GenericRESTTemplateService" class="net.sf.taverna.t2.activities.rest.ui.servicedescription.GenericRESTTemplateService" />
 
 	<bean id="ConfigureRESTActivityMenuAction" class="net.sf.taverna.t2.activities.rest.ui.view.ConfigureRESTActivityMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 	<bean id="AddRESTTemplateAction" class="net.sf.taverna.t2.activities.rest.ui.menu.AddRESTTemplateAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
 			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 	<bean id="AddRESTTemplateMenuAction" class="net.sf.taverna.t2.activities.rest.ui.menu.AddRESTTemplateMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
 			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 
 	<bean id="RESTActivityMainContextViewFactory" class="net.sf.taverna.t2.activities.rest.ui.view.RESTActivityMainContextViewFactory">
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="colourManager" ref="colourManager" />
 	</bean>
 
 	<bean id="RESTActivityHealthCheckVisitExplainer" class="net.sf.taverna.t2.activities.rest.ui.explainer.RESTActivityHealthCheckVisitExplainer" />

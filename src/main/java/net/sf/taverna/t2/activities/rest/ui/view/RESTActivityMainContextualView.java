@@ -18,9 +18,10 @@ import javax.swing.JTextField;
 import net.sf.taverna.t2.activities.rest.RESTActivity;
 import net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean;
 import net.sf.taverna.t2.activities.rest.ui.config.RESTActivityConfigureAction;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
+import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
-import net.sf.taverna.t2.workbench.ui.impl.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 
 @SuppressWarnings("serial")
@@ -29,7 +30,7 @@ public class RESTActivityMainContextualView extends ContextualView {
 
 	private JPanel jpMainPanel;
 	private JTextField tfHTTPMethod;
-	//private JTextField tfURLSignature;
+	// private JTextField tfURLSignature;
 	private JTextArea taURLSignature;
 	private JTextField tfAcceptHeader;
 	private JLabel jlContentType;
@@ -40,23 +41,28 @@ public class RESTActivityMainContextualView extends ContextualView {
 	private JTextField tfSendHTTPExpectRequestHeader;
 
 	private final EditManager editManager;
-
 	private final FileManager fileManager;
+	private final ActivityIconManager activityIconManager;
+	private final ColourManager colourManager;
 
-	public RESTActivityMainContextualView(RESTActivity activity, EditManager editManager, FileManager fileManager) {
+	public RESTActivityMainContextualView(RESTActivity activity, EditManager editManager,
+			FileManager fileManager, ActivityIconManager activityIconManager,
+			ColourManager colourManager) {
 		this.activity = activity;
 		this.editManager = editManager;
 		this.fileManager = fileManager;
+		this.activityIconManager = activityIconManager;
+		this.colourManager = colourManager;
 		initView();
 	}
 
 	@Override
 	public JComponent getMainFrame() {
 		jpMainPanel = new JPanel(new GridBagLayout());
-		jpMainPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createEmptyBorder(4, 2, 4, 2), BorderFactory.createLineBorder(
-				ColourManager.getInstance().getPreferredColour(
-						RESTActivity.class.getCanonicalName()), 2)));
+		jpMainPanel
+				.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(4, 2,
+						4, 2), BorderFactory.createLineBorder(
+						colourManager.getPreferredColour(RESTActivity.class.getCanonicalName()), 2)));
 
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -132,8 +138,8 @@ public class RESTActivityMainContextualView extends ContextualView {
 		c.gridx = 0;
 		c.gridy++;
 		jlSendHTTPExpectRequestHeader = new JLabel("Send HTTP 'Expect' header:");
-		jlSendHTTPExpectRequestHeader.setFont(jlSendHTTPExpectRequestHeader
-				.getFont().deriveFont(Font.BOLD));
+		jlSendHTTPExpectRequestHeader.setFont(jlSendHTTPExpectRequestHeader.getFont().deriveFont(
+				Font.BOLD));
 		jlSendHTTPExpectRequestHeader.setVisible(false);
 		jpMainPanel.add(jlSendHTTPExpectRequestHeader, c);
 
@@ -155,8 +161,8 @@ public class RESTActivityMainContextualView extends ContextualView {
 	 * views (even when this contextual view is collapsed).
 	 */
 	public String getViewTitle() {
-		//RESTActivityConfigurationBean configuration = activity
-		//		.getConfiguration();
+		// RESTActivityConfigurationBean configuration = activity
+		// .getConfiguration();
 		return "REST Service Details";
 	}
 
@@ -165,28 +171,24 @@ public class RESTActivityMainContextualView extends ContextualView {
 	 */
 	@Override
 	public void refreshView() {
-		RESTActivityConfigurationBean configuration = activity
-				.getConfiguration();
+		RESTActivityConfigurationBean configuration = activity.getConfiguration();
 
 		// toggle visibility of the elements that do not always appear
 		jlContentType.setVisible(activity.hasMessageBodyInputPort());
 		tfContentTypeHeader.setVisible(activity.hasMessageBodyInputPort());
 		jlSendDataAs.setVisible(activity.hasMessageBodyInputPort());
 		tfSendDataAs.setVisible(activity.hasMessageBodyInputPort());
-		jlSendHTTPExpectRequestHeader.setVisible(activity
-				.hasMessageBodyInputPort());
-		tfSendHTTPExpectRequestHeader.setVisible(activity
-				.hasMessageBodyInputPort());
+		jlSendHTTPExpectRequestHeader.setVisible(activity.hasMessageBodyInputPort());
+		tfSendHTTPExpectRequestHeader.setVisible(activity.hasMessageBodyInputPort());
 		jpMainPanel.revalidate();
 
 		tfHTTPMethod.setText("" + configuration.getHttpMethod());
-		//tfURLSignature.setText(configuration.getUrlSignature());
+		// tfURLSignature.setText(configuration.getUrlSignature());
 		taURLSignature.setText(configuration.getUrlSignature());
 		tfAcceptHeader.setText(configuration.getAcceptsHeaderValue());
 		tfContentTypeHeader.setText(configuration.getContentTypeForUpdates());
 		tfSendDataAs.setText("" + configuration.getOutgoingDataFormat());
-		tfSendHTTPExpectRequestHeader.setText(""
-				+ configuration.getSendHTTPExpectRequestHeader());
+		tfSendHTTPExpectRequestHeader.setText("" + configuration.getSendHTTPExpectRequestHeader());
 	}
 
 	/**
@@ -201,7 +203,8 @@ public class RESTActivityMainContextualView extends ContextualView {
 	@Override
 	public Action getConfigureAction(final Frame owner) {
 		// "Configure" button appears because of this action being returned
-		return new RESTActivityConfigureAction(activity, owner, editManager, fileManager);
+		return new RESTActivityConfigureAction(activity, owner, editManager, fileManager,
+				activityIconManager);
 	}
 
 }
