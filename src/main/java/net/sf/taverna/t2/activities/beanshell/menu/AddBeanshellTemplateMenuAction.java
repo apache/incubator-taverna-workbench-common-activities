@@ -34,7 +34,6 @@ import net.sf.taverna.t2.ui.menu.AbstractMenuAction;
 import net.sf.taverna.t2.ui.menu.MenuManager;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
-import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.DataflowSelectionManager;
 import net.sf.taverna.t2.workbench.ui.workflowview.WorkflowView;
 import net.sf.taverna.t2.workbench.views.graph.actions.DesignOnlyAction;
@@ -54,6 +53,9 @@ public class AddBeanshellTemplateMenuAction extends AbstractMenuAction {
 
 	private static final String ADD_BEANSHELL = "Beanshell";
 
+	public static final URI INSERT = URI
+			.create("http://taverna.sf.net/2008/t2workbench/menu#insert");
+
 	private static final URI ADD_BEANSHELL_URI = URI
 	.create("http://taverna.sf.net/2008/t2workbench/menu#graphMenuAddBeanshell");
 
@@ -64,8 +66,10 @@ public class AddBeanshellTemplateMenuAction extends AbstractMenuAction {
 	private MenuManager menuManager;
 	private DataflowSelectionManager dataflowSelectionManager;
 
+	private ActivityIconManager activityIconManager;
+
 	public AddBeanshellTemplateMenuAction() {
-		super(InsertMenu.INSERT, 300, ADD_BEANSHELL_URI);
+		super(INSERT, 300, ADD_BEANSHELL_URI);
 	}
 
 	@Override
@@ -77,8 +81,8 @@ public class AddBeanshellTemplateMenuAction extends AbstractMenuAction {
 	protected class AddBeanshellMenuAction extends DesignOnlyAction {
 		AddBeanshellMenuAction () {
 			super ();
-			putValue(SMALL_ICON, ActivityIconManager.getInstance().iconForActivity(
-					new BeanshellActivity()));
+			putValue(SMALL_ICON, activityIconManager.iconForActivity(
+					new BeanshellActivity(null)));
 			putValue(NAME, ADD_BEANSHELL);
 			putValue(SHORT_DESCRIPTION, "Beanshell service");
 			putValue(Action.ACCELERATOR_KEY,
@@ -101,6 +105,10 @@ public class AddBeanshellTemplateMenuAction extends AbstractMenuAction {
 
 	public void setDataflowSelectionManager(DataflowSelectionManager dataflowSelectionManager) {
 		this.dataflowSelectionManager = dataflowSelectionManager;
+	}
+
+	public void setActivityIconManager(ActivityIconManager activityIconManager) {
+		this.activityIconManager = activityIconManager;
 	}
 
 }

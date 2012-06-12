@@ -9,6 +9,7 @@
 	</parent>
 	<groupId>net.sf.taverna.t2.ui-activities</groupId>
 	<artifactId>beanshell-activity-ui</artifactId>
+	<packaging>bundle</packaging>
 	<name>Taverna 2 Beanshell Activity UI</name>
 	<dependencies>
 		<dependency>

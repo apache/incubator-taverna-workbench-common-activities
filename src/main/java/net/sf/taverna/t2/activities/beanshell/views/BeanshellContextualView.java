@@ -27,6 +27,8 @@ import javax.swing.Action;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.beanshell.actions.BeanshellActivityConfigurationAction;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
+import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
@@ -49,11 +51,14 @@ public class BeanshellContextualView extends
 
 	private EditManager editManager;
 	private FileManager fileManager;
+	private final ActivityIconManager activityIconManager;
 
-	public BeanshellContextualView(Activity<?> activity, EditManager editManager, FileManager fileManager) {
-		super(activity);
+	public BeanshellContextualView(Activity<?> activity, EditManager editManager, FileManager fileManager,
+			ActivityIconManager activityIconManager, ColourManager colourManager) {
+		super(activity, colourManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
+		this.activityIconManager = activityIconManager;
 		init();
 	}
 
@@ -95,7 +100,7 @@ public class BeanshellContextualView extends
 	@Override
 	public Action getConfigureAction(Frame owner) {
 		return new BeanshellActivityConfigurationAction(
-				(BeanshellActivity) getActivity(), owner, editManager, fileManager);
+				(BeanshellActivity) getActivity(), owner, editManager, fileManager, activityIconManager);
 	}
 
 	@Override

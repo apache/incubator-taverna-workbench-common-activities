@@ -42,7 +42,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.help.CSH;
+//import javax.help.CSH;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -275,10 +275,10 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	 * {@link #getPortPanel()}
 	 */
 	private void initialise() {
-		CSH
-				.setHelpIDString(
-						this,
-						"net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.BeanshellConfigView");
+//		CSH
+//				.setHelpIDString(
+//						this,
+//						"net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.BeanshellConfigView");
 		configuration = activity.getConfiguration();
 		inputViewList = new ArrayList<BeanshellInputViewer>();
 		outputViewList = new ArrayList<BeanshellOutputViewer>();
@@ -339,7 +339,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 
 			public void actionPerformed(ActionEvent ex) {
 				BeanshellActivityHealthChecker healthChecker = new BeanshellActivityHealthChecker();
-				BeanshellActivity fakeActivity = new BeanshellActivity();
+				BeanshellActivity fakeActivity = new BeanshellActivity(null);
 				try {
 					fakeActivity.configure(makeConfiguration());
 				} catch (ActivityConfigurationException e) {
@@ -526,9 +526,9 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 			JPanel labelPanel = new JPanel();
 			labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.PAGE_AXIS));
 			JLabel label = new JLabel("Local JAR files");
-			if (!BeanshellActivity.libDir.exists())
-				BeanshellActivity.libDir.mkdir();
-			JLabel libLabel = new JLabel("<html><small>" + BeanshellActivity.libDir.getAbsolutePath()
+			if (!activity.libDir.exists())
+				activity.libDir.mkdir();
+			JLabel libLabel = new JLabel("<html><small>" + activity.libDir.getAbsolutePath()
 					+ "</small></html>");
 			labelPanel.add(label);
 			labelPanel.add(libLabel);
@@ -557,7 +557,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 			// Make so it's there so the user can add stuff to it
 			// List of all jar files in the lib directory
 			List<String> jarFiles =
-				Arrays.asList(BeanshellActivity.libDir.list(new BeanshellActivity.FileExtFilter(".jar")));
+				Arrays.asList(activity.libDir.list(new BeanshellActivity.FileExtFilter(".jar")));
 			// We also add the list of jars that may have been configured sometime before
 			// but are now not present in the lib directory for some reason
 			Set<String> missingLocalDeps =
@@ -593,7 +593,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 				});
 				panel.add(checkBox);
 				// The jar may not be in the lib directory, so warn the user
-				if (!new File(BeanshellActivity.libDir, jarFile).exists()) {
+				if (!new File(activity.libDir, jarFile).exists()) {
 					checkBox.setForeground(Color.RED);
 					checkBox.setText(checkBox.getText() + " (missing file!)");
 				}

@@ -1,5 +1,6 @@
 package net.sf.taverna.t2.activities.beanshell.menu;
 
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.activitytools.AbstractConfigureActivityMenuAction;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
@@ -16,6 +17,7 @@ public class ConfigureBeanshellMenuAction extends
 
 	private EditManager editManager;
 	private FileManager fileManager;
+	private ActivityIconManager activityIconManager;
 
 	public ConfigureBeanshellMenuAction() {
 		super(BeanshellActivity.class);
@@ -27,7 +29,7 @@ public class ConfigureBeanshellMenuAction extends
 		Action result = null;
 		if (!(a instanceof LocalworkerActivity)) {
 			result = new BeanshellActivityConfigurationAction(
-					findActivity(), getParentFrame(), editManager, fileManager);
+					findActivity(), getParentFrame(), editManager, fileManager, activityIconManager);
 			result.putValue(Action.NAME, BeanshellActivityConfigurationAction.EDIT_BEANSHELL_SCRIPT);
 			addMenuDots(result);
 		}
@@ -40,6 +42,10 @@ public class ConfigureBeanshellMenuAction extends
 
 	public void setFileManager(FileManager fileManager) {
 		this.fileManager = fileManager;
+	}
+
+	public void setActivityIconManager(ActivityIconManager activityIconManager) {
+		this.activityIconManager = activityIconManager;
 	}
 
 }

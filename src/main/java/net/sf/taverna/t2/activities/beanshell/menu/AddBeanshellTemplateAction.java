@@ -59,6 +59,8 @@ public class AddBeanshellTemplateAction extends AbstractContextualMenuAction {
 	private MenuManager menuManager;
 	private DataflowSelectionManager dataflowSelectionManager;
 
+	private ActivityIconManager activityIconManager;
+
 	public AddBeanshellTemplateAction() {
 		super(insertSection, 300);
 	}
@@ -76,8 +78,8 @@ public class AddBeanshellTemplateAction extends AbstractContextualMenuAction {
 
 	protected class AddBeanshellAction extends AbstractAction {
 		AddBeanshellAction() {
-			super(ADD_BEANSHELL, ActivityIconManager.getInstance().iconForActivity(
-					new BeanshellActivity()));
+			super(ADD_BEANSHELL, activityIconManager.iconForActivity(
+					new BeanshellActivity(null)));
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -96,6 +98,10 @@ public class AddBeanshellTemplateAction extends AbstractContextualMenuAction {
 
 	public void setDataflowSelectionManager(DataflowSelectionManager dataflowSelectionManager) {
 		this.dataflowSelectionManager = dataflowSelectionManager;
+	}
+
+	public void setActivityIconManager(ActivityIconManager activityIconManager) {
+		this.activityIconManager = activityIconManager;
 	}
 
 }

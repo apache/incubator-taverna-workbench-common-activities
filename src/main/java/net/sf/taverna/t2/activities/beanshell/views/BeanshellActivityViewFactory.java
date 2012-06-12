@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
+import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
@@ -33,6 +35,8 @@ public class BeanshellActivityViewFactory implements ContextualViewFactory<Beans
 
 	private EditManager editManager;
 	private FileManager fileManager;
+	private ActivityIconManager activityIconManager;
+	private ColourManager colourManager;
 
 	public boolean canHandle(Object object) {
 		//changed since local worker sub classes beanshell which means instanceof can't be used any more
@@ -41,7 +45,7 @@ public class BeanshellActivityViewFactory implements ContextualViewFactory<Beans
 
 
 	public List<ContextualView> getViews(BeanshellActivity activity) {
-		return Arrays.asList(new ContextualView[] {new BeanshellContextualView(activity, editManager, fileManager)});
+		return Arrays.asList(new ContextualView[] {new BeanshellContextualView(activity, editManager, fileManager, activityIconManager, colourManager)});
 	}
 
 	public void setEditManager(EditManager editManager) {
@@ -50,6 +54,14 @@ public class BeanshellActivityViewFactory implements ContextualViewFactory<Beans
 
 	public void setFileManager(FileManager fileManager) {
 		this.fileManager = fileManager;
+	}
+
+	public void setActivityIconManager(ActivityIconManager activityIconManager) {
+		this.activityIconManager = activityIconManager;
+	}
+
+	public void setColourManager(ColourManager colourManager) {
+		this.colourManager = colourManager;
 	}
 
 }

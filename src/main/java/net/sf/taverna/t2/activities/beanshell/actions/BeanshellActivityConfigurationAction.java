@@ -26,6 +26,7 @@ import java.awt.event.ActionEvent;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.beanshell.views.BeanshellConfigView;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
@@ -38,8 +39,9 @@ public class BeanshellActivityConfigurationAction extends ActivityConfigurationA
 	private final EditManager editManager;
 	private final FileManager fileManager;
 
-	public BeanshellActivityConfigurationAction(BeanshellActivity activity, Frame owner, EditManager editManager, FileManager fileManager) {
-		super(activity);
+	public BeanshellActivityConfigurationAction(BeanshellActivity activity, Frame owner, EditManager editManager, FileManager fileManager,
+			ActivityIconManager activityIconManager) {
+		super(activity, activityIconManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
 		putValue(NAME, EDIT_BEANSHELL_SCRIPT );
