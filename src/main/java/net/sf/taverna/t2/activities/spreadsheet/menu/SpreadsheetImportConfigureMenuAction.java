@@ -25,6 +25,7 @@ import javax.swing.Action;
 import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportActivity;
 import net.sf.taverna.t2.activities.spreadsheet.actions.SpreadsheetImportActivityConfigurationAction;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.activitytools.AbstractConfigureActivityMenuAction;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
@@ -39,6 +40,7 @@ public class SpreadsheetImportConfigureMenuAction extends
 
 	private EditManager editManager;
 	private FileManager fileManager;
+	private ActivityIconManager activityIconManager;
 
 	public SpreadsheetImportConfigureMenuAction() {
 		super(SpreadsheetImportActivity.class);
@@ -47,7 +49,7 @@ public class SpreadsheetImportConfigureMenuAction extends
 	@Override
 	protected Action createAction() {
 		Action result = new SpreadsheetImportActivityConfigurationAction(findActivity(),
-				getParentFrame(), editManager, fileManager);
+				getParentFrame(), editManager, fileManager, activityIconManager);
 		result.putValue(Action.NAME, SpreadsheetImportUIText
 				.getString("SpreadsheetImportConfigureMenuAction.configureMenu"));
 		addMenuDots(result);
@@ -60,6 +62,10 @@ public class SpreadsheetImportConfigureMenuAction extends
 
 	public void setFileManager(FileManager fileManager) {
 		this.fileManager = fileManager;
+	}
+
+	public void setActivityIconManager(ActivityIconManager activityIconManager) {
+		this.activityIconManager = activityIconManager;
 	}
 
 }

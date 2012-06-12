@@ -52,12 +52,12 @@ import org.apache.log4j.Logger;
 public class SpreadsheetImportAddTemplateMenuAction extends AbstractMenuAction {
 
 	private static final URI ADD_SPREADSHEET_IMPORT_URI = URI
-	.create("http://taverna.sf.net/2008/t2workbench/menu#graphMenuAddSpreadsheetImport");
+			.create("http://taverna.sf.net/2008/t2workbench/menu#graphMenuAddSpreadsheetImport");
 
 	private static Logger logger = Logger.getLogger(SpreadsheetImportAddTemplateMenuAction.class);
 
 	private static String ADD_SPREADSHEET_IMPORT = SpreadsheetImportUIText
-	.getString("SpreadsheetImportAddTemplateAction.addMenu");
+			.getString("SpreadsheetImportAddTemplateAction.addMenu");
 
 	private EditManager editManager;
 
@@ -65,7 +65,9 @@ public class SpreadsheetImportAddTemplateMenuAction extends AbstractMenuAction {
 
 	private DataflowSelectionManager dataflowSelectionManager;
 
-	public SpreadsheetImportAddTemplateMenuAction(){
+	private ActivityIconManager activityIconManager;
+
+	public SpreadsheetImportAddTemplateMenuAction() {
 		super(InsertMenu.INSERT, 700, ADD_SPREADSHEET_IMPORT_URI);
 	}
 
@@ -77,19 +79,22 @@ public class SpreadsheetImportAddTemplateMenuAction extends AbstractMenuAction {
 	protected class AddSpreadsheetImportMenuAction extends DesignOnlyAction {
 		AddSpreadsheetImportMenuAction() {
 			super();
-			putValue(SMALL_ICON, ActivityIconManager.getInstance()
-					.iconForActivity(new SpreadsheetImportActivity()));
+			putValue(SMALL_ICON,
+					activityIconManager.iconForActivity(new SpreadsheetImportActivity()));
 			putValue(NAME, ADD_SPREADSHEET_IMPORT);
 			putValue(SHORT_DESCRIPTION, ADD_SPREADSHEET_IMPORT);
-			putValue(Action.ACCELERATOR_KEY,
-					KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_DOWN_MASK));
+			putValue(
+					Action.ACCELERATOR_KEY,
+					KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.SHIFT_DOWN_MASK
+							| InputEvent.ALT_DOWN_MASK));
 
 		}
 
 		public void actionPerformed(ActionEvent e) {
 
-			WorkflowView.importServiceDescription(SpreadsheetImportTemplateService.getServiceDescription(),
-					false, editManager, menuManager, dataflowSelectionManager);
+			WorkflowView.importServiceDescription(
+					SpreadsheetImportTemplateService.getServiceDescription(), false, editManager,
+					menuManager, dataflowSelectionManager);
 
 		}
 	}
@@ -106,5 +111,8 @@ public class SpreadsheetImportAddTemplateMenuAction extends AbstractMenuAction {
 		this.dataflowSelectionManager = dataflowSelectionManager;
 	}
 
-}
+	public void setActivityIconManager(ActivityIconManager activityIconManager) {
+		this.activityIconManager = activityIconManager;
+	}
 
+}

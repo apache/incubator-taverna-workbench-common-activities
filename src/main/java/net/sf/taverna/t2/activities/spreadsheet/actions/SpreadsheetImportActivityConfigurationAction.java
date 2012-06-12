@@ -29,6 +29,7 @@ import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportActivity;
 import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportConfiguration;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
 import net.sf.taverna.t2.activities.spreadsheet.views.SpreadsheetImportConfigView;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.helper.HelpEnabledDialog;
@@ -54,8 +55,9 @@ public class SpreadsheetImportActivityConfigurationAction extends
 	private final FileManager fileManager;
 
 	public SpreadsheetImportActivityConfigurationAction(SpreadsheetImportActivity activity,
-			Frame owner, EditManager editManager, FileManager fileManager) {
-		super(activity);
+			Frame owner, EditManager editManager, FileManager fileManager,
+			ActivityIconManager activityIconManager) {
+		super(activity, activityIconManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
 		putValue(NAME, CONFIGURE);
@@ -65,8 +67,10 @@ public class SpreadsheetImportActivityConfigurationAction extends
 	public void actionPerformed(ActionEvent e) {
 		final SpreadsheetImportConfigView spreadsheetConfigView = new SpreadsheetImportConfigView(
 				(SpreadsheetImportActivity) getActivity());
-		final HelpEnabledDialog dialog = new HelpEnabledDialog(owner, SpreadsheetImportUIText
-				.getString("SpreadsheetImportActivityConfigurationAction.dialogTitle"), true, null);
+		final HelpEnabledDialog dialog = new HelpEnabledDialog(owner,
+				SpreadsheetImportUIText
+						.getString("SpreadsheetImportActivityConfigurationAction.dialogTitle"),
+				true, null);
 		final Dataflow owningDataflow = fileManager.getCurrentDataflow();
 		dialog.add(spreadsheetConfigView);
 		// dialog.setSize(500, 600);
@@ -76,7 +80,8 @@ public class SpreadsheetImportActivityConfigurationAction extends
 				.getString("SpreadsheetImportActivityConfigurationAction.okButton")) {
 			public void actionPerformed(ActionEvent arg0) {
 				if (spreadsheetConfigView.isConfigurationChanged()) {
-					ActivityConfigurationDialog.configureActivityStatic(owningDataflow, activity, spreadsheetConfigView.getConfiguration(), editManager);
+					ActivityConfigurationDialog.configureActivityStatic(owningDataflow, activity,
+							spreadsheetConfigView.getConfiguration(), editManager);
 				}
 				dialog.setVisible(false);
 				dialog.dispose();

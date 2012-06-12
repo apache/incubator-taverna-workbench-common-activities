@@ -29,6 +29,8 @@ import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportConfiguration;
 import net.sf.taverna.t2.activities.spreadsheet.actions.SpreadsheetImportActivityConfigurationAction;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
 import net.sf.taverna.t2.activities.spreadsheet.servicedescriptions.SpreadsheetImportActivityIcon;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
+import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
@@ -47,18 +49,23 @@ public class SpreadsheetImportContextualView extends
 	private static final long serialVersionUID = 1L;
 	private final EditManager editManager;
 	private final FileManager fileManager;
+	private final ActivityIconManager activityIconManager;
 
-	public SpreadsheetImportContextualView(Activity<?> activity, EditManager editManager, FileManager fileManager) {
-		super(activity);
+	public SpreadsheetImportContextualView(Activity<?> activity, EditManager editManager,
+			FileManager fileManager, ActivityIconManager activityIconManager,
+			ColourManager colourManager) {
+		super(activity, colourManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
+		this.activityIconManager = activityIconManager;
 	}
 
 	@Override
 	protected String getRawTableRowsHtml() {
 		StringBuilder html = new StringBuilder();
 		html.append("<tr><th>");
-		html.append(SpreadsheetImportUIText.getString("SpreadsheetImportContextualView.inputPortName"));
+		html.append(SpreadsheetImportUIText
+				.getString("SpreadsheetImportContextualView.inputPortName"));
 		html.append("</th><th>");
 		html.append(SpreadsheetImportUIText.getString("SpreadsheetImportContextualView.depth"));
 		html.append("</th></tr>");
@@ -70,7 +77,8 @@ public class SpreadsheetImportContextualView extends
 			html.append("</td></tr>");
 		}
 		html.append("<tr><th>");
-		html.append(SpreadsheetImportUIText.getString("SpreadsheetImportContextualView.outputPortName"));
+		html.append(SpreadsheetImportUIText
+				.getString("SpreadsheetImportContextualView.outputPortName"));
 		html.append("</th><th>");
 		html.append(SpreadsheetImportUIText.getString("SpreadsheetImportContextualView.depth"));
 		html.append("</th></tr>");
@@ -92,7 +100,8 @@ public class SpreadsheetImportContextualView extends
 	@Override
 	public Action getConfigureAction(Frame owner) {
 		return new SpreadsheetImportActivityConfigurationAction(
-				(SpreadsheetImportActivity) getActivity(), owner, editManager, fileManager);
+				(SpreadsheetImportActivity) getActivity(), owner, editManager, fileManager,
+				activityIconManager);
 	}
 
 	@Override

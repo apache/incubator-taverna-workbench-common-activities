@@ -58,6 +58,8 @@ public class SpreadsheetImportAddTemplateAction extends AbstractContextualMenuAc
 
 	private DataflowSelectionManager dataflowSelectionManager;
 
+	private ActivityIconManager activityIconManager;
+
 	public SpreadsheetImportAddTemplateAction() {
 		super(insertSection, 700);
 	}
@@ -70,13 +72,14 @@ public class SpreadsheetImportAddTemplateAction extends AbstractContextualMenuAc
 	@Override
 	protected Action createAction() {
 
-		AbstractAction action = new AbstractAction(SpreadsheetImportUIText
-				.getString("SpreadsheetImportAddTemplateAction.addMenu"), ActivityIconManager
-				.getInstance().iconForActivity(new SpreadsheetImportActivity())) {
+		AbstractAction action = new AbstractAction(
+				SpreadsheetImportUIText.getString("SpreadsheetImportAddTemplateAction.addMenu"),
+				activityIconManager.iconForActivity(new SpreadsheetImportActivity())) {
 
 			public void actionPerformed(ActionEvent e) {
-				WorkflowView.importServiceDescription(SpreadsheetImportTemplateService.getServiceDescription(),
-						false, editManager, menuManager, dataflowSelectionManager);
+				WorkflowView.importServiceDescription(
+						SpreadsheetImportTemplateService.getServiceDescription(), false,
+						editManager, menuManager, dataflowSelectionManager);
 			}
 
 		};
@@ -94,6 +97,10 @@ public class SpreadsheetImportAddTemplateAction extends AbstractContextualMenuAc
 
 	public void setDataflowSelectionManager(DataflowSelectionManager dataflowSelectionManager) {
 		this.dataflowSelectionManager = dataflowSelectionManager;
+	}
+
+	public void setActivityIconManager(ActivityIconManager activityIconManager) {
+		this.activityIconManager = activityIconManager;
 	}
 
 }
