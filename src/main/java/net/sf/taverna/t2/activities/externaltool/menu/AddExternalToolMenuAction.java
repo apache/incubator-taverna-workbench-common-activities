@@ -63,6 +63,8 @@ public class AddExternalToolMenuAction extends AbstractMenuAction {
 	private MenuManager menuManager;
 	private DataflowSelectionManager dataflowSelectionManager;
 
+	private ActivityIconManager activityIconManager;
+
 	public AddExternalToolMenuAction() {
 		super(InsertMenu.INSERT, 900, ADD_EXTERNAL_TOOL_URI);
 	}
@@ -76,7 +78,7 @@ public class AddExternalToolMenuAction extends AbstractMenuAction {
 	protected class AddExternalToolAction extends DesignOnlyAction {
 		AddExternalToolAction () {
 			super ();
-			putValue(SMALL_ICON, ActivityIconManager.getInstance().iconForActivity(
+			putValue(SMALL_ICON, activityIconManager.iconForActivity(
 					new ExternalToolActivity()));
 			putValue(NAME, ADD_EXTERNAL_TOOL);
 			putValue(SHORT_DESCRIPTION, "Tool");
@@ -100,6 +102,10 @@ public class AddExternalToolMenuAction extends AbstractMenuAction {
 
 	public void setDataflowSelectionManager(DataflowSelectionManager dataflowSelectionManager) {
 		this.dataflowSelectionManager = dataflowSelectionManager;
+	}
+
+	public void setActivityIconManager(ActivityIconManager activityIconManager) {
+		this.activityIconManager = activityIconManager;
 	}
 
 }

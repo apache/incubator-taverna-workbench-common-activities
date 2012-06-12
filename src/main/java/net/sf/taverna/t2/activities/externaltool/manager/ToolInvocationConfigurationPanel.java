@@ -34,28 +34,25 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroup;
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManager;
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationManagerEvent;
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
+import net.sf.taverna.t2.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
 import net.sf.taverna.t2.lang.observer.Observable;
 import net.sf.taverna.t2.lang.observer.Observer;
 import net.sf.taverna.t2.lang.ui.DeselectingButton;
 import net.sf.taverna.t2.lang.ui.ValidatingUserInputDialog;
-import net.sf.taverna.t2.spi.SPIRegistry;
 import net.sf.taverna.t2.workbench.helper.Helper;
 
 /**
  * @author alanrw
  *
  */
-public class ToolInvocationConfigurationPanel extends JPanel  implements Observer<InvocationManagerEvent> {
+public class ToolInvocationConfigurationPanel extends JPanel implements
+		Observer<InvocationManagerEvent> {
 
 	public static final String HEADER_TEXT = "A tool can be set to run at an explicit location (e.g. on a specificic machine or one of a set of machines). Alternatively, it can be set to run at a symbolic location, which means the tool will then be run at the explicit location pointed to by the symbolic location.";
 
-	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
+	private static InvocationGroupManagerImpl manager = InvocationGroupManagerImpl.getInstance();
 
-	protected static SPIRegistry<InvocationMechanismEditor> invocationMechanismEditorRegistry = new SPIRegistry(InvocationMechanismEditor.class);
+	private final List<InvocationMechanismEditor<?>> invocationMechanismEditors;
 
 	private JTextArea headerText;
 
@@ -68,16 +65,18 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 
 	DefaultListModel groupListModel = new DefaultListModel();
 	DefaultListModel mechanismListModel = new DefaultListModel();
-	JComboBox locationTypeCombo = new JComboBox(new String[] {EXPLICIT_LOCATIONS, SYMBOLIC_LOCATIONS});
+	JComboBox locationTypeCombo = new JComboBox(new String[] { EXPLICIT_LOCATIONS,
+			SYMBOLIC_LOCATIONS });
 
-	public ToolInvocationConfigurationPanel(List<MechanismCreator> mechanismCreators) {
+	public ToolInvocationConfigurationPanel(List<MechanismCreator> mechanismCreators,
+			List<InvocationMechanismEditor<?>> invocationMechanismEditors) {
 		super();
 		this.mechanismCreators = mechanismCreators;
+		this.invocationMechanismEditors = invocationMechanismEditors;
 		manager.addObserver(this);
 
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
-
 
 		headerText = new JTextArea(HEADER_TEXT);
 		headerText.setLineWrap(true);
@@ -90,10 +89,10 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 		gbc.insets = new Insets(0, 0, 10, 0);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-	       gbc.gridwidth = 1;
-	        gbc.weightx = 1.0;
-	        gbc.weighty = 0.0;
-	        gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridwidth = 1;
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
 		add(headerText, gbc);
 
 		JPanel locationPanel = new JPanel(new BorderLayout());
@@ -106,7 +105,8 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				switchList();
-			}});
+			}
+		});
 		subPanel.add(modify);
 		subPanel.add(locationTypeCombo);
 
@@ -114,29 +114,28 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 		switchList();
 		locationList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		locationList.setCellRenderer(new DefaultListCellRenderer() {
-			public Component getListCellRendererComponent(JList list,
-                    Object value,
-                    int index,
-                    boolean isSelected,
-                    boolean cellHasFocus) {
+			public Component getListCellRendererComponent(JList list, Object value, int index,
+					boolean isSelected, boolean cellHasFocus) {
 				Object toShow = value;
 				if (value instanceof InvocationGroup) {
 					InvocationGroup invocationGroup = (InvocationGroup) value;
-					toShow = invocationGroup.getName() + "  -->  " + invocationGroup.getMechanismName();
+					toShow = invocationGroup.getName() + "  -->  "
+							+ invocationGroup.getMechanismName();
 				}
-				return super.getListCellRendererComponent(list, toShow, index, isSelected, cellHasFocus);
+				return super.getListCellRendererComponent(list, toShow, index, isSelected,
+						cellHasFocus);
 			}
 		});
 		locationPanel.add(new JScrollPane(locationList), BorderLayout.CENTER);
 		locationPanel.add(subPanel, BorderLayout.NORTH);
 
 		JPanel buttonPanel = new JPanel(new FlowLayout());
-		JButton helpButton = new DeselectingButton("Help",
-				new AbstractAction() {
+		JButton helpButton = new DeselectingButton("Help", new AbstractAction() {
 
 			public void actionPerformed(ActionEvent e) {
 				Helper.showHelp(ToolInvocationConfigurationPanel.this);
-			}});
+			}
+		});
 
 		buttonPanel.add(helpButton);
 
@@ -146,11 +145,11 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 		locationPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		gbc.gridy++;
-	    gbc.weighty = 1;
+		gbc.weighty = 1;
 
-        gbc.fill = GridBagConstraints.BOTH;
-	    gbc.anchor = GridBagConstraints.SOUTH;
-	    gbc.insets = new Insets(10, 0, 0, 0);
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.anchor = GridBagConstraints.SOUTH;
+		gbc.insets = new Insets(10, 0, 0, 0);
 		this.add(locationPanel, gbc);
 	}
 
@@ -176,7 +175,8 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 			@Override
 			public int compare(InvocationMechanism o1, InvocationMechanism o2) {
 				return o1.getName().compareTo(o2.getName());
-			}});
+			}
+		});
 		mechanismListModel.clear();
 		for (InvocationMechanism m : mechanisms) {
 			mechanismListModel.addElement(m);
@@ -195,12 +195,13 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 			@Override
 			public int compare(InvocationGroup o1, InvocationGroup o2) {
 				return o1.getName().compareTo(o2.getName());
-			}});
+			}
+		});
 		groupListModel.clear();
 		for (InvocationGroup g : groups) {
 			groupListModel.addElement(g);
 		}
-		if ((currentSelection != null) && isShowingGroups()){
+		if ((currentSelection != null) && isShowingGroups()) {
 			locationList.setSelectedValue(currentSelection, true);
 		}
 	}
@@ -210,8 +211,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 	}
 
 	private JButton addLocationButton() {
-		final JButton result = new DeselectingButton("Add",
-				new AbstractAction() {
+		final JButton result = new DeselectingButton("Add", new AbstractAction() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -225,10 +225,10 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 
 					ValidatingUserInputDialog vuid = new ValidatingUserInputDialog(
 							"Add symbolic location", inputPanel);
-					vuid.addTextComponentValidation(inputPanel
-							.getGroupNameField(), "Set the symbolic location name.",
-							usedGroupNames, "Duplicate symbolic location name.",
-							"[\\p{L}\\p{Digit}_.]+", "Invalid symbolic location name.");
+					vuid.addTextComponentValidation(inputPanel.getGroupNameField(),
+							"Set the symbolic location name.", usedGroupNames,
+							"Duplicate symbolic location name.", "[\\p{L}\\p{Digit}_.]+",
+							"Invalid symbolic location name.");
 					vuid.setSize(new Dimension(400, 250));
 
 					if (vuid.show(ToolInvocationConfigurationPanel.this)) {
@@ -239,14 +239,13 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 						manager.addInvocationGroup(newGroup);
 						locationList.setSelectedValue(newGroup, true);
 					}
-				}
-				else {
+				} else {
 					Set<String> usedNames = new HashSet<String>();
 					for (InvocationMechanism m : manager.getMechanisms()) {
 						usedNames.add(m.getName());
 					}
 
-					MechanismPanel inputPanel = new MechanismPanel();
+					MechanismPanel inputPanel = new MechanismPanel(invocationMechanismEditors);
 
 					ValidatingUserInputDialog vuid = new ValidatingUserInputDialog(
 							"Add explicit location", inputPanel);
@@ -254,7 +253,8 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 							"Set the explicit location name.", usedNames,
 							"Duplicate explicit location name.", "[\\p{L}\\p{Digit}_.]+",
 							"Invalid explicit location name.");
-					vuid.addMessageComponent(inputPanel.getMechanismTypeSelector(), "Set the location name and type.");
+					vuid.addMessageComponent(inputPanel.getMechanismTypeSelector(),
+							"Set the location name and type.");
 					vuid.setSize(new Dimension(400, 250));
 
 					if (vuid.show(ToolInvocationConfigurationPanel.this)) {
@@ -264,16 +264,14 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 						InvocationMechanism newMechanism = ime.createMechanism(mechanismName);
 						manager.addMechanism(newMechanism);
 						ime.show(newMechanism);
-						ime.setPreferredSize(new Dimension(
-								550, 500));
+						ime.setPreferredSize(new Dimension(550, 500));
 						int answer = JOptionPane.showConfirmDialog(
-								ToolInvocationConfigurationPanel.this, ime, "New explicit location",
-								JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+								ToolInvocationConfigurationPanel.this, ime,
+								"New explicit location", JOptionPane.OK_CANCEL_OPTION,
+								JOptionPane.PLAIN_MESSAGE, null);
 						if (answer == JOptionPane.OK_OPTION) {
 							ime.updateInvocationMechanism();
-							InvocationGroupManager
-									.getInstance()
-									.mechanismChanged(newMechanism);
+							InvocationGroupManagerImpl.getInstance().mechanismChanged(newMechanism);
 						}
 						locationList.setSelectedValue(newMechanism, true);
 					}
@@ -284,26 +282,22 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 	}
 
 	private JButton removeLocationButton() {
-		JButton result = new DeselectingButton("Remove",
-				new AbstractAction() {
+		JButton result = new DeselectingButton("Remove", new AbstractAction() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (isShowingGroups()) {
-					InvocationGroup toRemove = (InvocationGroup) locationList
-							.getSelectedValue();
+					InvocationGroup toRemove = (InvocationGroup) locationList.getSelectedValue();
 					if ((toRemove != null) && !toRemove.equals(manager.getDefaultGroup())) {
 						manager.removeInvocationGroup(toRemove);
 					}
-					locationList.setSelectedValue(manager.getDefaultGroup(),
-							true);
+					locationList.setSelectedValue(manager.getDefaultGroup(), true);
 				} else {
 					InvocationMechanism toRemove = (InvocationMechanism) locationList
 							.getSelectedValue();
 					if ((toRemove != null) && !toRemove.equals(manager.getDefaultMechanism())) {
 						manager.removeMechanism(toRemove);
-						locationList.setSelectedValue(manager
-								.getDefaultMechanism(), true);
+						locationList.setSelectedValue(manager.getDefaultMechanism(), true);
 					}
 				}
 			}
@@ -312,18 +306,18 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 	}
 
 	private JButton editLocationButton() {
-		final JButton result = new DeselectingButton("Edit",
-				new AbstractAction() {
+		final JButton result = new DeselectingButton("Edit", new AbstractAction() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (isShowingGroups()) {
-					InvocationGroup toEdit = (InvocationGroup) locationList
-					.getSelectedValue();
+					InvocationGroup toEdit = (InvocationGroup) locationList.getSelectedValue();
 					if (toEdit != null) {
-						InvocationMechanism chosenMechanism =
-							(InvocationMechanism) JOptionPane.showInputDialog(ToolInvocationConfigurationPanel.this, "Select an explicit location", "Edit symbolic location", JOptionPane.PLAIN_MESSAGE,
-								null, mechanismListModel.toArray(), toEdit.getMechanism());
+						InvocationMechanism chosenMechanism = (InvocationMechanism) JOptionPane
+								.showInputDialog(ToolInvocationConfigurationPanel.this,
+										"Select an explicit location", "Edit symbolic location",
+										JOptionPane.PLAIN_MESSAGE, null,
+										mechanismListModel.toArray(), toEdit.getMechanism());
 						if (chosenMechanism != null) {
 							toEdit.setMechanism(chosenMechanism);
 							manager.groupChanged(toEdit);
@@ -331,29 +325,28 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 					}
 				} else {
 					InvocationMechanism toEdit = (InvocationMechanism) locationList
-					.getSelectedValue();
+							.getSelectedValue();
 					if (toEdit != null) {
-					InvocationMechanismEditor ime = findEditor(toEdit.getClass());
-					ime.show(toEdit);
-					ime.setPreferredSize(new Dimension(
-							550, 500));
-					int answer = JOptionPane.showConfirmDialog(
-							ToolInvocationConfigurationPanel.this, ime, "Edit explicit location",
-							JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-					if (answer == JOptionPane.OK_OPTION) {
-						ime.updateInvocationMechanism();
-						InvocationGroupManager
-								.getInstance()
-								.mechanismChanged(toEdit);
-					}
+						InvocationMechanismEditor ime = findEditor(toEdit.getClass());
+						ime.show(toEdit);
+						ime.setPreferredSize(new Dimension(550, 500));
+						int answer = JOptionPane.showConfirmDialog(
+								ToolInvocationConfigurationPanel.this, ime,
+								"Edit explicit location", JOptionPane.OK_CANCEL_OPTION,
+								JOptionPane.PLAIN_MESSAGE, null);
+						if (answer == JOptionPane.OK_OPTION) {
+							ime.updateInvocationMechanism();
+							InvocationGroupManagerImpl.getInstance().mechanismChanged(toEdit);
+						}
 					}
 				}
 			}
 		});
 		return result;
 	}
+
 	protected InvocationMechanismEditor findEditor(String name) {
-		for (InvocationMechanismEditor ime : invocationMechanismEditorRegistry.getInstances()) {
+		for (InvocationMechanismEditor ime : invocationMechanismEditors) {
 			if (ime.getName().equalsIgnoreCase(name)) {
 				return ime;
 			}
@@ -362,7 +355,7 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 	}
 
 	protected InvocationMechanismEditor findEditor(Class c) {
-		for (InvocationMechanismEditor ime : invocationMechanismEditorRegistry.getInstances()) {
+		for (InvocationMechanismEditor ime : invocationMechanismEditors) {
 			if (ime.canShow(c)) {
 				return ime;
 			}
@@ -370,11 +363,9 @@ public class ToolInvocationConfigurationPanel extends JPanel  implements Observe
 		return null;
 	}
 
-
-
 	@Override
-	public void notify(Observable<InvocationManagerEvent> arg0,
-			InvocationManagerEvent arg1) throws Exception {
+	public void notify(Observable<InvocationManagerEvent> arg0, InvocationManagerEvent arg1)
+			throws Exception {
 		if (SwingUtilities.isEventDispatchThread()) {
 			populateLists();
 		} else {

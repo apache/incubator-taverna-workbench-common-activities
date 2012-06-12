@@ -30,28 +30,30 @@ import javax.swing.Action;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.views.ExternalToolConfigView;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
 
 /**
- * This class implements an ActivityConfigurationAction to configure the
- * ExternalToolActivity plugin. The configuration action is called
- * "Configure UseCase invocation" and is implemented in the
- * KnowARCConfigurationDialog inside the knowarc-usecases maven artifact.
+ * This class implements an ActivityConfigurationAction to configure the ExternalToolActivity
+ * plugin. The configuration action is called "Configure UseCase invocation" and is implemented in
+ * the KnowARCConfigurationDialog inside the knowarc-usecases maven artifact.
  *
  * @author Hajo Nils Krabbenhoeft
  */
 @SuppressWarnings("serial")
-public class ExternalToolActivityConfigureAction extends ActivityConfigurationAction<ExternalToolActivity, ExternalToolActivityConfigurationBean> {
+public class ExternalToolActivityConfigureAction extends
+		ActivityConfigurationAction<ExternalToolActivity, ExternalToolActivityConfigurationBean> {
 
 	private final Frame owner;
 	private final EditManager editManager;
 	private final FileManager fileManager;
 
-	public ExternalToolActivityConfigureAction(ExternalToolActivity activity, Frame owner, EditManager editManager, FileManager fileManager) {
-		super(activity);
+	public ExternalToolActivityConfigureAction(ExternalToolActivity activity, Frame owner,
+			EditManager editManager, FileManager fileManager, ActivityIconManager activityIconManager) {
+		super(activity, activityIconManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
 		putValue(Action.NAME, "Configure tool invocation");
@@ -59,17 +61,21 @@ public class ExternalToolActivityConfigureAction extends ActivityConfigurationAc
 	}
 
 	public void actionPerformed(ActionEvent e) {
-/*		if (getActivity().getConfiguration() instanceof RegisteredExternalToolActivityConfigurationBean) {
-			new KnowARCConfigurationDialog(owner, false, KnowARCConfigurationFactory.getConfiguration()).setVisible(true);
-		} else*/ {
-			ActivityConfigurationDialog currentDialog = ActivityConfigurationAction.getDialog(getActivity());
+		/*
+		 * if (getActivity().getConfiguration() instanceof
+		 * RegisteredExternalToolActivityConfigurationBean) { new KnowARCConfigurationDialog(owner,
+		 * false, KnowARCConfigurationFactory.getConfiguration()).setVisible(true); } else
+		 */{
+			ActivityConfigurationDialog currentDialog = ActivityConfigurationAction
+					.getDialog(getActivity());
 			if (currentDialog != null) {
 				currentDialog.toFront();
 				return;
 			}
-			final ExternalToolConfigView externalToolConfigView = new ExternalToolConfigView((ExternalToolActivity)getActivity());
-			final ActivityConfigurationDialog<ExternalToolActivity, ExternalToolActivityConfigurationBean> dialog =
-				new ActivityConfigurationDialog<ExternalToolActivity, ExternalToolActivityConfigurationBean>(getActivity(), externalToolConfigView, editManager, fileManager);
+			final ExternalToolConfigView externalToolConfigView = new ExternalToolConfigView(
+					(ExternalToolActivity) getActivity());
+			final ActivityConfigurationDialog<ExternalToolActivity, ExternalToolActivityConfigurationBean> dialog = new ActivityConfigurationDialog<ExternalToolActivity, ExternalToolActivityConfigurationBean>(
+					getActivity(), externalToolConfigView, editManager, fileManager);
 
 			ActivityConfigurationAction.setDialog(getActivity(), dialog, fileManager);
 		}

@@ -62,6 +62,8 @@ public class AddExternalToolContextualMenuAction extends AbstractContextualMenuA
 
 	private DataflowSelectionManager dataflowSelectionManager;
 
+	private ActivityIconManager activityIconManager;
+
 	public AddExternalToolContextualMenuAction() {
 		super(insertSection, 900);
 	}
@@ -79,7 +81,7 @@ public class AddExternalToolContextualMenuAction extends AbstractContextualMenuA
 
 	protected class AddExternalToolAction extends AbstractAction {
 		AddExternalToolAction() {
-			super(ADD_EXTERNAL_TOOL, ActivityIconManager.getInstance().iconForActivity(
+			super(ADD_EXTERNAL_TOOL, activityIconManager.iconForActivity(
 					new ExternalToolActivity()));
 		}
 
@@ -100,6 +102,10 @@ public class AddExternalToolContextualMenuAction extends AbstractContextualMenuA
 
 	public void setDataflowSelectionManager(DataflowSelectionManager dataflowSelectionManager) {
 		this.dataflowSelectionManager = dataflowSelectionManager;
+	}
+
+	public void setActivityIconManager(ActivityIconManager activityIconManager) {
+		this.activityIconManager = activityIconManager;
 	}
 
 }

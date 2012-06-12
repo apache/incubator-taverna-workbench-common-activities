@@ -20,6 +20,7 @@
  ******************************************************************************/
 package net.sf.taverna.t2.activities.externaltool.manager;
 
+import net.sf.taverna.t2.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
 import net.sf.taverna.t2.workbench.StartupSPI;
 
 /**
@@ -39,7 +40,7 @@ public class InvocationGroupManagerStartupHook implements StartupSPI {
 	}
 
 	public boolean startup() {
-		InvocationGroupManager.getInstance().loadInvocations();
+		InvocationGroupManagerImpl.getInstance().loadInvocations();
 		return true;
 	}
 

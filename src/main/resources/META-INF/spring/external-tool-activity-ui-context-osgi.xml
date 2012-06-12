@@ -6,7 +6,7 @@
                       http://www.springframework.org/schema/osgi
                       http://www.springframework.org/schema/osgi/spring-osgi.xsd">
 
-	<service ref="ToolInvocationConfigurationUIFactory" interface="net.sf.taverna.t2.workbench.configuration.ConfigurationUIFactory" />
+	<service ref="ToolInvocationConfigurationUIFactory" interface="uk.org.taverna.configuration.ConfigurationUIFactory" />
 
 	<service ref="InvocationGroupManagerStartupHook" interface="net.sf.taverna.t2.workbench.StartupSPI" />
 
@@ -27,10 +27,13 @@
 	<service ref="ExternalToolActivityViewFactory" interface="net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
 
 	<list id="mechanismCreators" interface="net.sf.taverna.t2.activities.externaltool.manager.MechanismCreator" cardinality="0..N" />
+	<list id="invocationMechanismEditors" interface="net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismEditor" cardinality="0..N" />
 
 	<reference id="editManager" interface="net.sf.taverna.t2.workbench.edits.EditManager" />
 	<reference id="fileManager" interface="net.sf.taverna.t2.workbench.file.FileManager" />
 	<reference id="menuManager" interface="net.sf.taverna.t2.ui.menu.MenuManager" />
 	<reference id="dataflowSelectionManager" interface="net.sf.taverna.t2.workbench.ui.DataflowSelectionManager" />
+	<reference id="activityIconManager" interface="net.sf.taverna.t2.workbench.activityicons.ActivityIconManager" />
+	<reference id="colourManager" interface="net.sf.taverna.t2.workbench.configuration.colour.ColourManager" />
 
 </beans:beans>

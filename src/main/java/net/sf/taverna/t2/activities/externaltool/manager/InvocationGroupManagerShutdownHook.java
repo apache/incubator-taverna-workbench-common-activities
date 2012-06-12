@@ -3,6 +3,7 @@
  */
 package net.sf.taverna.t2.activities.externaltool.manager;
 
+import net.sf.taverna.t2.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
 import net.sf.taverna.t2.workbench.ShutdownSPI;
 
 /**
@@ -24,7 +25,7 @@ public class InvocationGroupManagerShutdownHook implements ShutdownSPI {
 	 */
 	@Override
 	public boolean shutdown() {
-		InvocationGroupManager manager = InvocationGroupManager.getInstance();
+		InvocationGroupManager manager = InvocationGroupManagerImpl.getInstance();
 		manager.saveConfiguration();
 		manager.persistInvocations();
 		return true;

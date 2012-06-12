@@ -13,6 +13,7 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManager;
+import net.sf.taverna.t2.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
 import net.sf.taverna.t2.servicedescriptions.AbstractTemplateService;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
@@ -29,7 +30,7 @@ public class ExternalToolTemplateServiceDescription extends
 	
 	private static final String EXTERNAL_TOOL = "Tool";
 	
-	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
+	private static InvocationGroupManager manager = InvocationGroupManagerImpl.getInstance();
 
 	@Override
 	public Class<? extends Activity<ExternalToolActivityConfigurationBean>> getActivityClass() {

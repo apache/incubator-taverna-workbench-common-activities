@@ -32,13 +32,13 @@ import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityHealthCheck
 import net.sf.taverna.t2.activities.externaltool.configuration.ToolInvocationConfiguration;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroup;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupAddedEvent;
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManager;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupRemovedEvent;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationManagerEvent;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismAddedEvent;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismRemovedEvent;
 import net.sf.taverna.t2.activities.externaltool.manager.ToolInvocationConfigurationPanel;
+import net.sf.taverna.t2.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
 import net.sf.taverna.t2.lang.observer.Observable;
 import net.sf.taverna.t2.lang.observer.Observer;
 import net.sf.taverna.t2.lang.ui.DeselectingButton;
@@ -59,7 +59,7 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 	private DefaultComboBoxModel mechanismSelectionModel = new DefaultComboBoxModel();
 	private DefaultComboBoxModel groupSelectionModel = new DefaultComboBoxModel();
 
-	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
+	private static InvocationGroupManagerImpl manager = InvocationGroupManagerImpl.getInstance();
 	
 	private static Logger logger = Logger
 	.getLogger(InvocationPanel.class);
@@ -123,7 +123,7 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 	
 	private void populateMechanismList() {
 		InvocationMechanism currentSelection = (InvocationMechanism) mechanismSelection.getSelectedItem();
-		InvocationMechanism[] mechanisms = InvocationGroupManager.getInstance()
+		InvocationMechanism[] mechanisms = InvocationGroupManagerImpl.getInstance()
 				.getMechanisms().toArray(new InvocationMechanism[] {});
 		Arrays.sort(mechanisms, new Comparator<InvocationMechanism>() {
 
@@ -146,7 +146,7 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 
 	private void populateGroupList() {
 		InvocationGroup currentSelection = (InvocationGroup) groupSelection.getSelectedItem();
-		InvocationGroup[] groups = InvocationGroupManager.getInstance()
+		InvocationGroup[] groups = InvocationGroupManagerImpl.getInstance()
 				.getInvocationGroups().toArray(new InvocationGroup[] {});
 		Arrays.sort(groups, new Comparator<InvocationGroup>() {
 

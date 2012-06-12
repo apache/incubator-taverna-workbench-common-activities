@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManager;
+import net.sf.taverna.t2.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
 import net.sf.taverna.t2.activities.externaltool.views.ExternalToolConfigView;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
@@ -53,7 +54,7 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 	.getLogger(ExternalToolServiceDescription.class);
 
 	
-	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
+	private static InvocationGroupManager manager = InvocationGroupManagerImpl.getInstance();
 
 	private String repositoryUrl;
 	private String externaltoolid;

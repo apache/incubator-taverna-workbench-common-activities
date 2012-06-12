@@ -25,6 +25,7 @@ import javax.swing.Action;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.actions.ExternalToolActivityConfigureAction;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.activitytools.AbstractConfigureActivityMenuAction;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
@@ -34,10 +35,12 @@ import net.sf.taverna.t2.workbench.file.FileManager;
  *
  * @author Hajo Nils Krabbenhoeft
  */
-public class ConfigureExternalToolMenuAction extends AbstractConfigureActivityMenuAction<ExternalToolActivity> {
+public class ConfigureExternalToolMenuAction extends
+		AbstractConfigureActivityMenuAction<ExternalToolActivity> {
 
 	private EditManager editManager;
 	private FileManager fileManager;
+	private ActivityIconManager activityIconManager;
 
 	public ConfigureExternalToolMenuAction() {
 		super(ExternalToolActivity.class);
@@ -45,7 +48,8 @@ public class ConfigureExternalToolMenuAction extends AbstractConfigureActivityMe
 
 	@Override
 	protected Action createAction() {
-		ExternalToolActivityConfigureAction configAction = new ExternalToolActivityConfigureAction(findActivity(), getParentFrame(), editManager, fileManager);
+		ExternalToolActivityConfigureAction configAction = new ExternalToolActivityConfigureAction(
+				findActivity(), getParentFrame(), editManager, fileManager, activityIconManager);
 		addMenuDots(configAction);
 		return configAction;
 	}
@@ -56,6 +60,10 @@ public class ConfigureExternalToolMenuAction extends AbstractConfigureActivityMe
 
 	public void setFileManager(FileManager fileManager) {
 		this.fileManager = fileManager;
+	}
+
+	public void setActivityIconManager(ActivityIconManager activityIconManager) {
+		this.activityIconManager = activityIconManager;
 	}
 
 }

@@ -5,11 +5,14 @@
 
 	<bean id="ToolInvocationConfigurationUIFactory" class="net.sf.taverna.t2.activities.externaltool.manager.ToolInvocationConfigurationUIFactory">
 		<property name="mechanismCreators" ref="mechanismCreators" />
+		<property name="invocationMechanismEditors" ref="invocationMechanismEditors" />
 	</bean>
 
 	<bean id="InvocationGroupManagerStartupHook" class="net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManagerStartupHook" />
 
-	<bean id="ExternalToolActivityIcon" class="net.sf.taverna.t2.activities.externaltool.servicedescriptions.ExternalToolActivityIcon" />
+	<bean id="ExternalToolActivityIcon" class="net.sf.taverna.t2.activities.externaltool.servicedescriptions.ExternalToolActivityIcon">
+			<property name="colourManager" ref="colourManager" />
+	</bean>
 
 	<bean id="LocalInvocationMechanismEditor" class="net.sf.taverna.t2.activities.externaltool.manager.local.LocalInvocationMechanismEditor" />
 	<bean id="SshInvocationMechanismEditor" class="net.sf.taverna.t2.activities.externaltool.manager.ssh.SshInvocationMechanismEditor" />
@@ -20,16 +23,19 @@
 	<bean id="ConfigureExternalToolMenuAction" class="net.sf.taverna.t2.activities.externaltool.menu.ConfigureExternalToolMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 	<bean id="AddExternalToolContextualMenuAction" class="net.sf.taverna.t2.activities.externaltool.menu.AddExternalToolContextualMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
 			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 	<bean id="AddExternalToolMenuAction" class="net.sf.taverna.t2.activities.externaltool.menu.AddExternalToolMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
 			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 
 	<bean id="InvocationGroupManagerShutdownHook" class="net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManagerShutdownHook" />
@@ -37,6 +43,8 @@
 	<bean id="ExternalToolActivityViewFactory" class="net.sf.taverna.t2.activities.externaltool.views.ExternalToolActivityViewFactory">
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="colourManager" ref="colourManager" />
 	</bean>
 
 </beans>

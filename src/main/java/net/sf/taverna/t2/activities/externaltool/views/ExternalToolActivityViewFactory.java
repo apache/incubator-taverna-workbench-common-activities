@@ -25,13 +25,16 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
+import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
 
 /**
- * ExternalToolActivityViewFactory produces an ExternalToolActivityContextualView to show information for a use case activity.
+ * ExternalToolActivityViewFactory produces an ExternalToolActivityContextualView to show
+ * information for a use case activity.
  *
  * @author Hajo Nils Krabbenhoeft
  */
@@ -39,6 +42,8 @@ public class ExternalToolActivityViewFactory implements ContextualViewFactory<Ex
 
 	private EditManager editManager;
 	private FileManager fileManager;
+	private ActivityIconManager activityIconManager;
+	private ColourManager colourManager;
 
 	public boolean canHandle(Object object) {
 		if (object instanceof ExternalToolActivity) {
@@ -48,7 +53,8 @@ public class ExternalToolActivityViewFactory implements ContextualViewFactory<Ex
 	}
 
 	public List<ContextualView> getViews(ExternalToolActivity selection) {
-		return Arrays.asList(new ContextualView[] { new ExternalToolActivityContextualView(selection, editManager, fileManager) });
+		return Arrays.asList(new ContextualView[] { new ExternalToolActivityContextualView(
+				selection, editManager, fileManager, colourManager, activityIconManager) });
 	}
 
 	public void setEditManager(EditManager editManager) {
@@ -57,6 +63,14 @@ public class ExternalToolActivityViewFactory implements ContextualViewFactory<Ex
 
 	public void setFileManager(FileManager fileManager) {
 		this.fileManager = fileManager;
+	}
+
+	public void setActivityIconManager(ActivityIconManager activityIconManager) {
+		this.activityIconManager = activityIconManager;
+	}
+
+	public void setColourManager(ColourManager colourManager) {
+		this.colourManager = colourManager;
 	}
 
 }

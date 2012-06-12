@@ -33,6 +33,8 @@ import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.actions.ExternalToolActivityConfigureAction;
 import net.sf.taverna.t2.activities.externaltool.servicedescriptions.ExternalToolActivityIcon;
+import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
+import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
@@ -43,20 +45,24 @@ import de.uni_luebeck.inb.knowarc.usecases.ScriptOutput;
 import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 
 /**
- * ExternalToolActivityContextualView displays the use case information in a HTML table.
- * Currently, this is only the use case ID.
+ * ExternalToolActivityContextualView displays the use case information in a HTML table. Currently,
+ * this is only the use case ID.
  *
  * @author Hajo Nils Krabbenhoeft
  */
-public class ExternalToolActivityContextualView extends HTMLBasedActivityContextualView<ExternalToolActivityConfigurationBean> {
+public class ExternalToolActivityContextualView extends
+		HTMLBasedActivityContextualView<ExternalToolActivityConfigurationBean> {
 	private static final long serialVersionUID = 1L;
 	private final EditManager editManager;
 	private final FileManager fileManager;
+	private final ActivityIconManager activityIconManager;
 
-	public ExternalToolActivityContextualView(Activity<?> activity, EditManager editManager, FileManager fileManager) {
-		super(activity);
+	public ExternalToolActivityContextualView(Activity<?> activity, EditManager editManager,
+			FileManager fileManager, ColourManager colourManager, ActivityIconManager activityIconManager) {
+		super(activity, colourManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
+		this.activityIconManager = activityIconManager;
 	}
 
 	@Override
@@ -64,25 +70,25 @@ public class ExternalToolActivityContextualView extends HTMLBasedActivityContext
 		String html = "";
 		ExternalToolActivityConfigurationBean bean = getConfigBean();
 		String repositoryUrl = bean.getRepositoryUrl();
-		if ((repositoryUrl == null) || repositoryUrl.isEmpty()){
-		    repositoryUrl = "<b>Not specified</b>";
+		if ((repositoryUrl == null) || repositoryUrl.isEmpty()) {
+			repositoryUrl = "<b>Not specified</b>";
 		}
 		html += "<tr><td>Repository URL</td><td>" + repositoryUrl + "</td></tr>";
 
 		String id = bean.getExternaltoolid();
-		if ((id == null) || id.isEmpty()){
-		    id = "<b>Not specified</b>";
+		if ((id == null) || id.isEmpty()) {
+			id = "<b>Not specified</b>";
 		}
 		html += "<tr><td>Id</td><td>" + id + "</td></tr>";
 
 		UseCaseDescription useCaseDescription = bean.getUseCaseDescription();
 		String name = useCaseDescription.getUsecaseid();
-		if ((name == null) || name.isEmpty()){
-		    name = "<b>Not specified</b>";
+		if ((name == null) || name.isEmpty()) {
+			name = "<b>Not specified</b>";
 		}
 		html += "<tr><td>Name</td><td>" + name + "</td></tr>";
 
-		Map<String, ScriptInput> stringReplacements = new TreeMap<String, ScriptInput> ();
+		Map<String, ScriptInput> stringReplacements = new TreeMap<String, ScriptInput>();
 		Map<String, ScriptInput> fileInputs = new TreeMap<String, ScriptInput>();
 
 		for (Entry<String, ScriptInput> entry : useCaseDescription.getInputs().entrySet()) {
@@ -98,55 +104,55 @@ public class ExternalToolActivityContextualView extends HTMLBasedActivityContext
 		}
 
 		if (!stringReplacements.isEmpty()) {
-		    html += "<tr><td colspan=2 align=center><b>String replacements</b></td></tr>";
-		    html += "<tr><td><b>Port name</b></td><td><b>Replaces</b></td></tr>";
-		    for (String siName : stringReplacements.keySet()) {
-			html += "<tr><td>" + siName + "</td>";
-			ScriptInput si = stringReplacements.get(siName);
-			html += "<td>%%" + si.getTag() + "%%</td>";
+			html += "<tr><td colspan=2 align=center><b>String replacements</b></td></tr>";
+			html += "<tr><td><b>Port name</b></td><td><b>Replaces</b></td></tr>";
+			for (String siName : stringReplacements.keySet()) {
+				html += "<tr><td>" + siName + "</td>";
+				ScriptInput si = stringReplacements.get(siName);
+				html += "<td>%%" + si.getTag() + "%%</td>";
 
-			html += "</tr>";
-		    }
+				html += "</tr>";
+			}
 		}
 
 		if (!fileInputs.isEmpty()) {
-		    html += "<tr><td colspan=2 align=center><b>File inputs</b></td></tr>";
-		    html += "<tr><td><b>Port name</b></td><td><b>To file</b></td></tr>";
-		    for (String siName : fileInputs.keySet()) {
-			html += "<tr><td>" + siName + "</td>";
-			ScriptInput si = fileInputs.get(siName);
-			html += "<td>" + si.getTag() + "</td>";
+			html += "<tr><td colspan=2 align=center><b>File inputs</b></td></tr>";
+			html += "<tr><td><b>Port name</b></td><td><b>To file</b></td></tr>";
+			for (String siName : fileInputs.keySet()) {
+				html += "<tr><td>" + siName + "</td>";
+				ScriptInput si = fileInputs.get(siName);
+				html += "<td>" + si.getTag() + "</td>";
 
-			html += "</tr>";
-		    }
+				html += "</tr>";
+			}
 		}
 
 		List<ScriptInputStatic> staticInputs = useCaseDescription.getStatic_inputs();
 		if (!staticInputs.isEmpty()) {
-		    html += "<tr><td colspan=2 align=center><b>Static inputs</b></td></tr>";
-		    html += "<tr><td><b>Type</b></td><td><b>To file</b></td></tr>";
-		    for (ScriptInputStatic si : staticInputs) {
-			if (si.getUrl() != null) {
-			    html += "<td><b>URL</b></td>";
-			} else {
-			    html += "<td><b>Explicit content</b></td>";
+			html += "<tr><td colspan=2 align=center><b>Static inputs</b></td></tr>";
+			html += "<tr><td><b>Type</b></td><td><b>To file</b></td></tr>";
+			for (ScriptInputStatic si : staticInputs) {
+				if (si.getUrl() != null) {
+					html += "<td><b>URL</b></td>";
+				} else {
+					html += "<td><b>Explicit content</b></td>";
+				}
+				if (si.isFile()) {
+					html += "<td>" + si.getTag() + "</td>";
+				}
+				html += "</tr>";
 			}
-			if (si.isFile()) {
-			    html += "<td>" + si.getTag() + "</td>";
-			}
-			html += "</tr>";
-		    }
 		}
 		Map<String, ScriptOutput> outputs = useCaseDescription.getOutputs();
 		if (!outputs.isEmpty()) {
-		    html += "<tr><td colspan=2 align=center><b>File outputs</b></td></tr>";
-		    html += "<tr><td><b>Port name</b></td><td><b>From file</b></td></tr>";
-		    for (String soName : outputs.keySet()) {
-			html += "<tr><td>" + soName + "</td>";
-			ScriptOutput so = outputs.get(soName);
-			html += "<td>" + so.getPath() + "</td>";
-			html += "</tr>";
-		    }
+			html += "<tr><td colspan=2 align=center><b>File outputs</b></td></tr>";
+			html += "<tr><td><b>Port name</b></td><td><b>From file</b></td></tr>";
+			for (String soName : outputs.keySet()) {
+				html += "<tr><td>" + soName + "</td>";
+				ScriptOutput so = outputs.get(soName);
+				html += "<td>" + so.getPath() + "</td>";
+				html += "</tr>";
+			}
 		}
 		return html;
 	}
@@ -158,14 +164,14 @@ public class ExternalToolActivityContextualView extends HTMLBasedActivityContext
 
 	@Override
 	public Action getConfigureAction(final Frame owner) {
-		return new ExternalToolActivityConfigureAction((ExternalToolActivity) getActivity(), owner, editManager, fileManager);
+		return new ExternalToolActivityConfigureAction((ExternalToolActivity) getActivity(), owner,
+				editManager, fileManager, activityIconManager);
 	}
 
 	public String getBackgroundColour() {
 
 		return ExternalToolActivityIcon.getColourString();
 	}
-
 
 	@Override
 	public int getPreferredPosition() {

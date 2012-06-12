@@ -1,47 +1,40 @@
 /*******************************************************************************
- * Copyright (C) 2007 The University of Manchester   
- * 
+ * Copyright (C) 2007 The University of Manchester
+ *
  *  Modifications to the initial code base are copyright of their
  *  respective authors, or their employers as appropriate.
- * 
+ *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public License
  *  as published by the Free Software Foundation; either version 2.1 of
  *  the License, or (at your option) any later version.
- *    
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *    
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
  ******************************************************************************/
 package net.sf.taverna.t2.activities.externaltool.manager;
 
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 
-import net.sf.taverna.t2.spi.SPIRegistry;
+import net.sf.taverna.t2.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
 
 /**
  * UI for creating/editing dataflow input ports.
- * 
+ *
  * @author David Withers
  */
 public class GroupPanel extends JPanel {
@@ -49,10 +42,10 @@ public class GroupPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private JTextField groupNameField;
-	
+
 	private JComboBox mechanismComboBox;
-	
-	private static InvocationGroupManager manager = InvocationGroupManager.getInstance();
+
+	private static InvocationGroupManager manager = InvocationGroupManagerImpl.getInstance();
 
 	public GroupPanel(Object[] mechanisms) {
 		super(new GridBagLayout());
@@ -61,7 +54,7 @@ public class GroupPanel extends JPanel {
 
 
 		setBorder(new EmptyBorder(10, 10, 10, 10));
-		
+
 		GridBagConstraints constraints = new GridBagConstraints();
 
 		constraints.anchor = GridBagConstraints.WEST;
@@ -76,7 +69,7 @@ public class GroupPanel extends JPanel {
 		constraints.weightx = 1d;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		add(groupNameField, constraints);
-		
+
 		constraints.gridx = 0;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
@@ -112,7 +105,7 @@ public class GroupPanel extends JPanel {
 	public String getGroupName() {
 		return groupNameField.getText();
 	}
-	
+
 	public InvocationMechanism getSelectedMechanism() {
 		return (InvocationMechanism) mechanismComboBox.getSelectedItem();
 	}
