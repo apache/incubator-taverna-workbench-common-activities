@@ -10,9 +10,9 @@
 
 	<service ref="BeanshellTemplateService" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider" />
 
-	<service ref="AddBeanshellTemplateAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
-	<service ref="AddBeanshellTemplateMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
-	<service ref="ConfigureBeanshellMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
+	<service ref="AddBeanshellTemplateAction" auto-export="interfaces" />
+	<service ref="AddBeanshellTemplateMenuAction" auto-export="interfaces" />
+	<service ref="ConfigureBeanshellMenuAction" auto-export="interfaces" />
 
 	<service ref="BeanshellActivityViewFactory" interface="net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
 

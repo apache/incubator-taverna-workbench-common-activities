@@ -31,12 +31,12 @@ import javax.swing.KeyStroke;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.servicedescriptions.BeanshellTemplateService;
 import net.sf.taverna.t2.ui.menu.AbstractMenuAction;
+import net.sf.taverna.t2.ui.menu.DesignOnlyAction;
 import net.sf.taverna.t2.ui.menu.MenuManager;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.ui.DataflowSelectionManager;
 import net.sf.taverna.t2.workbench.ui.workflowview.WorkflowView;
-import net.sf.taverna.t2.workbench.views.graph.actions.DesignOnlyAction;
 import net.sf.taverna.t2.workbench.views.graph.menu.InsertMenu;
 
 import org.apache.log4j.Logger;
@@ -53,7 +53,7 @@ public class AddBeanshellTemplateMenuAction extends AbstractMenuAction {
 
 	private static final String ADD_BEANSHELL = "Beanshell";
 
-	public static final URI INSERT = URI
+	private static final URI INSERT = URI
 			.create("http://taverna.sf.net/2008/t2workbench/menu#insert");
 
 	private static final URI ADD_BEANSHELL_URI = URI
