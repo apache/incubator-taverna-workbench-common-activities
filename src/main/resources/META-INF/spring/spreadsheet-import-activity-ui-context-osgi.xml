@@ -10,9 +10,9 @@
 
 	<service ref="SpreadsheetImportTemplateService" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider" />
 
-	<service ref="SpreadsheetImportAddTemplateAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
-	<service ref="SpreadsheetImportConfigureMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
-	<service ref="SpreadsheetImportAddTemplateMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
+	<service ref="SpreadsheetImportAddTemplateAction" auto-export="interfaces" />
+	<service ref="SpreadsheetImportConfigureMenuAction" auto-export="interfaces" />
+	<service ref="SpreadsheetImportAddTemplateMenuAction" auto-export="interfaces" />
 
 	<service ref="SpreadsheetImportContextualViewFactory" interface="net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
 
