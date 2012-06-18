@@ -10,7 +10,7 @@
 
 	<service ref="SoaplabServiceProvider" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider" />
 
-	<service ref="ConfigureSoaplabActivityMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
+	<service ref="ConfigureSoaplabActivityMenuAction" auto-export="interfaces" />
 
 	<service ref="SoaplabActivityViewFactory" interface="net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
 
