@@ -10,9 +10,9 @@
 
 	<service ref="XPathTemplateService" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider" />
 
-	<service ref="ConfigureXPathActivityMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
-	<service ref="AddXPathTemplateAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
-	<service ref="AddXPathTemplateMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
+	<service ref="ConfigureXPathActivityMenuAction" auto-export="interfaces" />
+	<service ref="AddXPathTemplateAction" auto-export="interfaces" />
+	<service ref="AddXPathTemplateMenuAction" auto-export="interfaces" />
 
 	<service ref="XPathActivityMainContextViewFactory" interface="net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
 
