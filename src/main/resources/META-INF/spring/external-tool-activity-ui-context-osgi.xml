@@ -18,9 +18,9 @@
 	<service ref="ExternalToolServiceProvider" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider" />
 	<service ref="ExternalToolTemplateServiceDescription" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider" />
 
-	<service ref="ConfigureExternalToolMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
-	<service ref="AddExternalToolContextualMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
-	<service ref="AddExternalToolMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
+	<service ref="ConfigureExternalToolMenuAction" auto-export="interfaces" />
+	<service ref="AddExternalToolContextualMenuAction" auto-export="interfaces" />
+	<service ref="AddExternalToolMenuAction" auto-export="interfaces" />
 
 	<service ref="InvocationGroupManagerShutdownHook" interface="net.sf.taverna.t2.workbench.ShutdownSPI" />
 
