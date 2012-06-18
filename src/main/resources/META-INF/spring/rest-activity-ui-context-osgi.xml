@@ -10,9 +10,9 @@
 
 	<service ref="GenericRESTTemplateService" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider" />
 
-	<service ref="ConfigureRESTActivityMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
-	<service ref="AddRESTTemplateAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
-	<service ref="AddRESTTemplateMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
+	<service ref="ConfigureRESTActivityMenuAction" auto-export="interfaces" />
+	<service ref="AddRESTTemplateAction" auto-export="interfaces" />
+	<service ref="AddRESTTemplateMenuAction" auto-export="interfaces" />
 
 	<service ref="RESTActivityMainContextViewFactory" interface="net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
 
