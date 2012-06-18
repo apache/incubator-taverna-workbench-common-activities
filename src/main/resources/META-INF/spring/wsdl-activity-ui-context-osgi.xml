@@ -12,11 +12,11 @@
 
 	<service ref="WSDLServiceProvider" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider" />
 
-	<service ref="AddXMLInputSplitterForWSDLActivityMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
-	<service ref="AddXMLInputSplitterForXMLInputSplitterMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
-	<service ref="AddXMLOutputSplitterForWSDLActivityMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
-	<service ref="AddXMLOutputSplitterForXMLOutputSplitterMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
-	<service ref="ConfigureWSDLMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
+	<service ref="AddXMLInputSplitterForWSDLActivityMenuAction" auto-export="interfaces" />
+	<service ref="AddXMLInputSplitterForXMLInputSplitterMenuAction" auto-export="interfaces" />
+	<service ref="AddXMLOutputSplitterForWSDLActivityMenuAction" auto-export="interfaces" />
+	<service ref="AddXMLOutputSplitterForXMLOutputSplitterMenuAction" auto-export="interfaces" />
+	<service ref="ConfigureWSDLMenuAction" auto-export="interfaces" />
 
 	<service ref="WSDLActivityViewFactory" interface="net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
 	<service ref="XMLSplitterViewFactory" interface="net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
