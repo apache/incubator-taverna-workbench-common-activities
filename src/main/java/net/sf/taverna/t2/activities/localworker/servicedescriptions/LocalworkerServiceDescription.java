@@ -1,12 +1,10 @@
 package net.sf.taverna.t2.activities.localworker.servicedescriptions;
 
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.swing.Icon;
 
-import net.sf.taverna.raven.repository.BasicArtifact;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
@@ -37,7 +35,7 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 	}
 
 	private List<String> dependencies; // from old code - this property is not in use any more
-	private LinkedHashSet<BasicArtifact> artifactDependencies;
+//	private LinkedHashSet<BasicArtifact> artifactDependencies;
 	// Note that localworkers have no local dependencies, only artifatct ones
 
 	public String getProvider() {
@@ -156,19 +154,19 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 		this.dependencies = dependencies;
 	}
 	///////////// From old code /////////////////
-	/**
-	 * @return the artifactDependencies
-	 */
-	public LinkedHashSet<BasicArtifact> getArtifactDependencies() {
-		return artifactDependencies;
-	}
-
-	/**
-	 * @param artifactDependencies the artifactDependencies to set
-	 */
-	public void setArtifactDependencies(LinkedHashSet<BasicArtifact> artifactDependencies) {
-		this.artifactDependencies = artifactDependencies;
-	}
+//	/**
+//	 * @return the artifactDependencies
+//	 */
+//	public LinkedHashSet<BasicArtifact> getArtifactDependencies() {
+//		return artifactDependencies;
+//	}
+//
+//	/**
+//	 * @param artifactDependencies the artifactDependencies to set
+//	 */
+//	public void setArtifactDependencies(LinkedHashSet<BasicArtifact> artifactDependencies) {
+//		this.artifactDependencies = artifactDependencies;
+//	}
 
 	@Override
 	protected List<Object> getIdentifyingData() {

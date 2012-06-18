@@ -7,13 +7,11 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.Icon;
 
-import net.sf.taverna.raven.repository.BasicArtifact;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
@@ -369,14 +367,14 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 
 		// Translate the old dependencies field into artifactDependencies field
 		// The local worker definition xml files still have the old dependencies field
-		LinkedHashSet<BasicArtifact> artifactDependencies = new LinkedHashSet<BasicArtifact>();
-		for (String dep : configuration.getDependencies()){
-			String[] artifactParts = dep.split(":");
-			if (artifactParts.length == 3) {
-				artifactDependencies.add(new BasicArtifact(artifactParts[0], artifactParts[1],
-						artifactParts[2]));
-			}
-		}
+//		LinkedHashSet<BasicArtifact> artifactDependencies = new LinkedHashSet<BasicArtifact>();
+//		for (String dep : configuration.getDependencies()){
+//			String[] artifactParts = dep.split(":");
+//			if (artifactParts.length == 3) {
+//				artifactDependencies.add(new BasicArtifact(artifactParts[0], artifactParts[1],
+//						artifactParts[2]));
+//			}
+//		}
 //		configuration.setArtifactDependencies(artifactDependencies);
 
 		for (ActivityInputPortDefinitionBean bean : configuration

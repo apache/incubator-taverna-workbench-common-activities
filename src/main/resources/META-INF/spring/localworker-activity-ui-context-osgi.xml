@@ -10,7 +10,7 @@
 
 	<service ref="LocalworkerServiceProvider" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider" />
 
-	<service ref="ConfigureLocalworkerMenuAction" interface="net.sf.taverna.t2.ui.menu.MenuComponent" />
+	<service ref="ConfigureLocalworkerMenuAction" auto-export="interfaces" />
 
 	<service ref="LocalworkerActivityViewFactory" interface="net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
 
