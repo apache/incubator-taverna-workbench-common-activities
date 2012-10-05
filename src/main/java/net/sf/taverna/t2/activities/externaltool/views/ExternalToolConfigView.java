@@ -20,6 +20,7 @@
  ******************************************************************************/
 package net.sf.taverna.t2.activities.externaltool.views;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -80,6 +81,8 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 public class ExternalToolConfigView
 		extends
 		ActivityConfigurationPanel<ExternalToolActivity, ExternalToolActivityConfigurationBean> {
+	
+	private static final Color LINE_COLOR = new Color(225,225,225);
 
 	private static final String FILE_INPUT_DESCRIPTION = "You can use a file input to feed data into " +
 			"the service via an input port and have that data written to the specified file.";
@@ -448,7 +451,7 @@ public class ExternalToolConfigView
 					});*/
 
 			scriptTextArea = new JTextPane();
-			new LinePainter(scriptTextArea);
+			new LinePainter(scriptTextArea, LINE_COLOR);
 
 			final KeywordDocument doc = new KeywordDocument(
 					new HashSet<String>());
@@ -614,7 +617,11 @@ public class ExternalToolConfigView
 		Set<String> stringReplacementTags = new HashSet<String>();
 		for (ExternalToolStringReplacementViewer v : stringReplacementViewList) {
 			String name = v.getName();
-			if (stringReplacementPortNames.contains(name)) {
+			if (name.equalsIgnoreCase("stdin") || name.equalsIgnoreCase("stdout") || name.equalsIgnoreCase("stderr")) {
+				text += "A string replacement port has a reserved name \"" + name + "\"\n";
+				result = false;
+			}
+			else if (stringReplacementPortNames.contains(name)) {
 				text += "Two string replacement ports have the name \"" + name
 						+ "\"\n";
 				result = false;
@@ -677,7 +684,11 @@ public class ExternalToolConfigView
 		Set<String> inputFileNames = new HashSet<String>();
 		for (ExternalToolFileViewer v : inputFileViewList) {
 			String name = v.getName();
-			if (stringReplacementPortNames.contains(name)) {
+			if (name.equalsIgnoreCase("stdin") || name.equalsIgnoreCase("stdout") || name.equalsIgnoreCase("stderr")) {
+				text += "An input file port has a reserved name \"" + name + "\"\n";
+				result = false;
+			}
+			else if (stringReplacementPortNames.contains(name)) {
 				text += "A string replacement port and an input file port have the name \""
 						+ name + "\"\n";
 				result = false;
@@ -705,7 +716,10 @@ public class ExternalToolConfigView
 		Set<String> fileListFileNames = new HashSet<String>();
 		for (ExternalToolFileViewer v : fileListViewList) {
 			String name = v.getName();
-			if (stringReplacementPortNames.contains(name)) {
+			if (name.equalsIgnoreCase("stdin") || name.equalsIgnoreCase("stdout") || name.equalsIgnoreCase("stderr")) {
+				text += "A file list port has a reserved name \"" + name + "\"\n";
+				result = false;
+			} else if (stringReplacementPortNames.contains(name)) {
 				text += "A string replacement port and a file list port have the name \""
 						+ name + "\"\n";
 				result = false;
@@ -783,7 +797,10 @@ public class ExternalToolConfigView
 		Set<String> outputPortNames = new HashSet<String>();
 		for (ExternalToolFileViewer v : outputViewList) {
 			String name = v.getName();
-			if (outputPortNames.contains(name)) {
+			if (name.equalsIgnoreCase("stdin") || name.equalsIgnoreCase("stdout") || name.equalsIgnoreCase("stderr")) {
+				text += "An output port has a reserved name \"" + name + "\"\n";
+				result = false;
+			} else if (outputPortNames.contains(name)) {
 				text += "Two output file ports have the name \"" + name
 						+ "\"\n";
 				result = false;
@@ -807,6 +824,10 @@ public class ExternalToolConfigView
 	 * @return
 	 */
 	public boolean portNameExists(String name) {
+		if (name.equalsIgnoreCase("stdin") || name.equalsIgnoreCase("stdout") || name.equalsIgnoreCase("stderr")) {
+			return true;
+		}
+		
 		for (ExternalToolFileViewer v : inputFileViewList) {
 			if (name.equals(v.getName())) {
 				return true;

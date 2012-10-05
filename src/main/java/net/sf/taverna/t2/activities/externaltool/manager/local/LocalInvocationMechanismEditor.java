@@ -6,6 +6,7 @@ package net.sf.taverna.t2.activities.externaltool.manager.local;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -28,6 +29,8 @@ public final class LocalInvocationMechanismEditor extends
 	private JTextField shellPrefixField = new JTextField(30);
 	
 	private JTextField linkCommandField = new JTextField(30);
+	
+	private JCheckBox retrieveDataField = new JCheckBox();
 	
 
 	@Override
@@ -69,6 +72,14 @@ public final class LocalInvocationMechanismEditor extends
 		inputConstraint.gridx++;
 		linkCommandField.setText(invocationMechanism.getLinkCommand());
 		innerPanel.add(linkCommandField, inputConstraint);
+		
+		inputConstraint.gridx = 0;
+		inputConstraint.gridy++;
+		innerPanel.add(new JLabel("Fetch data: "), inputConstraint);
+		inputConstraint.gridx++;
+		retrieveDataField.setSelected(invocationMechanism.isRetrieveData());
+		innerPanel.add(retrieveDataField, inputConstraint);
+		
 		this.add(innerPanel);
 	}
 
@@ -94,6 +105,7 @@ public final class LocalInvocationMechanismEditor extends
 		} else {
 			invocationMechanism.setLinkCommand(linkCommandField.getText());
 		}
+		invocationMechanism.setRetrieveData(retrieveDataField.isSelected());
 		return invocationMechanism;
 	}
 
