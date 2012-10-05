@@ -46,6 +46,8 @@ org.embl.ebi.escience.scuflworkers.java.WebImageFetcher
 org.embl.ebi.escience.scuflworkers.java.WebPageFetcher
 org.embl.ebi.escience.scuflworkers.java.ExtractImageLinks
 org.embl.ebi.escience.scuflworkers.java.SendEmail
+net.sourceforge.taverna.scuflworkers.net.BrowseUrl
+net.sourceforge.taverna.scuflworkers.net.ExtractHeader
 category:base64
 org.embl.ebi.escience.scuflworkers.java.EncodeBase64
 org.embl.ebi.escience.scuflworkers.java.DecodeBase64
