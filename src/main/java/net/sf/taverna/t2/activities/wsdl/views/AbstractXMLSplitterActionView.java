@@ -137,10 +137,15 @@ public abstract class AbstractXMLSplitterActionView<BeanType> extends
 		if (descriptor != null && descriptor.isOptional()) {
 			html += "<em>optional</em><br>";
 		}
-		html += "Depth:" + port.getDepth() + "<br>";
-		if (descriptor != null)
-			html += "<code>" + descriptor.getQname().toString() + "</code><br>";
-		html += "</td></tr>";
+		html+="Depth:"+port.getDepth()+"<br>";
+		if (descriptor != null ) {
+            html+="<code>"+descriptor.getQname().toString()+"</code><br>";
+            if (descriptor.getDocumentation() != null && !descriptor.getDocumentation().isEmpty()){
+                html += "<p>"+descriptor.getDocumentation()+"</p>";
+            }
+        }
+
+		html+="</td></tr>";
 		return html;
 	}
 
