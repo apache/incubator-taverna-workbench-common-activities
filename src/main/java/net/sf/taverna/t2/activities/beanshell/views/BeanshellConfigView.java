@@ -104,10 +104,12 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputP
 @SuppressWarnings("serial")
 public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellActivity, BeanshellActivityConfigurationBean> {
 
+	private static final Color LINE_COLOR = new Color(225,225,225);
+
 	private static final String VALID_NAME_REGEX = "[\\p{L}\\p{Digit}_]+";
 
 	//private static Logger logger = Logger.getLogger(BeanshellConfigView.class);
-
+	
 	/** The activity which this view describes */
 	protected BeanshellActivity activity;
 
@@ -117,7 +119,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	///////// Beanshell properties that can be configured ////////
 	/** The beanshell script */
 	private JEditorPane scriptTextArea;
-
+	
 	/** A list of views over the input ports */
 	private List<BeanshellInputViewer> inputViewList;
 
@@ -164,7 +166,8 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	private boolean inputsChanged = false;
 
 	private JTabbedPane tabbedPane = null;
-
+	
+	private static Set<String> keys = EditorKeySetUtil.loadKeySet(BeanshellConfigView.class.getResourceAsStream("keys.txt"));
 	private static Set<String> keys = EditorKeySetUtil.loadKeySet(BeanshellConfigView.class.getResourceAsStream("keys.txt"));
 
 	//private File currentDirectory = null;
@@ -311,7 +314,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 		add(tabbedPane, outerConstraint);
 
 		scriptTextArea = new JTextPane();
-		new LinePainter(scriptTextArea);
+		new LinePainter(scriptTextArea, LINE_COLOR);
 
 		final KeywordDocument doc = new KeywordDocument(keys);
 		// NOTE: Due to T2-1145 - always set editor kit BEFORE setDocument
@@ -330,7 +333,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 			String name = op.getName();
 			doc.addPort(name);
 		}
-
+		
 		scriptEditPanel.add(new LineEnabledTextPanel(scriptTextArea), BorderLayout.CENTER);
 
 		final JButton checkScriptButton = new JButton("Check script");
@@ -348,9 +351,10 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 				}
 
 				VisitReport visit = healthChecker.visit(fakeActivity, Collections.emptyList());
+
 				boolean invalidScript = false;
-                                for (VisitReport subReport : visit.getSubReports()) {
-                                    if (subReport.getResultId() == HealthCheck.INVALID_SCRIPT) {
+                for (VisitReport subReport : visit.getSubReports()) {
+                  if (subReport.getResultId() == HealthCheck.INVALID_SCRIPT) {
 					invalidScript = true;
 					String message = subReport.getMessage();
 					JOptionPane.showMessageDialog(BeanshellConfigView.this, message, "Beanshell script check", JOptionPane.ERROR_MESSAGE);
@@ -370,6 +374,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 			    String newScript = FileTools.readStringFromFile(BeanshellConfigView.this, "Load Beanshell script", ".bsh");
 				if (newScript != null) {
 					scriptTextArea.setText(newScript);
+					scriptTextArea.setCaretPosition(0);
 				}
 			}
 		});
