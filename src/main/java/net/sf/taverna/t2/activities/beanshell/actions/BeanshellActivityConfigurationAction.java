@@ -23,6 +23,8 @@ package net.sf.taverna.t2.activities.beanshell.actions;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 
+import uk.org.taverna.scufl2.api.activity.Activity;
+
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.beanshell.views.BeanshellConfigView;
@@ -33,13 +35,13 @@ import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationActi
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
 
 @SuppressWarnings("serial")
-public class BeanshellActivityConfigurationAction extends ActivityConfigurationAction<BeanshellActivity, BeanshellActivityConfigurationBean>{
+public class BeanshellActivityConfigurationAction extends ActivityConfigurationAction {
 
 	public static final String EDIT_BEANSHELL_SCRIPT = "Edit beanshell script";
 	private final EditManager editManager;
 	private final FileManager fileManager;
 
-	public BeanshellActivityConfigurationAction(BeanshellActivity activity, Frame owner, EditManager editManager, FileManager fileManager,
+	public BeanshellActivityConfigurationAction(Activity activity, Frame owner, EditManager editManager, FileManager fileManager,
 			ActivityIconManager activityIconManager) {
 		super(activity, activityIconManager);
 		this.editManager = editManager;
@@ -53,9 +55,9 @@ public class BeanshellActivityConfigurationAction extends ActivityConfigurationA
 			currentDialog.toFront();
 			return;
 		}
-		final BeanshellConfigView beanshellConfigView = new BeanshellConfigView((BeanshellActivity)getActivity());
-		final ActivityConfigurationDialog<BeanshellActivity, BeanshellActivityConfigurationBean> dialog =
-			new ActivityConfigurationDialog<BeanshellActivity, BeanshellActivityConfigurationBean>(getActivity(), beanshellConfigView, editManager, fileManager);
+		final BeanshellConfigView beanshellConfigView = new BeanshellConfigView(getActivity());
+		final ActivityConfigurationDialog<BeanshellActivityConfigurationBean> dialog =
+			new ActivityConfigurationDialog<BeanshellActivityConfigurationBean>(getActivity(), beanshellConfigView, editManager, fileManager);
 
 		ActivityConfigurationAction.setDialog(getActivity(), dialog, fileManager);
 

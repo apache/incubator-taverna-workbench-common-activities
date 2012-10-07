@@ -23,15 +23,16 @@ package net.sf.taverna.t2.activities.beanshell.views;
 import java.util.Arrays;
 import java.util.List;
 
-import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
+import net.sf.taverna.t2.activities.beanshell.servicedescriptions.BeanshellTemplateService;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
+import uk.org.taverna.scufl2.api.activity.Activity;
 
-public class BeanshellActivityViewFactory implements ContextualViewFactory<BeanshellActivity>{
+public class BeanshellActivityViewFactory implements ContextualViewFactory<Activity> {
 
 	private EditManager editManager;
 	private FileManager fileManager;
@@ -39,12 +40,10 @@ public class BeanshellActivityViewFactory implements ContextualViewFactory<Beans
 	private ColourManager colourManager;
 
 	public boolean canHandle(Object object) {
-		//changed since local worker sub classes beanshell which means instanceof can't be used any more
-		return object.getClass().isAssignableFrom(BeanshellActivity.class);
+		return object instanceof Activity && ((Activity) object).getConfigurableType().equals(BeanshellTemplateService.ACTIVITY_TYPE);
 	}
 
-
-	public List<ContextualView> getViews(BeanshellActivity activity) {
+	public List<ContextualView> getViews(Activity activity) {
 		return Arrays.asList(new ContextualView[] {new BeanshellContextualView(activity, editManager, fileManager, activityIconManager, colourManager)});
 	}
 

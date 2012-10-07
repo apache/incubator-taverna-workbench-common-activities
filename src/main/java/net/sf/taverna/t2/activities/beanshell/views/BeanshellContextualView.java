@@ -24,6 +24,8 @@ import java.awt.Frame;
 
 import javax.swing.Action;
 
+import uk.org.taverna.scufl2.api.activity.Activity;
+
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.beanshell.actions.BeanshellActivityConfigurationAction;
@@ -32,9 +34,6 @@ import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
-import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
-import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
 
 /**
  * A simple non editable HTML table view over a {@link BeanshellActivity}.
@@ -53,7 +52,7 @@ public class BeanshellContextualView extends
 	private FileManager fileManager;
 	private final ActivityIconManager activityIconManager;
 
-	public BeanshellContextualView(Activity<?> activity, EditManager editManager, FileManager fileManager,
+	public BeanshellContextualView(Activity activity, EditManager editManager, FileManager fileManager,
 			ActivityIconManager activityIconManager, ColourManager colourManager) {
 		super(activity, colourManager);
 		this.editManager = editManager;
@@ -100,7 +99,7 @@ public class BeanshellContextualView extends
 	@Override
 	public Action getConfigureAction(Frame owner) {
 		return new BeanshellActivityConfigurationAction(
-				(BeanshellActivity) getActivity(), owner, editManager, fileManager, activityIconManager);
+				getActivity(), owner, editManager, fileManager, activityIconManager);
 	}
 
 	@Override

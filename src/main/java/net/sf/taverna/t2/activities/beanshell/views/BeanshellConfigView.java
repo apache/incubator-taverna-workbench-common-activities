@@ -42,7 +42,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-//import javax.help.CSH;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -68,6 +67,7 @@ import javax.swing.event.DocumentListener;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityHealthChecker;
+import net.sf.taverna.t2.activities.beanshell.servicedescriptions.BeanshellTemplateService;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity.ClassLoaderSharing;
 import net.sf.taverna.t2.lang.ui.EditorKeySetUtil;
@@ -86,6 +86,8 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityConfigurationE
 import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityInputPort;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
+import uk.org.taverna.scufl2.api.activity.Activity;
+import uk.org.taverna.scufl2.api.configurations.Configuration;
 
 //import org.apache.log4j.Logger;
 
@@ -102,7 +104,7 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputP
  *
  */
 @SuppressWarnings("serial")
-public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellActivity, BeanshellActivityConfigurationBean> {
+public class BeanshellConfigView extends ActivityConfigurationPanel {
 
 	private static final Color LINE_COLOR = new Color(225,225,225);
 
@@ -111,10 +113,10 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	//private static Logger logger = Logger.getLogger(BeanshellConfigView.class);
 	
 	/** The activity which this view describes */
-	protected BeanshellActivity activity;
+	protected Activity activity;
 
 	/** The configuration bean used to configure the activity */
-	private BeanshellActivityConfigurationBean configuration;
+	private Configuration configuration;
 
 	///////// Beanshell properties that can be configured ////////
 	/** The beanshell script */
@@ -166,8 +168,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	private boolean inputsChanged = false;
 
 	private JTabbedPane tabbedPane = null;
-	
-	private static Set<String> keys = EditorKeySetUtil.loadKeySet(BeanshellConfigView.class.getResourceAsStream("keys.txt"));
+
 	private static Set<String> keys = EditorKeySetUtil.loadKeySet(BeanshellConfigView.class.getResourceAsStream("keys.txt"));
 
 	//private File currentDirectory = null;
@@ -181,7 +182,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 	 * @param activity
 	 *            the {@link BeanshellActivity} that the view is over
 	 */
-	public BeanshellConfigView(BeanshellActivity activity) {
+	public BeanshellConfigView(Activity activity) {
 		this.activity = activity;
 		setLayout(new GridBagLayout());
 		initialise();
@@ -197,7 +198,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 			outputsChanged = false;
 	}
 
-	private BeanshellActivityConfigurationBean makeConfiguration() {
+	private Configuration makeConfiguration() {
 		// Set the new configuration
 		List<ActivityInputPortDefinitionBean> inputBeanList = new ArrayList<ActivityInputPortDefinitionBean>();
 		for (BeanshellInputViewer inputView : inputViewList) {
@@ -246,8 +247,8 @@ public class BeanshellConfigView extends ActivityConfigurationPanel<BeanshellAct
 			outputBeanList.add(activityOutputPortDefinitionBean);
 		}
 
-		BeanshellActivityConfigurationBean newConfiguration =
-			(BeanshellActivityConfigurationBean) cloneBean (configuration);
+		Configuration newConfiguration = new Configuration(activity.getName() + " Configuration");
+		newConfiguration.setConfigurableType(activity.getConfigurableType());
 		newConfiguration.setScript(scriptTextArea
 				.getText());
 		newConfiguration

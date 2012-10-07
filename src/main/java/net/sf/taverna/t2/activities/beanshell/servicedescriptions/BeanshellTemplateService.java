@@ -8,10 +8,11 @@ import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.servicedescriptions.AbstractTemplateService;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
-import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityFactory;
 
 public class BeanshellTemplateService extends
 		AbstractTemplateService<BeanshellActivityConfigurationBean> {
+
+	public static final URI ACTIVITY_TYPE = URI.create("http://ns.taverna.org.uk/2010/activity/beanshell");
 
 	private static final String BEANSHELL = "Beanshell";
 

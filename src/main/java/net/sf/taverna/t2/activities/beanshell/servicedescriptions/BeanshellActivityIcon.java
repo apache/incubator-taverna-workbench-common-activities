@@ -23,9 +23,10 @@ package net.sf.taverna.t2.activities.beanshell.servicedescriptions;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import uk.org.taverna.scufl2.api.activity.Activity;
+
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 /**
  * 
@@ -36,14 +37,14 @@ public class BeanshellActivityIcon implements ActivityIconSPI {
 
 	static Icon icon = null;
 
-	public int canProvideIconScore(Activity<?> activity) {
+	public int canProvideIconScore(Activity activity) {
 		if (activity instanceof BeanshellActivity)
 			return DEFAULT_ICON + 1;
 		else
 			return NO_ICON;
 	}
 
-	public Icon getIcon(Activity<?> activity) {
+	public Icon getIcon(Activity activity) {
 		return getBeanshellIcon();
 	}
 	
