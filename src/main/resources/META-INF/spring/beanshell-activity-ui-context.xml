@@ -10,19 +10,22 @@
 	<bean id="AddBeanshellTemplateAction" class="net.sf.taverna.t2.activities.beanshell.menu.AddBeanshellTemplateAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
-			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+			<property name="selectionManager" ref="selectionManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
 	</bean>
 	<bean id="AddBeanshellTemplateMenuAction" class="net.sf.taverna.t2.activities.beanshell.menu.AddBeanshellTemplateMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
-			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+			<property name="selectionManager" ref="selectionManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
 	</bean>
 	<bean id="ConfigureBeanshellMenuAction" class="net.sf.taverna.t2.activities.beanshell.menu.ConfigureBeanshellMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
 	</bean>
 
 	<bean id="BeanshellActivityViewFactory" class="net.sf.taverna.t2.activities.beanshell.views.BeanshellActivityViewFactory">
@@ -30,6 +33,7 @@
 			<property name="fileManager" ref="fileManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
 			<property name="colourManager" ref="colourManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
 	</bean>
 
 </beans>

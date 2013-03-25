@@ -32,9 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,7 +65,6 @@ import javax.swing.event.DocumentListener;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityHealthChecker;
-import net.sf.taverna.t2.activities.beanshell.servicedescriptions.BeanshellTemplateService;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity;
 import net.sf.taverna.t2.activities.dependencyactivity.AbstractAsynchronousDependencyActivity.ClassLoaderSharing;
 import net.sf.taverna.t2.lang.ui.EditorKeySetUtil;
@@ -79,15 +76,15 @@ import net.sf.taverna.t2.lang.ui.NoWrapEditorKit;
 import net.sf.taverna.t2.reference.ExternalReferenceSPI;
 import net.sf.taverna.t2.visit.VisitReport;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
-import net.sf.taverna.t2.workflowmodel.OutputPort;
-import net.sf.taverna.t2.workflowmodel.Port;
 import net.sf.taverna.t2.workflowmodel.health.HealthCheck;
 import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityConfigurationException;
-import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityInputPort;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
 import uk.org.taverna.scufl2.api.activity.Activity;
 import uk.org.taverna.scufl2.api.configurations.Configuration;
+import uk.org.taverna.scufl2.api.port.InputActivityPort;
+import uk.org.taverna.scufl2.api.port.OutputActivityPort;
+import uk.org.taverna.scufl2.api.port.Port;
 
 //import org.apache.log4j.Logger;
 
@@ -111,17 +108,14 @@ public class BeanshellConfigView extends ActivityConfigurationPanel {
 	private static final String VALID_NAME_REGEX = "[\\p{L}\\p{Digit}_]+";
 
 	//private static Logger logger = Logger.getLogger(BeanshellConfigView.class);
-	
-	/** The activity which this view describes */
-	protected Activity activity;
 
 	/** The configuration bean used to configure the activity */
-	private Configuration configuration;
+	private BeanshellActivityConfigurationBean configuration;
 
 	///////// Beanshell properties that can be configured ////////
 	/** The beanshell script */
 	private JEditorPane scriptTextArea;
-	
+
 	/** A list of views over the input ports */
 	private List<BeanshellInputViewer> inputViewList;
 
@@ -183,7 +177,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel {
 	 *            the {@link BeanshellActivity} that the view is over
 	 */
 	public BeanshellConfigView(Activity activity) {
-		this.activity = activity;
+		super(activity);
 		setLayout(new GridBagLayout());
 		initialise();
 	}
@@ -198,7 +192,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel {
 			outputsChanged = false;
 	}
 
-	private Configuration makeConfiguration() {
+	private BeanshellActivityConfigurationBean makeConfiguration() {
 		// Set the new configuration
 		List<ActivityInputPortDefinitionBean> inputBeanList = new ArrayList<ActivityInputPortDefinitionBean>();
 		for (BeanshellInputViewer inputView : inputViewList) {
@@ -247,8 +241,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel {
 			outputBeanList.add(activityOutputPortDefinitionBean);
 		}
 
-		Configuration newConfiguration = new Configuration(activity.getName() + " Configuration");
-		newConfiguration.setConfigurableType(activity.getConfigurableType());
+		BeanshellActivityConfigurationBean newConfiguration = new BeanshellActivityConfigurationBean();
 		newConfiguration.setScript(scriptTextArea
 				.getText());
 		newConfiguration
@@ -278,12 +271,12 @@ public class BeanshellConfigView extends ActivityConfigurationPanel {
 	 * initial values through {@link #setDependencies()},
 	 * {@link #getPortPanel()}
 	 */
-	private void initialise() {
+	protected void initialise() {
 //		CSH
 //				.setHelpIDString(
 //						this,
 //						"net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.BeanshellConfigView");
-		configuration = activity.getConfiguration();
+//		configuration = activity.getConfiguration();
 		inputViewList = new ArrayList<BeanshellInputViewer>();
 		outputViewList = new ArrayList<BeanshellOutputViewer>();
 		classLoaderSharing = configuration.getClassLoaderSharing();
@@ -292,8 +285,6 @@ public class BeanshellConfigView extends ActivityConfigurationPanel {
 				javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
 				javax.swing.border.TitledBorder.DEFAULT_POSITION,
 				new java.awt.Font("Lucida Grande", 1, 12)));
-		final BeanshellActivityConfigurationBean configBean = activity
-				.getConfiguration();
 
 		JPanel scriptEditPanel = new JPanel(new BorderLayout());
 
@@ -322,7 +313,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel {
 		scriptTextArea.setEditorKit( new NoWrapEditorKit() );
 		scriptTextArea.setFont(new Font("Monospaced",Font.PLAIN,14));
 		scriptTextArea.setDocument(doc);
-		scriptTextArea.setText(configBean.getScript());
+		scriptTextArea.setText(configuration.getScript());
 		scriptTextArea.setCaretPosition(0);
 		scriptTextArea.setPreferredSize(new Dimension(200, 100));
 
@@ -334,7 +325,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel {
 			String name = op.getName();
 			doc.addPort(name);
 		}
-		
+
 		scriptEditPanel.add(new LineEnabledTextPanel(scriptTextArea), BorderLayout.CENTER);
 
 		final JButton checkScriptButton = new JButton("Check script");
@@ -532,9 +523,9 @@ public class BeanshellConfigView extends ActivityConfigurationPanel {
 			JPanel labelPanel = new JPanel();
 			labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.PAGE_AXIS));
 			JLabel label = new JLabel("Local JAR files");
-			if (!activity.libDir.exists())
-				activity.libDir.mkdir();
-			JLabel libLabel = new JLabel("<html><small>" + activity.libDir.getAbsolutePath()
+//			if (!activity.libDir.exists())
+//				activity.libDir.mkdir();
+			JLabel libLabel = new JLabel("<html><small>" //+ activity.libDir.getAbsolutePath()
 					+ "</small></html>");
 			labelPanel.add(label);
 			labelPanel.add(libLabel);
@@ -562,17 +553,17 @@ public class BeanshellConfigView extends ActivityConfigurationPanel {
 
 			// Make so it's there so the user can add stuff to it
 			// List of all jar files in the lib directory
-			List<String> jarFiles =
-				Arrays.asList(activity.libDir.list(new BeanshellActivity.FileExtFilter(".jar")));
+//			List<String> jarFiles =
+//				Arrays.asList(activity.libDir.list(new BeanshellActivity.FileExtFilter(".jar")));
 			// We also add the list of jars that may have been configured sometime before
 			// but are now not present in the lib directory for some reason
 			Set<String> missingLocalDeps =
 				new HashSet<String>(configuration.getLocalDependencies());
-			missingLocalDeps.removeAll(jarFiles);
+//			missingLocalDeps.removeAll(jarFiles);
 			// jarFiles and missingLocalDeps now contain two sets of files that do not intersect
 			List<String> jarFilesList = new ArrayList<String>();
 			// Put them all together
-			jarFilesList.addAll(jarFiles);
+//			jarFilesList.addAll(jarFiles);
 			jarFilesList.addAll(missingLocalDeps);
 			Collections.sort(jarFilesList);
 
@@ -599,10 +590,10 @@ public class BeanshellConfigView extends ActivityConfigurationPanel {
 				});
 				panel.add(checkBox);
 				// The jar may not be in the lib directory, so warn the user
-				if (!new File(activity.libDir, jarFile).exists()) {
-					checkBox.setForeground(Color.RED);
-					checkBox.setText(checkBox.getText() + " (missing file!)");
-				}
+//				if (!new File(activity.libDir, jarFile).exists()) {
+//					checkBox.setForeground(Color.RED);
+//					checkBox.setText(checkBox.getText() + " (missing file!)");
+//				}
 			}
 			return panel;
 		}
@@ -1010,7 +1001,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel {
 	 * @param set
 	 * @return
 	 */
-	private boolean inputPortNameExists(String name, Set<ActivityInputPort> set) {
+	private boolean inputPortNameExists(String name, Set<InputActivityPort> set) {
 		for (Port port : set) {
 			if (name.equals(port.getName())) {
 				return true;
@@ -1027,7 +1018,7 @@ public class BeanshellConfigView extends ActivityConfigurationPanel {
 	 * @param set
 	 * @return
 	 */
-	private boolean outputPortNameExists(String name, Set<OutputPort> set) {
+	private boolean outputPortNameExists(String name, Set<OutputActivityPort> set) {
 		for (Port port : set) {
 			if (name.equals(port.getName())) {
 				return true;
@@ -1050,8 +1041,8 @@ public class BeanshellConfigView extends ActivityConfigurationPanel {
 	}
 
 	@Override
-	public BeanshellActivityConfigurationBean getConfiguration() {
-		return configuration;
+	public Configuration getConfiguration() {
+		return null;//configuration;
 	}
 
 	@Override

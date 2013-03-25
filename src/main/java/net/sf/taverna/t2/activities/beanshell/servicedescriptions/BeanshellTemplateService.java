@@ -4,13 +4,14 @@ import java.net.URI;
 
 import javax.swing.Icon;
 
+import uk.org.taverna.scufl2.api.configurations.Configuration;
+
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.servicedescriptions.AbstractTemplateService;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 
-public class BeanshellTemplateService extends
-		AbstractTemplateService<BeanshellActivityConfigurationBean> {
+public class BeanshellTemplateService extends AbstractTemplateService {
 
 	public static final URI ACTIVITY_TYPE = URI.create("http://ns.taverna.org.uk/2010/activity/beanshell");
 
@@ -24,18 +25,16 @@ public class BeanshellTemplateService extends
 	}
 
 	@Override
-	public URI getActivityURI() {
-		return URI.create(BeanshellActivity.URI);
+	public URI getActivityType() {
+		return ACTIVITY_TYPE;
 	}
 
 	@Override
-	public Class<BeanshellActivity> getActivityClass() {
-		return BeanshellActivity.class;
-	}
-
-	@Override
-	public BeanshellActivityConfigurationBean getActivityConfiguration() {
-		return new BeanshellActivityConfigurationBean();
+	public Configuration getActivityConfiguration() {
+		Configuration configuration = new Configuration();
+		configuration.setType(ACTIVITY_TYPE.resolve("#Config"));
+		configuration.getPropertyResource().addPropertyAsString(ACTIVITY_TYPE.resolve("#script"), "");
+		return configuration;
 	}
 
 	@Override

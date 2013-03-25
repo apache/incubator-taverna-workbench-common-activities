@@ -24,16 +24,16 @@ import java.awt.Frame;
 
 import javax.swing.Action;
 
-import uk.org.taverna.scufl2.api.activity.Activity;
-
-import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
-import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.beanshell.actions.BeanshellActivityConfigurationAction;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
+import uk.org.taverna.scufl2.api.activity.Activity;
+import uk.org.taverna.scufl2.api.port.InputActivityPort;
+import uk.org.taverna.scufl2.api.port.OutputActivityPort;
 
 /**
  * A simple non editable HTML table view over a {@link BeanshellActivity}.
@@ -45,19 +45,20 @@ import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextu
  *
  */
 @SuppressWarnings("serial")
-public class BeanshellContextualView extends
-		HTMLBasedActivityContextualView<BeanshellActivityConfigurationBean> {
+public class BeanshellContextualView extends HTMLBasedActivityContextualView {
 
 	private EditManager editManager;
 	private FileManager fileManager;
 	private final ActivityIconManager activityIconManager;
+	private final ServiceDescriptionRegistry serviceDescriptionRegistry;
 
 	public BeanshellContextualView(Activity activity, EditManager editManager, FileManager fileManager,
-			ActivityIconManager activityIconManager, ColourManager colourManager) {
+			ActivityIconManager activityIconManager, ColourManager colourManager, ServiceDescriptionRegistry serviceDescriptionRegistry) {
 		super(activity, colourManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
 		this.activityIconManager = activityIconManager;
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
 		init();
 	}
 
@@ -66,29 +67,18 @@ public class BeanshellContextualView extends
 
 	@Override
 	protected String getRawTableRowsHtml() {
-		String html = "";
-		html = html
-		+ "<tr><th>Input Port Name</th>"
-			+	"<th>Depth</th>"
-		+"</tr>";
-		for (ActivityInputPortDefinitionBean bean : getConfigBean()
-				.getInputPortDefinitions()) {
-			html = html + "<tr><td>" + bean.getName() + "</td><td>"
-					+ bean.getDepth() + "</td></tr>";
+		StringBuilder html = new StringBuilder();
+		html.append("<tr><th>Input Port Name</th><th>Depth</th></tr>");
+		for (InputActivityPort inputActivityPort : getActivity().getInputPorts()) {
+			html.append("<tr><td>" + inputActivityPort.getName() + "</td><td>");
+			html.append(inputActivityPort.getDepth() + "</td></tr>");
 		}
-		html = html
-				+ "<tr><th>Output Port Name</th>"
-					+	"<th>Depth</th>"
-				+"</tr>";
-		for (ActivityOutputPortDefinitionBean bean : getConfigBean()
-				.getOutputPortDefinitions()) {
-			html = html + "<tr><td>" + bean.getName() + "</td><td>"
-					+ bean.getDepth() + "</td>"
-//							+ "<td>" + bean.getGranularDepth()
-//					+ "</td>"
-					+ "</tr>";
+		html.append("<tr><th>Output Port Name</th><th>Depth</th></tr>");
+		for (OutputActivityPort outputActivityPort : getActivity().getOutputPorts()) {
+			html.append("<tr><td>" + outputActivityPort.getName() + "</td><td>");
+			html.append(outputActivityPort.getDepth() + "</td></tr>");
 		}
-		return html;
+		return html.toString();
 	}
 
 	@Override
@@ -99,7 +89,7 @@ public class BeanshellContextualView extends
 	@Override
 	public Action getConfigureAction(Frame owner) {
 		return new BeanshellActivityConfigurationAction(
-				getActivity(), owner, editManager, fileManager, activityIconManager);
+				getActivity(), owner, editManager, fileManager, activityIconManager, serviceDescriptionRegistry);
 	}
 
 	@Override

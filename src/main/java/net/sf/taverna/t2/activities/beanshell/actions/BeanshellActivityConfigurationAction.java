@@ -23,16 +23,14 @@ package net.sf.taverna.t2.activities.beanshell.actions;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 
-import uk.org.taverna.scufl2.api.activity.Activity;
-
-import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
-import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
-import net.sf.taverna.t2.activities.beanshell.views.BeanshellConfigView;
+import net.sf.taverna.t2.activities.beanshell.views.BeanshellConfigurationPanel;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
+import uk.org.taverna.scufl2.api.activity.Activity;
 
 @SuppressWarnings("serial")
 public class BeanshellActivityConfigurationAction extends ActivityConfigurationAction {
@@ -42,8 +40,8 @@ public class BeanshellActivityConfigurationAction extends ActivityConfigurationA
 	private final FileManager fileManager;
 
 	public BeanshellActivityConfigurationAction(Activity activity, Frame owner, EditManager editManager, FileManager fileManager,
-			ActivityIconManager activityIconManager) {
-		super(activity, activityIconManager);
+			ActivityIconManager activityIconManager, ServiceDescriptionRegistry serviceDescriptionRegistry) {
+		super(activity, activityIconManager, serviceDescriptionRegistry);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
 		putValue(NAME, EDIT_BEANSHELL_SCRIPT );
@@ -55,9 +53,9 @@ public class BeanshellActivityConfigurationAction extends ActivityConfigurationA
 			currentDialog.toFront();
 			return;
 		}
-		final BeanshellConfigView beanshellConfigView = new BeanshellConfigView(getActivity());
-		final ActivityConfigurationDialog<BeanshellActivityConfigurationBean> dialog =
-			new ActivityConfigurationDialog<BeanshellActivityConfigurationBean>(getActivity(), beanshellConfigView, editManager, fileManager);
+		final BeanshellConfigurationPanel beanshellConfigView = new BeanshellConfigurationPanel(getActivity(), getServiceDescription());
+		final ActivityConfigurationDialog dialog =
+			new ActivityConfigurationDialog(getActivity(), beanshellConfigView, editManager);
 
 		ActivityConfigurationAction.setDialog(getActivity(), dialog, fileManager);
 

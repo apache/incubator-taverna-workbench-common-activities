@@ -25,19 +25,18 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.net.URI;
 
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
-import net.sf.taverna.t2.activities.beanshell.servicedescriptions.BeanshellTemplateService;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.ui.menu.AbstractMenuAction;
 import net.sf.taverna.t2.ui.menu.DesignOnlyAction;
 import net.sf.taverna.t2.ui.menu.MenuManager;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
-import net.sf.taverna.t2.workbench.ui.DataflowSelectionManager;
+import net.sf.taverna.t2.workbench.selection.SelectionManager;
 import net.sf.taverna.t2.workbench.ui.workflowview.WorkflowView;
-import net.sf.taverna.t2.workbench.views.graph.menu.InsertMenu;
 
 import org.apache.log4j.Logger;
 
@@ -50,6 +49,8 @@ import org.apache.log4j.Logger;
  */
 @SuppressWarnings("serial")
 public class AddBeanshellTemplateMenuAction extends AbstractMenuAction {
+
+	private static final URI ACTIVITY_TYPE = URI.create("http://ns.taverna.org.uk/2010/activity/beanshell");
 
 	private static final String ADD_BEANSHELL = "Beanshell";
 
@@ -64,9 +65,11 @@ public class AddBeanshellTemplateMenuAction extends AbstractMenuAction {
 
 	private EditManager editManager;
 	private MenuManager menuManager;
-	private DataflowSelectionManager dataflowSelectionManager;
+	private SelectionManager selectionManager;
 
 	private ActivityIconManager activityIconManager;
+
+	private ServiceDescriptionRegistry serviceDescriptionRegistry;
 
 	public AddBeanshellTemplateMenuAction() {
 		super(INSERT, 300, ADD_BEANSHELL_URI);
@@ -78,11 +81,10 @@ public class AddBeanshellTemplateMenuAction extends AbstractMenuAction {
 		return new AddBeanshellMenuAction();
 	}
 
-	protected class AddBeanshellMenuAction extends DesignOnlyAction {
+	protected class AddBeanshellMenuAction extends AbstractAction implements DesignOnlyAction {
 		AddBeanshellMenuAction () {
 			super ();
-			putValue(SMALL_ICON, activityIconManager.iconForActivity(
-					new BeanshellActivity(null)));
+			putValue(SMALL_ICON, activityIconManager.iconForActivity(ACTIVITY_TYPE));
 			putValue(NAME, ADD_BEANSHELL);
 			putValue(SHORT_DESCRIPTION, "Beanshell service");
 			putValue(Action.ACCELERATOR_KEY,
@@ -90,8 +92,8 @@ public class AddBeanshellTemplateMenuAction extends AbstractMenuAction {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			WorkflowView.importServiceDescription(BeanshellTemplateService.getServiceDescription(),
-			false, editManager, menuManager, dataflowSelectionManager);
+			WorkflowView.importServiceDescription(serviceDescriptionRegistry.getServiceDescription(ACTIVITY_TYPE),
+			false, editManager, menuManager, selectionManager);
 		}
 	}
 
@@ -103,12 +105,16 @@ public class AddBeanshellTemplateMenuAction extends AbstractMenuAction {
 		this.menuManager = menuManager;
 	}
 
-	public void setDataflowSelectionManager(DataflowSelectionManager dataflowSelectionManager) {
-		this.dataflowSelectionManager = dataflowSelectionManager;
+	public void setSelectionManager(SelectionManager selectionManager) {
+		this.selectionManager = selectionManager;
 	}
 
 	public void setActivityIconManager(ActivityIconManager activityIconManager) {
 		this.activityIconManager = activityIconManager;
+	}
+
+	public void setServiceDescriptionRegistry(ServiceDescriptionRegistry serviceDescriptionRegistry) {
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
 	}
 
 }
