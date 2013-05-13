@@ -42,10 +42,11 @@ import net.sf.taverna.t2.activities.rest.URISignatureHandler;
 import net.sf.taverna.t2.activities.rest.URISignatureHandler.URISignatureParsingException;
 import net.sf.taverna.t2.workbench.MainWindow;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.T2ActivityConfigurationPanel;
 
 @SuppressWarnings("serial")
 public class RESTActivityConfigurationPanel extends
-		ActivityConfigurationPanel<RESTActivity, RESTActivityConfigurationBean> {
+		T2ActivityConfigurationPanel<RESTActivity, RESTActivityConfigurationBean> {
 	private static final Icon infoIcon = new ImageIcon(
 			RESTActivityConfigurationPanel.class.getResource("information.png"));
 
@@ -373,7 +374,7 @@ public class RESTActivityConfigurationPanel extends
 		jlSendDataAsFieldPlaceholder.setPreferredSize(cbSendDataAs
 				.getPreferredSize());
 		jpGeneral.add(jlSendDataAsFieldPlaceholder, c);
-		
+
 		JPanel finalPanel = new JPanel(new BorderLayout());
 		finalPanel.add(jpGeneral, BorderLayout.NORTH);
 		return (finalPanel);
@@ -446,7 +447,7 @@ public class RESTActivityConfigurationPanel extends
 		cbShowRedirectionOutputPort = new JCheckBox(
 				"Show \"Redirection\" output port");
 		jpAdvanced.add(cbShowRedirectionOutputPort, c);
-		
+
 		c.gridx = 0;
 		c.gridy++;
 		c.weightx = 0;
@@ -463,7 +464,7 @@ public class RESTActivityConfigurationPanel extends
 		cbShowActualUrlPort = new JCheckBox(
 				"Show \"Actual URL\" output port");
 		jpAdvanced.add(cbShowActualUrlPort, c);
-		
+
 		c.gridx = 0;
 		c.gridy++;
 		c.weightx = 0;
@@ -480,7 +481,7 @@ public class RESTActivityConfigurationPanel extends
 		cbShowResponseHeadersPort = new JCheckBox(
 				"Show \"Response headers\" output port");
 		jpAdvanced.add(cbShowResponseHeadersPort, c);
-		
+
 		c.gridx = 0;
 		c.gridy++;
 		c.weightx = 0;
@@ -496,7 +497,7 @@ public class RESTActivityConfigurationPanel extends
 		c.insets = new Insets(2, 0, 5, 8);
 		cbEscapeParameters = new JCheckBox("Escape URL parameter values");
 		jpAdvanced.add(cbEscapeParameters, c);
-		
+
 		c.gridx = 0;
 		c.gridy++;
 		c.weightx = 0;
@@ -507,7 +508,7 @@ public class RESTActivityConfigurationPanel extends
 		jlHTTPHeadersInfoIcon
 				.setToolTipText("<html>Set additional HTTP headers</html>");
 		jpAdvanced.add(jlHTTPHeadersInfoIcon, c);
-		
+
 		c.gridx = 1;
 		c.weightx = 0;
 		c.weighty = 0;
@@ -533,7 +534,7 @@ public class RESTActivityConfigurationPanel extends
 		buttonPanel.add(addHeaderButton, FlowLayout.LEFT);
 		buttonPanel.add(removeHeaderButton);
 		jpAdvanced.add(buttonPanel, c);
-		
+
 		c.gridx = 1;
 		c.gridy++;
 		c.weightx = 0;
@@ -558,21 +559,21 @@ public class RESTActivityConfigurationPanel extends
 //		c.insets = new Insets(0, 0, 0, 0);
 //		JLabel jlSpacer = new JLabel();
 //		jpAdvanced.add(jlSpacer, c);
-		
+
 		return (jpAdvanced);
 	}
-	
+
 	/*
 	 * Based on http://www.javalobby.org/java/forums/t19559.html
 	 */
-	public static void setVisibleRowCount(JTable table, int visibleRows){ 
-	    int height = 0; 
-	    for(int row = 0; row < visibleRows; row++) 
-	        height += table.getRowHeight(row); 
-	 
-	    table.setPreferredScrollableViewportSize(new Dimension( 
-	            table.getPreferredScrollableViewportSize().width, 
-	            height)); 
+	public static void setVisibleRowCount(JTable table, int visibleRows){
+	    int height = 0;
+	    for(int row = 0; row < visibleRows; row++)
+	        height += table.getRowHeight(row);
+
+	    table.setPreferredScrollableViewportSize(new Dimension(
+	            table.getPreferredScrollableViewportSize().width,
+	            height));
 	}
 
 
@@ -603,16 +604,16 @@ public class RESTActivityConfigurationPanel extends
 						JOptionPane.WARNING_MESSAGE);
 				return (false);
 			}
-						
-			// Test if the URL string contains "unsafe" characters, i.e. characters 
+
+			// Test if the URL string contains "unsafe" characters, i.e. characters
 			// that need URL-encoding.
-			// From RFC 1738: "...Only alphanumerics [0-9a-zA-Z], the special 
-			// characters "$-_.+!*'()," (not including the quotes) and reserved 
-			// characters used for their reserved purposes may be 
-			// used unencoded within a URL." 
-			// Reserved characters are: ";/?:@&=" ..." (excluding quotes) and "%" used 
+			// From RFC 1738: "...Only alphanumerics [0-9a-zA-Z], the special
+			// characters "$-_.+!*'()," (not including the quotes) and reserved
+			// characters used for their reserved purposes may be
+			// used unencoded within a URL."
+			// Reserved characters are: ";/?:@&=" ..." (excluding quotes) and "%" used
 			// for escaping.
-			// We do not warn the user if they have not properly enclosed parameter 
+			// We do not warn the user if they have not properly enclosed parameter
 			// names in curly braces as this check is already being done elsewhere in the code.
 			// We do not check the characters in parameter names either.
 			try {
@@ -625,7 +626,7 @@ public class RESTActivityConfigurationPanel extends
 						JOptionPane.WARNING_MESSAGE);
 				return (false);
 			}
-			
+
 			// Other HTTP headers configured must not have empty names
 			ArrayList<String> otherHTTPHeaderNames = httpHeadersTableModel.getHTTPHeaderNames();
 			for (String headerName : otherHTTPHeaderNames){
@@ -679,7 +680,7 @@ public class RESTActivityConfigurationPanel extends
 	 * noteConfiguration() was called.
 	 */
 	@Override
-	public RESTActivityConfigurationBean getConfiguration() {
+	public RESTActivityConfigurationBean getT2Configuration() {
 		// Should already have been made by noteConfiguration()
 		return configBean;
 	}
@@ -736,7 +737,7 @@ public class RESTActivityConfigurationPanel extends
 				}
 			}
 		}
-		
+
 		// true (changed) unless all fields match the originals
 		return !(originalHTTPMethod == (HTTP_METHOD) cbHTTPMethod
 				.getSelectedItem()
@@ -746,13 +747,13 @@ public class RESTActivityConfigurationPanel extends
 				&& contentTypeHasNotChanged
 				&& originalOutgoingDataFormat == (DATA_FORMAT) cbSendDataAs
 						.getSelectedItem()
-				&& originalSendHTTPExpectRequestHeader == cbSendHTTPExpectHeader.isSelected() 
+				&& originalSendHTTPExpectRequestHeader == cbSendHTTPExpectHeader.isSelected()
 				&& originalShowRedirectionOutputPort == cbShowRedirectionOutputPort.isSelected()
 				&& originalShowActualUrlPort == cbShowActualUrlPort.isSelected()
 				&& originalShowResponseHeadersPort == cbShowResponseHeadersPort.isSelected()
 				&& originalEscapeParameters == cbEscapeParameters.isSelected()
 				&& otherHTTPHeadersNotChanged);
-		
+
 	}
 
 	/**
@@ -805,7 +806,7 @@ public class RESTActivityConfigurationPanel extends
 		cbEscapeParameters.setSelected(configBean.getEscapeParameters());
 		httpHeadersTableModel.setHTTPHeaderData(configBean.getOtherHTTPHeaders());
 	}
-	
+
 	/*
 	 * Compares two lists of strings by doing string comparison on their first element.
 	 */
@@ -828,11 +829,11 @@ public class RESTActivityConfigurationPanel extends
 				}
 				else{
 					return list1.get(0).compareTo(list2.get(0));
-				}			
-				
+				}
+
 			}
 		}
-		
+
 	}
 
 }
