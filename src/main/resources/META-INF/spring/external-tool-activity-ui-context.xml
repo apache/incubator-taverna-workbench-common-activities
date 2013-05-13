@@ -28,13 +28,13 @@
 	<bean id="AddExternalToolContextualMenuAction" class="net.sf.taverna.t2.activities.externaltool.menu.AddExternalToolContextualMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
-			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+			<property name="selectionManager" ref="selectionManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 	<bean id="AddExternalToolMenuAction" class="net.sf.taverna.t2.activities.externaltool.menu.AddExternalToolMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
-			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+			<property name="selectionManager" ref="selectionManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 

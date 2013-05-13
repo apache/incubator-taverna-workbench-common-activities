@@ -8,7 +8,7 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import net.sf.taverna.t2.renderers.XMLTree;
+import net.sf.taverna.t2.renderers.impl.XMLTree;
 
 import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 
