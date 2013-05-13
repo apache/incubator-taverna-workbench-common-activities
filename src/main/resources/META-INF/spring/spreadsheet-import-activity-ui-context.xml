@@ -12,7 +12,7 @@
 	<bean id="SpreadsheetImportAddTemplateAction" class="net.sf.taverna.t2.activities.spreadsheet.menu.SpreadsheetImportAddTemplateAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
-			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+			<property name="selectionManager" ref="selectionManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 	<bean id="SpreadsheetImportConfigureMenuAction" class="net.sf.taverna.t2.activities.spreadsheet.menu.SpreadsheetImportConfigureMenuAction">
@@ -23,7 +23,7 @@
 	<bean id="SpreadsheetImportAddTemplateMenuAction" class="net.sf.taverna.t2.activities.spreadsheet.menu.SpreadsheetImportAddTemplateMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
-			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+			<property name="selectionManager" ref="selectionManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 

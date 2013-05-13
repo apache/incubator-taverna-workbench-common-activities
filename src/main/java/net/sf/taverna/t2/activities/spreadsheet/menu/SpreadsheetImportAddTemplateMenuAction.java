@@ -36,7 +36,7 @@ import net.sf.taverna.t2.ui.menu.DesignOnlyAction;
 import net.sf.taverna.t2.ui.menu.MenuManager;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
-import net.sf.taverna.t2.workbench.ui.DataflowSelectionManager;
+import net.sf.taverna.t2.workbench.selection.SelectionManager;
 import net.sf.taverna.t2.workbench.ui.workflowview.WorkflowView;
 import net.sf.taverna.t2.workbench.views.graph.menu.InsertMenu;
 
@@ -63,7 +63,7 @@ public class SpreadsheetImportAddTemplateMenuAction extends AbstractMenuAction {
 
 	private MenuManager menuManager;
 
-	private DataflowSelectionManager dataflowSelectionManager;
+	private SelectionManager selectionManager;
 
 	private ActivityIconManager activityIconManager;
 
@@ -94,7 +94,7 @@ public class SpreadsheetImportAddTemplateMenuAction extends AbstractMenuAction {
 
 			WorkflowView.importServiceDescription(
 					SpreadsheetImportTemplateService.getServiceDescription(), false, editManager,
-					menuManager, dataflowSelectionManager);
+					menuManager, selectionManager);
 
 		}
 	}
@@ -107,8 +107,8 @@ public class SpreadsheetImportAddTemplateMenuAction extends AbstractMenuAction {
 		this.menuManager = menuManager;
 	}
 
-	public void setDataflowSelectionManager(DataflowSelectionManager dataflowSelectionManager) {
-		this.dataflowSelectionManager = dataflowSelectionManager;
+	public void setSelectionManager(SelectionManager selectionManager) {
+		this.selectionManager = selectionManager;
 	}
 
 	public void setActivityIconManager(ActivityIconManager activityIconManager) {
