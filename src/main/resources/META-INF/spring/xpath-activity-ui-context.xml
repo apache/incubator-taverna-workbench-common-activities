@@ -17,13 +17,13 @@
 	<bean id="AddXPathTemplateAction" class="net.sf.taverna.t2.activities.xpath.ui.menu.AddXPathTemplateAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
-			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+			<property name="selectionManager" ref="selectionManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 	<bean id="AddXPathTemplateMenuAction" class="net.sf.taverna.t2.activities.xpath.ui.menu.AddXPathTemplateMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
-			<property name="dataflowSelectionManager" ref="dataflowSelectionManager" />
+			<property name="selectionManager" ref="selectionManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 
