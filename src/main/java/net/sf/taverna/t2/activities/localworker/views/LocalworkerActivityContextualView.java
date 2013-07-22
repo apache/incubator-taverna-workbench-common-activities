@@ -24,73 +24,75 @@ import java.awt.Frame;
 
 import javax.swing.Action;
 
-import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
-import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
 import net.sf.taverna.t2.activities.localworker.actions.LocalworkerActivityConfigurationAction;
 import net.sf.taverna.t2.activities.localworker.servicedescriptions.LocalworkerServiceProvider;
-import net.sf.taverna.t2.annotation.AnnotationAssertion;
-import net.sf.taverna.t2.annotation.AnnotationChain;
-import net.sf.taverna.t2.annotation.annotationbeans.HostInstitution;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
-import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
-import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
+import uk.org.taverna.configuration.app.ApplicationConfiguration;
+import uk.org.taverna.scufl2.api.activity.Activity;
+import uk.org.taverna.scufl2.api.configurations.Configuration;
+import uk.org.taverna.scufl2.api.port.InputActivityPort;
+import uk.org.taverna.scufl2.api.port.OutputActivityPort;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 @SuppressWarnings("serial")
-public class LocalworkerActivityContextualView extends
-		HTMLBasedActivityContextualView<LocalworkerActivityConfigurationBean> {
+public class LocalworkerActivityContextualView extends HTMLBasedActivityContextualView {
 
 	private final EditManager editManager;
 	private final FileManager fileManager;
 	private final ActivityIconManager activityIconManager;
+	private final ServiceDescriptionRegistry serviceDescriptionRegistry;
 
-	public LocalworkerActivityContextualView(Activity<?> activity, EditManager editManager,
-			FileManager fileManager, ColourManager colourManager, ActivityIconManager activityIconManager) {
+	private final ApplicationConfiguration applicationConfiguration;
+
+	public LocalworkerActivityContextualView(Activity activity, EditManager editManager,
+			FileManager fileManager, ColourManager colourManager,
+			ActivityIconManager activityIconManager,
+			ServiceDescriptionRegistry serviceDescriptionRegistry,
+			ApplicationConfiguration applicationConfiguration) {
 		super(activity, colourManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
 		this.activityIconManager = activityIconManager;
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
+		this.applicationConfiguration = applicationConfiguration;
 	}
 
 	@Override
 	protected String getRawTableRowsHtml() {
-		String html = "<tr><th>Input Port Name</th><th>Depth</th></tr>";
-		for (ActivityInputPortDefinitionBean bean : getConfigBean().getInputPortDefinitions()) {
-			html = html + "<tr><td>" + bean.getName() + "</td><td>" + bean.getDepth()
-					+ "</td></tr>";
+		StringBuilder html = new StringBuilder();
+		html.append("<tr><th>Input Port Name</th><th>Depth</th></tr>");
+		for (InputActivityPort inputActivityPort : getActivity().getInputPorts()) {
+			html.append("<tr><td>" + inputActivityPort.getName() + "</td><td>");
+			html.append(inputActivityPort.getDepth() + "</td></tr>");
 		}
-		html = html + "<tr><th>Output Port Name</th><th>Depth</th></tr>";
-		for (ActivityOutputPortDefinitionBean bean : getConfigBean().getOutputPortDefinitions()) {
-			html = html + "<tr></td>" + bean.getName() + "</td><td>" + bean.getDepth() + "</td>" // <td>"
-																									// +
-																									// bean.getGranularDepth()
-					// + "</td>"
-					+ "</tr>";
+		html.append("<tr><th>Output Port Name</th><th>Depth</th></tr>");
+		for (OutputActivityPort outputActivityPort : getActivity().getOutputPorts()) {
+			html.append("<tr><td>" + outputActivityPort.getName() + "</td><td>");
+			html.append(outputActivityPort.getDepth() + "</td></tr>");
 		}
-		return html;
+		return html.toString();
 	}
 
 	@Override
 	public String getViewTitle() {
 		String result = "";
-		LocalworkerActivity localActivity = (LocalworkerActivity) getActivity();
-		if (localActivity.isAltered()) {
+		Configuration configuration = getConfigBean();
+		JsonNode json = configuration.getJson();
+		String workerName = LocalworkerServiceProvider.getServiceNameFromClassname(json.get(
+				"localworkerName").textValue());
+		if (json.get("isAltered").booleanValue()) {
 			result = "Altered local worker service";
-			String workerName = LocalworkerServiceProvider
-					.getServiceNameFromClassname(localActivity.getConfiguration()
-							.getLocalworkerName());
 			if ((workerName != null) && !workerName.equals("")) {
 				result += " - originally " + workerName;
 			}
 		} else {
 			result = "Local worker service";
-			String workerName = LocalworkerServiceProvider
-					.getServiceNameFromClassname(localActivity.getConfiguration()
-							.getLocalworkerName());
 			if ((workerName != null) && !workerName.equals("")) {
 				result += " - " + workerName;
 			}
@@ -98,22 +100,11 @@ public class LocalworkerActivityContextualView extends
 		return result;
 	}
 
-	private boolean checkAnnotations() {
-		for (AnnotationChain chain : getActivity().getAnnotations()) {
-			for (AnnotationAssertion<?> assertion : chain.getAssertions()) {
-				Object detail = assertion.getDetail();
-				if (detail instanceof HostInstitution) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
 	@Override
 	public Action getConfigureAction(Frame owner) {
-		return new LocalworkerActivityConfigurationAction((LocalworkerActivity) getActivity(),
-				owner, editManager, fileManager, activityIconManager);
+		return new LocalworkerActivityConfigurationAction(getActivity(), owner, editManager,
+				fileManager, activityIconManager, serviceDescriptionRegistry,
+				applicationConfiguration);
 	}
 
 	@Override

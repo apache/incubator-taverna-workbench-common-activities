@@ -23,28 +23,36 @@ package net.sf.taverna.t2.activities.localworker.views;
 import java.util.Arrays;
 import java.util.List;
 
-import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
+import net.sf.taverna.t2.activities.localworker.servicedescriptions.LocalworkerServiceDescription;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
+import uk.org.taverna.configuration.app.ApplicationConfiguration;
+import uk.org.taverna.scufl2.api.activity.Activity;
 
-public class LocalworkerActivityViewFactory implements
-		ContextualViewFactory<LocalworkerActivity> {
+public class LocalworkerActivityViewFactory implements ContextualViewFactory<Activity> {
 
 	private EditManager editManager;
 	private FileManager fileManager;
 	private ActivityIconManager activityIconManager;
 	private ColourManager colourManager;
+	private ServiceDescriptionRegistry serviceDescriptionRegistry;
+	private ApplicationConfiguration applicationConfiguration;
 
 	public boolean canHandle(Object object) {
-		return object instanceof LocalworkerActivity;
+		return object instanceof Activity
+				&& ((Activity) object).getType()
+						.equals(LocalworkerServiceDescription.ACTIVITY_TYPE);
 	}
 
-	public List<ContextualView> getViews(LocalworkerActivity activity) {
-		return Arrays.asList(new ContextualView[] {new LocalworkerActivityContextualView(activity, editManager, fileManager, colourManager, activityIconManager)});
+	public List<ContextualView> getViews(Activity activity) {
+		return Arrays.asList(new ContextualView[] { new LocalworkerActivityContextualView(activity,
+				editManager, fileManager, colourManager, activityIconManager,
+				serviceDescriptionRegistry, applicationConfiguration) });
 	}
 
 	public void setEditManager(EditManager editManager) {
@@ -61,6 +69,14 @@ public class LocalworkerActivityViewFactory implements
 
 	public void setColourManager(ColourManager colourManager) {
 		this.colourManager = colourManager;
+	}
+
+	public void setServiceDescriptionRegistry(ServiceDescriptionRegistry serviceDescriptionRegistry) {
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
+	}
+
+	public void setApplicationConfiguration(ApplicationConfiguration applicationConfiguration) {
+		this.applicationConfiguration = applicationConfiguration;
 	}
 
 }

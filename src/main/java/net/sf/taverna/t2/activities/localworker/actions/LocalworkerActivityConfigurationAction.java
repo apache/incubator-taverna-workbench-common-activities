@@ -26,50 +26,49 @@ import java.awt.event.ActionEvent;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 
-import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
-import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
-import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
 import net.sf.taverna.t2.activities.localworker.views.LocalworkerActivityConfigView;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
+import uk.org.taverna.configuration.app.ApplicationConfiguration;
+import uk.org.taverna.scufl2.api.activity.Activity;
+import uk.org.taverna.scufl2.api.common.Scufl2Tools;
+import uk.org.taverna.scufl2.api.configurations.Configuration;
 
-import org.apache.log4j.Logger;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * The {@link LocalworkerActivity}s have pre-defined scripts, ports etc in a serialised form on
  * disk. So if the user wants to change them they have to do so at own risk.
  *
  * @author Ian Dunlop
- *
  */
 @SuppressWarnings("serial")
-public class LocalworkerActivityConfigurationAction extends
-		ActivityConfigurationAction<LocalworkerActivity, BeanshellActivityConfigurationBean> {
-
-	private static Logger logger = Logger.getLogger(LocalworkerActivityConfigurationAction.class);
+public class LocalworkerActivityConfigurationAction extends ActivityConfigurationAction {
 
 	public static final String EDIT_LOCALWORKER_SCRIPT = "Edit beanshell script";
-
-	private final Frame owner;
 
 	private final EditManager editManager;
 
 	private final FileManager fileManager;
 
-	private final ActivityIconManager activityIconManager;
+	private final ApplicationConfiguration applicationConfiguration;
 
-	public LocalworkerActivityConfigurationAction(LocalworkerActivity activity, Frame owner,
+	private Scufl2Tools scufl2Tools = new Scufl2Tools();
+
+	public LocalworkerActivityConfigurationAction(Activity activity, Frame owner,
 			EditManager editManager, FileManager fileManager,
-			ActivityIconManager activityIconManager) {
-		super(activity, activityIconManager);
+			ActivityIconManager activityIconManager,
+			ServiceDescriptionRegistry serviceDescriptionRegistry,
+			ApplicationConfiguration applicationConfiguration) {
+		super(activity, activityIconManager, serviceDescriptionRegistry);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
-		this.activityIconManager = activityIconManager;
+		this.applicationConfiguration = applicationConfiguration;
 		putValue(Action.NAME, EDIT_LOCALWORKER_SCRIPT);
-		this.owner = owner;
 	}
 
 	/**
@@ -78,7 +77,9 @@ public class LocalworkerActivityConfigurationAction extends
 	 */
 	public void actionPerformed(ActionEvent e) {
 		Object[] options = { "Continue", "Cancel" };
-		if (!activity.isAltered()) {
+		Configuration configuration = scufl2Tools.configurationFor(activity, activity.getParent());
+		JsonNode json = configuration.getJson();
+		if (!json.get("isAltered").booleanValue()) {
 			int n = JOptionPane
 					.showOptionDialog(
 							null,
@@ -100,17 +101,16 @@ public class LocalworkerActivityConfigurationAction extends
 	}
 
 	private void openDialog() {
-		ActivityConfigurationDialog<LocalworkerActivity, LocalworkerActivityConfigurationBean> currentDialog = ActivityConfigurationAction
+		ActivityConfigurationDialog currentDialog = ActivityConfigurationAction
 				.getDialog(getActivity());
 		if (currentDialog != null) {
 			currentDialog.toFront();
 			return;
 		}
-		final LocalworkerActivity activity = (LocalworkerActivity) getActivity();
 		final LocalworkerActivityConfigView localworkerConfigView = new LocalworkerActivityConfigView(
-				activity, editManager, activityIconManager);
+				getActivity(), applicationConfiguration);
 		final ActivityConfigurationDialog dialog = new ActivityConfigurationDialog(getActivity(),
-				localworkerConfigView, editManager, fileManager);
+				localworkerConfigView, editManager);
 		ActivityConfigurationAction.setDialog(getActivity(), dialog, fileManager);
 
 	}

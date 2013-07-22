@@ -11,6 +11,8 @@
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+			<property name="applicationConfiguration" ref="applicationConfiguration" />
 	</bean>
 
 	<bean id="LocalworkerActivityViewFactory" class="net.sf.taverna.t2.activities.localworker.views.LocalworkerActivityViewFactory">
@@ -18,6 +20,8 @@
 			<property name="fileManager" ref="fileManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
 			<property name="colourManager" ref="colourManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+			<property name="applicationConfiguration" ref="applicationConfiguration" />
 	</bean>
 
 </beans>

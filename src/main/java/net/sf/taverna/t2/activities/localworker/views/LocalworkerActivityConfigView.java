@@ -20,65 +20,21 @@
  ******************************************************************************/
 package net.sf.taverna.t2.activities.localworker.views;
 
-import net.sf.taverna.t2.activities.beanshell.views.BeanshellConfigView;
-import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
-import net.sf.taverna.t2.annotation.annotationbeans.HostInstitution;
-import net.sf.taverna.t2.lang.ui.ModelMap;
-import net.sf.taverna.t2.workbench.ModelMapConstants;
-import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
-import net.sf.taverna.t2.workbench.edits.EditManager;
-import net.sf.taverna.t2.workflowmodel.Dataflow;
-import net.sf.taverna.t2.workflowmodel.EditException;
-
-import org.apache.log4j.Logger;
+import net.sf.taverna.t2.activities.beanshell.views.BeanshellConfigurationPanel;
+import uk.org.taverna.configuration.app.ApplicationConfiguration;
+import uk.org.taverna.scufl2.api.activity.Activity;
 
 @SuppressWarnings("serial")
-public class LocalworkerActivityConfigView extends BeanshellConfigView {
+public class LocalworkerActivityConfigView extends BeanshellConfigurationPanel {
 
-	private static Logger logger = Logger.getLogger(LocalworkerActivityConfigView.class);
-	private final EditManager editManager;
-	private final ActivityIconManager activityIconManager;
-
-	public LocalworkerActivityConfigView(LocalworkerActivity activity, EditManager editManager,
-			ActivityIconManager activityIconManager) {
-		super(activity);
-		this.editManager = editManager;
-		this.activityIconManager = activityIconManager;
-		initLocalworker();
-	}
-
-	private void initLocalworker() {
+	public LocalworkerActivityConfigView(Activity activity, ApplicationConfiguration applicationConfiguration) {
+		super(activity, applicationConfiguration);
 	}
 
 	public void noteConfiguration() {
 		if (isConfigurationChanged()) {
 			super.noteConfiguration();
-			addAnnotation();
-		}
-	}
-
-	/**
-	 * Annotate the Activity with the name of the Institution or person who created the activity.
-	 * Useful for Localworkers that have been altered by a user
-	 */
-	private void addAnnotation() {
-		// FIXME use a more useful name or a different type of annotation, this
-		// is just here as a marker so that
-		// the colour manager works
-		HostInstitution hostInstitutionAnnotation = new HostInstitution();
-		hostInstitutionAnnotation.setText("UserNameHere");
-
-		try {
-			// force the dataflow view to update with the annotation added,
-			// therefore triggering the localworker to be coloured as a
-			// beanshell
-			editManager.doDataflowEdit(
-					(Dataflow) ModelMap.getInstance().getModel(ModelMapConstants.CURRENT_DATAFLOW),
-					editManager.getEdits().getAddAnnotationChainEdit(activity,
-							hostInstitutionAnnotation));
-			activityIconManager.resetIcon(activity);
-		} catch (EditException e) {
-			logger.error(e);
+			getJson().put("isAltered", true);
 		}
 	}
 
