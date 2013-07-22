@@ -25,12 +25,13 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.net.URI;
 
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportActivity;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
 import net.sf.taverna.t2.activities.spreadsheet.servicedescriptions.SpreadsheetImportTemplateService;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.ui.menu.AbstractMenuAction;
 import net.sf.taverna.t2.ui.menu.DesignOnlyAction;
 import net.sf.taverna.t2.ui.menu.MenuManager;
@@ -38,15 +39,12 @@ import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.selection.SelectionManager;
 import net.sf.taverna.t2.workbench.ui.workflowview.WorkflowView;
-import net.sf.taverna.t2.workbench.views.graph.menu.InsertMenu;
-
-import org.apache.log4j.Logger;
+import uk.org.taverna.commons.services.ServiceRegistry;
 
 /**
  * An action to add a spreadsheet import activity + a wrapping processor to the workflow.
  *
  * @author Alan R Williams
- *
  */
 @SuppressWarnings("serial")
 public class SpreadsheetImportAddTemplateMenuAction extends AbstractMenuAction {
@@ -54,21 +52,21 @@ public class SpreadsheetImportAddTemplateMenuAction extends AbstractMenuAction {
 	private static final URI ADD_SPREADSHEET_IMPORT_URI = URI
 			.create("http://taverna.sf.net/2008/t2workbench/menu#graphMenuAddSpreadsheetImport");
 
-	private static Logger logger = Logger.getLogger(SpreadsheetImportAddTemplateMenuAction.class);
+	private static final URI INSERT = URI
+			.create("http://taverna.sf.net/2008/t2workbench/menu#insert");
 
 	private static String ADD_SPREADSHEET_IMPORT = SpreadsheetImportUIText
 			.getString("SpreadsheetImportAddTemplateAction.addMenu");
 
 	private EditManager editManager;
-
 	private MenuManager menuManager;
-
 	private SelectionManager selectionManager;
-
 	private ActivityIconManager activityIconManager;
+	private ServiceDescriptionRegistry serviceDescriptionRegistry;
+	private ServiceRegistry serviceRegistry;
 
 	public SpreadsheetImportAddTemplateMenuAction() {
-		super(InsertMenu.INSERT, 700, ADD_SPREADSHEET_IMPORT_URI);
+		super(INSERT, 700, ADD_SPREADSHEET_IMPORT_URI);
 	}
 
 	@Override
@@ -76,11 +74,13 @@ public class SpreadsheetImportAddTemplateMenuAction extends AbstractMenuAction {
 		return new AddSpreadsheetImportMenuAction();
 	}
 
-	protected class AddSpreadsheetImportMenuAction extends DesignOnlyAction {
+	protected class AddSpreadsheetImportMenuAction extends AbstractAction implements
+			DesignOnlyAction {
 		AddSpreadsheetImportMenuAction() {
 			super();
 			putValue(SMALL_ICON,
-					activityIconManager.iconForActivity(new SpreadsheetImportActivity()));
+					activityIconManager
+							.iconForActivity(SpreadsheetImportTemplateService.ACTIVITY_TYPE));
 			putValue(NAME, ADD_SPREADSHEET_IMPORT);
 			putValue(SHORT_DESCRIPTION, ADD_SPREADSHEET_IMPORT);
 			putValue(
@@ -91,11 +91,9 @@ public class SpreadsheetImportAddTemplateMenuAction extends AbstractMenuAction {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-
-			WorkflowView.importServiceDescription(
-					SpreadsheetImportTemplateService.getServiceDescription(), false, editManager,
-					menuManager, selectionManager);
-
+			WorkflowView.importServiceDescription(serviceDescriptionRegistry
+					.getServiceDescription(SpreadsheetImportTemplateService.ACTIVITY_TYPE), false,
+					editManager, menuManager, selectionManager, serviceRegistry);
 		}
 	}
 
@@ -113,6 +111,14 @@ public class SpreadsheetImportAddTemplateMenuAction extends AbstractMenuAction {
 
 	public void setActivityIconManager(ActivityIconManager activityIconManager) {
 		this.activityIconManager = activityIconManager;
+	}
+
+	public void setServiceDescriptionRegistry(ServiceDescriptionRegistry serviceDescriptionRegistry) {
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
+	}
+
+	public void setServiceRegistry(ServiceRegistry serviceRegistry) {
+		this.serviceRegistry = serviceRegistry;
 	}
 
 }

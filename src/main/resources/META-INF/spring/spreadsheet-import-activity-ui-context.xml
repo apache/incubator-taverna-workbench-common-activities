@@ -14,17 +14,22 @@
 			<property name="menuManager" ref="menuManager" />
 			<property name="selectionManager" ref="selectionManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
-	</bean>
-	<bean id="SpreadsheetImportConfigureMenuAction" class="net.sf.taverna.t2.activities.spreadsheet.menu.SpreadsheetImportConfigureMenuAction">
-			<property name="editManager" ref="editManager" />
-			<property name="fileManager" ref="fileManager" />
-			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+			<property name="serviceRegistry" ref="serviceRegistry" />
 	</bean>
 	<bean id="SpreadsheetImportAddTemplateMenuAction" class="net.sf.taverna.t2.activities.spreadsheet.menu.SpreadsheetImportAddTemplateMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
 			<property name="selectionManager" ref="selectionManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+			<property name="serviceRegistry" ref="serviceRegistry" />
+	</bean>
+	<bean id="SpreadsheetImportConfigureMenuAction" class="net.sf.taverna.t2.activities.spreadsheet.menu.SpreadsheetImportConfigureMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
 	</bean>
 
 	<bean id="SpreadsheetImportContextualViewFactory" class="net.sf.taverna.t2.activities.spreadsheet.views.SpreadsheetImportContextualViewFactory">
@@ -32,6 +37,7 @@
 			<property name="fileManager" ref="fileManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
 			<property name="colourManager" ref="colourManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
 	</bean>
 
 </beans>

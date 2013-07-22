@@ -24,18 +24,18 @@ import java.awt.Frame;
 
 import javax.swing.Action;
 
-import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportActivity;
-import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportConfiguration;
 import net.sf.taverna.t2.activities.spreadsheet.actions.SpreadsheetImportActivityConfigurationAction;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
 import net.sf.taverna.t2.activities.spreadsheet.servicedescriptions.SpreadsheetImportActivityIcon;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
-import net.sf.taverna.t2.workflowmodel.Port;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
+import uk.org.taverna.scufl2.api.activity.Activity;
+import uk.org.taverna.scufl2.api.port.InputActivityPort;
+import uk.org.taverna.scufl2.api.port.OutputActivityPort;
 
 /**
  * A simple non editable HTML table view over a {@link SpreadsheetImportActivity}. Clicking on the
@@ -43,21 +43,22 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
  *
  * @author David Withers
  */
-public class SpreadsheetImportContextualView extends
-		HTMLBasedActivityContextualView<SpreadsheetImportConfiguration> {
+public class SpreadsheetImportContextualView extends HTMLBasedActivityContextualView {
 
 	private static final long serialVersionUID = 1L;
 	private final EditManager editManager;
 	private final FileManager fileManager;
 	private final ActivityIconManager activityIconManager;
+	private final ServiceDescriptionRegistry serviceDescriptionRegistry;
 
-	public SpreadsheetImportContextualView(Activity<?> activity, EditManager editManager,
+	public SpreadsheetImportContextualView(Activity activity, EditManager editManager,
 			FileManager fileManager, ActivityIconManager activityIconManager,
-			ColourManager colourManager) {
+			ColourManager colourManager, ServiceDescriptionRegistry serviceDescriptionRegistry) {
 		super(activity, colourManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
 		this.activityIconManager = activityIconManager;
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class SpreadsheetImportContextualView extends
 		html.append("</th><th>");
 		html.append(SpreadsheetImportUIText.getString("SpreadsheetImportContextualView.depth"));
 		html.append("</th></tr>");
-		for (Port port : getActivity().getInputPorts()) {
+		for (InputActivityPort port : getActivity().getInputPorts()) {
 			html.append("<tr><td>");
 			html.append(port.getName());
 			html.append("</td><td>");
@@ -82,7 +83,7 @@ public class SpreadsheetImportContextualView extends
 		html.append("</th><th>");
 		html.append(SpreadsheetImportUIText.getString("SpreadsheetImportContextualView.depth"));
 		html.append("</th></tr>");
-		for (Port port : getActivity().getOutputPorts()) {
+		for (OutputActivityPort port : getActivity().getOutputPorts()) {
 			html.append("<tr><td>");
 			html.append(port.getName());
 			html.append("</td><td>");
@@ -100,8 +101,8 @@ public class SpreadsheetImportContextualView extends
 	@Override
 	public Action getConfigureAction(Frame owner) {
 		return new SpreadsheetImportActivityConfigurationAction(
-				(SpreadsheetImportActivity) getActivity(), owner, editManager, fileManager,
-				activityIconManager);
+				getActivity(), owner, editManager, fileManager,
+				activityIconManager, serviceDescriptionRegistry);
 	}
 
 	@Override

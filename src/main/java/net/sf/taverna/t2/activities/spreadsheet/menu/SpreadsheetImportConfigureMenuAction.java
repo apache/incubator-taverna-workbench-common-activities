@@ -22,9 +22,10 @@ package net.sf.taverna.t2.activities.spreadsheet.menu;
 
 import javax.swing.Action;
 
-import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportActivity;
 import net.sf.taverna.t2.activities.spreadsheet.actions.SpreadsheetImportActivityConfigurationAction;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
+import net.sf.taverna.t2.activities.spreadsheet.servicedescriptions.SpreadsheetImportTemplateService;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.activitytools.AbstractConfigureActivityMenuAction;
 import net.sf.taverna.t2.workbench.edits.EditManager;
@@ -35,21 +36,22 @@ import net.sf.taverna.t2.workbench.file.FileManager;
  *
  * @author David Withers
  */
-public class SpreadsheetImportConfigureMenuAction extends
-		AbstractConfigureActivityMenuAction<SpreadsheetImportActivity> {
+public class SpreadsheetImportConfigureMenuAction extends AbstractConfigureActivityMenuAction {
 
 	private EditManager editManager;
 	private FileManager fileManager;
 	private ActivityIconManager activityIconManager;
+	private ServiceDescriptionRegistry serviceDescriptionRegistry;
 
 	public SpreadsheetImportConfigureMenuAction() {
-		super(SpreadsheetImportActivity.class);
+		super(SpreadsheetImportTemplateService.ACTIVITY_TYPE);
 	}
 
 	@Override
 	protected Action createAction() {
 		Action result = new SpreadsheetImportActivityConfigurationAction(findActivity(),
-				getParentFrame(), editManager, fileManager, activityIconManager);
+				getParentFrame(), editManager, fileManager, activityIconManager,
+				serviceDescriptionRegistry);
 		result.putValue(Action.NAME, SpreadsheetImportUIText
 				.getString("SpreadsheetImportConfigureMenuAction.configureMenu"));
 		addMenuDots(result);
@@ -66,6 +68,10 @@ public class SpreadsheetImportConfigureMenuAction extends
 
 	public void setActivityIconManager(ActivityIconManager activityIconManager) {
 		this.activityIconManager = activityIconManager;
+	}
+
+	public void setServiceDescriptionRegistry(ServiceDescriptionRegistry serviceDescriptionRegistry) {
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
 	}
 
 }

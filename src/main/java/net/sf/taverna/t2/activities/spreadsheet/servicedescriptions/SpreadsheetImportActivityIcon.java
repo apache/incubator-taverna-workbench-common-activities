@@ -21,14 +21,13 @@
 package net.sf.taverna.t2.activities.spreadsheet.servicedescriptions;
 
 import java.awt.Color;
+import java.net.URI;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportActivity;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI;
 import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 /**
  * UI icon for the SpreadsheetImport Activity.
@@ -40,17 +39,18 @@ public class SpreadsheetImportActivityIcon implements ActivityIconSPI {
 	public static final String SPREADSHEET_COLOUR_HTML = "#40e0d0";
 	public static final Color SPREADSHEET_COLOUR = Color.decode(SPREADSHEET_COLOUR_HTML);
 
-	static Icon icon = null;
+	private static Icon icon = null;
 
-	public int canProvideIconScore(Activity<?> activity) {
-		if (activity.getClass().getName().equals(SpreadsheetImportActivity.class.getName())) {
+	@Override
+	public int canProvideIconScore(URI activityType) {
+		if (SpreadsheetImportTemplateService.ACTIVITY_TYPE.equals(activityType))
 			return DEFAULT_ICON + 1;
-		} else {
+		else
 			return NO_ICON;
-		}
 	}
 
-	public Icon getIcon(Activity<?> activity) {
+	@Override
+	public Icon getIcon(URI activityType) {
 		return getSpreadsheetImportIcon();
 	}
 
@@ -64,7 +64,7 @@ public class SpreadsheetImportActivityIcon implements ActivityIconSPI {
 
 	public void setColourManager(ColourManager colourManager) {
 		colourManager.setPreferredColour(
-				"net.sf.taverna.t2.activities.spreadsheet.SpreadsheetImportActivity",
+				"http://ns.taverna.org.uk/2010/activity/spreadsheet-import",
 				SPREADSHEET_COLOUR);
 	}
 
