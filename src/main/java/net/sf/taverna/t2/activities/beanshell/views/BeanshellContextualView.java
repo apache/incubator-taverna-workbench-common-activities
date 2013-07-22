@@ -31,18 +31,18 @@ import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
+import uk.org.taverna.configuration.app.ApplicationConfiguration;
 import uk.org.taverna.scufl2.api.activity.Activity;
 import uk.org.taverna.scufl2.api.port.InputActivityPort;
 import uk.org.taverna.scufl2.api.port.OutputActivityPort;
 
 /**
  * A simple non editable HTML table view over a {@link BeanshellActivity}.
- * Clicking on the configure button shows the editable
- * {@link BeanshellConfigView}
+ * Clicking on the configure button shows the editable {@link BeanshellConfigView}
  *
  * @author Ian Dunlop
  * @author Stuart Owen
- *
+ * @author David Withers
  */
 @SuppressWarnings("serial")
 public class BeanshellContextualView extends HTMLBasedActivityContextualView {
@@ -51,14 +51,18 @@ public class BeanshellContextualView extends HTMLBasedActivityContextualView {
 	private FileManager fileManager;
 	private final ActivityIconManager activityIconManager;
 	private final ServiceDescriptionRegistry serviceDescriptionRegistry;
+	private final ApplicationConfiguration applicationConfiguration;
 
-	public BeanshellContextualView(Activity activity, EditManager editManager, FileManager fileManager,
-			ActivityIconManager activityIconManager, ColourManager colourManager, ServiceDescriptionRegistry serviceDescriptionRegistry) {
+	public BeanshellContextualView(Activity activity, EditManager editManager,
+			FileManager fileManager, ActivityIconManager activityIconManager,
+			ColourManager colourManager, ServiceDescriptionRegistry serviceDescriptionRegistry,
+			ApplicationConfiguration applicationConfiguration) {
 		super(activity, colourManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
 		this.activityIconManager = activityIconManager;
 		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
+		this.applicationConfiguration = applicationConfiguration;
 		init();
 	}
 
@@ -88,8 +92,8 @@ public class BeanshellContextualView extends HTMLBasedActivityContextualView {
 
 	@Override
 	public Action getConfigureAction(Frame owner) {
-		return new BeanshellActivityConfigurationAction(
-				getActivity(), owner, editManager, fileManager, activityIconManager, serviceDescriptionRegistry);
+		return new BeanshellActivityConfigurationAction(getActivity(), owner, editManager,
+				fileManager, activityIconManager, serviceDescriptionRegistry, applicationConfiguration);
 	}
 
 	@Override

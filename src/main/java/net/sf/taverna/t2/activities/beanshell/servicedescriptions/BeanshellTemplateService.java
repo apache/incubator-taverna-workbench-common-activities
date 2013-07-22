@@ -4,12 +4,11 @@ import java.net.URI;
 
 import javax.swing.Icon;
 
-import uk.org.taverna.scufl2.api.configurations.Configuration;
-
-import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
-import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.servicedescriptions.AbstractTemplateService;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
+import uk.org.taverna.scufl2.api.configurations.Configuration;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class BeanshellTemplateService extends AbstractTemplateService {
 
@@ -33,7 +32,8 @@ public class BeanshellTemplateService extends AbstractTemplateService {
 	public Configuration getActivityConfiguration() {
 		Configuration configuration = new Configuration();
 		configuration.setType(ACTIVITY_TYPE.resolve("#Config"));
-		configuration.getPropertyResource().addPropertyAsString(ACTIVITY_TYPE.resolve("#script"), "");
+		((ObjectNode) configuration.getJson()).put("script", "");
+		((ObjectNode) configuration.getJson()).put("classLoaderSharing", "workflow");
 		return configuration;
 	}
 
@@ -47,7 +47,6 @@ public class BeanshellTemplateService extends AbstractTemplateService {
 		return "A service that allows Beanshell scripts, with dependencies on libraries";
 	}
 
-	@SuppressWarnings("unchecked")
 	public static ServiceDescription getServiceDescription() {
 		BeanshellTemplateService bts = new BeanshellTemplateService();
 		return bts.templateService;

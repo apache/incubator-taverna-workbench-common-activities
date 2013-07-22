@@ -30,21 +30,21 @@ import net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI;
 /**
  *
  * @author Alex Nenadic
- *
+ * @author David Withers
  */
 public class BeanshellActivityIcon implements ActivityIconSPI {
 
-	private static final URI ACTIVITY_TYPE = URI.create("http://ns.taverna.org.uk/2010/activity/beanshell");
+	private static Icon icon = null;
 
-	static Icon icon = null;
-
+	@Override
 	public int canProvideIconScore(URI activityType) {
-		if (ACTIVITY_TYPE.equals(activityType))
+		if (BeanshellTemplateService.ACTIVITY_TYPE.equals(activityType))
 			return DEFAULT_ICON + 1;
 		else
 			return NO_ICON;
 	}
 
+	@Override
 	public Icon getIcon(URI activityType) {
 		return getBeanshellIcon();
 	}

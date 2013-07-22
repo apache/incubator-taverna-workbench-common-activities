@@ -31,11 +31,13 @@ import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
+import uk.org.taverna.configuration.app.ApplicationConfiguration;
 import uk.org.taverna.scufl2.api.activity.Activity;
 
 public class BeanshellActivityViewFactory implements ContextualViewFactory<Activity> {
 
-	private static final URI ACTIVITY_TYPE = URI.create("http://ns.taverna.org.uk/2010/activity/beanshell");
+	private static final URI ACTIVITY_TYPE = URI
+			.create("http://ns.taverna.org.uk/2010/activity/beanshell");
 
 	private EditManager editManager;
 	private FileManager fileManager;
@@ -43,12 +45,16 @@ public class BeanshellActivityViewFactory implements ContextualViewFactory<Activ
 	private ColourManager colourManager;
 	private ServiceDescriptionRegistry serviceDescriptionRegistry;
 
+	private ApplicationConfiguration applicationConfiguration;
+
 	public boolean canHandle(Object object) {
-		return object instanceof Activity && ((Activity) object).getConfigurableType().equals(ACTIVITY_TYPE);
+		return object instanceof Activity && ((Activity) object).getType().equals(ACTIVITY_TYPE);
 	}
 
 	public List<ContextualView> getViews(Activity activity) {
-		return Arrays.asList(new ContextualView[] {new BeanshellContextualView(activity, editManager, fileManager, activityIconManager, colourManager, serviceDescriptionRegistry)});
+		return Arrays.asList(new ContextualView[] { new BeanshellContextualView(activity,
+				editManager, fileManager, activityIconManager, colourManager,
+				serviceDescriptionRegistry, applicationConfiguration) });
 	}
 
 	public void setEditManager(EditManager editManager) {
@@ -69,6 +75,10 @@ public class BeanshellActivityViewFactory implements ContextualViewFactory<Activ
 
 	public void setServiceDescriptionRegistry(ServiceDescriptionRegistry serviceDescriptionRegistry) {
 		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
+	}
+
+	public void setApplicationConfiguration(ApplicationConfiguration applicationConfiguration) {
+		this.applicationConfiguration = applicationConfiguration;
 	}
 
 }
