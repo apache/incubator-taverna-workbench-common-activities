@@ -33,22 +33,24 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import net.sf.taverna.t2.activities.soaplab.SoaplabActivity;
-import net.sf.taverna.t2.activities.soaplab.SoaplabActivityConfigurationBean;
 import net.sf.taverna.t2.activities.soaplab.actions.SoaplabActivityConfigurationAction;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 import org.apache.axis.client.Call;
 import org.apache.axis.client.Service;
 import org.apache.log4j.Logger;
 
-public class SoaplabActivityContextualView extends
-		HTMLBasedActivityContextualView<SoaplabActivityConfigurationBean> {
+import uk.org.taverna.scufl2.api.activity.Activity;
+import uk.org.taverna.scufl2.api.configurations.Configuration;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
+public class SoaplabActivityContextualView extends HTMLBasedActivityContextualView {
 
 	private static Logger logger = Logger.getLogger(SoaplabActivityContextualView.class);
 
@@ -60,13 +62,16 @@ public class SoaplabActivityContextualView extends
 
 	private final ActivityIconManager activityIconManager;
 
-	public SoaplabActivityContextualView(Activity<?> activity, EditManager editManager,
+	private final ServiceDescriptionRegistry serviceDescriptionRegistry;
+
+	public SoaplabActivityContextualView(Activity activity, EditManager editManager,
 			FileManager fileManager, ActivityIconManager activityIconManager,
-			ColourManager colourManager) {
+			ColourManager colourManager, ServiceDescriptionRegistry serviceDescriptionRegistry) {
 		super(activity, colourManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
 		this.activityIconManager = activityIconManager;
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
 	}
 
 	@Override
@@ -76,28 +81,31 @@ public class SoaplabActivityContextualView extends
 
 	@Override
 	protected String getRawTableRowsHtml() {
-		SoaplabActivityConfigurationBean bean = getConfigBean();
-		String html = "<tr><td>Endpoint</td><td>" + bean.getEndpoint() + "</td></tr>";
-		html += "<tr><td>Polling interval</td><td>" + bean.getPollingInterval() + "</td></tr>";
-		html += "<tr><td>Polling backoff</td><td>" + bean.getPollingBackoff() + "</td></tr>";
-		html += "<tr><td>Polling interval max</td><td>" + bean.getPollingIntervalMax()
+		Configuration configuration = getConfigBean();
+		JsonNode json = configuration.getJson();
+		String html = "<tr><td>Endpoint</td><td>" + json.get("endpoint").textValue() + "</td></tr>";
+		html += "<tr><td>Polling interval</td><td>" + json.get("pollingInterval").asText()
+				+ "</td></tr>";
+		html += "<tr><td>Polling backoff</td><td>" + json.get("pollingBackoff").asText()
+				+ "</td></tr>";
+		html += "<tr><td>Polling interval max</td><td>" + json.get("pollingIntervalMax").asText()
 				+ "</td></tr>";
 		// html += "<tr><td>SOAPLAB Metadata</td><td>" + getMetadata()
 		// + "</td></tr>";
 		return html;
 	}
 
-	@SuppressWarnings("serial")
 	@Override
 	public Action getConfigureAction(Frame owner) {
-		return new SoaplabActivityConfigurationAction((SoaplabActivity) getActivity(), owner,
-				editManager, fileManager, activityIconManager);
+		return new SoaplabActivityConfigurationAction(getActivity(), owner, editManager,
+				fileManager, activityIconManager, serviceDescriptionRegistry);
 	}
 
 	private String getMetadata() {
 		try {
-			String endpoint = ((SoaplabActivityConfigurationBean) getActivity().getConfiguration())
-					.getEndpoint();
+			Configuration configuration = getConfigBean();
+			JsonNode json = configuration.getJson();
+			String endpoint = json.get("endpoint").textValue();
 			Call call = (Call) new Service().createCall();
 			call.setTimeout(new Integer(0));
 			call.setTargetEndpointAddress(endpoint);

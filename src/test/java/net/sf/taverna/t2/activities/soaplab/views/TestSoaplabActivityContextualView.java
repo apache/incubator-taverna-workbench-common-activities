@@ -22,37 +22,28 @@ package net.sf.taverna.t2.activities.soaplab.views;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
-import net.sf.taverna.t2.activities.soaplab.SoaplabActivity;
-import net.sf.taverna.t2.activities.soaplab.SoaplabActivityConfigurationBean;
 import net.sf.taverna.t2.activities.soaplab.actions.SoaplabActivityConfigurationAction;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
-import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
-import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactoryRegistry;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import uk.org.taverna.scufl2.api.activity.Activity;
+
 public class TestSoaplabActivityContextualView {
 
-	Activity<?> a;
+	Activity a;
 
 	@Before
 	public void setup() throws Exception {
-		a=new SoaplabActivity();
-		SoaplabActivityConfigurationBean sb = new SoaplabActivityConfigurationBean();
-		sb.setEndpoint("http://www.ebi.ac.uk/soaplab/services/edit.seqret");
-		((SoaplabActivity)a).configure(sb);
+		a=new Activity();
 	}
 
 	@Test
 	@Ignore("Integration test")
 	public void testConfigureAction() throws Exception {
-		ContextualView view = new SoaplabActivityContextualView(a, null, null, null, null);
+		ContextualView view = new SoaplabActivityContextualView(a, null, null, null, null, null);
 		assertNotNull("the action should not be null",view.getConfigureAction(null));
 		assertTrue("The action should be a SoaplabAcitivyConfigurationAction",view.getConfigureAction(null) instanceof SoaplabActivityConfigurationAction);
 	}
@@ -60,7 +51,7 @@ public class TestSoaplabActivityContextualView {
 	private void run() throws Exception
 	{
 		setup();
-		ContextualView view = new SoaplabActivityContextualView(a, null, null, null, null);
+		ContextualView view = new SoaplabActivityContextualView(a, null, null, null, null, null);
 		view.setVisible(true);
 	}
 

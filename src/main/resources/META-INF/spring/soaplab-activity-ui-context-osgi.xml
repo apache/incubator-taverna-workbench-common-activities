@@ -8,7 +8,12 @@
 
 	<service ref="SoaplabActivityIcon" interface="net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI" />
 
-	<service ref="SoaplabServiceProvider" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider" />
+	<service ref="SoaplabServiceProvider">
+		<interfaces>
+			<beans:value>net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider</beans:value>
+			<beans:value>net.sf.taverna.t2.servicedescriptions.ConfigurableServiceProvider</beans:value>
+		</interfaces>
+	</service>
 
 	<service ref="ConfigureSoaplabActivityMenuAction" auto-export="interfaces" />
 

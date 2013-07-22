@@ -7,13 +7,14 @@ import java.util.List;
 
 import javax.swing.Icon;
 
-import net.sf.taverna.t2.activities.soaplab.SoaplabActivity;
-import net.sf.taverna.t2.activities.soaplab.SoaplabActivityConfigurationBean;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
+import uk.org.taverna.scufl2.api.configurations.Configuration;
 
-public class SoaplabServiceDescription extends
-		ServiceDescription<SoaplabActivityConfigurationBean> {
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+public class SoaplabServiceDescription extends ServiceDescription {
+
+	public static final URI ACTIVITY_TYPE = URI.create("http://ns.taverna.org.uk/2010/activity/soaplab");
 
 	private final static String SOAPLAB = "Soaplab @ ";
 
@@ -27,7 +28,7 @@ public class SoaplabServiceDescription extends
 	public List<String> getTypes() {
 		return types;
 	}
-	
+
 	/**
 	 * @return the category
 	 */
@@ -56,7 +57,7 @@ public class SoaplabServiceDescription extends
 	 */
 	public void setOperation(final String operation) {
 		this.operation = operation;
-		
+
 		String name = operation;
 		int finalColon = operation.lastIndexOf(":");
 		if (finalColon != -1) {
@@ -75,15 +76,19 @@ public class SoaplabServiceDescription extends
 
 
 	@Override
-	public Class<? extends Activity<SoaplabActivityConfigurationBean>> getActivityClass() {
-		return SoaplabActivity.class;
+	public URI getActivityType() {
+		return ACTIVITY_TYPE;
 	}
 
 	@Override
-	public SoaplabActivityConfigurationBean getActivityConfiguration() {
-		SoaplabActivityConfigurationBean bean = new SoaplabActivityConfigurationBean();
-		bean.setEndpoint(getEndpoint().toASCIIString() + getOperation());
-		return bean;
+	public Configuration getActivityConfiguration() {
+		Configuration configuration = new Configuration();
+		configuration.setType(ACTIVITY_TYPE.resolve("#Config"));
+		((ObjectNode) configuration.getJson()).put("endpoint", getEndpoint().toASCIIString() + getOperation());
+		((ObjectNode) configuration.getJson()).put("pollingInterval", 0);
+		((ObjectNode) configuration.getJson()).put("pollingBackoff", 1.0);
+		((ObjectNode) configuration.getJson()).put("pollingIntervalMax", 0);
+		return configuration;
 	}
 
 	@Override
@@ -102,7 +107,7 @@ public class SoaplabServiceDescription extends
 		path.add(SOAPLAB + getEndpoint());
 		path.add(getCategory());
 		// Don't use getTypes() - as we end up
-		// with double entries.. 
+		// with double entries..
 		return path;
 	}
 
