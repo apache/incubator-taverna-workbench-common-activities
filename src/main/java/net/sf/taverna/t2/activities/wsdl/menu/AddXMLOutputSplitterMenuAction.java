@@ -4,50 +4,49 @@
 package net.sf.taverna.t2.activities.wsdl.menu;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Map;
 
 import javax.swing.Action;
+import javax.wsdl.WSDLException;
+import javax.xml.parsers.ParserConfigurationException;
 
-import net.sf.taverna.t2.activities.wsdl.OutputPortTypeDescriptorActivity;
 import net.sf.taverna.t2.activities.wsdl.actions.AbstractAddXMLSplitterAction;
 import net.sf.taverna.t2.activities.wsdl.actions.AddXMLOutputSplitterAction;
 import net.sf.taverna.t2.workbench.activitytools.AbstractConfigureActivityMenuAction;
 import net.sf.taverna.t2.workbench.edits.EditManager;
-import net.sf.taverna.t2.workbench.file.FileManager;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
+import net.sf.taverna.t2.workbench.selection.SelectionManager;
 import net.sf.taverna.wsdl.parser.TypeDescriptor;
 import net.sf.taverna.wsdl.parser.UnknownOperationException;
 
+import org.jdom.JDOMException;
+import org.xml.sax.SAXException;
+
 /**
  * @author alanrw
- *
  */
-public abstract class AddXMLOutputSplitterMenuAction<ActivityClass extends Activity<?>> extends
-		AbstractConfigureActivityMenuAction<ActivityClass> {
+public abstract class AddXMLOutputSplitterMenuAction extends AbstractConfigureActivityMenuAction {
 
 	private static final String ADD_XML_OUTPUT_SPLITTER = "Add XML Output Splitter";
 	private EditManager editManager;
-	private FileManager fileManager;
+	private SelectionManager selectionManager;
 
-	public AddXMLOutputSplitterMenuAction(Class<ActivityClass> activityClass) {
-		super(activityClass);
+	public AddXMLOutputSplitterMenuAction(URI activityType) {
+		super(activityType);
 	}
 
 	@Override
 	protected Action createAction() {
+		AddXMLOutputSplitterAction configAction = new AddXMLOutputSplitterAction(
+				findActivity(), null, editManager, selectionManager);
 		Map<String, TypeDescriptor> descriptors;
 		try {
-			descriptors = ((OutputPortTypeDescriptorActivity) findActivity())
-					.getTypeDescriptorsForOutputPorts();
-		} catch (UnknownOperationException e) {
-			return null;
-		} catch (IOException e) {
+			descriptors = configAction.getTypeDescriptors();
+		} catch (UnknownOperationException | IOException | ParserConfigurationException
+				| WSDLException | SAXException | JDOMException e) {
 			return null;
 		}
-		if (!AbstractAddXMLSplitterAction.filterDescriptors(descriptors)
-				.isEmpty()) {
-			AddXMLOutputSplitterAction configAction = new AddXMLOutputSplitterAction(
-					( OutputPortTypeDescriptorActivity) findActivity(), null, editManager, fileManager);
+		if (!AbstractAddXMLSplitterAction.filterDescriptors(descriptors).isEmpty()) {
 			configAction.putValue(Action.NAME, ADD_XML_OUTPUT_SPLITTER);
 			addMenuDots(configAction);
 			return configAction;
@@ -60,8 +59,8 @@ public abstract class AddXMLOutputSplitterMenuAction<ActivityClass extends Activ
 		this.editManager = editManager;
 	}
 
-	public void setFileManager(FileManager fileManager) {
-		this.fileManager = fileManager;
+	public void setSelectionManager(SelectionManager selectionManager) {
+		this.selectionManager = selectionManager;
 	}
 
 }

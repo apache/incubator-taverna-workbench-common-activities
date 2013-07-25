@@ -28,32 +28,36 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
-import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
 import net.sf.taverna.t2.activities.wsdl.actions.WSDLActivityConfigureAction;
+import net.sf.taverna.t2.security.credentialmanager.CredentialManager;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
+import net.sf.taverna.t2.workbench.selection.SelectionManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
+import uk.org.taverna.scufl2.api.activity.Activity;
 
-public class WSDLActivityContextualView extends
-		AbstractXMLSplitterActionView<WSDLActivityConfigurationBean> {
+import com.fasterxml.jackson.databind.JsonNode;
 
-	private static final long serialVersionUID = -4329643934083676113L;
+@SuppressWarnings("serial")
+public class WSDLActivityContextualView extends AbstractXMLSplitterActionView {
+
 	private final ActivityIconManager activityIconManager;
+	private final ServiceDescriptionRegistry serviceDescriptionRegistry;
+	private final CredentialManager credentialManager;
+	private final FileManager fileManager;
 
-	public WSDLActivityContextualView(Activity<?> activity, EditManager editManager,
-			FileManager fileManager, ActivityIconManager activityIconManager,
-			ColourManager colourManager) {
-		super(activity, editManager, fileManager, colourManager);
+	public WSDLActivityContextualView(Activity activity, EditManager editManager, FileManager fileManager,
+			SelectionManager selectionManager, ActivityIconManager activityIconManager,
+			ColourManager colourManager, CredentialManager credentialManager,
+			ServiceDescriptionRegistry serviceDescriptionRegistry) {
+		super(activity, editManager, selectionManager, colourManager);
+		this.fileManager = fileManager;
 		this.activityIconManager = activityIconManager;
-	}
-
-	@Override
-	public WSDLActivity getActivity() {
-		return (WSDLActivity) super.getActivity();
+		this.credentialManager = credentialManager;
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
 	}
 
 	/**
@@ -79,10 +83,11 @@ public class WSDLActivityContextualView extends
 
 	@Override
 	protected String getRawTableRowsHtml() {
-		String summary = "<tr><td>WSDL</td><td>" + getConfigBean().getOperation().getWsdl();
-		summary += "</td></tr><tr><td>Operation</td><td>" + getConfigBean().getOperation()
+		JsonNode operation = getConfigBean().getJson().get("operation");
+		String summary = "<tr><td>WSDL</td><td>" + operation.get("wsdl").textValue();
+		summary += "</td></tr><tr><td>Operation</td><td>" + operation.get("name").textValue()
 				+ "</td></tr>";
-		boolean securityConfigured = getConfigBean().getSecurityProfile() != null;
+		boolean securityConfigured = getConfigBean().getJson().has("securityProfile");
 		summary += "<tr><td>Secure</td><td>" + securityConfigured + "</td></tr>";
 		summary += "</tr>";
 		summary += describePorts();
@@ -91,8 +96,8 @@ public class WSDLActivityContextualView extends
 
 	@Override
 	public Action getConfigureAction(Frame owner) {
-		// return null;
-		return new WSDLActivityConfigureAction(getActivity(), owner, editManager, fileManager, activityIconManager);
+		return new WSDLActivityConfigureAction(getActivity(), owner, editManager, fileManager,
+				activityIconManager, serviceDescriptionRegistry, credentialManager);
 	}
 
 	@Override

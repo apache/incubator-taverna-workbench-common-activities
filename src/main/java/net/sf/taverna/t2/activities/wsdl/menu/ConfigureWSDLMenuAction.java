@@ -22,28 +22,35 @@ package net.sf.taverna.t2.activities.wsdl.menu;
 
 import javax.swing.Action;
 
-import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
 import net.sf.taverna.t2.activities.wsdl.actions.WSDLActivityConfigureAction;
+import net.sf.taverna.t2.activities.wsdl.servicedescriptions.WSDLServiceDescription;
+import net.sf.taverna.t2.security.credentialmanager.CredentialManager;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
+import net.sf.taverna.t2.ui.menu.ContextualMenuComponent;
+import net.sf.taverna.t2.ui.menu.MenuComponent;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.activitytools.AbstractConfigureActivityMenuAction;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 
-public class ConfigureWSDLMenuAction extends
-		AbstractConfigureActivityMenuAction<WSDLActivity> {
+public class ConfigureWSDLMenuAction extends AbstractConfigureActivityMenuAction implements
+		MenuComponent, ContextualMenuComponent {
 
 	private EditManager editManager;
-	private FileManager fileManager;
 	private ActivityIconManager activityIconManager;
+	private ServiceDescriptionRegistry serviceDescriptionRegistry;
+	private CredentialManager credentialManager;
+	private FileManager fileManager;
 
 	public ConfigureWSDLMenuAction() {
-		super(WSDLActivity.class);
+		super(WSDLServiceDescription.ACTIVITY_TYPE);
 	}
 
 	@Override
 	protected Action createAction() {
-		WSDLActivityConfigureAction configAction = new WSDLActivityConfigureAction(
-				findActivity(), getParentFrame(), editManager, fileManager, activityIconManager);
+		WSDLActivityConfigureAction configAction = new WSDLActivityConfigureAction(findActivity(),
+				getParentFrame(), editManager, fileManager, activityIconManager,
+				serviceDescriptionRegistry, credentialManager);
 		addMenuDots(configAction);
 		return configAction;
 	}
@@ -58,6 +65,14 @@ public class ConfigureWSDLMenuAction extends
 
 	public void setActivityIconManager(ActivityIconManager activityIconManager) {
 		this.activityIconManager = activityIconManager;
+	}
+
+	public void setServiceDescriptionRegistry(ServiceDescriptionRegistry serviceDescriptionRegistry) {
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
+	}
+
+	public void setCredentialManager(CredentialManager credentialManager) {
+		this.credentialManager = credentialManager;
 	}
 
 }

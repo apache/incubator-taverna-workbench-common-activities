@@ -24,87 +24,48 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 
 import javax.swing.Action;
+import javax.swing.JDialog;
 
-import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
-import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
 import net.sf.taverna.t2.activities.wsdl.views.WSDLActivityConfigurationView;
+import net.sf.taverna.t2.security.credentialmanager.CredentialManager;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
-import net.sf.taverna.t2.workflowmodel.Dataflow;
-
-import org.apache.log4j.Logger;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
+import uk.org.taverna.scufl2.api.activity.Activity;
 
 @SuppressWarnings("serial")
-public class WSDLActivityConfigureAction extends
-		ActivityConfigurationAction<WSDLActivity, WSDLActivityConfigurationBean> {
+public class WSDLActivityConfigureAction extends ActivityConfigurationAction {
 
-	private final Frame owner;
-	private static Logger logger = Logger.getLogger(WSDLActivityConfigureAction.class);
 	private final EditManager editManager;
 	private final FileManager fileManager;
+	private final CredentialManager credentialManager;
 
-	public WSDLActivityConfigureAction(WSDLActivity activity, Frame owner, EditManager editManager,
-			FileManager fileManager, ActivityIconManager activityIconManager) {
-		super(activity, activityIconManager);
+	public WSDLActivityConfigureAction(Activity activity, Frame owner, EditManager editManager,
+			FileManager fileManager, ActivityIconManager activityIconManager,
+			ServiceDescriptionRegistry serviceDescriptionRegistry, CredentialManager credentialManager) {
+		super(activity, activityIconManager, serviceDescriptionRegistry);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
+		this.credentialManager = credentialManager;
 		putValue(Action.NAME, "Configure security");
-		this.owner = owner;
 	}
 
 	public void actionPerformed(ActionEvent e) {
-
-		// Should clone it
-		WSDLActivityConfigurationBean bean = getActivity().getConfiguration();
-
-		Dataflow owningDataflow = fileManager.getCurrentDataflow();
-
-		/*
-		 * WSSecurityProfileChooser wsSecurityProfileChooser = new WSSecurityProfileChooser( owner);
-		 * if (wsSecurityProfileChooser.isInitialised()) {
-		 * wsSecurityProfileChooser.setVisible(true); }
-		 *
-		 * WSSecurityProfile wsSecurityProfile = wsSecurityProfileChooser .getWSSecurityProfile();
-		 * String profileString; if (wsSecurityProfile != null) { // user did not cancel
-		 * profileString = wsSecurityProfile.getWSSecurityProfileString();
-		 * logger.info("WSSecurityProfile string read as:" + profileString);
-		 * bean.setSecurityProfile(profileString);
-		 * ActivityConfigurationDialog.configureActivity(owningDataflow, getActivity(), bean); }
-		 */
-
-		WSDLActivityConfigurationView configDialog = new WSDLActivityConfigurationView(owner, bean);
-		configDialog.setLocationRelativeTo(owner);
-		configDialog.setVisible(true);
-
-		// Get the new bean after configuration
-		WSDLActivityConfigurationBean newBean = configDialog.getNewBean();
-
-		if (newBean == null) { // user cancelled
+		JDialog currentDialog = ActivityConfigurationAction.getDialog(getActivity());
+		if (currentDialog != null) {
+			currentDialog.toFront();
 			return;
 		}
+		final ActivityConfigurationPanel rshellConfigView = new WSDLActivityConfigurationView(
+				getActivity(), credentialManager);
+		final ActivityConfigurationDialog dialog = new ActivityConfigurationDialog(getActivity(),
+				rshellConfigView, editManager);
 
-		// Has anything changed in the configuration bean?
-		if (bean.getSecurityProfile() == null) {
-			if (newBean.getSecurityProfile() != null) { // config changed
-				logger.info("WSDL activity configuration: Old security profile: null");
-				logger.info("WSDL activity configuration: New security profile: "
-						+ newBean.getSecurityProfile());
-				ActivityConfigurationDialog.configureActivityStatic(owningDataflow, getActivity(),
-						newBean, editManager);
-			}
-		} else {
-			if (!bean.getSecurityProfile().equals(newBean.getSecurityProfile())) { // config changed
-				logger.info("WSDL activity configuration: Old security profile: "
-						+ bean.getSecurityProfile());
-				logger.info("WSDL activity configuration: New security profile: "
-						+ newBean.getSecurityProfile());
-				ActivityConfigurationDialog.configureActivityStatic(owningDataflow, getActivity(),
-						newBean, editManager);
-			}
-		}
+		ActivityConfigurationAction.setDialog(getActivity(), dialog, fileManager);
 	}
 
 }

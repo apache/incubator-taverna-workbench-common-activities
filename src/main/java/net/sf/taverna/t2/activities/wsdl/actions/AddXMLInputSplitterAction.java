@@ -21,17 +21,34 @@
 package net.sf.taverna.t2.activities.wsdl.actions;
 
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.wsdl.WSDLException;
+import javax.xml.parsers.ParserConfigurationException;
 
-import net.sf.taverna.t2.activities.wsdl.InputPortTypeDescriptorActivity;
+import net.sf.taverna.t2.activities.wsdl.servicedescriptions.WSDLServiceDescription;
 import net.sf.taverna.t2.activities.wsdl.xmlsplitter.AddXMLSplitterEdit;
 import net.sf.taverna.t2.workbench.edits.EditManager;
-import net.sf.taverna.t2.workbench.file.FileManager;
+import net.sf.taverna.t2.workbench.selection.SelectionManager;
+import net.sf.taverna.wsdl.parser.ArrayTypeDescriptor;
+import net.sf.taverna.wsdl.parser.ComplexTypeDescriptor;
 import net.sf.taverna.wsdl.parser.TypeDescriptor;
 import net.sf.taverna.wsdl.parser.UnknownOperationException;
+import net.sf.taverna.wsdl.parser.WSDLParser;
+import net.sf.taverna.wsdl.xmlsplitter.XMLSplitterSerialisationHelper;
+
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.xml.sax.SAXException;
+
+import uk.org.taverna.scufl2.api.activity.Activity;
+import uk.org.taverna.scufl2.api.configurations.Configuration;
 
 /**
  * Pops up a {@link JOptionPane} with the names of all the wsdl ports. The one
@@ -40,21 +57,43 @@ import net.sf.taverna.wsdl.parser.UnknownOperationException;
  *
  * @author Ian Dunlop
  * @author Stian Soiland-Reyes
- *
  */
-public class AddXMLInputSplitterAction extends
-		AbstractAddXMLSplitterAction<InputPortTypeDescriptorActivity> {
+@SuppressWarnings("serial")
+public class AddXMLInputSplitterAction extends AbstractAddXMLSplitterAction {
 
-	public AddXMLInputSplitterAction(InputPortTypeDescriptorActivity activity,
-			JComponent owner, EditManager editManager, FileManager fileManager) {
-		super(activity, owner, editManager, fileManager);
+	public AddXMLInputSplitterAction(Activity activity, JComponent owner, EditManager editManager,
+			SelectionManager selectionManager) {
+		super(activity, owner, editManager, selectionManager);
 		putValue(NAME, "Add input XML splitter");
 	}
 
 	@Override
-	protected Map<String, TypeDescriptor> getTypeDescriptors()
-			throws UnknownOperationException, IOException {
-		return (activity).getTypeDescriptorsForInputPorts();
+	public Map<String, TypeDescriptor> getTypeDescriptors() throws UnknownOperationException, IOException, ParserConfigurationException, WSDLException, SAXException, JDOMException {
+		Map<String, TypeDescriptor> descriptors = new HashMap<String, TypeDescriptor>();
+		Configuration configuration = scufl2Tools.configurationFor(activity, selectionManager.getSelectedProfile());
+		if (activity.getType().equals(WSDLServiceDescription.ACTIVITY_TYPE)) {
+			String wsdlLocation = configuration.getJson().get("operation").get("wsdl").textValue();
+			String operationName = configuration.getJson().get("operation").get("name").textValue();
+			List<TypeDescriptor> inputDescriptors = new WSDLParser(wsdlLocation)
+					.getOperationInputParameters(operationName);
+			for (TypeDescriptor descriptor : inputDescriptors) {
+				descriptors.put(descriptor.getName(), descriptor);
+			}
+		} else if (activity.getType().equals(WSDLServiceDescription.INPUT_SPLITTER_TYPE)) {
+			String wrappedType = configuration.getJson().get("wrappedType").textValue();
+			Element element = new SAXBuilder().build(new StringReader(wrappedType)).getRootElement();
+			TypeDescriptor typeDescriptor = XMLSplitterSerialisationHelper.extensionXMLToTypeDescriptor(element);
+			if (typeDescriptor instanceof ComplexTypeDescriptor) {
+				for (TypeDescriptor desc : ((ComplexTypeDescriptor)typeDescriptor).getElements()) {
+					descriptors.put(desc.getName(), desc);
+				}
+			}
+			else if (typeDescriptor instanceof ArrayTypeDescriptor) {
+				TypeDescriptor desc = ((ArrayTypeDescriptor)typeDescriptor).getElementType();
+				descriptors.put(typeDescriptor.getName(), desc);
+			}
+		}
+		return descriptors;
 	}
 
 	@Override

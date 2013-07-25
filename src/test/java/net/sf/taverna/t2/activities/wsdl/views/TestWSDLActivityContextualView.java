@@ -22,30 +22,32 @@ package net.sf.taverna.t2.activities.wsdl.views;
 
 import static org.junit.Assert.assertNull;
 
-import java.net.URI;
-
-import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
-import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
-
 import org.junit.Before;
+
+import uk.org.taverna.scufl2.api.activity.Activity;
+import uk.org.taverna.scufl2.api.configurations.Configuration;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class TestWSDLActivityContextualView {
 
-	Activity<?> a;
+	Activity a;
 
 	@Before
 	public void setUp() throws Exception {
-		a=new WSDLActivity(null);
-		WSDLActivityConfigurationBean b=new WSDLActivityConfigurationBean();
-		b.getOperation().setOperationName("getReport");
+		a=new Activity();
+		Configuration configuration = new Configuration();
+		ObjectNode json = (ObjectNode) configuration.getJson();
+		ObjectNode operation = json.objectNode();
+		operation.put("name", "getReport");
+		json.set("operation", operation);
 		String wsdlUrl=TestWSDLActivityContextualView.class.getResource("/GMService.wsdl").toExternalForm();
-		b.getOperation().setWsdl(new URI(wsdlUrl));
-		((WSDLActivity)a).configure(b);
+		operation.put("wsdl", wsdlUrl);
+		configuration.setConfigures(a);
 	}
 
 	public void testConfigurationAction() {
-		WSDLActivityContextualView view = new WSDLActivityContextualView(a, null, null, null, null);
+		WSDLActivityContextualView view = new WSDLActivityContextualView(a, null, null, null, null, null, null, null);
 		assertNull("WSDL has no configure action, so should be null",view.getConfigureAction(null));
 	}
 }

@@ -6,76 +6,81 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.wsdl.WSDLException;
+import javax.xml.parsers.ParserConfigurationException;
 
-import net.sf.taverna.t2.activities.wsdl.InputPortTypeDescriptorActivity;
-import net.sf.taverna.t2.activities.wsdl.OutputPortTypeDescriptorActivity;
 import net.sf.taverna.t2.activities.wsdl.actions.AbstractAddXMLSplitterAction;
 import net.sf.taverna.t2.activities.wsdl.actions.AddXMLInputSplitterAction;
 import net.sf.taverna.t2.activities.wsdl.actions.AddXMLOutputSplitterAction;
+import net.sf.taverna.t2.activities.wsdl.servicedescriptions.WSDLServiceDescription;
 import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
-import net.sf.taverna.t2.workbench.file.FileManager;
+import net.sf.taverna.t2.workbench.selection.SelectionManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
-import net.sf.taverna.t2.workflowmodel.OutputPort;
-import net.sf.taverna.t2.workflowmodel.Port;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
-import net.sf.taverna.t2.workflowmodel.processor.activity.ActivityInputPort;
 import net.sf.taverna.wsdl.parser.TypeDescriptor;
 import net.sf.taverna.wsdl.parser.UnknownOperationException;
 
 import org.apache.log4j.Logger;
+import org.jdom.JDOMException;
+import org.xml.sax.SAXException;
+
+import uk.org.taverna.scufl2.api.activity.Activity;
+import uk.org.taverna.scufl2.api.port.DepthPort;
+import uk.org.taverna.scufl2.api.port.InputActivityPort;
+import uk.org.taverna.scufl2.api.port.OutputActivityPort;
 
 @SuppressWarnings("serial")
-public abstract class AbstractXMLSplitterActionView<BeanType> extends
-		HTMLBasedActivityContextualView<BeanType> {
+public abstract class AbstractXMLSplitterActionView extends HTMLBasedActivityContextualView {
 
 	private static Logger logger = Logger.getLogger(AbstractXMLSplitterActionView.class);
 	protected final EditManager editManager;
-	protected final FileManager fileManager;
+	protected final SelectionManager selectionManager;
+	protected AbstractAddXMLSplitterAction splitterAction;
 
-	public AbstractXMLSplitterActionView(Activity<?> activity, EditManager editManager,
-			FileManager fileManager, ColourManager colourManager) {
+	public AbstractXMLSplitterActionView(Activity activity, EditManager editManager,
+			SelectionManager selectionManager, ColourManager colourManager) {
 		super(activity, colourManager);
 		this.editManager = editManager;
-		this.fileManager = fileManager;
+		this.selectionManager = selectionManager;
+		if (getActivity().getType().equals(WSDLServiceDescription.OUTPUT_SPLITTER_TYPE)) {
+			splitterAction = new AddXMLOutputSplitterAction(getActivity(),
+					null, editManager, selectionManager);
+		} else if (getActivity().getType().equals(WSDLServiceDescription.INPUT_SPLITTER_TYPE)) {
+			splitterAction = new AddXMLInputSplitterAction(getActivity(),
+					null, editManager, selectionManager);
+		}
+		super.initView();
+	}
+
+	@Override
+	public void initView() {
 	}
 
 	protected void addOutputSplitter(final JComponent mainFrame, JPanel flowPanel) {
-		if (getActivity() instanceof OutputPortTypeDescriptorActivity) {
-			Map<String, TypeDescriptor> descriptors;
+		if (getActivity().getType().equals(WSDLServiceDescription.OUTPUT_SPLITTER_TYPE)) {
 			try {
-				descriptors = ((OutputPortTypeDescriptorActivity) getActivity())
-						.getTypeDescriptorsForOutputPorts();
+				Map<String, TypeDescriptor> descriptors = splitterAction.getTypeDescriptors();
 				if (!AbstractAddXMLSplitterAction.filterDescriptors(descriptors).isEmpty()) {
-					AddXMLOutputSplitterAction outputSplitterAction = new AddXMLOutputSplitterAction(
-							(OutputPortTypeDescriptorActivity) getActivity(), mainFrame,
-							editManager, fileManager);
-					flowPanel.add(new JButton(outputSplitterAction));
+					flowPanel.add(new JButton(splitterAction));
 				}
-			} catch (UnknownOperationException e) {
-				logger.warn("Could not find operation for " + getActivity(), e);
-			} catch (IOException e) {
-				logger.warn("Could not read definition for " + getActivity(), e);
+			} catch (UnknownOperationException | IOException | ParserConfigurationException
+					| WSDLException | SAXException | JDOMException e) {
+				logger.warn("Could not find type descriptors for " + getActivity(), e);
 			}
 		}
 	}
 
 	protected void addInputSplitter(final JComponent mainFrame, JPanel flowPanel) {
-		if (getActivity() instanceof InputPortTypeDescriptorActivity) {
-			Map<String, TypeDescriptor> descriptors;
+		if (getActivity().getType().equals(WSDLServiceDescription.INPUT_SPLITTER_TYPE)) {
 			try {
-				descriptors = ((InputPortTypeDescriptorActivity) getActivity())
-						.getTypeDescriptorsForInputPorts();
+				Map<String, TypeDescriptor> descriptors = splitterAction.getTypeDescriptors();
 				if (!AbstractAddXMLSplitterAction.filterDescriptors(descriptors).isEmpty()) {
-					AddXMLInputSplitterAction inputSplitterAction = new AddXMLInputSplitterAction(
-							(InputPortTypeDescriptorActivity) getActivity(), mainFrame,
-							editManager, fileManager);
-					flowPanel.add(new JButton(inputSplitterAction));
+					splitterAction.setOwner(mainFrame);
+					flowPanel.add(new JButton(splitterAction));
 				}
-			} catch (UnknownOperationException e) {
-				logger.warn("Could not find operation for " + getActivity(), e);
-			} catch (IOException e) {
-				logger.warn("Could not read definition for " + getActivity(), e);
+			} catch (UnknownOperationException | IOException | ParserConfigurationException
+					| WSDLException | SAXException | JDOMException e) {
+				logger.warn("Could not find type descriptors for " + getActivity(), e);
 			}
 		}
 	}
@@ -85,17 +90,14 @@ public abstract class AbstractXMLSplitterActionView<BeanType> extends
 
 		if (!getActivity().getInputPorts().isEmpty()) {
 			html.append("<tr><th colspan='2' align='left'>Inputs</th></tr>");
-			for (ActivityInputPort port : getActivity().getInputPorts()) {
+			for (InputActivityPort port : getActivity().getInputPorts()) {
 				TypeDescriptor descriptor = null;
-				if (getActivity() instanceof InputPortTypeDescriptorActivity) {
+				if (getActivity().getType().equals(WSDLServiceDescription.INPUT_SPLITTER_TYPE)) {
 					try {
-						descriptor = ((InputPortTypeDescriptorActivity) getActivity())
-								.getTypeDescriptorForInputPort(port.getName());
-
-					} catch (UnknownOperationException e) {
-						logger.warn("Could not find operation for " + getActivity(), e);
-					} catch (IOException e) {
-						logger.warn("Could not read definition for " + getActivity(), e);
+						descriptor = splitterAction.getTypeDescriptors().get(port.getName());
+					} catch (UnknownOperationException | IOException | ParserConfigurationException
+							| WSDLException | SAXException | JDOMException e) {
+						logger.warn("Could not find type descriptors for " + getActivity(), e);
 					}
 				}
 				if (descriptor == null) {
@@ -109,16 +111,14 @@ public abstract class AbstractXMLSplitterActionView<BeanType> extends
 
 		if (!getActivity().getOutputPorts().isEmpty()) {
 			html.append("<tr><th colspan='2' align='left'>Outputs</th></tr>");
-			for (OutputPort port : getActivity().getOutputPorts()) {
+			for (OutputActivityPort port : getActivity().getOutputPorts()) {
 				TypeDescriptor descriptor = null;
-				if (getActivity() instanceof OutputPortTypeDescriptorActivity) {
+				if (getActivity().getType().equals(WSDLServiceDescription.OUTPUT_SPLITTER_TYPE)) {
 					try {
-						descriptor = ((OutputPortTypeDescriptorActivity) getActivity())
-								.getTypeDescriptorForOutputPort(port.getName());
-					} catch (UnknownOperationException e) {
-						logger.warn("Could not find operation for " + getActivity(), e);
-					} catch (IOException e) {
-						logger.warn("Could not read definition for " + getActivity(), e);
+						descriptor = splitterAction.getTypeDescriptors().get(port.getName());
+					} catch (UnknownOperationException | IOException | ParserConfigurationException
+							| WSDLException | SAXException | JDOMException e) {
+						logger.warn("Could not find type descriptors for " + getActivity(), e);
 					}
 				}
 				if (descriptor == null) {
@@ -132,7 +132,7 @@ public abstract class AbstractXMLSplitterActionView<BeanType> extends
 		return html.toString();
 	}
 
-	private String describePort(Port port, TypeDescriptor descriptor) {
+	private String describePort(DepthPort port, TypeDescriptor descriptor) {
 		String html = "<tr><td>" + port.getName() + "</td><td>";
 		if (descriptor != null && descriptor.isOptional()) {
 			html += "<em>optional</em><br>";
@@ -140,16 +140,16 @@ public abstract class AbstractXMLSplitterActionView<BeanType> extends
 		html+="Depth:"+port.getDepth()+"<br>";
 		if (descriptor != null ) {
             html+="<code>"+descriptor.getQname().toString()+"</code><br>";
-            if (descriptor.getDocumentation() != null && !descriptor.getDocumentation().isEmpty()){
-                html += "<p>"+descriptor.getDocumentation()+"</p>";
-            }
+//            if (descriptor.getDocumentation() != null && !descriptor.getDocumentation().isEmpty()){
+//                html += "<p>"+descriptor.getDocumentation()+"</p>";
+//            }
         }
 
 		html+="</td></tr>";
 		return html;
 	}
 
-	private String describePort(Port port) {
+	private String describePort(DepthPort port) {
 		String html = "<tr><td>" + port.getName() + "</td><td>";
 		html += "Depth:" + port.getDepth() + "<br>";
 		html += "</td></tr>";

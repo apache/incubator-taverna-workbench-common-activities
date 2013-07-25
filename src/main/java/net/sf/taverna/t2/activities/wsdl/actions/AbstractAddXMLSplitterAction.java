@@ -32,19 +32,25 @@ import java.util.Map.Entry;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.wsdl.WSDLException;
+import javax.xml.parsers.ParserConfigurationException;
 
-import net.sf.taverna.t2.activities.wsdl.xmlsplitter.AddXMLSplitterEdit;
+import net.sf.taverna.t2.workbench.edits.EditException;
 import net.sf.taverna.t2.workbench.edits.EditManager;
-import net.sf.taverna.t2.workbench.file.FileManager;
-import net.sf.taverna.t2.workflowmodel.Dataflow;
-import net.sf.taverna.t2.workflowmodel.EditException;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
+import net.sf.taverna.t2.workbench.selection.SelectionManager;
 import net.sf.taverna.wsdl.parser.ArrayTypeDescriptor;
 import net.sf.taverna.wsdl.parser.ComplexTypeDescriptor;
 import net.sf.taverna.wsdl.parser.TypeDescriptor;
 import net.sf.taverna.wsdl.parser.UnknownOperationException;
 
 import org.apache.log4j.Logger;
+import org.jdom.JDOMException;
+import org.xml.sax.SAXException;
+
+import uk.org.taverna.scufl2.api.activity.Activity;
+import uk.org.taverna.scufl2.api.common.Scufl2Tools;
+import uk.org.taverna.scufl2.api.core.Workflow;
+import uk.org.taverna.scufl2.api.profiles.Profile;
 
 /**
  * Abstract superclass of {@link AddXMLOutputSplitterAction} and
@@ -59,22 +65,24 @@ import org.apache.log4j.Logger;
  * @author Stuart Owen
  *
  */
-@SuppressWarnings("unchecked")
-public abstract class AbstractAddXMLSplitterAction<ActivityType> extends AbstractAction {
+@SuppressWarnings("serial")
+public abstract class AbstractAddXMLSplitterAction extends AbstractAction {
 
-	private static Logger logger = Logger
-			.getLogger(AddXMLOutputSplitterAction.class);
-	protected final JComponent owner;
-	protected final ActivityType activity;
-	private final EditManager editManager;
-	private final FileManager fileManager;
+	private static Logger logger = Logger.getLogger(AddXMLOutputSplitterAction.class);
 
-	public AbstractAddXMLSplitterAction(ActivityType activity,
-			JComponent owner, EditManager editManager, FileManager fileManager) {
+	protected Scufl2Tools scufl2Tools = new Scufl2Tools();
+
+	protected JComponent owner;
+	protected final Activity activity;
+	protected final EditManager editManager;
+	protected final SelectionManager selectionManager;
+
+	public AbstractAddXMLSplitterAction(Activity activity,
+			JComponent owner, EditManager editManager, SelectionManager selectionManager) {
 		this.activity = activity;
 		this.owner = owner;
 		this.editManager = editManager;
-		this.fileManager = fileManager;
+		this.selectionManager = selectionManager;
 	}
 
 	public void actionPerformed(ActionEvent ev) {
@@ -86,7 +94,7 @@ public abstract class AbstractAddXMLSplitterAction<ActivityType> extends Abstrac
 			logger.error("Can't find operation for activity "
 					+ activity, ex);
 			return;
-		} catch (IOException ex) {
+		} catch (IOException | ParserConfigurationException | WSDLException | SAXException | JDOMException ex) {
 			logger.error("Can't read definition for activity "
 					+ activity, ex);
 			return;
@@ -106,16 +114,17 @@ public abstract class AbstractAddXMLSplitterAction<ActivityType> extends Abstrac
 				"Add output XML splitter", JOptionPane.PLAIN_MESSAGE, null,
 				possibilities.toArray(), possibilities.get(0));
 
-		Dataflow currentDataflow = fileManager.getCurrentDataflow();
-		TypeDescriptor typeDescriptorForOutputPort = typeDescriptors
+		Workflow workflow = selectionManager.getSelectedWorkflow();
+		Profile profile = selectionManager.getSelectedProfile();
+		TypeDescriptor typeDescriptorForPort = typeDescriptors
 				.get(portName);
 
-		if (typeDescriptorForOutputPort instanceof ArrayTypeDescriptor
-				|| typeDescriptorForOutputPort instanceof ComplexTypeDescriptor) {
-			AddXMLSplitterEdit edit = new AddXMLSplitterEdit(currentDataflow,
-					(Activity)activity, portName, isInput(), editManager.getEdits());
+		if (typeDescriptorForPort instanceof ArrayTypeDescriptor
+				|| typeDescriptorForPort instanceof ComplexTypeDescriptor) {
+			AddXMLSplitterEdit edit = new AddXMLSplitterEdit(workflow, profile,
+					activity, typeDescriptorForPort, portName, isInput());
 			try {
-				editManager.doDataflowEdit(currentDataflow, edit);
+				editManager.doDataflowEdit(workflow.getParent(), edit);
 			} catch (EditException ex) {
 				logger.error("Could not perform edit to add " + portName, ex);
 			}
@@ -138,6 +147,10 @@ public abstract class AbstractAddXMLSplitterAction<ActivityType> extends Abstrac
 
 	protected abstract boolean isInput();
 
-	protected abstract Map<String, TypeDescriptor> getTypeDescriptors()
-			throws UnknownOperationException, IOException;
+	public abstract Map<String, TypeDescriptor> getTypeDescriptors()
+			throws UnknownOperationException, IOException, ParserConfigurationException, WSDLException, SAXException, JDOMException;
+
+	public void setOwner(JComponent owner) {
+		this.owner = owner;
+	}
 }

@@ -27,17 +27,21 @@ import java.util.List;
 
 import javax.swing.Icon;
 
-import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
-import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
 import net.sf.taverna.t2.security.credentialmanager.CMException;
 import net.sf.taverna.t2.security.credentialmanager.CredentialManager;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 import org.apache.log4j.Logger;
 
-public class WSDLServiceDescription extends
-		ServiceDescription<WSDLActivityConfigurationBean> {
+import uk.org.taverna.scufl2.api.configurations.Configuration;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+public class WSDLServiceDescription extends ServiceDescription {
+
+	public static final URI ACTIVITY_TYPE = URI.create("http://ns.taverna.org.uk/2010/activity/wsdl");
+	public static final URI INPUT_SPLITTER_TYPE = URI.create("http://ns.taverna.org.uk/2010/activity/xml-splitter/in");
+	public static final URI OUTPUT_SPLITTER_TYPE = URI.create("http://ns.taverna.org.uk/2010/activity/xml-splitter/out");
 
 	private static final String WSDL = "WSDL @ ";
 
@@ -98,23 +102,28 @@ public class WSDLServiceDescription extends
 		return WSDLActivityIcon.getWSDLIcon();
 	}
 
-	public Class<? extends Activity<WSDLActivityConfigurationBean>> getActivityClass() {
-		return WSDLActivity.class;
+	@Override
+	public URI getActivityType() {
+		return ACTIVITY_TYPE;
 	}
 
-	public WSDLActivityConfigurationBean getActivityConfiguration() {
-		WSDLActivityConfigurationBean bean = new WSDLActivityConfigurationBean();
-		bean.getOperation().setWsdl(getURI());
-		bean.getOperation().setOperationName(getOperation());
-		return bean;
+	@Override
+	public Configuration getActivityConfiguration() {
+		Configuration configuration = new Configuration();
+		configuration.setType(ACTIVITY_TYPE.resolve("#Config"));
+		ObjectNode json = (ObjectNode) configuration.getJson();
+		ObjectNode operation = json.objectNode();
+		json.put("operation", operation);
+		operation.put("wsdl", getURI().toString());
+		operation.put("name", getOperation());
+		return configuration;
 	}
 
 	public String getName() {
 		return getOperation();
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<? extends Comparable> getPath() {
+	public List<? extends Comparable<?>> getPath() {
 		return Collections.singletonList(WSDL + getURI());
 	}
 

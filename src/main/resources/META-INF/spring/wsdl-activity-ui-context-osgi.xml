@@ -10,7 +10,12 @@
 	<service ref="XMLInputSplitterActivityIcon" interface="net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI" />
 	<service ref="XMLOutputSplitterActivityIcon" interface="net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI" />
 
-	<service ref="WSDLServiceProvider" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider" />
+	<service ref="WSDLServiceProvider">
+		<interfaces>
+			<beans:value>net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider</beans:value>
+			<beans:value>net.sf.taverna.t2.servicedescriptions.ConfigurableServiceProvider</beans:value>
+		</interfaces>
+	</service>
 
 	<service ref="AddXMLInputSplitterForWSDLActivityMenuAction" auto-export="interfaces" />
 	<service ref="AddXMLInputSplitterForXMLInputSplitterMenuAction" auto-export="interfaces" />
@@ -27,5 +32,6 @@
 	<reference id="colourManager" interface="net.sf.taverna.t2.workbench.configuration.colour.ColourManager" />
 	<reference id="serviceDescriptionRegistry" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry" />
 	<reference id="credentialManager" interface="net.sf.taverna.t2.security.credentialmanager.CredentialManager" />
+	<reference id="selectionManager" interface="net.sf.taverna.t2.workbench.selection.SelectionManager" />
 
 </beans:beans>

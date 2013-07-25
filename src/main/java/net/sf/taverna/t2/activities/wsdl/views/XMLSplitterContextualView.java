@@ -26,23 +26,21 @@ import java.awt.FlowLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import net.sf.taverna.t2.activities.wsdl.xmlsplitter.XMLSplitterConfigurationBean;
 import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
-import net.sf.taverna.t2.workbench.file.FileManager;
+import net.sf.taverna.t2.workbench.selection.SelectionManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 import org.apache.log4j.Logger;
 
-public class XMLSplitterContextualView extends
-		AbstractXMLSplitterActionView<XMLSplitterConfigurationBean> {
+import uk.org.taverna.scufl2.api.activity.Activity;
 
-	private static final long serialVersionUID = -4329643934083676113L;
+@SuppressWarnings("serial")
+public class XMLSplitterContextualView extends AbstractXMLSplitterActionView {
 
-	public XMLSplitterContextualView(Activity<XMLSplitterConfigurationBean> activity,
-			EditManager editManager, FileManager fileManager, ColourManager colourManager) {
-		super(activity, editManager, fileManager, colourManager);
+	public XMLSplitterContextualView(Activity activity,
+			EditManager editManager, SelectionManager selectionManager, ColourManager colourManager) {
+		super(activity, editManager, selectionManager, colourManager);
 	}
 
 	static Logger logger = Logger.getLogger(XMLSplitterContextualView.class);

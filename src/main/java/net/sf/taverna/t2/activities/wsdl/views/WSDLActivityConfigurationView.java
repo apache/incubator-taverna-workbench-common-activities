@@ -24,9 +24,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -35,6 +33,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.net.URI;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -49,29 +48,24 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
-import java.awt.Dialog;
-import java.net.URI;
 
-//import org.apache.log4j.Logger;
-
-import net.sf.taverna.t2.activities.wsdl.WSDLActivityConfigurationBean;
 import net.sf.taverna.t2.activities.wsdl.security.SecurityProfiles;
 import net.sf.taverna.t2.lang.ui.DialogTextArea;
-import net.sf.taverna.t2.workbench.MainWindow;
-import net.sf.taverna.t2.workbench.helper.HelpEnabledDialog;
+import net.sf.taverna.t2.security.credentialmanager.CredentialManager;
 import net.sf.taverna.t2.workbench.ui.credentialmanager.CredentialManagerUI;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
+import uk.org.taverna.scufl2.api.activity.Activity;
 
 /**
  * Configuration dialog for WSDL activity.
  *
  * @author Alex Nenadic
- *
  */
 @SuppressWarnings("serial")
-public class WSDLActivityConfigurationView extends HelpEnabledDialog implements ItemListener{
+public class WSDLActivityConfigurationView extends ActivityConfigurationPanel implements ItemListener {
 
-	private WSDLActivityConfigurationBean oldBean;
-	private WSDLActivityConfigurationBean newBean;
+	private CredentialManager credentialManager;
+	private CredentialManagerUI credManagerUI;
 
 	private ButtonGroup buttonGroup;
 	private JRadioButton noSecurityRadioButton;
@@ -84,46 +78,26 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 	// Password types
 	private final String PLAINTEXT_PASSWORD = "Plaintext password";
 	private final String DIGEST_PASSWORD = "Digest password";
-	private String[] passwordTypes = new String[]{PLAINTEXT_PASSWORD, DIGEST_PASSWORD};
-	private String[] tooltips = new String[]{ "Password will be sent in plaintext (which is OK if service is using HTTPS)",
-			"Password will be digested (cryptographically hashed) before sending"};
-	private JComboBox passwordTypeComboBox;
+	private String[] passwordTypes = new String[] { PLAINTEXT_PASSWORD, DIGEST_PASSWORD };
+	private String[] tooltips = new String[] {
+			"Password will be sent in plaintext (which is OK if service is using HTTPS)",
+			"Password will be digested (cryptographically hashed) before sending" };
+	private JComboBox<String> passwordTypeComboBox;
 	private JCheckBox addTimestampCheckBox;
 	private JButton setHttpUsernamePasswordButton;
 	private JButton setWsdlUsernamePasswordButton;
 
-	//private  Logger logger = Logger.getLogger(WSDLActivityConfigurationView.class);
+	// private Logger logger = Logger.getLogger(WSDLActivityConfigurationView.class);
 
-	public WSDLActivityConfigurationView(WSDLActivityConfigurationBean bean){
-    	super(MainWindow.getMainWindow(), "Web service configuration", true, null); //create a modal dialog
-    	this.oldBean = bean;
-    	newBean = copy(oldBean);
-    	initComponents();
+	public WSDLActivityConfigurationView(Activity activity, CredentialManager credentialManager) {
+		super(activity);
+		this.credentialManager = credentialManager;
+		initialise();
 	}
 
-	public WSDLActivityConfigurationView(Frame owner, WSDLActivityConfigurationBean bean){
-    	super(owner, "WSDL service configuration", true, null); //create a modal dialog
-    	this.oldBean = bean;
-    	newBean = copy(oldBean);
-    	initComponents();
-	}
-
-	/**
-	 * Creates a copy of the bean.
-	 */
-	private WSDLActivityConfigurationBean copy(
-			WSDLActivityConfigurationBean oldBean) {
-
-		WSDLActivityConfigurationBean newBean = new WSDLActivityConfigurationBean();
-		newBean.setOperation(oldBean.getOperation());
-		newBean.getOperation().setWsdl(oldBean.getOperation().getWsdl());
-		newBean.setSecurityProfile(oldBean.getSecurityProfile());
-		return newBean;
-	}
-
-	private void initComponents() {
-
-		this.setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
+	@Override
+	protected void initialise() {
+		super.initialise();
 
 		int gridy = 0;
 
@@ -133,12 +107,13 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 		JLabel titleLabel = new JLabel("Security configuration");
 		titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 13.5f));
 		titleLabel.setBorder(new EmptyBorder(10, 10, 0, 10));
-		DialogTextArea titleMessage = new DialogTextArea("Select a security profile for the service");
+		DialogTextArea titleMessage = new DialogTextArea(
+				"Select a security profile for the service");
 		titleMessage.setMargin(new Insets(5, 20, 10, 10));
 		titleMessage.setFont(titleMessage.getFont().deriveFont(11f));
 		titleMessage.setEditable(false);
 		titleMessage.setFocusable(false);
-		titlePanel.setBorder( new EmptyBorder(10, 10, 0, 10));
+		titlePanel.setBorder(new EmptyBorder(10, 10, 0, 10));
 		titlePanel.add(titleLabel, BorderLayout.NORTH);
 		titlePanel.add(titleMessage, BorderLayout.CENTER);
 		addDivider(titlePanel, SwingConstants.BOTTOM, true);
@@ -148,21 +123,22 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 		mainPanel.setLayout(new GridBagLayout());
 		mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-	    //Create the radio buttons
-	    noSecurityRadioButton = new JRadioButton("None");
-	    noSecurityRadioButton.addItemListener(this);
+		// Create the radio buttons
+		noSecurityRadioButton = new JRadioButton("None");
+		noSecurityRadioButton.addItemListener(this);
 
-	    wsSecurityAuthNRadioButton = new JRadioButton("WS-Security username and password authentication");
-	    wsSecurityAuthNRadioButton.addItemListener(this);
+		wsSecurityAuthNRadioButton = new JRadioButton(
+				"WS-Security username and password authentication");
+		wsSecurityAuthNRadioButton.addItemListener(this);
 
-	    httpSecurityAuthNRadioButton = new JRadioButton("HTTP username and password authentication");
-	    httpSecurityAuthNRadioButton.addItemListener(this);
+		httpSecurityAuthNRadioButton = new JRadioButton("HTTP username and password authentication");
+		httpSecurityAuthNRadioButton.addItemListener(this);
 
-	    //Group the radio buttons
-	    buttonGroup = new ButtonGroup();
-	    buttonGroup.add(noSecurityRadioButton);
-	    buttonGroup.add(wsSecurityAuthNRadioButton);
-	    buttonGroup.add(httpSecurityAuthNRadioButton);
+		// Group the radio buttons
+		buttonGroup = new ButtonGroup();
+		buttonGroup.add(noSecurityRadioButton);
+		buttonGroup.add(wsSecurityAuthNRadioButton);
+		buttonGroup.add(httpSecurityAuthNRadioButton);
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.weightx = 1.0;
@@ -175,9 +151,9 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 		gbc.insets = new Insets(5, 10, 0, 0);
 		mainPanel.add(noSecurityRadioButton, gbc);
 
-	    noSecurityLabel = new JLabel("Service requires no security");
-	    noSecurityLabel.setFont(noSecurityLabel.getFont().deriveFont(11f));
-//		addDivider(noSecurityLabel, SwingConstants.BOTTOM, false);
+		noSecurityLabel = new JLabel("Service requires no security");
+		noSecurityLabel.setFont(noSecurityLabel.getFont().deriveFont(11f));
+		// addDivider(noSecurityLabel, SwingConstants.BOTTOM, false);
 		gbc.gridx = 0;
 		gbc.gridy = gridy++;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -196,14 +172,17 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 
 			public void actionPerformed(ActionEvent e) {
 				// Get Credential Manager UI to get the username and password for the service
-				CredentialManagerUI credManagerUI = CredentialManagerUI.getInstance();
-				if (credManagerUI != null)
-					credManagerUI.newPasswordForService(oldBean.getOperation().getWsdl());
+				if (credManagerUI == null) {
+					credManagerUI = new CredentialManagerUI(credentialManager);
+				}
+				credManagerUI.newPasswordForService(URI.create(getJson().get("operation")
+						.get("wsdl").textValue()));
 			}
 		};
 
-	    httpSecurityAuthNLabel = new JLabel("Service requires HTTP username and password in order to authenticate the user");
-	    httpSecurityAuthNLabel.setFont(httpSecurityAuthNLabel.getFont().deriveFont(11f));
+		httpSecurityAuthNLabel = new JLabel(
+				"Service requires HTTP username and password in order to authenticate the user");
+		httpSecurityAuthNLabel.setFont(httpSecurityAuthNLabel.getFont().deriveFont(11f));
 		gbc.gridx = 0;
 		gbc.gridy = gridy++;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -230,8 +209,9 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 		gbc.insets = new Insets(5, 10, 0, 0);
 		mainPanel.add(wsSecurityAuthNRadioButton, gbc);
 
-	    wsSecurityAuthNLabel = new JLabel("Service requires WS-Security username and password in order to authenticate the user");
-	    wsSecurityAuthNLabel.setFont(wsSecurityAuthNLabel.getFont().deriveFont(11f));
+		wsSecurityAuthNLabel = new JLabel(
+				"Service requires WS-Security username and password in order to authenticate the user");
+		wsSecurityAuthNLabel.setFont(wsSecurityAuthNLabel.getFont().deriveFont(11f));
 		gbc.gridx = 0;
 		gbc.gridy = gridy++;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -240,7 +220,7 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 		mainPanel.add(wsSecurityAuthNLabel, gbc);
 
 		// Password type list
-		passwordTypeComboBox = new JComboBox(passwordTypes);
+		passwordTypeComboBox = new JComboBox<>(passwordTypes);
 		passwordTypeComboBox.setRenderer(new ComboBoxTooltipRenderer());
 		gbc.gridx = 0;
 		gbc.gridy = gridy++;
@@ -272,114 +252,94 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 
 		addDivider(mainPanel, SwingConstants.BOTTOM, true);
 
-		// OK/Cancel button panel
-		JPanel okCancelPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		JButton okButton = new JButton("OK");
-		okButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				okPressed();
-			}
-		});
-		JButton cancelButton = new JButton("Cancel");
-		cancelButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				cancelPressed();
-			}
-		});
-		okCancelPanel.add(cancelButton);
-		okCancelPanel.add(okButton);
-
 		// Enable/disable controls based on what is the current security profiles
-	    URI securityProfile = oldBean.getSecurityProfile();
-		if (securityProfile == null){
-	    	noSecurityRadioButton.setSelected(true);
-	    }
-	    else{
-		    if (securityProfile.equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_PLAINTEXTPASSWORD) ||
-		    		securityProfile.equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_DIGESTPASSWORD) ||
-		    		securityProfile.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_PLAINTEXTPASSWORD) ||
-		    		securityProfile.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_DIGESTPASSWORD) ){
-		    	wsSecurityAuthNRadioButton.setSelected(true);
-		    }
-		    if (securityProfile.equals(SecurityProfiles.HTTP_BASIC_AUTHN) ||
-		    		securityProfile.equals(SecurityProfiles.HTTP_DIGEST_AUTHN)) {
-		    	httpSecurityAuthNRadioButton.setSelected(true);
-		    }
-		    if (securityProfile.equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_PLAINTEXTPASSWORD) ||
-		    		securityProfile.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_PLAINTEXTPASSWORD)){
-		    	passwordTypeComboBox.setSelectedItem(PLAINTEXT_PASSWORD);
-		    }
-		    else if (securityProfile.equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_DIGESTPASSWORD) ||
-		    		securityProfile.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_DIGESTPASSWORD)){
-		    	passwordTypeComboBox.setSelectedItem(DIGEST_PASSWORD);
-		    }
-		    if (securityProfile.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_DIGESTPASSWORD) ||
-		    		securityProfile.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_PLAINTEXTPASSWORD)){
-		    	addTimestampCheckBox.setSelected(true);
-		    }
-		    else {
-		    	addTimestampCheckBox.setSelected(false);
-		    }
-	    }
+		if (!getJson().has("securityProfile")) {
+			noSecurityRadioButton.setSelected(true);
+		} else {
+			URI securityProfile = URI.create(getJson().get("securityProfile").textValue());
+			if (securityProfile.equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_PLAINTEXTPASSWORD)
+					|| securityProfile
+							.equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_DIGESTPASSWORD)
+					|| securityProfile
+							.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_PLAINTEXTPASSWORD)
+					|| securityProfile
+							.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_DIGESTPASSWORD)) {
+				wsSecurityAuthNRadioButton.setSelected(true);
+			}
+			if (securityProfile.equals(SecurityProfiles.HTTP_BASIC_AUTHN)
+					|| securityProfile.equals(SecurityProfiles.HTTP_DIGEST_AUTHN)) {
+				httpSecurityAuthNRadioButton.setSelected(true);
+			}
+			if (securityProfile.equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_PLAINTEXTPASSWORD)
+					|| securityProfile
+							.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_PLAINTEXTPASSWORD)) {
+				passwordTypeComboBox.setSelectedItem(PLAINTEXT_PASSWORD);
+			} else if (securityProfile
+					.equals(SecurityProfiles.WSSECURITY_USERNAMETOKEN_DIGESTPASSWORD)
+					|| securityProfile
+							.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_DIGESTPASSWORD)) {
+				passwordTypeComboBox.setSelectedItem(DIGEST_PASSWORD);
+			}
+			if (securityProfile
+					.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_DIGESTPASSWORD)
+					|| securityProfile
+							.equals(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_PLAINTEXTPASSWORD)) {
+				addTimestampCheckBox.setSelected(true);
+			} else {
+				addTimestampCheckBox.setSelected(false);
+			}
+		}
 
 		// Put everything together
-	    JPanel layoutPanel = new JPanel(new BorderLayout());
-	    layoutPanel.add(titlePanel, BorderLayout.NORTH);
-	    layoutPanel.add(mainPanel, BorderLayout.CENTER);
-	    layoutPanel.add(okCancelPanel, BorderLayout.SOUTH);
-	    layoutPanel.setPreferredSize(new Dimension(550,400));
+		JPanel layoutPanel = new JPanel(new BorderLayout());
+		layoutPanel.add(titlePanel, BorderLayout.NORTH);
+		layoutPanel.add(mainPanel, BorderLayout.CENTER);
+		layoutPanel.setPreferredSize(new Dimension(550, 400));
 
-	    this.getContentPane().add(layoutPanel);
-	    this.pack();
+		add(layoutPanel);
 	}
 
-	private void okPressed() {
+	@Override
+	public boolean checkValues() {
+		return true;
+	}
 
-		if (noSecurityRadioButton.isSelected()){
-			newBean.setSecurityProfile(null); // no security required
-		}
-		else if (httpSecurityAuthNRadioButton.isSelected()) {
-				newBean.setSecurityProfile(SecurityProfiles.HTTP_BASIC_AUTHN);
-		}
-		else if (wsSecurityAuthNRadioButton.isSelected()){ // plaintext password
-			if (passwordTypeComboBox.getSelectedItem().equals(PLAINTEXT_PASSWORD)){
-				if (addTimestampCheckBox.isSelected()){
-					newBean.setSecurityProfile(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_PLAINTEXTPASSWORD);
+	@Override
+	public void noteConfiguration() {
+
+		if (noSecurityRadioButton.isSelected()) {
+			getJson().remove("securityProfile"); // no security required
+		} else if (httpSecurityAuthNRadioButton.isSelected()) {
+			getJson().put("securityProfile", SecurityProfiles.HTTP_BASIC_AUTHN.toString());
+		} else if (wsSecurityAuthNRadioButton.isSelected()) { // plaintext password
+			if (passwordTypeComboBox.getSelectedItem().equals(PLAINTEXT_PASSWORD)) {
+				if (addTimestampCheckBox.isSelected()) {
+					getJson().put(
+							"securityProfile",
+							SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_PLAINTEXTPASSWORD
+									.toString());
+				} else {
+					getJson().put("securityProfile",
+							SecurityProfiles.WSSECURITY_USERNAMETOKEN_PLAINTEXTPASSWORD.toString());
 				}
-				else{
-					newBean.setSecurityProfile(SecurityProfiles.WSSECURITY_USERNAMETOKEN_PLAINTEXTPASSWORD);
+			} else { // digest password
+				if (addTimestampCheckBox.isSelected()) {
+					getJson().put(
+							"securityProfile",
+							SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_DIGESTPASSWORD
+									.toString());
+				} else {
+					getJson().put("securityProfile",
+							SecurityProfiles.WSSECURITY_USERNAMETOKEN_DIGESTPASSWORD.toString());
 				}
 			}
-			else { //digest password
-				if (addTimestampCheckBox.isSelected()){
-					newBean.setSecurityProfile(SecurityProfiles.WSSECURITY_TIMESTAMP_USERNAMETOKEN_DIGESTPASSWORD);
-				}
-				else{
-					newBean.setSecurityProfile(SecurityProfiles.WSSECURITY_USERNAMETOKEN_DIGESTPASSWORD);
-				}
-			}
 		}
-		closeDialog();
 	}
 
-	private void cancelPressed() {
-		newBean = null; // to indicate that user has cancelled
-		closeDialog();
-	}
-
-    /**
-     * Close the dialog.
-     */
-    private void closeDialog()
-    {
-        setVisible(false);
-        dispose();
-    }
-
-    /**
-     * Disable/enable items on the panel based on this radio button
-     * has been selected.
-     */
+	/**
+	 * Disable/enable items on the panel based on this radio button
+	 * has been selected.
+	 */
 	public void itemStateChanged(ItemEvent e) {
 
 		Object source = e.getItemSelectable();
@@ -392,8 +352,7 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 			addTimestampCheckBox.setEnabled(false);
 
 			noSecurityLabel.setEnabled(true);
-		}
-		else if (source == httpSecurityAuthNRadioButton) {
+		} else if (source == httpSecurityAuthNRadioButton) {
 			noSecurityLabel.setEnabled(false);
 			httpSecurityAuthNLabel.setEnabled(true);
 			wsSecurityAuthNLabel.setEnabled(false);
@@ -401,8 +360,7 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 			setHttpUsernamePasswordButton.setEnabled(true);
 			setWsdlUsernamePasswordButton.setEnabled(false);
 			addTimestampCheckBox.setEnabled(false);
-		}
-		else if (source == wsSecurityAuthNRadioButton) {
+		} else if (source == wsSecurityAuthNRadioButton) {
 			noSecurityLabel.setEnabled(false);
 			httpSecurityAuthNLabel.setEnabled(false);
 			wsSecurityAuthNLabel.setEnabled(true);
@@ -413,30 +371,28 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 		}
 	}
 
-
-/**
- * A renderer for JComboBox that will display a tooltip for
- * the selected item.
- *
- */
+	/**
+	 * A renderer for JComboBox that will display a tooltip for
+	 * the selected item.
+	 */
 	class ComboBoxTooltipRenderer extends BasicComboBoxRenderer {
-	    public Component getListCellRendererComponent(JList list, Object value,
-	        int index, boolean isSelected, boolean cellHasFocus) {
-	      if (isSelected) {
-	        setBackground(list.getSelectionBackground());
-	        setForeground(list.getSelectionForeground());
-	        if (-1 < index) {
-	          list.setToolTipText(tooltips[index]);
-	        }
-	      } else {
-	        setBackground(list.getBackground());
-	        setForeground(list.getForeground());
-	      }
-	      setFont(list.getFont());
-	      setText((value == null) ? "" : value.toString());
-	      return this;
-	    }
-	 }
+		public Component getListCellRendererComponent(JList list, Object value, int index,
+				boolean isSelected, boolean cellHasFocus) {
+			if (isSelected) {
+				setBackground(list.getSelectionBackground());
+				setForeground(list.getSelectionForeground());
+				if (-1 < index) {
+					list.setToolTipText(tooltips[index]);
+				}
+			} else {
+				setBackground(list.getBackground());
+				setForeground(list.getForeground());
+			}
+			setFont(list.getFont());
+			setText((value == null) ? "" : value.toString());
+			return this;
+		}
+	}
 
 	/**
 	 * Adds a light gray or etched border to the top or bottom of a JComponent.
@@ -487,10 +443,4 @@ public class WSDLActivityConfigurationView extends HelpEnabledDialog implements 
 		});
 	}
 
-	/**
-	 * Gets the new bean after user has finished with configuring it.
-	 */
-	public WSDLActivityConfigurationBean getNewBean() {
-		return newBean;
-	}
 }

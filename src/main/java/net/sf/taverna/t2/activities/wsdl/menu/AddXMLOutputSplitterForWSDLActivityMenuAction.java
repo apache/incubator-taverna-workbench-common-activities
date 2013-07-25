@@ -1,12 +1,11 @@
 package net.sf.taverna.t2.activities.wsdl.menu;
 
-import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
+import net.sf.taverna.t2.activities.wsdl.servicedescriptions.WSDLServiceDescription;
 
-public class AddXMLOutputSplitterForWSDLActivityMenuAction extends
-			AddXMLOutputSplitterMenuAction<WSDLActivity> {
+public class AddXMLOutputSplitterForWSDLActivityMenuAction extends AddXMLOutputSplitterMenuAction {
 
 	public AddXMLOutputSplitterForWSDLActivityMenuAction() {
-		super(WSDLActivity.class);
+		super(WSDLServiceDescription.ACTIVITY_TYPE);
 	}
 
 }

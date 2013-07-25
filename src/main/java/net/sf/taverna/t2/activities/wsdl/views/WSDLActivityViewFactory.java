@@ -23,28 +23,38 @@ package net.sf.taverna.t2.activities.wsdl.views;
 import java.util.Arrays;
 import java.util.List;
 
-import net.sf.taverna.t2.activities.wsdl.WSDLActivity;
+import net.sf.taverna.t2.activities.wsdl.servicedescriptions.WSDLServiceDescription;
+import net.sf.taverna.t2.security.credentialmanager.CredentialManager;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
+import net.sf.taverna.t2.workbench.selection.SelectionManager;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
+import uk.org.taverna.scufl2.api.activity.Activity;
 
-public class WSDLActivityViewFactory implements ContextualViewFactory<WSDLActivity> {
+public class WSDLActivityViewFactory implements ContextualViewFactory<Activity> {
 
 	private EditManager editManager;
-	private FileManager fileManager;
 	private ActivityIconManager activityIconManager;
 	private ColourManager colourManager;
+	private SelectionManager selectionManager;
+	private ServiceDescriptionRegistry serviceDescriptionRegistry;
+	private CredentialManager credentialManager;
+	private FileManager fileManager;
 
 	public boolean canHandle(Object object) {
-		return object instanceof WSDLActivity;
+		return object instanceof Activity
+				&& ((Activity) object).getType().equals(WSDLServiceDescription.ACTIVITY_TYPE);
 	}
 
-	public List<ContextualView> getViews(WSDLActivity activity) {
-		return Arrays.asList(new ContextualView[] { new WSDLActivityContextualView(activity,
-				editManager, fileManager, activityIconManager, colourManager) });
+	public List<ContextualView> getViews(Activity activity) {
+		return Arrays
+				.asList(new ContextualView[] { new WSDLActivityContextualView(activity,
+						editManager, fileManager, selectionManager, activityIconManager, colourManager,
+						credentialManager, serviceDescriptionRegistry) });
 	}
 
 	public void setEditManager(EditManager editManager) {
@@ -55,12 +65,24 @@ public class WSDLActivityViewFactory implements ContextualViewFactory<WSDLActivi
 		this.fileManager = fileManager;
 	}
 
+	public void setSelectionManager(SelectionManager selectionManager) {
+		this.selectionManager = selectionManager;
+	}
+
 	public void setActivityIconManager(ActivityIconManager activityIconManager) {
 		this.activityIconManager = activityIconManager;
 	}
 
 	public void setColourManager(ColourManager colourManager) {
 		this.colourManager = colourManager;
+	}
+
+	public void setServiceDescriptionRegistry(ServiceDescriptionRegistry serviceDescriptionRegistry) {
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
+	}
+
+	public void setCredentialManager(CredentialManager credentialManager) {
+		this.credentialManager = credentialManager;
 	}
 
 }
