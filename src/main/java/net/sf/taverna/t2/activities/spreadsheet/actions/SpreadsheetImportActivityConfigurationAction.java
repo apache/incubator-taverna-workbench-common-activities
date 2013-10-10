@@ -23,20 +23,15 @@ package net.sf.taverna.t2.activities.spreadsheet.actions;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractAction;
-
-import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
 import net.sf.taverna.t2.activities.spreadsheet.views.SpreadsheetImportConfigView;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
-import net.sf.taverna.t2.workbench.helper.HelpEnabledDialog;
 import net.sf.taverna.t2.workbench.ui.actions.activity.ActivityConfigurationAction;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
-import net.sf.taverna.t2.workflowmodel.Dataflow;
+import uk.org.taverna.commons.services.ServiceRegistry;
 import uk.org.taverna.scufl2.api.activity.Activity;
-import uk.org.taverna.scufl2.api.container.WorkflowBundle;
 
 /**
  * The configuration action for a SpreadsheetImport activity.
@@ -48,26 +43,26 @@ public class SpreadsheetImportActivityConfigurationAction extends ActivityConfig
 
 	private static final String CONFIGURE = "Configure";
 
-	private final Frame owner;
-
 	private final EditManager editManager;
 
 	private final FileManager fileManager;
 
+	private final ServiceRegistry serviceRegistry;
+
 	public SpreadsheetImportActivityConfigurationAction(Activity activity,
 			Frame owner, EditManager editManager, FileManager fileManager,
 			ActivityIconManager activityIconManager,
-			ServiceDescriptionRegistry serviceDescriptionRegistry) {
+			ServiceDescriptionRegistry serviceDescriptionRegistry, ServiceRegistry serviceRegistry) {
 		super(activity, activityIconManager, serviceDescriptionRegistry);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
+		this.serviceRegistry = serviceRegistry;
 		putValue(NAME, CONFIGURE);
-		this.owner = owner;
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		final SpreadsheetImportConfigView spreadsheetConfigView = new SpreadsheetImportConfigView(
-				getActivity());
+				getActivity(), serviceRegistry);
 		final ActivityConfigurationDialog dialog = new ActivityConfigurationDialog(getActivity(),
 				spreadsheetConfigView, editManager);
 

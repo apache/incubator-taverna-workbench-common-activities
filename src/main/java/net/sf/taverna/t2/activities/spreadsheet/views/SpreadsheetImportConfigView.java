@@ -35,9 +35,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -45,7 +42,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 
-import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -81,6 +77,7 @@ import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityCon
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
+import uk.org.taverna.commons.services.ServiceRegistry;
 import uk.org.taverna.scufl2.api.activity.Activity;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -155,7 +152,7 @@ public class SpreadsheetImportConfigView extends ActivityConfigurationPanel {
 
 	private SpreadsheetImportConfigTableModel columnMappingTableModel;
 
-	private JButton actionOkButton, actionCancelButton, nextButton, backButton;
+	private JButton nextButton, backButton;
 
 	private CardLayout cardLayout = new CardLayout();
 
@@ -163,23 +160,18 @@ public class SpreadsheetImportConfigView extends ActivityConfigurationPanel {
 
 	private Stack<String> errorMessages = new Stack<String>();
 
-	private KeyListener enterKeyListener = new KeyAdapter() {
-		public void keyPressed(KeyEvent e) {
-			if (actionOkButton.isSelected() && e.getKeyCode() == KeyEvent.VK_ENTER) {
-				actionOkButton.doClick();
-			}
-		}
-	};
-
 	private ObjectNode newConfiguration;
+
+	private final ServiceRegistry serviceRegistry;
 
 	/**
 	 * Constructs a configuration view for an SpreadsheetImport Activity.
 	 *
 	 * @param activity
 	 */
-	public SpreadsheetImportConfigView(Activity activity) {
+	public SpreadsheetImportConfigView(Activity activity, ServiceRegistry serviceRegistry) {
 		super(activity);
+		this.serviceRegistry = serviceRegistry;
 		initialise();
 	}
 
@@ -211,10 +203,8 @@ public class SpreadsheetImportConfigView extends ActivityConfigurationPanel {
 
 		JsonNode columnRange = newConfiguration.get("columnRange");
 		columnFromValue = new JTextField(new UpperCaseDocument(), SpreadsheetUtils.getColumnLabel(columnRange.get("start").intValue()), 4);
-		columnFromValue.addKeyListener(enterKeyListener);
 		columnFromValue.setMinimumSize(columnFromValue.getPreferredSize());
 		columnToValue = new JTextField(new UpperCaseDocument(), SpreadsheetUtils.getColumnLabel(columnRange.get("end").intValue()), 4);
-		columnToValue.addKeyListener(enterKeyListener);
 		columnToValue.setMinimumSize(columnToValue.getPreferredSize());
 
 		columnFromValue.getDocument().addDocumentListener(new DocumentListener() {
@@ -309,9 +299,7 @@ public class SpreadsheetImportConfigView extends ActivityConfigurationPanel {
 		} else {
 			rowToValue = new JTextField(new NumericDocument(), String.valueOf(rowRange.get("end").intValue() + 1), 4);
 		}
-		rowFromValue.addKeyListener(enterKeyListener);
 		rowFromValue.setMinimumSize(rowFromValue.getPreferredSize());
-		rowToValue.addKeyListener(enterKeyListener);
 		rowToValue.setMinimumSize(rowToValue.getPreferredSize());
 
 		if (newConfiguration.get("allRows").booleanValue()) {
@@ -445,7 +433,6 @@ public class SpreadsheetImportConfigView extends ActivityConfigurationPanel {
 		emptyCellErrorValueOption.setFocusable(false);
 
 		emptyCellUserDefinedValue = new JTextField(newConfiguration.get("emptyCellValue").textValue());
-		emptyCellUserDefinedValue.addKeyListener(enterKeyListener);
 
 		emptyCellButtonGroup.add(emptyCellEmptyStringOption);
 		emptyCellButtonGroup.add(emptyCellUserDefinedOption);
@@ -649,13 +636,6 @@ public class SpreadsheetImportConfigView extends ActivityConfigurationPanel {
 		});
 
 		// buttons
-		actionOkButton = new JButton();
-		actionOkButton.setFocusable(false);
-		actionOkButton.setSelected(true);
-
-		actionCancelButton = new JButton();
-		actionCancelButton.setFocusable(false);
-
 		nextButton = new JButton(SpreadsheetImportUIText.getString("SpreadsheetImportConfigView.nextButton"));
 		nextButton.setFocusable(false);
 		nextButton.addActionListener(new ActionListener() {
@@ -686,12 +666,14 @@ public class SpreadsheetImportConfigView extends ActivityConfigurationPanel {
 
 	@Override
 	public void noteConfiguration() {
-		getConfiguration().setJson(newConfiguration);
+		setJson(newConfiguration);
+		configureInputPorts(serviceRegistry);
+		configureOutputPorts(serviceRegistry);
 	}
 
 	@Override
 	public boolean checkValues() {
-		return true;
+		return errorMessages.isEmpty();
 	}
 
 	private void layoutPanel() {
@@ -807,10 +789,8 @@ public class SpreadsheetImportConfigView extends ActivityConfigurationPanel {
 		c.weighty = 1;
 		page2.add(new JScrollPane(columnMappingTable), c);
 
-		buttonPanel.add(actionCancelButton);
 		buttonPanel.add(backButton);
 		buttonPanel.add(nextButton);
-		buttonPanel.add(actionOkButton);
 		add(buttonPanel, BorderLayout.SOUTH);
 	}
 
@@ -823,7 +803,6 @@ public class SpreadsheetImportConfigView extends ActivityConfigurationPanel {
 	public void setMessage(String message) {
 		titleIcon.setIcon(null);
 		titleMessage.setText(message);
-		actionOkButton.setEnabled(true);
 	}
 
 	/**
@@ -871,7 +850,6 @@ public class SpreadsheetImportConfigView extends ActivityConfigurationPanel {
 	public void setWarningMessage(String message) {
 		titleIcon.setIcon(Icons.warningIcon);
 		titleMessage.setText(message);
-		actionOkButton.setEnabled(true);
 	}
 
 	/**
@@ -919,7 +897,6 @@ public class SpreadsheetImportConfigView extends ActivityConfigurationPanel {
 	public void setErrorMessage(String message) {
 		titleIcon.setIcon(Icons.severeIcon);
 		titleMessage.setText(message);
-		actionOkButton.setEnabled(false);
 	}
 
 	protected boolean validatePortNames() {
@@ -1032,14 +1009,6 @@ public class SpreadsheetImportConfigView extends ActivityConfigurationPanel {
 			}
 
 		});
-	}
-
-	public void setOkAction(Action okAction) {
-		actionOkButton.setAction(okAction);
-	}
-
-	public void setCancelAction(Action cancelAction) {
-		actionCancelButton.setAction(cancelAction);
 	}
 
 	private void enableTable(JTable table, boolean enabled) {

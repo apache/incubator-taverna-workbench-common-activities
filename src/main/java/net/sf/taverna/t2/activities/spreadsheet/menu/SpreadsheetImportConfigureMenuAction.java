@@ -22,6 +22,8 @@ package net.sf.taverna.t2.activities.spreadsheet.menu;
 
 import javax.swing.Action;
 
+import uk.org.taverna.commons.services.ServiceRegistry;
+
 import net.sf.taverna.t2.activities.spreadsheet.actions.SpreadsheetImportActivityConfigurationAction;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
 import net.sf.taverna.t2.activities.spreadsheet.servicedescriptions.SpreadsheetImportTemplateService;
@@ -42,6 +44,7 @@ public class SpreadsheetImportConfigureMenuAction extends AbstractConfigureActiv
 	private FileManager fileManager;
 	private ActivityIconManager activityIconManager;
 	private ServiceDescriptionRegistry serviceDescriptionRegistry;
+	private ServiceRegistry serviceRegistry;
 
 	public SpreadsheetImportConfigureMenuAction() {
 		super(SpreadsheetImportTemplateService.ACTIVITY_TYPE);
@@ -51,7 +54,7 @@ public class SpreadsheetImportConfigureMenuAction extends AbstractConfigureActiv
 	protected Action createAction() {
 		Action result = new SpreadsheetImportActivityConfigurationAction(findActivity(),
 				getParentFrame(), editManager, fileManager, activityIconManager,
-				serviceDescriptionRegistry);
+				serviceDescriptionRegistry, serviceRegistry);
 		result.putValue(Action.NAME, SpreadsheetImportUIText
 				.getString("SpreadsheetImportConfigureMenuAction.configureMenu"));
 		addMenuDots(result);
@@ -72,6 +75,10 @@ public class SpreadsheetImportConfigureMenuAction extends AbstractConfigureActiv
 
 	public void setServiceDescriptionRegistry(ServiceDescriptionRegistry serviceDescriptionRegistry) {
 		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
+	}
+
+	public void setServiceRegistry(ServiceRegistry serviceRegistry) {
+		this.serviceRegistry = serviceRegistry;
 	}
 
 }

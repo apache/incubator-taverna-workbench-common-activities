@@ -33,6 +33,7 @@ import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
+import uk.org.taverna.commons.services.ServiceRegistry;
 import uk.org.taverna.scufl2.api.activity.Activity;
 import uk.org.taverna.scufl2.api.port.InputActivityPort;
 import uk.org.taverna.scufl2.api.port.OutputActivityPort;
@@ -50,15 +51,17 @@ public class SpreadsheetImportContextualView extends HTMLBasedActivityContextual
 	private final FileManager fileManager;
 	private final ActivityIconManager activityIconManager;
 	private final ServiceDescriptionRegistry serviceDescriptionRegistry;
+	private final ServiceRegistry serviceRegistry;
 
 	public SpreadsheetImportContextualView(Activity activity, EditManager editManager,
 			FileManager fileManager, ActivityIconManager activityIconManager,
-			ColourManager colourManager, ServiceDescriptionRegistry serviceDescriptionRegistry) {
+			ColourManager colourManager, ServiceDescriptionRegistry serviceDescriptionRegistry, ServiceRegistry serviceRegistry) {
 		super(activity, colourManager);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
 		this.activityIconManager = activityIconManager;
 		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
+		this.serviceRegistry = serviceRegistry;
 	}
 
 	@Override
@@ -102,7 +105,7 @@ public class SpreadsheetImportContextualView extends HTMLBasedActivityContextual
 	public Action getConfigureAction(Frame owner) {
 		return new SpreadsheetImportActivityConfigurationAction(
 				getActivity(), owner, editManager, fileManager,
-				activityIconManager, serviceDescriptionRegistry);
+				activityIconManager, serviceDescriptionRegistry, serviceRegistry);
 	}
 
 	@Override

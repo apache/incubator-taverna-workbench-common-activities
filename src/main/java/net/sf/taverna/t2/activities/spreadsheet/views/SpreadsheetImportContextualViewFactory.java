@@ -31,6 +31,7 @@ import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
+import uk.org.taverna.commons.services.ServiceRegistry;
 import uk.org.taverna.scufl2.api.activity.Activity;
 
 /**
@@ -45,6 +46,7 @@ public class SpreadsheetImportContextualViewFactory implements ContextualViewFac
 	private ActivityIconManager activityIconManager;
 	private ColourManager colourManager;
 	private ServiceDescriptionRegistry serviceDescriptionRegistry;
+	private ServiceRegistry serviceRegistry;
 
 	public boolean canHandle(Object object) {
 		return object instanceof Activity
@@ -55,7 +57,7 @@ public class SpreadsheetImportContextualViewFactory implements ContextualViewFac
 	public List<ContextualView> getViews(Activity activity) {
 		return Arrays.asList(new ContextualView[] { new SpreadsheetImportContextualView(activity,
 				editManager, fileManager, activityIconManager, colourManager,
-				serviceDescriptionRegistry) });
+				serviceDescriptionRegistry, serviceRegistry) });
 	}
 
 	public void setEditManager(EditManager editManager) {
@@ -76,6 +78,10 @@ public class SpreadsheetImportContextualViewFactory implements ContextualViewFac
 
 	public void setServiceDescriptionRegistry(ServiceDescriptionRegistry serviceDescriptionRegistry) {
 		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
+	}
+
+	public void setServiceRegistry(ServiceRegistry serviceRegistry) {
+		this.serviceRegistry = serviceRegistry;
 	}
 
 }

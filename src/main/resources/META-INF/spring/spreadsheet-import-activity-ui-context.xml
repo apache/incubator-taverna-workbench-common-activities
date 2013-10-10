@@ -30,6 +30,7 @@
 			<property name="fileManager" ref="fileManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
 			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+			<property name="serviceRegistry" ref="serviceRegistry" />
 	</bean>
 
 	<bean id="SpreadsheetImportContextualViewFactory" class="net.sf.taverna.t2.activities.spreadsheet.views.SpreadsheetImportContextualViewFactory">
@@ -38,6 +39,7 @@
 			<property name="activityIconManager" ref="activityIconManager" />
 			<property name="colourManager" ref="colourManager" />
 			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+			<property name="serviceRegistry" ref="serviceRegistry" />
 	</bean>
 
 </beans>
