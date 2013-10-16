@@ -6,7 +6,6 @@ import java.net.URI;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import net.sf.taverna.t2.activities.rest.RESTActivity;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI;
 import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 
