@@ -8,8 +8,6 @@ import net.sf.taverna.t2.servicedescriptions.AbstractTemplateService;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import uk.org.taverna.scufl2.api.configurations.Configuration;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 public class BeanshellTemplateService extends AbstractTemplateService {
 
 	public static final URI ACTIVITY_TYPE = URI.create("http://ns.taverna.org.uk/2010/activity/beanshell");
@@ -32,8 +30,8 @@ public class BeanshellTemplateService extends AbstractTemplateService {
 	public Configuration getActivityConfiguration() {
 		Configuration configuration = new Configuration();
 		configuration.setType(ACTIVITY_TYPE.resolve("#Config"));
-		((ObjectNode) configuration.getJson()).put("script", "");
-		((ObjectNode) configuration.getJson()).put("classLoaderSharing", "workflow");
+		configuration.getJsonAsObjectNode().put("script", "");
+		configuration.getJsonAsObjectNode().put("classLoaderSharing", "workflow");
 		return configuration;
 	}
 

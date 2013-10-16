@@ -91,11 +91,16 @@ public class BeanshellConfigurationPanel extends MultiPageActivityConfigurationP
 	public void noteConfiguration() {
 		setProperty("script", scriptConfigurationComponent.getScript());
 		setProperty("classLoaderSharing", dependencyConfigurationPanel.getClassLoaderSharing());
-		ArrayNode localDependenciesArray = getJson().arrayNode();
-		for (String localDependency : dependencyConfigurationPanel.getLocalDependencies()) {
-			localDependenciesArray.add(localDependency);
+		List<String> localDependencies = dependencyConfigurationPanel.getLocalDependencies();
+		if (localDependencies == null || localDependencies.isEmpty()) {
+			getJson().remove("localDependency");
+		} else {
+			ArrayNode localDependenciesArray = getJson().arrayNode();
+			for (String localDependency : localDependencies) {
+				localDependenciesArray.add(localDependency);
+			}
+			getJson().put("localDependency", localDependenciesArray);
 		}
-		getJson().put("localDependency", localDependenciesArray);
 	}
 
 	@Override
