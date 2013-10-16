@@ -16,7 +16,7 @@
 
 	<service ref="XPathActivityMainContextViewFactory" interface="net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
 
-	<service ref="XPathActivityHealthCheckVisitExplainer" interface="net.sf.taverna.t2.workbench.report.explainer.VisitExplainer" />
+	<!-- <service ref="XPathActivityHealthCheckVisitExplainer" interface="net.sf.taverna.t2.workbench.report.explainer.VisitExplainer" /> -->
 
 	<reference id="editManager" interface="net.sf.taverna.t2.workbench.edits.EditManager" />
 	<reference id="fileManager" interface="net.sf.taverna.t2.workbench.file.FileManager" />
@@ -24,5 +24,7 @@
 	<reference id="selectionManager" interface="net.sf.taverna.t2.workbench.selection.SelectionManager" />
 	<reference id="activityIconManager" interface="net.sf.taverna.t2.workbench.activityicons.ActivityIconManager" />
 	<reference id="colourManager" interface="net.sf.taverna.t2.workbench.configuration.colour.ColourManager" />
+	<reference id="serviceDescriptionRegistry" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry" />
+	<reference id="serviceRegistry" interface="uk.org.taverna.commons.services.ServiceRegistry" />
 
 </beans:beans>

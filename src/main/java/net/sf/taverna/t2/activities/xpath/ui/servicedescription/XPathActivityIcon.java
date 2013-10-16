@@ -1,17 +1,15 @@
 package net.sf.taverna.t2.activities.xpath.ui.servicedescription;
 
 import java.awt.Color;
+import java.net.URI;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import net.sf.taverna.t2.activities.xpath.XPathActivity;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI;
 import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 
 /**
- *
  * @author Sergejs Aleksejevs
  */
 public class XPathActivityIcon implements ActivityIconSPI {
@@ -45,15 +43,15 @@ public class XPathActivityIcon implements ActivityIconSPI {
 
 	private static ImageIcon icon;
 
-	public int canProvideIconScore(Activity<?> activity) {
-		if (activity.getClass().getName().equals(XPathActivity.class.getName()))
+	public int canProvideIconScore(URI activityType) {
+		if (XPathTemplateService.ACTIVITY_TYPE.equals(activityType))
 			return DEFAULT_ICON + 1;
 		else
 			return NO_ICON;
 	}
 
-	public Icon getIcon(Activity<?> activity) {
-		return (getXPathActivityIcon());
+	public Icon getIcon(URI activityType) {
+		return getXPathActivityIcon();
 	}
 
 	public static Icon getXPathActivityIcon() {
@@ -82,8 +80,7 @@ public class XPathActivityIcon implements ActivityIconSPI {
 	}
 
 	public void setColourManager(ColourManager colourManager) {
-		colourManager.setPreferredColour(XPathActivity.class.getCanonicalName(),
-				PROCESSOR_COLOUR);
+		colourManager.setPreferredColour(XPathTemplateService.ACTIVITY_TYPE.toString(), PROCESSOR_COLOUR);
 	}
 
 }

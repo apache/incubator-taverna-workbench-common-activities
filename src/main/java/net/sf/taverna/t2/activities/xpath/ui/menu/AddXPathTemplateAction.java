@@ -26,7 +26,6 @@ import java.net.URI;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
-import net.sf.taverna.t2.activities.xpath.XPathActivity;
 import net.sf.taverna.t2.activities.xpath.ui.servicedescription.XPathTemplateService;
 import net.sf.taverna.t2.ui.menu.AbstractContextualMenuAction;
 import net.sf.taverna.t2.ui.menu.MenuManager;
@@ -34,15 +33,13 @@ import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.selection.SelectionManager;
 import net.sf.taverna.t2.workbench.ui.workflowview.WorkflowView;
-import net.sf.taverna.t2.workflowmodel.Dataflow;
-
-import org.apache.log4j.Logger;
+import uk.org.taverna.commons.services.ServiceRegistry;
+import uk.org.taverna.scufl2.api.core.Workflow;
 
 /**
  * An action to add a REST activity + a wrapping processor to the workflow.
  *
  * @author Alex Nenadic
- *
  */
 @SuppressWarnings("serial")
 public class AddXPathTemplateAction extends AbstractContextualMenuAction {
@@ -52,9 +49,6 @@ public class AddXPathTemplateAction extends AbstractContextualMenuAction {
 	private static final URI insertSection = URI
 			.create("http://taverna.sf.net/2009/contextMenu/insert");
 
-	private static Logger logger = Logger
-			.getLogger(AddXPathTemplateAction.class);
-
 	private EditManager editManager;
 
 	private MenuManager menuManager;
@@ -63,14 +57,15 @@ public class AddXPathTemplateAction extends AbstractContextualMenuAction {
 
 	private ActivityIconManager activityIconManager;
 
+	private ServiceRegistry serviceRegistry;
+
 	public AddXPathTemplateAction() {
 		super(insertSection, 1000);
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return super.isEnabled()
-				&& getContextualSelection().getSelection() instanceof Dataflow;
+		return super.isEnabled() && getContextualSelection().getSelection() instanceof Workflow;
 	}
 
 	@Override
@@ -81,14 +76,14 @@ public class AddXPathTemplateAction extends AbstractContextualMenuAction {
 
 	protected class AddXPathAction extends AbstractAction {
 		AddXPathAction() {
-			super(ADD_XPATH, activityIconManager.iconForActivity(
-					new XPathActivity()));
+			super(ADD_XPATH, activityIconManager
+					.iconForActivity(XPathTemplateService.ACTIVITY_TYPE));
 		}
 
 		public void actionPerformed(ActionEvent e) {
 
-			WorkflowView.importServiceDescription(
-					XPathTemplateService.getServiceDescription(), false, editManager, menuManager, selectionManager);
+			WorkflowView.importServiceDescription(XPathTemplateService.getServiceDescription(),
+					false, editManager, menuManager, selectionManager, serviceRegistry);
 		}
 	}
 
@@ -106,6 +101,10 @@ public class AddXPathTemplateAction extends AbstractContextualMenuAction {
 
 	public void setActivityIconManager(ActivityIconManager activityIconManager) {
 		this.activityIconManager = activityIconManager;
+	}
+
+	public void setServiceRegistry(ServiceRegistry serviceRegistry) {
+		this.serviceRegistry = serviceRegistry;
 	}
 
 }

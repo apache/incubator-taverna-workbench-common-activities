@@ -25,10 +25,10 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.net.URI;
 
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import net.sf.taverna.t2.activities.xpath.XPathActivity;
 import net.sf.taverna.t2.activities.xpath.ui.servicedescription.XPathTemplateService;
 import net.sf.taverna.t2.ui.menu.AbstractMenuAction;
 import net.sf.taverna.t2.ui.menu.DesignOnlyAction;
@@ -37,27 +37,24 @@ import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.selection.SelectionManager;
 import net.sf.taverna.t2.workbench.ui.workflowview.WorkflowView;
-import net.sf.taverna.t2.workbench.views.graph.menu.InsertMenu;
-
-import org.apache.log4j.Logger;
+import uk.org.taverna.commons.services.ServiceRegistry;
 
 /**
  * An action to add a REST activity + a wrapping processor to the workflow.
  *
  * @author Alex Nenadic
  * @author alanrw
- *
  */
 @SuppressWarnings("serial")
 public class AddXPathTemplateMenuAction extends AbstractMenuAction {
 
 	private static final String ADD_XPATH = "XPath";
 
+	private static final URI INSERT = URI
+			.create("http://taverna.sf.net/2008/t2workbench/menu#insert");
+
 	private static final URI ADD_XPATH_URI = URI
 			.create("http://taverna.sf.net/2008/t2workbench/menu#graphMenuAddXPath");
-
-	private static Logger logger = Logger
-			.getLogger(AddXPathTemplateMenuAction.class);
 
 	private EditManager editManager;
 
@@ -67,30 +64,33 @@ public class AddXPathTemplateMenuAction extends AbstractMenuAction {
 
 	private ActivityIconManager activityIconManager;
 
+	private ServiceRegistry serviceRegistry;
+
 	public AddXPathTemplateMenuAction() {
-		super(InsertMenu.INSERT, 1000, ADD_XPATH_URI);
+		super(INSERT, 1000, ADD_XPATH_URI);
 	}
 
 	@Override
 	protected Action createAction() {
-
 		return new AddXPathMenuAction();
 	}
 
-	protected class AddXPathMenuAction extends DesignOnlyAction {
+	protected class AddXPathMenuAction extends AbstractAction implements DesignOnlyAction {
 		AddXPathMenuAction() {
 			super();
-			putValue(SMALL_ICON, activityIconManager.iconForActivity(new XPathActivity()));
+			putValue(SMALL_ICON,
+					activityIconManager.iconForActivity(XPathTemplateService.ACTIVITY_TYPE));
 			putValue(NAME, ADD_XPATH);
 			putValue(SHORT_DESCRIPTION, "XPath service");
-			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-					KeyEvent.VK_P, InputEvent.SHIFT_DOWN_MASK
+			putValue(
+					Action.ACCELERATOR_KEY,
+					KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.SHIFT_DOWN_MASK
 							| InputEvent.ALT_DOWN_MASK));
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			WorkflowView.importServiceDescription(
-					XPathTemplateService.getServiceDescription(), false, editManager, menuManager, selectionManager);
+			WorkflowView.importServiceDescription(XPathTemplateService.getServiceDescription(),
+					false, editManager, menuManager, selectionManager, serviceRegistry);
 		}
 	}
 
@@ -108,6 +108,10 @@ public class AddXPathTemplateMenuAction extends AbstractMenuAction {
 
 	public void setActivityIconManager(ActivityIconManager activityIconManager) {
 		this.activityIconManager = activityIconManager;
+	}
+
+	public void setServiceRegistry(ServiceRegistry serviceRegistry) {
+		this.serviceRegistry = serviceRegistry;
 	}
 
 }

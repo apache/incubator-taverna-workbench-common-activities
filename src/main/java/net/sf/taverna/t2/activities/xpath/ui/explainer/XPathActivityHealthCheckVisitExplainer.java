@@ -18,15 +18,15 @@ import net.sf.taverna.t2.activities.xpath.XPathActivityHealthCheck;
 import net.sf.taverna.t2.lang.ui.ReadOnlyTextArea;
 import net.sf.taverna.t2.visit.VisitKind;
 import net.sf.taverna.t2.visit.VisitReport;
-import net.sf.taverna.t2.workbench.report.explainer.VisitExplainer;
-import net.sf.taverna.t2.workbench.report.view.ReportViewConfigureAction;
+//import net.sf.taverna.t2.workbench.report.explainer.VisitExplainer;
+//import net.sf.taverna.t2.workbench.report.view.ReportViewConfigureAction;
 import net.sf.taverna.t2.workflowmodel.Processor;
 
 /**
  *
  * @author Sergejs Aleksejevs
  */
-public class XPathActivityHealthCheckVisitExplainer implements VisitExplainer {
+public class XPathActivityHealthCheckVisitExplainer /*implements VisitExplainer*/ {
 
 	public boolean canExplain(VisitKind vk, int resultId) {
 		return (vk instanceof XPathActivityHealthCheck);
@@ -146,7 +146,7 @@ public class XPathActivityHealthCheckVisitExplainer implements VisitExplainer {
 		if (includeConfigButton) {
 			JButton button = new JButton();
 			Processor p = (Processor) (vr.getSubject());
-			button.setAction(new ReportViewConfigureAction(p));
+//			button.setAction(new ReportViewConfigureAction(p));
 			button.setText("Open XPath Activity configuration dialog");
 			button.setAlignmentX(Component.LEFT_ALIGNMENT);
 

@@ -2,47 +2,44 @@ package net.sf.taverna.t2.activities.xpath.ui.config;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 
-import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
-
-import net.sf.taverna.t2.activities.xpath.XPathActivity;
 import net.sf.taverna.t2.activities.xpath.XPathActivityConfigurationBean;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
+import uk.org.taverna.commons.services.ServiceRegistry;
+import uk.org.taverna.scufl2.api.activity.Activity;
 
-@SuppressWarnings("serial")
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
 /**
- * 
+ *
  * @author Sergejs Aleksejevs
+ * @author David Withers
  */
-public class XPathActivityConfigurationPanelProvider
-		extends
-		ActivityConfigurationPanel<XPathActivity, XPathActivityConfigurationBean> {
-	private XPathActivity activity;
-	private XPathActivityConfigurationBean configBean;
+@SuppressWarnings("serial")
+public class XPathActivityConfigurationPanelProvider extends ActivityConfigurationPanel {
 
 	private XPathActivityConfigurationPanel configPanel;
+	private final ServiceRegistry serviceRegistry;
 
-	public XPathActivityConfigurationPanelProvider(XPathActivity activity) {
-		this.activity = activity;
-		initGui();
+	public XPathActivityConfigurationPanelProvider(Activity activity, ServiceRegistry serviceRegistry) {
+		super(activity);
+		this.serviceRegistry = serviceRegistry;
+		initialise();
 	}
 
-	protected void initGui() {
+	@Override
+	protected void initialise() {
+		super.initialise();
 		removeAll();
 		setLayout(new BorderLayout());
-
-		// create view title
-		// ShadedLabel slConfigurationLabel = new
-		// ShadedLabel("Configuration options for this XPath service",
-		// ShadedLabel.ORANGE);
-		// JPanel jpConfigurationLabel = new JPanel(new GridLayout(1,1));
-		// jpConfigurationLabel.add(slConfigurationLabel);
-		// jpConfigurationLabel.setBorder(BorderFactory.createEmptyBorder(10,
-		// 10, 0, 10));
-		// add(jpConfigurationLabel, BorderLayout.NORTH);
 
 		// create actual contents of the config panel
 		this.configPanel = new XPathActivityConfigurationPanel();
@@ -51,75 +48,12 @@ public class XPathActivityConfigurationPanelProvider
 		// place the whole configuration panel into a raised area, so that
 		// automatically added 'Apply' / 'Close' buttons visually apply to
 		// the whole of the panel, not just part of it
-		this.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createEmptyBorder(12, 12, 2, 12), BorderFactory
-				.createRaisedBevelBorder()));
-
-		// set preferred size for the panel (otherwise it will be way too small)
-		//this.setMinimumSize(new Dimension(800, 600));
-		//this.setPreferredSize(new Dimension(950, 650));
+		this.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createEmptyBorder(12, 12, 2, 12),
+				BorderFactory.createRaisedBevelBorder()));
 
 		// Populate fields from activity configuration bean
 		refreshConfiguration();
-	}
-
-	/**
-	 * Check that user values in the UI are valid.
-	 */
-	@Override
-	public boolean checkValues() {
-		// the only validity condition is the correctness of the XPath
-		// expression -- so checking that
-		int xpathExpressionStatus = XPathActivityConfigurationBean
-				.validateXPath(this.configPanel.getCurrentXPathExpression());
-
-		// show an explicit warning message to explain the problem
-		if (xpathExpressionStatus == XPathActivityConfigurationBean.XPATH_EMPTY) {
-			JOptionPane.showMessageDialog(this,
-					"XPath expression should not be empty", "XPath Activity",
-					JOptionPane.WARNING_MESSAGE);
-		} else if (xpathExpressionStatus == XPathActivityConfigurationBean.XPATH_INVALID) {
-			JOptionPane
-					.showMessageDialog(
-							this,
-							"<html><center>XPath expression is invalid - hover the mouse over the XPath status<br>"
-									+ "icon to get more information</center></html>",
-							"XPath Activity", JOptionPane.WARNING_MESSAGE);
-		}
-
-		return (xpathExpressionStatus == XPathActivityConfigurationBean.XPATH_VALID);
-	}
-
-	/**
-	 * Return configuration bean generated from user interface last time
-	 * noteConfiguration() was called.
-	 */
-	@Override
-	public XPathActivityConfigurationBean getConfiguration() {
-		// Should already have been made by noteConfiguration()
-		return configBean;
-	}
-
-	/**
-	 * Check if the user has changed the configuration from the original
-	 */
-	@Override
-	public boolean isConfigurationChanged() {
-		boolean xmlDocumentHasNotChanged = (configPanel.getCurrentXMLTree() == null && configBean
-				.getXmlDocument() == null)
-				|| (configPanel.getCurrentXMLTree() != null
-						&& configBean.getXmlDocument() != null && configPanel
-						.getCurrentXMLTree().getDocumentUsedToPopulateTree()
-						.asXML().equals(configBean.getXmlDocument()));
-		boolean xpathExpressionHasNotChanged = configPanel
-				.getCurrentXPathExpression().equals(
-						configBean.getXpathExpression());
-		boolean xpathNamespaceMapHasNotChanged = configPanel
-				.getCurrentXPathNamespaceMap().equals(
-						configBean.getXpathNamespaceMap());
-
-		// true (changed) unless all fields match the originals
-		return !(xmlDocumentHasNotChanged && xpathExpressionHasNotChanged && xpathNamespaceMapHasNotChanged);
 	}
 
 	/**
@@ -128,15 +62,49 @@ public class XPathActivityConfigurationPanelProvider
 	 */
 	@Override
 	public void noteConfiguration() {
-		configBean = new XPathActivityConfigurationBean();
-
 		if (configPanel.getCurrentXMLTree() != null) {
-			configBean.setXmlDocument(configPanel.getCurrentXMLTree()
+			setProperty("exampleXmlDocument", configPanel.getCurrentXMLTree()
 					.getDocumentUsedToPopulateTree().asXML());
 		}
-		configBean.setXpathExpression(configPanel.getCurrentXPathExpression());
-		configBean.setXpathNamespaceMap(configPanel
-				.getCurrentXPathNamespaceMap());
+		setProperty("xpathExpression", configPanel.getCurrentXPathExpression());
+
+		Map<String, String> xPathNamespaceMap = configPanel.getCurrentXPathNamespaceMap();
+		if (xPathNamespaceMap.isEmpty()) {
+			json.remove("xpathNamespaceMap");
+		} else {
+			ArrayNode namespaceMapNode = json.arrayNode();
+			for (Entry<String, String> namespaceMapping : xPathNamespaceMap.entrySet()) {
+				namespaceMapNode.addObject().put("prefix", namespaceMapping.getKey()).put("uri", namespaceMapping.getValue());
+			}
+			json.set("xpathNamespaceMap", namespaceMapNode);
+		}
+
+		configureInputPorts(serviceRegistry);
+		configureOutputPorts(serviceRegistry);
+}
+
+	/**
+	 * Check that user values in the UI are valid.
+	 */
+	@Override
+	public boolean checkValues() {
+		// the only validity condition is the correctness of the XPath
+		// expression -- so checking that
+		int xpathExpressionStatus = XPathActivityConfigurationBean.validateXPath(this.configPanel
+				.getCurrentXPathExpression());
+
+		// show an explicit warning message to explain the problem
+		if (xpathExpressionStatus == XPathActivityConfigurationBean.XPATH_EMPTY) {
+			JOptionPane.showMessageDialog(this, "XPath expression should not be empty",
+					"XPath Activity", JOptionPane.WARNING_MESSAGE);
+		} else if (xpathExpressionStatus == XPathActivityConfigurationBean.XPATH_INVALID) {
+			JOptionPane.showMessageDialog(this,
+					"<html><center>XPath expression is invalid - hover the mouse over the XPath status<br>"
+							+ "icon to get more information</center></html>", "XPath Activity",
+					JOptionPane.WARNING_MESSAGE);
+		}
+
+		return (xpathExpressionStatus == XPathActivityConfigurationBean.XPATH_VALID);
 	}
 
 	/**
@@ -144,17 +112,20 @@ public class XPathActivityConfigurationPanelProvider
 	 */
 	@Override
 	public void refreshConfiguration() {
-		configBean = activity.getConfiguration();
-
-		if (configBean.getXmlDocument() != null) {
-			configPanel.setSourceXML(configBean.getXmlDocument());
+		if (json.has("exampleXmlDocument")) {
+			configPanel.setSourceXML(getProperty("exampleXmlDocument"));
 			configPanel.parseXML();
 		}
 
-		configPanel.setCurrentXPathExpression(configBean.getXpathExpression());
+		configPanel.setCurrentXPathExpression(getProperty("xpathExpression"));
 
-		configPanel.setCurrentXPathNamespaceMapValues(configBean
-				.getXpathNamespaceMap());
+		Map<String, String> xpathNamespaceMap = new HashMap<>();
+		if (json.has("xpathNamespaceMap")) {
+			for (JsonNode namespaceMapping : json.get("xpathNamespaceMap")) {
+				xpathNamespaceMap.put(namespaceMapping.get("prefix").asText(), namespaceMapping.get("uri").asText());
+			}
+		}
+		configPanel.setCurrentXPathNamespaceMapValues(xpathNamespaceMap);
 		configPanel.reloadNamespaceMappingTableFromLocalMap();
 
 		// if the XML tree was populated, (re-)run the XPath expression
@@ -166,7 +137,7 @@ public class XPathActivityConfigurationPanelProvider
 			// discard the first 'leg', as it's a side effect of
 			// "String.split()" -
 			// non-existent string to the left of the first "/"
-			String[] xpathLegs = configBean.getXpathExpression().split("/");
+			String[] xpathLegs = getProperty("xpathExpression").split("/");
 			List<String> xpathLegList = new ArrayList<String>();
 			for (int i = 1; i < xpathLegs.length; i++) {
 				xpathLegList.add("/" + xpathLegs[i]);

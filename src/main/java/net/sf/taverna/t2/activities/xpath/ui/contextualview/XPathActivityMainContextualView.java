@@ -10,7 +10,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Map;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -22,22 +21,32 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import net.sf.taverna.t2.activities.xpath.XPathActivity;
-import net.sf.taverna.t2.activities.xpath.XPathActivityConfigurationBean;
 import net.sf.taverna.t2.activities.xpath.ui.config.XPathActivityConfigureAction;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
+import uk.org.taverna.commons.services.ServiceRegistry;
+import uk.org.taverna.scufl2.api.activity.Activity;
+import uk.org.taverna.scufl2.api.common.Scufl2Tools;
+import uk.org.taverna.scufl2.api.configurations.Configuration;
 
-@SuppressWarnings("serial")
+import com.fasterxml.jackson.databind.JsonNode;
+
 /**
  *
  * @author Sergejs Aleksejevs
+ * @author David Withers
  */
+@SuppressWarnings("serial")
 public class XPathActivityMainContextualView extends ContextualView {
+
+	private final Scufl2Tools scufl2Tools = new Scufl2Tools();
+
 	private XPathActivityMainContextualView thisContextualView;
-	private final XPathActivity activity;
+
+	private final Activity activity;
 
 	private JPanel jpMainPanel;
 	private JTextField tfXPathExpression;
@@ -48,12 +57,17 @@ public class XPathActivityMainContextualView extends ContextualView {
 	private final EditManager editManager;
 	private final FileManager fileManager;
 	private final ActivityIconManager activityIconManager;
+	private final ServiceDescriptionRegistry serviceDescriptionRegistry;
+	private final ServiceRegistry serviceRegistry;
 
-	public XPathActivityMainContextualView(XPathActivity activity,
-			EditManager editManager, FileManager fileManager, ActivityIconManager activityIconManager) {
+	public XPathActivityMainContextualView(Activity activity, EditManager editManager,
+			FileManager fileManager, ActivityIconManager activityIconManager,
+			ServiceDescriptionRegistry serviceDescriptionRegistry, ServiceRegistry serviceRegistry) {
 		this.editManager = editManager;
 		this.fileManager = fileManager;
 		this.activityIconManager = activityIconManager;
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
+		this.serviceRegistry = serviceRegistry;
 		this.thisContextualView = this;
 		this.activity = activity;
 		initView();
@@ -63,11 +77,7 @@ public class XPathActivityMainContextualView extends ContextualView {
 	public JComponent getMainFrame() {
 		jpMainPanel = new JPanel(new GridBagLayout());
 		jpMainPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createEmptyBorder(4, 2, 4, 2),
-				BorderFactory.createEmptyBorder()
-		// BorderFactory.createLineBorder(ColourManager.getInstance().getPreferredColour(XPathActivity.class.getCanonicalName()),
-		// 2) // makes a thin border with the colour of the processor
-				));
+				BorderFactory.createEmptyBorder(4, 2, 4, 2), BorderFactory.createEmptyBorder()));
 
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -80,8 +90,7 @@ public class XPathActivityMainContextualView extends ContextualView {
 		c.gridy = 0;
 		c.insets = new Insets(5, 5, 5, 5);
 		JLabel jlXPathExpression = new JLabel("XPath Expression:");
-		jlXPathExpression.setFont(jlXPathExpression.getFont().deriveFont(
-				Font.BOLD));
+		jlXPathExpression.setFont(jlXPathExpression.getFont().deriveFont(Font.BOLD));
 		jpMainPanel.add(jlXPathExpression, c);
 
 		c.gridx++;
@@ -92,17 +101,14 @@ public class XPathActivityMainContextualView extends ContextualView {
 
 		// --- Label to Show/Hide Mapping Table ---
 
-		final JLabel jlShowHideNamespaceMappings = new JLabel(
-				"Show namespace mappings...");
+		final JLabel jlShowHideNamespaceMappings = new JLabel("Show namespace mappings...");
 		jlShowHideNamespaceMappings.setForeground(Color.BLUE);
 		jlShowHideNamespaceMappings.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		jlShowHideNamespaceMappings.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				spXPathNamespaceMappings.setVisible(!spXPathNamespaceMappings
-						.isVisible());
-				jlShowHideNamespaceMappings.setText((spXPathNamespaceMappings
-						.isVisible() ? "Hide" : "Show")
-						+ " namespace mappings...");
+				spXPathNamespaceMappings.setVisible(!spXPathNamespaceMappings.isVisible());
+				jlShowHideNamespaceMappings.setText((spXPathNamespaceMappings.isVisible() ? "Hide"
+						: "Show") + " namespace mappings...");
 				thisContextualView.revalidate();
 			}
 		});
@@ -130,18 +136,18 @@ public class XPathActivityMainContextualView extends ContextualView {
 
 		jtXPathNamespaceMappings = new JTable();
 		jtXPathNamespaceMappings.setModel(xpathNamespaceMappingsTableModel);
-		jtXPathNamespaceMappings
-				.setPreferredScrollableViewportSize(new Dimension(200, 90));
+		jtXPathNamespaceMappings.setPreferredScrollableViewportSize(new Dimension(200, 90));
 		// TODO - next line is to be enabled when Taverna is migrated to Java
 		// 1.6; for now it's fine to run without this
 		// jtXPathNamespaceMappings.setFillsViewportHeight(true); // makes sure
 		// that when the dedicated area is larger than the table, the latter is
 		// stretched vertically to fill the empty space
 
-		jtXPathNamespaceMappings.getColumnModel().getColumn(0)
-				.setPreferredWidth(20); // set relative sizes of columns
-		jtXPathNamespaceMappings.getColumnModel().getColumn(1)
-				.setPreferredWidth(300);
+		jtXPathNamespaceMappings.getColumnModel().getColumn(0).setPreferredWidth(20); // set
+																						// relative
+																						// sizes of
+																						// columns
+		jtXPathNamespaceMappings.getColumnModel().getColumn(1).setPreferredWidth(300);
 
 		c.gridy++;
 		spXPathNamespaceMappings = new JScrollPane(jtXPathNamespaceMappings);
@@ -160,8 +166,6 @@ public class XPathActivityMainContextualView extends ContextualView {
 	 * views (even when this contextual view is collapsed).
 	 */
 	public String getViewTitle() {
-		XPathActivityConfigurationBean configuration = activity
-				.getConfiguration();
 		return "XPath Service Details";
 	}
 
@@ -170,17 +174,19 @@ public class XPathActivityMainContextualView extends ContextualView {
 	 */
 	@Override
 	public void refreshView() {
-		XPathActivityConfigurationBean configBean = activity.getConfiguration();
+		Configuration configuration = scufl2Tools.configurationFor(activity, activity.getParent());
+		JsonNode json = configuration.getJson();
 
 		// Set XPath Expression
-		tfXPathExpression.setText("" + configBean.getXpathExpression());
+		tfXPathExpression.setText(json.get("xpathExpression").asText());
 
 		// Populate Namespace Mappings
 		xpathNamespaceMappingsTableModel.getDataVector().removeAllElements();
-		for (Map.Entry<String, String> mapping : configBean
-				.getXpathNamespaceMap().entrySet()) {
-			xpathNamespaceMappingsTableModel.addRow(new Object[] {
-					mapping.getKey(), mapping.getValue() });
+		if (json.has("xpathNamespaceMap")) {
+			for (JsonNode mapping : json.get("xpathNamespaceMap")) {
+				xpathNamespaceMappingsTableModel.addRow(new Object[] {
+						mapping.get("prefix").asText(), mapping.get("uri").asText() });
+			}
 		}
 	}
 
@@ -196,7 +202,8 @@ public class XPathActivityMainContextualView extends ContextualView {
 	@Override
 	public Action getConfigureAction(final Frame owner) {
 		// "Configure" button appears because of this action being returned
-		return new XPathActivityConfigureAction(activity, owner, editManager, fileManager, activityIconManager);
+		return new XPathActivityConfigureAction(activity, owner, editManager, fileManager,
+				activityIconManager, serviceDescriptionRegistry, serviceRegistry);
 	}
 
 }
