@@ -25,10 +25,10 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.net.URI;
 
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import net.sf.taverna.t2.activities.rest.RESTActivity;
 import net.sf.taverna.t2.activities.rest.ui.servicedescription.GenericRESTTemplateService;
 import net.sf.taverna.t2.ui.menu.AbstractMenuAction;
 import net.sf.taverna.t2.ui.menu.DesignOnlyAction;
@@ -38,15 +38,14 @@ import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.selection.SelectionManager;
 import net.sf.taverna.t2.workbench.ui.workflowview.WorkflowView;
 import net.sf.taverna.t2.workbench.views.graph.menu.InsertMenu;
-
-import org.apache.log4j.Logger;
+import uk.org.taverna.commons.services.ServiceRegistry;
 
 /**
  * An action to add a REST activity + a wrapping processor to the workflow.
  *
  * @author Alex Nenadic
  * @author alanrw
- *
+ * @author David Withers
  */
 @SuppressWarnings("serial")
 public class AddRESTTemplateMenuAction extends AbstractMenuAction {
@@ -56,12 +55,11 @@ public class AddRESTTemplateMenuAction extends AbstractMenuAction {
 	private static final URI ADD_REST_URI = URI
 			.create("http://taverna.sf.net/2008/t2workbench/menu#graphMenuAddREST");
 
-	private static Logger logger = Logger.getLogger(AddRESTTemplateMenuAction.class);
-
 	private EditManager editManager;
 	private MenuManager menuManager;
 	private SelectionManager selectionManager;
 	private ActivityIconManager activityIconManager;
+	private ServiceRegistry serviceRegistry;
 
 	public AddRESTTemplateMenuAction() {
 		super(InsertMenu.INSERT, 500, ADD_REST_URI);
@@ -69,14 +67,13 @@ public class AddRESTTemplateMenuAction extends AbstractMenuAction {
 
 	@Override
 	protected Action createAction() {
-
 		return new AddRESTMenuAction();
 	}
 
-	protected class AddRESTMenuAction extends DesignOnlyAction {
+	protected class AddRESTMenuAction extends AbstractAction implements DesignOnlyAction {
 		AddRESTMenuAction() {
 			super();
-			putValue(SMALL_ICON, activityIconManager.iconForActivity(new RESTActivity(null)));
+			putValue(SMALL_ICON, activityIconManager.iconForActivity(GenericRESTTemplateService.ACTIVITY_TYPE));
 			putValue(NAME, ADD_REST);
 			putValue(SHORT_DESCRIPTION, "REST service");
 			putValue(
@@ -88,7 +85,7 @@ public class AddRESTTemplateMenuAction extends AbstractMenuAction {
 		public void actionPerformed(ActionEvent e) {
 			WorkflowView.importServiceDescription(
 					GenericRESTTemplateService.getServiceDescription(), false, editManager,
-					menuManager, selectionManager);
+					menuManager, selectionManager, serviceRegistry);
 		}
 	}
 
@@ -106,6 +103,10 @@ public class AddRESTTemplateMenuAction extends AbstractMenuAction {
 
 	public void setActivityIconManager(ActivityIconManager activityIconManager) {
 		this.activityIconManager = activityIconManager;
+	}
+
+	public void setServiceRegistry(ServiceRegistry serviceRegistry) {
+		this.serviceRegistry = serviceRegistry;
 	}
 
 }

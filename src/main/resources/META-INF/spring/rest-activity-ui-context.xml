@@ -1,39 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
                       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="RESTActivityIcon" class="net.sf.taverna.t2.activities.rest.ui.servicedescription.RESTActivityIcon">
-			<property name="colourManager" ref="colourManager" />
+	<bean id="RESTActivityIcon"
+		class="net.sf.taverna.t2.activities.rest.ui.servicedescription.RESTActivityIcon">
+		<property name="colourManager" ref="colourManager" />
 	</bean>
 
-	<bean id="GenericRESTTemplateService" class="net.sf.taverna.t2.activities.rest.ui.servicedescription.GenericRESTTemplateService" />
+	<bean id="GenericRESTTemplateService"
+		class="net.sf.taverna.t2.activities.rest.ui.servicedescription.GenericRESTTemplateService" />
 
-	<bean id="ConfigureRESTActivityMenuAction" class="net.sf.taverna.t2.activities.rest.ui.view.ConfigureRESTActivityMenuAction">
-			<property name="editManager" ref="editManager" />
-			<property name="fileManager" ref="fileManager" />
-			<property name="activityIconManager" ref="activityIconManager" />
+	<bean id="ConfigureRESTActivityMenuAction"
+		class="net.sf.taverna.t2.activities.rest.ui.view.ConfigureRESTActivityMenuAction">
+		<property name="editManager" ref="editManager" />
+		<property name="fileManager" ref="fileManager" />
+		<property name="activityIconManager" ref="activityIconManager" />
+		<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+		<property name="serviceRegistry" ref="serviceRegistry" />
 	</bean>
-	<bean id="AddRESTTemplateAction" class="net.sf.taverna.t2.activities.rest.ui.menu.AddRESTTemplateAction">
-			<property name="editManager" ref="editManager" />
-			<property name="menuManager" ref="menuManager" />
-			<property name="selectionManager" ref="selectionManager" />
-			<property name="activityIconManager" ref="activityIconManager" />
+	<bean id="AddRESTTemplateAction"
+		class="net.sf.taverna.t2.activities.rest.ui.menu.AddRESTTemplateAction">
+		<property name="editManager" ref="editManager" />
+		<property name="menuManager" ref="menuManager" />
+		<property name="selectionManager" ref="selectionManager" />
+		<property name="activityIconManager" ref="activityIconManager" />
+		<property name="serviceRegistry" ref="serviceRegistry" />
 	</bean>
-	<bean id="AddRESTTemplateMenuAction" class="net.sf.taverna.t2.activities.rest.ui.menu.AddRESTTemplateMenuAction">
-			<property name="editManager" ref="editManager" />
-			<property name="menuManager" ref="menuManager" />
-			<property name="selectionManager" ref="selectionManager" />
-			<property name="activityIconManager" ref="activityIconManager" />
+	<bean id="AddRESTTemplateMenuAction"
+		class="net.sf.taverna.t2.activities.rest.ui.menu.AddRESTTemplateMenuAction">
+		<property name="editManager" ref="editManager" />
+		<property name="menuManager" ref="menuManager" />
+		<property name="selectionManager" ref="selectionManager" />
+		<property name="activityIconManager" ref="activityIconManager" />
+		<property name="serviceRegistry" ref="serviceRegistry" />
 	</bean>
 
-	<bean id="RESTActivityMainContextViewFactory" class="net.sf.taverna.t2.activities.rest.ui.view.RESTActivityMainContextViewFactory">
-			<property name="editManager" ref="editManager" />
-			<property name="fileManager" ref="fileManager" />
-			<property name="activityIconManager" ref="activityIconManager" />
-			<property name="colourManager" ref="colourManager" />
+	<bean id="RESTActivityMainContextViewFactory"
+		class="net.sf.taverna.t2.activities.rest.ui.view.RESTActivityMainContextViewFactory">
+		<property name="editManager" ref="editManager" />
+		<property name="fileManager" ref="fileManager" />
+		<property name="activityIconManager" ref="activityIconManager" />
+		<property name="colourManager" ref="colourManager" />
+		<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+		<property name="serviceRegistry" ref="serviceRegistry" />
 	</bean>
 
-	<bean id="RESTActivityHealthCheckVisitExplainer" class="net.sf.taverna.t2.activities.rest.ui.explainer.RESTActivityHealthCheckVisitExplainer" />
+	<!-- <bean id="RESTActivityHealthCheckVisitExplainer" class="net.sf.taverna.t2.activities.rest.ui.explainer.RESTActivityHealthCheckVisitExplainer"
+		/> -->
 
 </beans>

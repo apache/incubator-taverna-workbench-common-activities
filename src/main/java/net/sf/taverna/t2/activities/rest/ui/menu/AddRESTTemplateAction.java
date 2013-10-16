@@ -26,7 +26,6 @@ import java.net.URI;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
-import net.sf.taverna.t2.activities.rest.RESTActivity;
 import net.sf.taverna.t2.activities.rest.ui.servicedescription.GenericRESTTemplateService;
 import net.sf.taverna.t2.ui.menu.AbstractContextualMenuAction;
 import net.sf.taverna.t2.ui.menu.MenuManager;
@@ -34,15 +33,14 @@ import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.selection.SelectionManager;
 import net.sf.taverna.t2.workbench.ui.workflowview.WorkflowView;
-import net.sf.taverna.t2.workflowmodel.Dataflow;
-
-import org.apache.log4j.Logger;
+import uk.org.taverna.commons.services.ServiceRegistry;
+import uk.org.taverna.scufl2.api.core.Workflow;
 
 /**
  * An action to add a REST activity + a wrapping processor to the workflow.
  *
  * @author Alex Nenadic
- *
+ * @author David Withers
  */
 @SuppressWarnings("serial")
 public class AddRESTTemplateAction extends AbstractContextualMenuAction {
@@ -52,12 +50,11 @@ public class AddRESTTemplateAction extends AbstractContextualMenuAction {
 	private static final URI insertSection = URI
 			.create("http://taverna.sf.net/2009/contextMenu/insert");
 
-	private static Logger logger = Logger.getLogger(AddRESTTemplateAction.class);
-
 	private EditManager editManager;
 	private MenuManager menuManager;
 	private SelectionManager selectionManager;
 	private ActivityIconManager activityIconManager;
+	private ServiceRegistry serviceRegistry;
 
 	public AddRESTTemplateAction() {
 		super(insertSection, 500);
@@ -65,7 +62,7 @@ public class AddRESTTemplateAction extends AbstractContextualMenuAction {
 
 	@Override
 	public boolean isEnabled() {
-		return super.isEnabled() && getContextualSelection().getSelection() instanceof Dataflow;
+		return super.isEnabled() && getContextualSelection().getSelection() instanceof Workflow;
 	}
 
 	@Override
@@ -76,12 +73,14 @@ public class AddRESTTemplateAction extends AbstractContextualMenuAction {
 
 	protected class AddRestAction extends AbstractAction {
 		AddRestAction() {
-			super(ADD_REST, activityIconManager.iconForActivity(new RESTActivity(null)));
+			super(ADD_REST, activityIconManager
+					.iconForActivity(GenericRESTTemplateService.ACTIVITY_TYPE));
 		}
 
 		public void actionPerformed(ActionEvent e) {
 			WorkflowView.importServiceDescription(
-					GenericRESTTemplateService.getServiceDescription(), false, editManager, menuManager, selectionManager);
+					GenericRESTTemplateService.getServiceDescription(), false, editManager,
+					menuManager, selectionManager, serviceRegistry);
 		}
 	}
 
@@ -99,6 +98,10 @@ public class AddRESTTemplateAction extends AbstractContextualMenuAction {
 
 	public void setActivityIconManager(ActivityIconManager activityIconManager) {
 		this.activityIconManager = activityIconManager;
+	}
+
+	public void setServiceRegistry(ServiceRegistry serviceRegistry) {
+		this.serviceRegistry = serviceRegistry;
 	}
 
 }

@@ -14,12 +14,10 @@ import java.awt.event.FocusListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,7 +27,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -41,25 +38,23 @@ import net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean;
 import net.sf.taverna.t2.activities.rest.URISignatureHandler;
 import net.sf.taverna.t2.activities.rest.URISignatureHandler.URISignatureParsingException;
 import net.sf.taverna.t2.workbench.MainWindow;
-import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
-import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.T2ActivityConfigurationPanel;
+import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.MultiPageActivityConfigurationPanel;
+import uk.org.taverna.commons.services.ServiceRegistry;
+import uk.org.taverna.scufl2.api.activity.Activity;
+
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @SuppressWarnings("serial")
-public class RESTActivityConfigurationPanel extends
-		T2ActivityConfigurationPanel<RESTActivity, RESTActivityConfigurationBean> {
+public class RESTActivityConfigurationPanel extends MultiPageActivityConfigurationPanel {
 	private static final Icon infoIcon = new ImageIcon(
 			RESTActivityConfigurationPanel.class.getResource("information.png"));
 
-	private RESTActivity activity;
-	private RESTActivityConfigurationBean configBean;
-
-	//private RESTActivityConfigurationPanel thisPanel;
-
 	// GENERAL tab
-	private JComboBox cbHTTPMethod; // HTTP method of this REST activity
+	private JComboBox<HTTP_METHOD> cbHTTPMethod; // HTTP method of this REST activity
 	private JTextField tfURLSignature; // URL signature that determines its
 										// input ports
-	private JComboBox cbAccepts; // for Accepts header
+	private JComboBox<String> cbAccepts; // for Accepts header
 	private JLabel jlContentTypeExplanation;
 	private JLabel jlContentTypeExplanationPlaceholder;
 	private JLabel jlContentType;
@@ -69,10 +64,10 @@ public class RESTActivityConfigurationPanel extends
 													// when the latter is not
 													// shown
 	private JLabel jlContentTypeFieldPlaceholder;
-	private JComboBox cbContentType; // for MIME type of data sent to the server
+	private JComboBox<String> cbContentType; // for MIME type of data sent to the server
 										// by POST / PUT methods
 	private JLabel jlSendDataAs;
-	private JComboBox cbSendDataAs;
+	private JComboBox<DATA_FORMAT> cbSendDataAs;
 	private JLabel jlSendDataAsLabelPlaceholder;
 	private JLabel jlSendDataAsFieldPlaceholder;
 
@@ -89,35 +84,143 @@ public class RESTActivityConfigurationPanel extends
 
 	private String[] mediaTypes;
 
-	public RESTActivityConfigurationPanel(RESTActivity activity) {
-		//this.thisPanel = this;
-		this.activity = activity;
-		initGui();
+	private final ServiceRegistry serviceRegistry;
+
+	public RESTActivityConfigurationPanel(Activity activity, ServiceRegistry serviceRegistry) {
+		super(activity);
+		this.serviceRegistry = serviceRegistry;
+		initialise();
 	}
 
-	protected void initGui() {
-		removeAll();
-		setLayout(new BorderLayout());
-
-		// create view title
-//		ShadedLabel slConfigurationLabel = new ShadedLabel(
-//				"Configuration options for this REST service",
-//				ShadedLabel.ORANGE);
-//		JPanel jpConfigurationLabel = new JPanel(new GridLayout(1, 1));
-//		jpConfigurationLabel.add(slConfigurationLabel);
-//		jpConfigurationLabel.setBorder(BorderFactory.createEmptyBorder(8, 10,
-//				0, 10));
-//		add(jpConfigurationLabel, BorderLayout.NORTH);
-
-		// create tabbed view
-		JTabbedPane tpTabs = new JTabbedPane();
-		tpTabs.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-		tpTabs.add("General", createGeneralTab());
-		tpTabs.add("Advanced", createAdvancedTab());
-		add(tpTabs, BorderLayout.CENTER);
-
-		// Populate fields from activity configuration bean
+	@Override
+	protected void initialise() {
+		super.initialise();
+		removeAllPages();
+		addPage("General", createGeneralTab());
+		addPage("Advanced", createAdvancedTab());
 		refreshConfiguration();
+	}
+
+	@Override
+	public void noteConfiguration() {
+		ObjectNode requestNode = json.objectNode();
+
+		String methodName = ((HTTP_METHOD) cbHTTPMethod.getSelectedItem()).name();
+		requestNode.put("httpMethod", methodName);
+		requestNode.put("absoluteURITemplate", tfURLSignature.getText().trim());
+
+		ArrayNode headersNode = requestNode.arrayNode();
+		headersNode.addObject().put("header", "Accept").put("value", (String) cbAccepts.getSelectedItem());
+		headersNode.addObject().put("header", "Content-Type").put("value", (String) cbContentType.getSelectedItem());
+		if (cbSendHTTPExpectHeader.isSelected()) {
+			headersNode.addObject().put("header", "Expect").put("value", "100-continue");
+		}
+		ArrayList<String> headerNames = httpHeadersTableModel.getHTTPHeaderNames();
+		ArrayList<String> headerValues = httpHeadersTableModel.getHTTPHeaderValues();
+		for (int i = 0; i < headerNames.size(); i++) {
+			headersNode.addObject().put("header", headerNames.get(i)).put("value", headerValues.get(i));
+		}
+
+		requestNode.set("headers", headersNode);
+		json.set("request", requestNode);
+
+		json.put("outgoingDataFormat", ((DATA_FORMAT) cbSendDataAs.getSelectedItem()).name());
+		json.put("showRedirectionOutputPort", cbShowRedirectionOutputPort
+				.isSelected());
+		json.put("showActualURLPort", cbShowActualUrlPort.isSelected());
+		json.put("showResponseHeadersPort", cbShowResponseHeadersPort.isSelected());
+		json.put("escapeParameters", cbEscapeParameters.isSelected());
+
+		configureInputPorts(serviceRegistry);
+		configureOutputPorts(serviceRegistry);
+	}
+
+	/**
+	 * Check that user values in the UI are valid.
+	 */
+	@Override
+	public boolean checkValues() {
+		// HTTP method is a fixed selection combo-box - no validation required
+
+		// URL signature must be present and be valid
+		String candidateURLSignature = tfURLSignature.getText().trim();
+		if (candidateURLSignature == null
+				|| candidateURLSignature.length() == 0) {
+			JOptionPane.showMessageDialog(MainWindow.getMainWindow(),
+					"URL signature must not be empty",
+					"REST Activity Configuration - Warning",
+					JOptionPane.WARNING_MESSAGE);
+			return (false);
+		} else {
+			try {
+				// Test if any exceptions will be thrown - if not, proceed to
+				// other validations
+				URISignatureHandler.validate(candidateURLSignature);
+			} catch (URISignatureParsingException e) {
+				JOptionPane.showMessageDialog(MainWindow.getMainWindow(), e
+						.getMessage(), "REST Activity Configuration - Warning",
+						JOptionPane.WARNING_MESSAGE);
+				return (false);
+			}
+
+			// Test if the URL string contains "unsafe" characters, i.e. characters
+			// that need URL-encoding.
+			// From RFC 1738: "...Only alphanumerics [0-9a-zA-Z], the special
+			// characters "$-_.+!*'()," (not including the quotes) and reserved
+			// characters used for their reserved purposes may be
+			// used unencoded within a URL."
+			// Reserved characters are: ";/?:@&=" ..." (excluding quotes) and "%" used
+			// for escaping.
+			// We do not warn the user if they have not properly enclosed parameter
+			// names in curly braces as this check is already being done elsewhere in the code.
+			// We do not check the characters in parameter names either.
+			try {
+				// Test if any exceptions will be thrown - if not, proceed to
+				// other validations
+				URISignatureHandler.checkForUnsafeCharacters(candidateURLSignature);
+			} catch (URISignatureParsingException e) {
+				JOptionPane.showMessageDialog(MainWindow.getMainWindow(), e
+						.getMessage(), "REST Activity Configuration - Warning",
+						JOptionPane.WARNING_MESSAGE);
+				return (false);
+			}
+
+			// Other HTTP headers configured must not have empty names
+			ArrayList<String> otherHTTPHeaderNames = httpHeadersTableModel.getHTTPHeaderNames();
+			for (String headerName : otherHTTPHeaderNames){
+				if (headerName.equals("")){
+					JOptionPane.showMessageDialog(MainWindow.getMainWindow(), "One of the HTTP header names is empty", "REST Activity Configuration - Warning",
+							JOptionPane.WARNING_MESSAGE);
+					return false;
+				}
+			}
+		}
+
+		// All valid, return true
+		return true;
+	}
+
+	/**
+	 * Update GUI from a changed configuration bean (perhaps by undo / redo).
+	 */
+	@Override
+	public void refreshConfiguration() {
+		RESTActivityConfigurationBean configBean = new RESTActivityConfigurationBean(json);
+
+		cbHTTPMethod.setSelectedItem(configBean.getHttpMethod());
+		tfURLSignature.setText(configBean.getUrlSignature());
+		tfURLSignature.setCaretPosition(0);
+		cbAccepts.setSelectedItem(configBean.getAcceptsHeaderValue());
+		cbContentType.setSelectedItem(configBean.getContentTypeForUpdates());
+		cbSendDataAs.setSelectedItem(configBean.getOutgoingDataFormat());
+		cbSendHTTPExpectHeader.setSelected(configBean
+				.getSendHTTPExpectRequestHeader());
+		cbShowRedirectionOutputPort.setSelected(configBean
+				.getShowRedirectionOutputPort());
+		cbShowActualUrlPort.setSelected(configBean.getShowActualUrlPort());
+		cbShowResponseHeadersPort.setSelected(configBean.getShowResponseHeadersPort());
+		cbEscapeParameters.setSelected(configBean.getEscapeParameters());
+		httpHeadersTableModel.setHTTPHeaderData(configBean.getOtherHTTPHeaders());
 	}
 
 	private JPanel createGeneralTab() {
@@ -152,7 +255,7 @@ public class RESTActivityConfigurationPanel extends
 		c.insets = new Insets(7, 3, 3, 7);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1.0;
-		cbHTTPMethod = new JComboBox(RESTActivity.HTTP_METHOD.values());
+		cbHTTPMethod = new JComboBox<>(HTTP_METHOD.values());
 		cbHTTPMethod.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				boolean contentTypeSelEnabled = RESTActivity
@@ -240,7 +343,7 @@ public class RESTActivityConfigurationPanel extends
 		c.insets = new Insets(3, 3, 3, 7);
 		c.weightx = 1.0;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		cbAccepts = new JComboBox(getMediaTypes());
+		cbAccepts = new JComboBox<>(getMediaTypes());
 		cbAccepts.setEditable(true);
 		cbAccepts.getEditor().getEditorComponent().addFocusListener(
 				new FocusListener() {
@@ -280,7 +383,7 @@ public class RESTActivityConfigurationPanel extends
 		c.insets = new Insets(3, 3, 3, 7);
 		c.weightx = 1.0;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		cbContentType = new JComboBox(getMediaTypes());
+		cbContentType = new JComboBox<>(getMediaTypes());
 		cbContentType.setEditable(true);
 		cbContentType.getEditor().getEditorComponent().addFocusListener(
 				new FocusListener() {
@@ -352,7 +455,7 @@ public class RESTActivityConfigurationPanel extends
 		c.insets = new Insets(3, 3, 8, 7);
 		c.weightx = 1.0;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		cbSendDataAs = new JComboBox(RESTActivity.DATA_FORMAT.values());
+		cbSendDataAs = new JComboBox<>(DATA_FORMAT.values());
 		cbSendDataAs.setEditable(false);
 		jpGeneral.add(cbSendDataAs, c);
 
@@ -549,17 +652,6 @@ public class RESTActivityConfigurationPanel extends
 		JScrollPane headersTableScrollPane = new JScrollPane(httpHeadersTable);
 		jpAdvanced.add(headersTableScrollPane, c);
 
-		// this JLabel makes the rest of the content of the panel to go to the
-		// top of the tab
-		// (instead of being centered)
-//		c.gridx = 0;
-//		c.gridy++;
-//		c.weightx = 0;
-//		c.weighty = 1.0;
-//		c.insets = new Insets(0, 0, 0, 0);
-//		JLabel jlSpacer = new JLabel();
-//		jpAdvanced.add(jlSpacer, c);
-
 		return (jpAdvanced);
 	}
 
@@ -574,266 +666,6 @@ public class RESTActivityConfigurationPanel extends
 	    table.setPreferredScrollableViewportSize(new Dimension(
 	            table.getPreferredScrollableViewportSize().width,
 	            height));
-	}
-
-
-	/**
-	 * Check that user values in the UI are valid.
-	 */
-	@Override
-	public boolean checkValues() {
-		// HTTP method is a fixed selection combo-box - no validation required
-
-		// URL signature must be present and be valid
-		String candidateURLSignature = tfURLSignature.getText().trim();
-		if (candidateURLSignature == null
-				|| candidateURLSignature.length() == 0) {
-			JOptionPane.showMessageDialog(MainWindow.getMainWindow(),
-					"URL signature must not be empty",
-					"REST Activity Configuration - Warning",
-					JOptionPane.WARNING_MESSAGE);
-			return (false);
-		} else {
-			try {
-				// Test if any exceptions will be thrown - if not, proceed to
-				// other validations
-				URISignatureHandler.validate(candidateURLSignature);
-			} catch (URISignatureParsingException e) {
-				JOptionPane.showMessageDialog(MainWindow.getMainWindow(), e
-						.getMessage(), "REST Activity Configuration - Warning",
-						JOptionPane.WARNING_MESSAGE);
-				return (false);
-			}
-
-			// Test if the URL string contains "unsafe" characters, i.e. characters
-			// that need URL-encoding.
-			// From RFC 1738: "...Only alphanumerics [0-9a-zA-Z], the special
-			// characters "$-_.+!*'()," (not including the quotes) and reserved
-			// characters used for their reserved purposes may be
-			// used unencoded within a URL."
-			// Reserved characters are: ";/?:@&=" ..." (excluding quotes) and "%" used
-			// for escaping.
-			// We do not warn the user if they have not properly enclosed parameter
-			// names in curly braces as this check is already being done elsewhere in the code.
-			// We do not check the characters in parameter names either.
-			try {
-				// Test if any exceptions will be thrown - if not, proceed to
-				// other validations
-				URISignatureHandler.checkForUnsafeCharacters(candidateURLSignature);
-			} catch (URISignatureParsingException e) {
-				JOptionPane.showMessageDialog(MainWindow.getMainWindow(), e
-						.getMessage(), "REST Activity Configuration - Warning",
-						JOptionPane.WARNING_MESSAGE);
-				return (false);
-			}
-
-			// Other HTTP headers configured must not have empty names
-			ArrayList<String> otherHTTPHeaderNames = httpHeadersTableModel.getHTTPHeaderNames();
-			for (String headerName : otherHTTPHeaderNames){
-				if (headerName.equals("")){
-					JOptionPane.showMessageDialog(MainWindow.getMainWindow(), "One of the HTTP header names is empty", "REST Activity Configuration - Warning",
-							JOptionPane.WARNING_MESSAGE);
-					return false;
-				}
-			}
-		}
-
-		// check if Accept header value is at least not empty
-// We now allow blank values for the 'Accept' header
-//		Object candidateAcceptHeaderValue = cbAccepts.getSelectedItem();
-//		if (candidateAcceptHeaderValue == null
-//				|| ((String) candidateAcceptHeaderValue).length() == 0) {
-//			JOptionPane.showMessageDialog(MainWindow.getMainWindow(),
-//					"Accept header value must not be empty",
-//					"REST Activity Configuration - Warning",
-//					JOptionPane.WARNING_MESSAGE);
-//			return (false);
-//		}
-
-		// check if Content-Type header value is at least not empty - only do
-		// this for those HTTP
-		// methods which actually use this value; otherwise, it doesn't really
-		// matter, as the value
-		// will not be stored to the bean anyway
-// We now allow blank values for the 'Content-Type' header
-//		if (RESTActivity
-//				.hasMessageBodyInputPort((RESTActivity.HTTP_METHOD) cbHTTPMethod
-//						.getSelectedItem())) {
-//			Object candidateContentTypeHeaderValue = cbContentType
-//					.getSelectedItem();
-//			if (candidateContentTypeHeaderValue == null
-//					|| ((String) candidateContentTypeHeaderValue).length() == 0) {
-//				JOptionPane.showMessageDialog(MainWindow.getMainWindow(),
-//						"Content-Type header value must not be empty",
-//						"REST Activity Configuration - Warning",
-//						JOptionPane.WARNING_MESSAGE);
-//				return (false);
-//			}
-//		}
-
-		// All valid, return true
-		return true;
-	}
-
-	/**
-	 * Return configuration bean generated from user interface last time
-	 * noteConfiguration() was called.
-	 */
-	@Override
-	public RESTActivityConfigurationBean getT2Configuration() {
-		// Should already have been made by noteConfiguration()
-		return configBean;
-	}
-
-	/**
-	 * Check if the user has changed the configuration from the original
-	 */
-	@Override
-	public boolean isConfigurationChanged() {
-		HTTP_METHOD originalHTTPMethod = configBean.getHttpMethod();
-		String originalURLSignature = configBean.getUrlSignature();
-		String originalAcceptsHeaderValue = configBean.getAcceptsHeaderValue();
-		String originalContentType = configBean.getContentTypeForUpdates();
-		DATA_FORMAT originalOutgoingDataFormat = configBean
-				.getOutgoingDataFormat();
-		boolean originalSendHTTPExpectRequestHeader = configBean
-				.getSendHTTPExpectRequestHeader();
-		boolean originalShowRedirectionOutputPort = configBean
-				.getShowRedirectionOutputPort();
-		boolean originalShowActualUrlPort = configBean
-		.getShowActualUrlPort();
-		boolean originalShowResponseHeadersPort = configBean.getShowResponseHeadersPort();
-		boolean originalEscapeParameters = configBean.getEscapeParameters();
-
-		boolean contentTypeHasNotChanged = (originalContentType == null && ((String) cbContentType
-				.getSelectedItem()).length() == 0)
-				|| (originalContentType != null && originalContentType
-						.equals((String) cbContentType.getSelectedItem()));
-
-		// Check if other HTTP header fields or their values have changed
-		boolean otherHTTPHeadersNotChanged = true;
-		// List of 2-element lists containing header name and value
-		ArrayList<ArrayList<String>> originalOtherHTTPHeaders = configBean.getOtherHTTPHeaders();
-		ArrayList<ArrayList<String>> otherHTTPHeaders = httpHeadersTableModel.getHTTPHeaderData();
-		ListComparator listComparator = new ListComparator();
-		// Sort the list rows by the first element in the row (which is HTTP header name)
-		Collections.sort(originalOtherHTTPHeaders, listComparator);
-		Collections.sort(otherHTTPHeaders, listComparator);
-		if (originalOtherHTTPHeaders.size() != otherHTTPHeaders.size()){
-			otherHTTPHeadersNotChanged = false; // if size differs we do not have to check anything else
-		}
-		else{
-			// Lists are sorted by HTTP header names now, we can just iterate over any
-			for (int i = 0; i < otherHTTPHeaders.size() ; i++){
-				// Compare the header names
-				if (!otherHTTPHeaders.get(i).get(0).equals(originalOtherHTTPHeaders.get(i).get(0))){
-					otherHTTPHeadersNotChanged = false;
-					break;
-				}
-				// Compare the header values
-				if (!otherHTTPHeaders.get(i).get(1).equals(originalOtherHTTPHeaders.get(i).get(1))){
-					otherHTTPHeadersNotChanged = false;
-					break;
-				}
-			}
-		}
-
-		// true (changed) unless all fields match the originals
-		return !(originalHTTPMethod == (HTTP_METHOD) cbHTTPMethod
-				.getSelectedItem()
-				&& originalURLSignature.equals(tfURLSignature.getText())
-				&& originalAcceptsHeaderValue.equals((String) cbAccepts
-						.getSelectedItem())
-				&& contentTypeHasNotChanged
-				&& originalOutgoingDataFormat == (DATA_FORMAT) cbSendDataAs
-						.getSelectedItem()
-				&& originalSendHTTPExpectRequestHeader == cbSendHTTPExpectHeader.isSelected()
-				&& originalShowRedirectionOutputPort == cbShowRedirectionOutputPort.isSelected()
-				&& originalShowActualUrlPort == cbShowActualUrlPort.isSelected()
-				&& originalShowResponseHeadersPort == cbShowResponseHeadersPort.isSelected()
-				&& originalEscapeParameters == cbEscapeParameters.isSelected()
-				&& otherHTTPHeadersNotChanged);
-
-	}
-
-	/**
-	 * Prepare a new configuration bean from the UI, to be returned with
-	 * getConfiguration()
-	 */
-	@Override
-	public void noteConfiguration() {
-		configBean = new RESTActivityConfigurationBean();
-
-		// safe to cast, as it's the type of values that have been placed there
-		configBean.setHttpMethod((RESTActivity.HTTP_METHOD) cbHTTPMethod
-				.getSelectedItem());
-		configBean.setUrlSignature(tfURLSignature.getText().trim());
-		configBean.setAcceptsHeaderValue((String) cbAccepts.getSelectedItem());
-		configBean.setContentTypeForUpdates((String) cbContentType
-				.getSelectedItem());
-		configBean.setOutgoingDataFormat((DATA_FORMAT) cbSendDataAs
-				.getSelectedItem());
-		configBean.setSendHTTPExpectRequestHeader(cbSendHTTPExpectHeader
-				.isSelected());
-		configBean.setShowRedirectionOutputPort(cbShowRedirectionOutputPort
-				.isSelected());
-		configBean.setShowActualUrlPort(cbShowActualUrlPort.isSelected());
-		configBean.setShowResponseHeadersPort(cbShowResponseHeadersPort.isSelected());
-
-		configBean.setEscapeParameters(cbEscapeParameters.isSelected());
-		configBean.setOtherHTTPHeaders(httpHeadersTableModel.getHTTPHeaderData());
-	}
-
-	/**
-	 * Update GUI from a changed configuration bean (perhaps by undo / redo).
-	 */
-	@Override
-	public void refreshConfiguration() {
-		configBean = activity.getConfiguration();
-
-		cbHTTPMethod.setSelectedItem(configBean.getHttpMethod());
-		tfURLSignature.setText(configBean.getUrlSignature());
-		tfURLSignature.setCaretPosition(0);
-		cbAccepts.setSelectedItem(configBean.getAcceptsHeaderValue());
-		cbContentType.setSelectedItem(configBean.getContentTypeForUpdates());
-		cbSendDataAs.setSelectedItem(configBean.getOutgoingDataFormat());
-		cbSendHTTPExpectHeader.setSelected(configBean
-				.getSendHTTPExpectRequestHeader());
-		cbShowRedirectionOutputPort.setSelected(configBean
-				.getShowRedirectionOutputPort());
-		cbShowActualUrlPort.setSelected(configBean.getShowActualUrlPort());
-		cbShowResponseHeadersPort.setSelected(configBean.getShowResponseHeadersPort());
-		cbEscapeParameters.setSelected(configBean.getEscapeParameters());
-		httpHeadersTableModel.setHTTPHeaderData(configBean.getOtherHTTPHeaders());
-	}
-
-	/*
-	 * Compares two lists of strings by doing string comparison on their first element.
-	 */
-	private class ListComparator implements Comparator<ArrayList<String>>{
-
-		@Override
-		public int compare(ArrayList<String> list1, ArrayList<String> list2) {
-			// lists should not be empty, but ...
-			if (list1.isEmpty()){
-				if (list2.isEmpty()){
-					return 0;
-				}
-				else{
-					return 1;
-				}
-			}
-			else{
-				if (list2.isEmpty()){
-					return -1;
-				}
-				else{
-					return list1.get(0).compareTo(list2.get(0));
-				}
-
-			}
-		}
-
 	}
 
 }

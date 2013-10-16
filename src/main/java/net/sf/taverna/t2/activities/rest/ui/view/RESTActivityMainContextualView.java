@@ -16,21 +16,29 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import net.sf.taverna.t2.activities.rest.RESTActivity;
+import net.sf.taverna.t2.activities.rest.RESTActivity.HTTP_METHOD;
 import net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean;
 import net.sf.taverna.t2.activities.rest.ui.config.RESTActivityConfigureAction;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.ContextualView;
+import uk.org.taverna.commons.services.ServiceRegistry;
+import uk.org.taverna.scufl2.api.activity.Activity;
+import uk.org.taverna.scufl2.api.common.Scufl2Tools;
+import uk.org.taverna.scufl2.api.configurations.Configuration;
 
 @SuppressWarnings("serial")
 public class RESTActivityMainContextualView extends ContextualView {
-	private final RESTActivity activity;
+
+	private final Scufl2Tools scufl2Tools = new Scufl2Tools();
+
+	private final Activity activity;
 
 	private JPanel jpMainPanel;
 	private JTextField tfHTTPMethod;
-	// private JTextField tfURLSignature;
 	private JTextArea taURLSignature;
 	private JTextField tfAcceptHeader;
 	private JLabel jlContentType;
@@ -44,15 +52,20 @@ public class RESTActivityMainContextualView extends ContextualView {
 	private final FileManager fileManager;
 	private final ActivityIconManager activityIconManager;
 	private final ColourManager colourManager;
+	private final ServiceDescriptionRegistry serviceDescriptionRegistry;
+	private final ServiceRegistry serviceRegistry;
 
-	public RESTActivityMainContextualView(RESTActivity activity, EditManager editManager,
+	public RESTActivityMainContextualView(Activity activity, EditManager editManager,
 			FileManager fileManager, ActivityIconManager activityIconManager,
-			ColourManager colourManager) {
+			ColourManager colourManager, ServiceDescriptionRegistry serviceDescriptionRegistry,
+			ServiceRegistry serviceRegistry) {
 		this.activity = activity;
 		this.editManager = editManager;
 		this.fileManager = fileManager;
 		this.activityIconManager = activityIconManager;
 		this.colourManager = colourManager;
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
+		this.serviceRegistry = serviceRegistry;
 		initView();
 	}
 
@@ -90,8 +103,6 @@ public class RESTActivityMainContextualView extends ContextualView {
 		jpMainPanel.add(jlURLSignature, c);
 
 		c.gridx++;
-		// tfURLSignature = new JTextField(20);
-		// tfURLSignature.setEditable(false);
 		taURLSignature = new JTextArea(3, 30);
 		taURLSignature.setEditable(false);
 		taURLSignature.setLineWrap(true);
@@ -161,8 +172,6 @@ public class RESTActivityMainContextualView extends ContextualView {
 	 * views (even when this contextual view is collapsed).
 	 */
 	public String getViewTitle() {
-		// RESTActivityConfigurationBean configuration = activity
-		// .getConfiguration();
 		return "REST Service Details";
 	}
 
@@ -171,24 +180,25 @@ public class RESTActivityMainContextualView extends ContextualView {
 	 */
 	@Override
 	public void refreshView() {
-		RESTActivityConfigurationBean configuration = activity.getConfiguration();
+		Configuration configuration = scufl2Tools.configurationFor(activity, activity.getParent());
+		RESTActivityConfigurationBean configurationBean = new RESTActivityConfigurationBean(configuration.getJson());
 
 		// toggle visibility of the elements that do not always appear
-		jlContentType.setVisible(activity.hasMessageBodyInputPort());
-		tfContentTypeHeader.setVisible(activity.hasMessageBodyInputPort());
-		jlSendDataAs.setVisible(activity.hasMessageBodyInputPort());
-		tfSendDataAs.setVisible(activity.hasMessageBodyInputPort());
-		jlSendHTTPExpectRequestHeader.setVisible(activity.hasMessageBodyInputPort());
-		tfSendHTTPExpectRequestHeader.setVisible(activity.hasMessageBodyInputPort());
+		HTTP_METHOD httpMethod = configurationBean.getHttpMethod();
+		jlContentType.setVisible(httpMethod == HTTP_METHOD.POST || httpMethod == HTTP_METHOD.PUT);
+		tfContentTypeHeader.setVisible(httpMethod == HTTP_METHOD.POST || httpMethod == HTTP_METHOD.PUT);
+		jlSendDataAs.setVisible(httpMethod == HTTP_METHOD.POST || httpMethod == HTTP_METHOD.PUT);
+		tfSendDataAs.setVisible(httpMethod == HTTP_METHOD.POST || httpMethod == HTTP_METHOD.PUT);
+		jlSendHTTPExpectRequestHeader.setVisible(httpMethod == HTTP_METHOD.POST || httpMethod == HTTP_METHOD.PUT);
+		tfSendHTTPExpectRequestHeader.setVisible(httpMethod == HTTP_METHOD.POST || httpMethod == HTTP_METHOD.PUT);
 		jpMainPanel.revalidate();
 
-		tfHTTPMethod.setText("" + configuration.getHttpMethod());
-		// tfURLSignature.setText(configuration.getUrlSignature());
-		taURLSignature.setText(configuration.getUrlSignature());
-		tfAcceptHeader.setText(configuration.getAcceptsHeaderValue());
-		tfContentTypeHeader.setText(configuration.getContentTypeForUpdates());
-		tfSendDataAs.setText("" + configuration.getOutgoingDataFormat());
-		tfSendHTTPExpectRequestHeader.setText("" + configuration.getSendHTTPExpectRequestHeader());
+		tfHTTPMethod.setText("" + configurationBean.getHttpMethod());
+		taURLSignature.setText(configurationBean.getUrlSignature());
+		tfAcceptHeader.setText(configurationBean.getAcceptsHeaderValue());
+		tfContentTypeHeader.setText(configurationBean.getContentTypeForUpdates());
+		tfSendDataAs.setText("" + configurationBean.getOutgoingDataFormat());
+		tfSendHTTPExpectRequestHeader.setText("" + configurationBean.getSendHTTPExpectRequestHeader());
 	}
 
 	/**
@@ -204,7 +214,7 @@ public class RESTActivityMainContextualView extends ContextualView {
 	public Action getConfigureAction(final Frame owner) {
 		// "Configure" button appears because of this action being returned
 		return new RESTActivityConfigureAction(activity, owner, editManager, fileManager,
-				activityIconManager);
+				activityIconManager, serviceDescriptionRegistry, serviceRegistry);
 	}
 
 }

@@ -11,8 +11,8 @@ import net.sf.taverna.t2.activities.rest.RESTActivityHealthCheck;
 import net.sf.taverna.t2.lang.ui.ReadOnlyTextArea;
 import net.sf.taverna.t2.visit.VisitKind;
 import net.sf.taverna.t2.visit.VisitReport;
-import net.sf.taverna.t2.workbench.report.explainer.VisitExplainer;
-import net.sf.taverna.t2.workbench.report.view.ReportViewConfigureAction;
+//import net.sf.taverna.t2.workbench.report.explainer.VisitExplainer;
+//import net.sf.taverna.t2.workbench.report.view.ReportViewConfigureAction;
 import net.sf.taverna.t2.workflowmodel.Processor;
 
 // import status constants
@@ -22,7 +22,7 @@ import static net.sf.taverna.t2.activities.rest.RESTActivityHealthCheck.*;
  *
  * @author Sergejs Aleksejevs
  */
-public class RESTActivityHealthCheckVisitExplainer implements VisitExplainer
+public class RESTActivityHealthCheckVisitExplainer /*implements VisitExplainer*/
 {
 
   public boolean canExplain(VisitKind vk, int resultId) {
@@ -92,7 +92,7 @@ public class RESTActivityHealthCheckVisitExplainer implements VisitExplainer
     {
       JButton button = new JButton();
       Processor p = (Processor) (vr.getSubject());
-      button.setAction(new ReportViewConfigureAction(p));
+//      button.setAction(new ReportViewConfigureAction(p));
       button.setText("Open REST Activity configuration dialog");
       button.setAlignmentX(Component.LEFT_ALIGNMENT);
 
