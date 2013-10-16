@@ -37,7 +37,6 @@ import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.selection.SelectionManager;
 import net.sf.taverna.t2.workbench.ui.workflowview.WorkflowView;
-import net.sf.taverna.t2.workbench.views.graph.menu.InsertMenu;
 import uk.org.taverna.commons.services.ServiceRegistry;
 
 /**
@@ -52,6 +51,9 @@ public class AddRESTTemplateMenuAction extends AbstractMenuAction {
 
 	private static final String ADD_REST = "REST";
 
+	private static final URI INSERT = URI
+			.create("http://taverna.sf.net/2008/t2workbench/menu#insert");
+
 	private static final URI ADD_REST_URI = URI
 			.create("http://taverna.sf.net/2008/t2workbench/menu#graphMenuAddREST");
 
@@ -62,7 +64,7 @@ public class AddRESTTemplateMenuAction extends AbstractMenuAction {
 	private ServiceRegistry serviceRegistry;
 
 	public AddRESTTemplateMenuAction() {
-		super(InsertMenu.INSERT, 500, ADD_REST_URI);
+		super(INSERT, 500, ADD_REST_URI);
 	}
 
 	@Override
