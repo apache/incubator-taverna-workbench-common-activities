@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.taverna.t2.activities.wsdl.servicedescriptions.WSDLServiceDescription;
+import net.sf.taverna.t2.activities.wsdl.xmlsplitter.XMLSplitterConfigurationBeanBuilder;
 import net.sf.taverna.t2.workbench.edits.CompoundEdit;
 import net.sf.taverna.t2.workbench.edits.Edit;
 import net.sf.taverna.t2.workbench.edits.EditException;
@@ -36,7 +37,6 @@ import net.sf.taverna.wsdl.parser.TypeDescriptor;
 import net.sf.taverna.wsdl.xmlsplitter.XMLSplitterSerialisationHelper;
 
 import org.jdom.Element;
-import org.jdom.output.XMLOutputter;
 
 import uk.org.taverna.scufl2.api.activity.Activity;
 import uk.org.taverna.scufl2.api.common.Scufl2Tools;
@@ -50,7 +50,7 @@ import uk.org.taverna.scufl2.api.port.OutputProcessorPort;
 import uk.org.taverna.scufl2.api.profiles.ProcessorBinding;
 import uk.org.taverna.scufl2.api.profiles.Profile;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class AddXMLSplitterEdit implements Edit<Workflow> {
 
@@ -155,14 +155,17 @@ public class AddXMLSplitterEdit implements Edit<Workflow> {
 
 				Element element = XMLSplitterSerialisationHelper
 						.typeDescriptorToExtensionXML(typeDescriptor);
-				String wrappedType = new XMLOutputter().outputString(element);
+//				String wrappedType = new XMLOutputter().outputString(element);
 
 				splitter = new Activity();
 				splitter.setType(INPUT_SPLITTER_TYPE);
 				splitterConfiguration = new Configuration();
 				splitterConfiguration.setType(SPLITTER_CONFIG_TYPE);
 				splitterConfiguration.setConfigures(splitter);
-				((ObjectNode) splitterConfiguration.getJson()).put("wrappedType", wrappedType);
+//				((ObjectNode) splitterConfiguration.getJson()).put("wrappedType", wrappedType);
+
+				JsonNode bean = XMLSplitterConfigurationBeanBuilder.buildBeanForInput(element);
+				splitterConfiguration.setJson(bean);
 
 				XMLSplitterPortBuilder.addPortsForInput(element, splitter, splitterProcessor,
 						processorBinding);
@@ -179,14 +182,17 @@ public class AddXMLSplitterEdit implements Edit<Workflow> {
 
 				Element element = XMLSplitterSerialisationHelper
 						.typeDescriptorToExtensionXML(typeDescriptor);
-				String wrappedType = new XMLOutputter().outputString(element);
+//				String wrappedType = new XMLOutputter().outputString(element);
 
 				splitter = new Activity();
 				splitter.setType(OUTPUT_SPLITTER_TYPE);
 				splitterConfiguration = new Configuration();
 				splitterConfiguration.setType(SPLITTER_CONFIG_TYPE);
 				splitterConfiguration.setConfigures(splitter);
-				((ObjectNode) splitterConfiguration.getJson()).put("wrappedType", wrappedType);
+//				((ObjectNode) splitterConfiguration.getJson()).put("wrappedType", wrappedType);
+
+				JsonNode bean = XMLSplitterConfigurationBeanBuilder.buildBeanForOutput(element);
+				splitterConfiguration.setJson(bean);
 
 				XMLSplitterPortBuilder.addPortsForOutput(element, splitter, splitterProcessor,
 						processorBinding);
@@ -195,14 +201,17 @@ public class AddXMLSplitterEdit implements Edit<Workflow> {
 				if (isInput) {
 					Element element = XMLSplitterSerialisationHelper
 							.typeDescriptorToExtensionXML(typeDescriptor);
-					String wrappedType = new XMLOutputter().outputString(element);
+//					String wrappedType = new XMLOutputter().outputString(element);
 
 					splitter = new Activity();
 					splitter.setType(WSDLServiceDescription.INPUT_SPLITTER_TYPE);
 					splitterConfiguration = new Configuration();
 					splitterConfiguration.setType(SPLITTER_CONFIG_TYPE);
 					splitterConfiguration.setConfigures(splitter);
-					((ObjectNode) splitterConfiguration.getJson()).put("wrappedType", wrappedType);
+//					((ObjectNode) splitterConfiguration.getJson()).put("wrappedType", wrappedType);
+
+					JsonNode bean = XMLSplitterConfigurationBeanBuilder.buildBeanForInput(element);
+					splitterConfiguration.setJson(bean);
 
 					XMLSplitterPortBuilder.addPortsForInput(element, splitter, splitterProcessor,
 							processorBinding);
@@ -210,14 +219,17 @@ public class AddXMLSplitterEdit implements Edit<Workflow> {
 				} else {
 					Element element = XMLSplitterSerialisationHelper
 							.typeDescriptorToExtensionXML(typeDescriptor);
-					String wrappedType = new XMLOutputter().outputString(element);
+//					String wrappedType = new XMLOutputter().outputString(element);
 
 					splitter = new Activity();
 					splitter.setType(WSDLServiceDescription.OUTPUT_SPLITTER_TYPE);
 					splitterConfiguration = new Configuration();
 					splitterConfiguration.setType(SPLITTER_CONFIG_TYPE);
 					splitterConfiguration.setConfigures(splitter);
-					((ObjectNode) splitterConfiguration.getJson()).put("wrappedType", wrappedType);
+//					((ObjectNode) splitterConfiguration.getJson()).put("wrappedType", wrappedType);
+
+					JsonNode bean = XMLSplitterConfigurationBeanBuilder.buildBeanForOutput(element);
+					splitterConfiguration.setJson(bean);
 
 					XMLSplitterPortBuilder.addPortsForOutput(element, splitter, splitterProcessor,
 							processorBinding);
