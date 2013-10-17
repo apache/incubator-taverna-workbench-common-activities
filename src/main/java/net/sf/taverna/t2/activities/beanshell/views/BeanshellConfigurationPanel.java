@@ -21,6 +21,7 @@
 package net.sf.taverna.t2.activities.beanshell.views;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.File;
@@ -85,6 +86,7 @@ public class BeanshellConfigurationPanel extends MultiPageActivityConfigurationP
 		addPage("Input ports", createInputPanel());
 		addPage("Output ports", createOutputPanel());
 		addPage("Dependencies", createDependenciesPanel());
+		setPreferredSize(new Dimension(600, 500));
 	}
 
 	@Override
