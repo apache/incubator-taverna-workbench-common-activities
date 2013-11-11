@@ -31,11 +31,12 @@ public class LocalworkerActivityConfigView extends BeanshellConfigurationPanel {
 		super(activity, applicationConfiguration);
 	}
 
-	public void noteConfiguration() {
-		if (isConfigurationChanged()) {
-			super.noteConfiguration();
+	public boolean isConfigurationChanged() {
+		boolean configurationChanged = super.isConfigurationChanged();
+		if (configurationChanged) {
 			getJson().put("isAltered", true);
 		}
+		return configurationChanged;
 	}
 
 }
