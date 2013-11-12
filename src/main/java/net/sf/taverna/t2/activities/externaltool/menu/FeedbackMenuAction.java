@@ -21,22 +21,20 @@
 
 package net.sf.taverna.t2.activities.externaltool.menu;
 
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
-import org.apache.log4j.Logger;
-
-import de.uni_luebeck.inb.knowarc.usecases.RuntimeEnvironmentConstraint;
-
 import net.sf.taverna.t2.ui.menu.AbstractMenuAction;
-import edu.stanford.ejalbert.BrowserLauncher;
-import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
-import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
+
+import org.apache.log4j.Logger;
 
 /**
  * This class adds the feedback item to the context menu of every use case
@@ -72,12 +70,11 @@ public class FeedbackMenuAction extends AbstractMenuAction {
 
 		public void actionPerformed(ActionEvent e) {
 			try {
-				final BrowserLauncher launcher = new BrowserLauncher();
-				launcher.openURLinBrowser(feedbackUrl);
-			} catch (BrowserLaunchingInitializingException e1) {
+				Desktop.getDesktop().browse(new URI(feedbackUrl));
+			} catch (IOException e1) {
 				logger.error(e1);
 				JOptionPane.showMessageDialog(null, feedbackUrl + "\n" + e1.getLocalizedMessage(), errTitle, JOptionPane.ERROR_MESSAGE);
-			} catch (UnsupportedOperatingSystemException e1) {
+			} catch (URISyntaxException e1) {
 				logger.error(e1);
 				JOptionPane.showMessageDialog(null, feedbackUrl + "\n" + e1.getLocalizedMessage(), errTitle, JOptionPane.ERROR_MESSAGE);
 			}
