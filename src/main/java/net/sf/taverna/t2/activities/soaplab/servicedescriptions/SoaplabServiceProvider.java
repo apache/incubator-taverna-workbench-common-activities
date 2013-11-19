@@ -63,8 +63,10 @@ public class SoaplabServiceProvider extends
 		ServiceDescriptionRegistryImpl serviceRegistry = ServiceDescriptionRegistryImpl.getInstance();
 		// If defaults have failed to load from a configuration file then load them here.
 		if (!serviceRegistry.isDefaultSystemConfigurableProvidersLoaded()){
+//			defaults.add(new SoaplabServiceProviderConfig(
+//			"http://www.ebi.ac.uk/soaplab/services/"));
 			defaults.add(new SoaplabServiceProviderConfig(
-			"http://www.ebi.ac.uk/soaplab/services/"));
+			"http://wsembnet.vital-it.ch/soaplab2-axis/services/"));
 		} // else return an empty list
 		
 		return defaults;
