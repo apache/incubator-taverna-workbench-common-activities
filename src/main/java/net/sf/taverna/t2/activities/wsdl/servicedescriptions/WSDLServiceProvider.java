@@ -74,10 +74,10 @@ public class WSDLServiceProvider extends
 		ServiceDescriptionRegistryImpl serviceRegistry = ServiceDescriptionRegistryImpl.getInstance();
 		// If defaults have failed to load from a configuration file then load them here.
 		if (!serviceRegistry.isDefaultSystemConfigurableProvidersLoaded()){
-			defaults.add(new WSDLServiceProviderConfig(
-					"http://www.ebi.ac.uk/xembl/XEMBL.wsdl"));
-			defaults.add(new WSDLServiceProviderConfig(
-					"http://soap.genome.jp/KEGG.wsdl"));
+//			defaults.add(new WSDLServiceProviderConfig(
+//					"http://www.ebi.ac.uk/xembl/XEMBL.wsdl"));
+//			defaults.add(new WSDLServiceProviderConfig(
+//					"http://soap.genome.jp/KEGG.wsdl"));
 			// 2009-12-16: 503 server error
 			defaults.add(new WSDLServiceProviderConfig(
 							"http://eutils.ncbi.nlm.nih.gov/entrez/eutils/soap/eutils.wsdl"));
