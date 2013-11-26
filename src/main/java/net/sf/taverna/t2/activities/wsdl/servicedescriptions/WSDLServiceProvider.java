@@ -69,11 +69,15 @@ public class WSDLServiceProvider extends
 
 	public List<WSDLServiceProviderConfig> getDefaultConfigurations() {
 		
+		logger.error("Default services are being asked for");
+		
 		List<WSDLServiceProviderConfig> defaults = new ArrayList<WSDLServiceProviderConfig>();
 		
 		ServiceDescriptionRegistryImpl serviceRegistry = ServiceDescriptionRegistryImpl.getInstance();
 		// If defaults have failed to load from a configuration file then load them here.
 		if (!serviceRegistry.isDefaultSystemConfigurableProvidersLoaded()){
+			logger.error("Default services are being got");
+			
 //			defaults.add(new WSDLServiceProviderConfig(
 //					"http://www.ebi.ac.uk/xembl/XEMBL.wsdl"));
 //			defaults.add(new WSDLServiceProviderConfig(
