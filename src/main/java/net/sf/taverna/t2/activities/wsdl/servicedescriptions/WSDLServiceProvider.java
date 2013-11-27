@@ -69,8 +69,6 @@ public class WSDLServiceProvider extends
 
 	public List<WSDLServiceProviderConfig> getDefaultConfigurations() {
 		
-		logger.error("Default services are being asked for");
-		
 		List<WSDLServiceProviderConfig> defaults = new ArrayList<WSDLServiceProviderConfig>();
 		
 		ServiceDescriptionRegistryImpl serviceRegistry = ServiceDescriptionRegistryImpl.getInstance();
