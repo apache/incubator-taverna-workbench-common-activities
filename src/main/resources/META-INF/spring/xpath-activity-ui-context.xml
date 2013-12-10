@@ -46,7 +46,4 @@
 		<property name="serviceRegistry" ref="serviceRegistry" />
 	</bean>
 
-	<!-- <bean id="XPathActivityHealthCheckVisitExplainer"
-		class="net.sf.taverna.t2.activities.xpath.ui.explainer.XPathActivityHealthCheckVisitExplainer" /> -->
-
 </beans>
