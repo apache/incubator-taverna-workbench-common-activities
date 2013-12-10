@@ -47,7 +47,4 @@
 		<property name="serviceRegistry" ref="serviceRegistry" />
 	</bean>
 
-	<!-- <bean id="RESTActivityHealthCheckVisitExplainer" class="net.sf.taverna.t2.activities.rest.ui.explainer.RESTActivityHealthCheckVisitExplainer"
-		/> -->
-
 </beans>
