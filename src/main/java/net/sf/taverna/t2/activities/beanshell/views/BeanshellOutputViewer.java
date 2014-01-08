@@ -31,6 +31,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivity;
+import net.sf.taverna.t2.lang.ui.SanitisingDocumentFilter;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
 
@@ -94,6 +95,7 @@ public class BeanshellOutputViewer extends JPanel {
 		outerConstraint.fill = GridBagConstraints.BOTH;
 
 		nameField = new JTextField(bean.getName());
+		SanitisingDocumentFilter.addFilterToComponent(nameField);
 		add(nameField, outerConstraint);
 
 		outerConstraint.gridx = 1;
