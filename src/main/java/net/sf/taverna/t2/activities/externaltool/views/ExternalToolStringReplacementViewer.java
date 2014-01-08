@@ -12,6 +12,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
+import net.sf.taverna.t2.lang.ui.SanitisingDocumentFilter;
+
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInput;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInputUser;
 
@@ -44,6 +46,7 @@ public class ExternalToolStringReplacementViewer {
 		this.name = name;
 		nameField = new JTextField(20);
 		nameField.setText(name);
+		SanitisingDocumentFilter.addFilterToComponent(nameField);
 		valueField = new JTextField(20);
 		valueFromField = new JCheckBox(new AbstractAction() {
 
