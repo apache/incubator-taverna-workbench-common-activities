@@ -1121,12 +1121,18 @@ public class XPathActivityConfigurationPanel extends JPanel {
 
 			StringBuffer outNodesText = new StringBuffer();
 			StringBuffer outNodesXML = new StringBuffer();
-			for (Node n : matchingNodes) {
-				if (n.getStringValue() != null
-						&& n.getStringValue().length() > 0) {
-					outNodesText.append(n.getStringValue() + "\n");
+			for (Object o : matchingNodes) {
+				if (o instanceof Node) {
+					Node n = (Node) o;
+					if (n.getStringValue() != null
+							&& n.getStringValue().length() > 0) {
+						outNodesText.append(n.getStringValue() + "\n");
+					}
+					outNodesXML.append(n.asXML() + "\n");
 				}
-				outNodesXML.append(n.asXML() + "\n");
+				else {
+					outNodesText.append(o.toString());
+				}
 			}
 
 			// tpExecutedXPathExpressionResults.setSelectedIndex(0); // open the
