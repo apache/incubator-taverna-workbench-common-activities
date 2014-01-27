@@ -55,12 +55,12 @@ CustomizedConfigurePanelProvider<ExternalToolServiceProviderConfig>{
 		return "Tool service";
 	}
 
-	public List<ExternalToolServiceProviderConfig> getDefaultConfigurations() {
+/*	public List<ExternalToolServiceProviderConfig> getDefaultConfigurations() {
 		List<ExternalToolServiceProviderConfig> defaults = new ArrayList<ExternalToolServiceProviderConfig>();
 		// Disabled until sensible set
 //		defaults.add(new ExternalToolServiceProviderConfig("http://taverna.nordugrid.org/sharedRepository/xml.php"));
 		return defaults;
-	}
+	}*/
 
 	public void findServiceDescriptionsAsync(FindServiceDescriptionsCallBack callBack) {
 		String repositoryUrl = serviceProviderConfig.getRepositoryUrl();
