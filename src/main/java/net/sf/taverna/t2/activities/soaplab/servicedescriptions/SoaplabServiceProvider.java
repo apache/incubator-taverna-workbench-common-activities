@@ -56,7 +56,7 @@ public class SoaplabServiceProvider extends
 		}
 	}
 
-	public List<SoaplabServiceProviderConfig> getDefaultConfigurations() {
+/*	public List<SoaplabServiceProviderConfig> getDefaultConfigurations() {
 		
 		List<SoaplabServiceProviderConfig> defaults = new ArrayList<SoaplabServiceProviderConfig>();
 		
@@ -70,7 +70,7 @@ public class SoaplabServiceProvider extends
 		} // else return an empty list
 		
 		return defaults;
-	}
+	}*/
 
 	public Icon getIcon() {
 		return SoaplabActivityIcon.getSoaplabIcon();
