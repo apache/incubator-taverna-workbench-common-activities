@@ -416,11 +416,17 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 		// name is last part of the class name that was split
 		//String operation = split[split.length - 1];
 		String operationName = localWorkerToScript.get(line);
+		if (operationName == null) {
+			logger.error("operation name for " + line + " was not found");
+		}
 		item.setOperation(operationName);
 		item.setDependencies(((BeanshellActivity) activity).getConfiguration()
 				.getDependencies()); // this property is not in use any more
 		item.setArtifactDependencies(configuration.getArtifactDependencies());
 //		item.setOperation(operation);
+		if (item.getName() == null) {
+			logger.error("item has no name");
+		}
 		return item;
 
 	}

@@ -1,10 +1,13 @@
 package net.sf.taverna.t2.activities.localworker.servicedescriptions;
 
+import static org.apache.log4j.Logger.getLogger;
+
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.swing.Icon;
+
 import net.sf.taverna.raven.repository.BasicArtifact;
 import net.sf.taverna.t2.activities.beanshell.BeanshellActivityConfigurationBean;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
@@ -15,8 +18,12 @@ import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
 
+import org.apache.log4j.Logger;
+
 public class LocalworkerServiceDescription extends ServiceDescription<BeanshellActivityConfigurationBean>{
 	
+	private final Logger logger = getLogger(LocalworkerServiceDescription.class);
+
 	private static final String LOCALWORKER = ServiceDescription.LOCAL_SERVICES;
 
 	private String script;
@@ -91,6 +98,9 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 
 	@Override
 	public String getName() {
+		if (operation == null) {
+			logger.error("Service description has no name");
+		}
 		return operation;
 	}
 
@@ -134,6 +144,9 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 	}
 
 	public void setOperation(String operation) {
+		if (operation == null) {
+			logger.error("Operation set to null");
+		}
 		this.operation = operation;
 	}
 	///////////// From old code //////////////////
