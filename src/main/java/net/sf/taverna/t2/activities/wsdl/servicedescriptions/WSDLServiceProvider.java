@@ -67,7 +67,7 @@ public class WSDLServiceProvider extends
 		return WSDL_SERVICE;
 	}
 
-	public List<WSDLServiceProviderConfig> getDefaultConfigurations() {
+/*	public List<WSDLServiceProviderConfig> getDefaultConfigurations() {
 		
 		List<WSDLServiceProviderConfig> defaults = new ArrayList<WSDLServiceProviderConfig>();
 		
@@ -89,7 +89,7 @@ public class WSDLServiceProvider extends
 		} // else return an empty list
 		
 		return defaults;
-	}
+	}*/
 
 	public void findServiceDescriptionsAsync(
 			FindServiceDescriptionsCallBack callBack) {
