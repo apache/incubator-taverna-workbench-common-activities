@@ -131,24 +131,6 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 				"net.sourceforge.taverna.scuflworkers.xml.XSLTWorkerWithParameters",
 				"Transform XML with parameters");
 
-		// biojava
-		localWorkerToScript
-				.put(
-						"net.sourceforge.taverna.scuflworkers.biojava.GenBankParserWorker",
-						"Read Gen Bank File");
-		localWorkerToScript
-				.put(
-						"net.sourceforge.taverna.scuflworkers.biojava.ReverseCompWorker",
-						"Reverse Complement DNA");
-		localWorkerToScript
-				.put(
-						"net.sourceforge.taverna.scuflworkers.biojava.SwissProtParserWorker",
-						"Read Swiss Prot File");
-		localWorkerToScript
-				.put(
-						"net.sourceforge.taverna.scuflworkers.biojava.TranscribeWorker",
-						"Transcribe DNA");
-
 		// io
 		localWorkerToScript.put(
 				"net.sourceforge.taverna.scuflworkers.io.TextFileReader",
