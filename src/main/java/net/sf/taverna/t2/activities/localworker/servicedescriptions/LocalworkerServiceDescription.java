@@ -2,10 +2,13 @@ package net.sf.taverna.t2.activities.localworker.servicedescriptions;
 
 import static org.apache.log4j.Logger.getLogger;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import javax.help.BadIDException;
 import javax.swing.Icon;
 
 import net.sf.taverna.raven.repository.BasicArtifact;
@@ -14,6 +17,7 @@ import net.sf.taverna.t2.activities.localworker.LocalworkerActivity;
 import net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean;
 import net.sf.taverna.t2.lang.beans.PropertyAnnotation;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
+import net.sf.taverna.t2.workbench.helper.HelpCollator;
 import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean;
 import net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean;
@@ -185,6 +189,10 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 	@Override
 	protected List<Object> getIdentifyingData() {
 		return Arrays.<Object>asList(getScript());
+	}
+	
+	protected String getHelpId() {
+		return (super.getHelpId() + "-" + getLocalworkerName());
 	}
 
 }
