@@ -191,7 +191,7 @@ public class LocalworkerServiceDescription extends ServiceDescription<BeanshellA
 		return Arrays.<Object>asList(getScript());
 	}
 	
-	protected String getHelpId() {
+	public String getHelpId() {
 		return (super.getHelpId() + "-" + getLocalworkerName());
 	}
 
