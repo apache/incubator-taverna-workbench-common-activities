@@ -141,6 +141,9 @@ public abstract class AbstractAddXMLSplitterAction extends AbstractAction {
 			if (descriptor.getMimeType().contains("'text/xml'")) {
 				filtered.put(entry.getKey(), descriptor);
 			}
+//                        if (descriptor instanceof ComplexTypeDescriptor || descriptor instanceof ArrayTypeDescriptor) {
+//                            filtered.put(entry.getKey(), descriptor);
+//                        }
 		}
 		return filtered;
 	}

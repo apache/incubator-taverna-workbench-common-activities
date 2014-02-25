@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.Icon;
-import javax.wsdl.Operation;
 import javax.wsdl.WSDLException;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
 
 import net.sf.taverna.t2.activities.wsdl.WSDLActivityHealthChecker;
@@ -89,6 +89,7 @@ public class WSDLServiceProvider extends
 		return defaults;
 	}
 
+        @Override
 	public void findServiceDescriptionsAsync(
 			FindServiceDescriptionsCallBack callBack) {
 
@@ -98,32 +99,32 @@ public class WSDLServiceProvider extends
 		WSDLParser parser = null;
 		try {
 			parser = new WSDLParser(wsdl.toASCIIString());
-			List<Operation> operations = parser.getOperations();
-			callBack.status("Found " + operations.size() + " WSDL operations:"
-					+ wsdl);
-			List<WSDLServiceDescription> items = new ArrayList<WSDLServiceDescription>();
-			for (Operation op : operations) {
-				WSDLServiceDescription item = new WSDLServiceDescription(credentialManager);
-				try {
-					String name = op.getName();
-					item.setOperation(name);
-					String use = parser.getUse(name);
-					String style = parser.getStyle();
-					if (!WSDLActivityHealthChecker.checkStyleAndUse(style, use)) {
-						logger.warn("Unsupported style and use combination " + style + "/" + use + " for operation " + name + " from " + wsdl);
-						continue;
-					}
-					item.setUse(use);
-					item.setStyle(style);
-					item.setURI(wsdl);
-					item.setDescription(parser.getOperationDocumentation(name));
-					items.add(item);
-				} catch (UnknownOperationException e) {
-					String message = "Encountered an unexpected operation name:"
-							+ item.getOperation();
-					callBack.fail(message, e);
-				}
-			}
+                        List<WSDLServiceDescription> items = new ArrayList<WSDLServiceDescription>();
+                        List<String> operations = parser.getOperations();
+                        callBack.status("Found " + operations.size() + " WSDL operations:"
+                                        + wsdl);
+
+                        for (String operationName : operations) {
+                                WSDLServiceDescription item = new WSDLServiceDescription(credentialManager);
+                                try {
+                                        item.setOperation(operationName);
+                                        String use = parser.getUse(operationName);
+                                        String style = parser.getStyle();
+                                        if (!WSDLActivityHealthChecker.checkStyleAndUse(style, use)) {
+                                                logger.warn("Unsupported style and use combination " + style + "/" + use + " for operation " + operationName + " from " + wsdl);
+                                                continue;
+                                        }
+                                        item.setUse(use);
+                                        item.setStyle(style);
+                                        item.setURI(wsdl);
+                                        item.setDescription(parser.getOperationDocumentation(operationName));
+                                        items.add(item);
+                                } catch (UnknownOperationException e) {
+                                        String message = "Encountered an unexpected operation name:"
+                                                        + item.getOperation();
+                                        callBack.fail(message, e);
+                                }
+                        }
 			callBack.partialResults(items);
 			callBack.finished();
 		} catch (ParserConfigurationException e) {
