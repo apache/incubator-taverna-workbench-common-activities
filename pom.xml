@@ -8,6 +8,7 @@
 	</parent>
 	<groupId>net.sf.taverna.t2.ui-activities</groupId>
 	<artifactId>soaplab-activity-ui</artifactId>
+	<version>1.6-SNAPSHOT</version>
 	<name>Taverna 2 Soaplab Activity UI.</name>
 	<dependencies>
 		<dependency>
