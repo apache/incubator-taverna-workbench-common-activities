@@ -3,8 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>net.sf.taverna.t2</groupId>
-		<artifactId>ui-activities</artifactId>
-		<version>1.5-SNAPSHOT</version>
+		<artifactId>taverna-parent</artifactId>
+		<version>1.6-SNAPSHOT</version>
 	</parent>
 	<groupId>net.sf.taverna.t2.ui-activities</groupId>
 	<artifactId>wsdl-activity-ui</artifactId>
@@ -69,5 +69,31 @@
 		
 		<!--  testing dependencies -->
 	</dependencies>
+		<repositories>
+		<repository>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>mygrid-repository</id>
+			<name>myGrid Repository</name>
+			<url>http://www.mygrid.org.uk/maven/repository</url>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots />
+			<id>mygrid-snapshot-repository</id>
+			<name>myGrid Snapshot Repository</name>
+			<url>http://www.mygrid.org.uk/maven/snapshot-repository</url>
+		</repository>
+	</repositories>
+	<scm>
+                <connection>scm:git:https://github.com/taverna/taverna-wsdl-activity-ui.git</connection>
+                <developerConnection>scm:git:ssh://git@github.com:taverna/taverna-wsdl-activity-ui.git</developerConnection>
+                <url>https://github.com/taverna/taverna-wsdl-activity-ui</url>
+                <tag>HEAD</tag>
+	</scm>
 </project>
 
