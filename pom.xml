@@ -20,6 +20,15 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+                <repository>
+                        <releases>
+                                <enabled>false</enabled>
+                        </releases>
+                        <snapshots />
+                        <id>mygrid-snapshot-repository</id>
+                        <name>myGrid Snapshot Repository</name>
+                        <url>http://www.mygrid.org.uk/maven/snapshot-repository</url>
+                </repository>
 	</repositories>
 
 	<dependencies>
@@ -124,5 +133,11 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+       <scm>
+                <connection>scm:git:https://github.com/taverna/taverna-spreadsheet-import-activity-ui.git</connection>
+                <developerConnection>scm:git:ssh://git@github.com:taverna/taverna-spreadsheet-import-activity-ui.git</developerConnection>
+                <url>https://github.com/taverna/taverna-spreadsheet-import-activity-ui</url>
+                <tag>HEAD</tag>
+        </scm>
 
 </project>
