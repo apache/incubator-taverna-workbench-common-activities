@@ -19,6 +19,12 @@
 		</dependency>
 		
 		<dependency>
+			<groupId>net.sf.taverna.t2.ui-activities</groupId>
+			<artifactId>rest-activity-ui</artifactId>
+			<version>${t2.ui.activities.version}</version>
+		</dependency>
+		
+		<dependency>
 	<groupId>org.jvnet.ws.wadl</groupId>
 	<artifactId>wadl-core</artifactId>
 	<version>1.1.6</version>
