@@ -36,6 +36,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
 import com.sun.tools.xjc.api.SchemaCompiler;
+import com.sun.tools.xjc.api.XJC;
 import com.sun.tools.xjc.api.impl.s2j.SchemaCompilerImpl;
 
 public class WadlServiceProvider extends
@@ -59,7 +60,7 @@ public class WadlServiceProvider extends
 		// Use callback.status() for long-running searches
 		// callBack.status("Resolving example services");
 		
-		final SchemaCompiler s2j = new SchemaCompilerImpl();
+		final SchemaCompiler s2j = XJC.createSchemaCompiler();
         
         final Set<URI> jsonSchemas = new LinkedHashSet<URI>();
 		
