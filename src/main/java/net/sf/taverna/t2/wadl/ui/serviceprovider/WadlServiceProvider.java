@@ -1,8 +1,10 @@
 package net.sf.taverna.t2.wadl.ui.serviceprovider;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -10,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.Icon;
+import javax.xml.bind.JAXBException;
 
 import net.sf.taverna.t2.activities.rest.RESTActivity.HTTP_METHOD;
 import net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean;
@@ -18,6 +21,7 @@ import net.sf.taverna.t2.servicedescriptions.AbstractConfigurableServiceProvider
 import net.sf.taverna.t2.servicedescriptions.CustomizedConfigurePanelProvider;
 
 import org.apache.log4j.Logger;
+import org.jvnet.ws.wadl.Application;
 import org.jvnet.ws.wadl.Param;
 import org.jvnet.ws.wadl.ast.ApplicationNode;
 import org.jvnet.ws.wadl.ast.InvalidWADLException;
@@ -120,7 +124,15 @@ public class WadlServiceProvider extends
 					@Override
 					public void error(String message, Throwable throwable) {
 						logger.error(message, throwable);
-					}});
+					}}) {
+                    @Override 
+                    protected Application processDescription(URI desc) throws JAXBException, IOException {
+                        URLConnection conn = desc.toURL().openConnection();
+                        conn.setRequestProperty("Accept", "application/vnd.sun.wadl+xml");
+                        InputStream is = conn.getInputStream();
+                        return processDescription(desc, is);
+                    }
+                };
        
        
 		List<WadlServiceDesc> results = new ArrayList<WadlServiceDesc>();      
