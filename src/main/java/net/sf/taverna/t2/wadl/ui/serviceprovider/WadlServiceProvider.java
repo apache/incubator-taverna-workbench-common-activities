@@ -1,12 +1,8 @@
 package net.sf.taverna.t2.wadl.ui.serviceprovider;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -19,7 +15,6 @@ import net.sf.taverna.t2.activities.rest.RESTActivity.HTTP_METHOD;
 import net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean;
 import net.sf.taverna.t2.activities.rest.ui.servicedescription.RESTActivityIcon;
 import net.sf.taverna.t2.servicedescriptions.AbstractConfigurableServiceProvider;
-import net.sf.taverna.t2.servicedescriptions.ConfigurableServiceProvider;
 import net.sf.taverna.t2.servicedescriptions.CustomizedConfigurePanelProvider;
 
 import org.apache.log4j.Logger;
@@ -34,10 +29,6 @@ import org.jvnet.ws.wadl.ast.WadlAstBuilder;
 import org.jvnet.ws.wadl.util.MessageListener;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
-
-import com.sun.tools.xjc.api.SchemaCompiler;
-import com.sun.tools.xjc.api.XJC;
-import com.sun.tools.xjc.api.impl.s2j.SchemaCompilerImpl;
 
 public class WadlServiceProvider extends
 	AbstractConfigurableServiceProvider<WadlServiceProviderConfig> implements
@@ -60,7 +51,7 @@ public class WadlServiceProvider extends
 		// Use callback.status() for long-running searches
 		// callBack.status("Resolving example services");
 		
-		final SchemaCompiler s2j = XJC.createSchemaCompiler();
+//		final SchemaCompiler s2j = XJC.createSchemaCompiler();
         
         final Set<URI> jsonSchemas = new LinkedHashSet<URI>();
 		
@@ -69,7 +60,7 @@ public class WadlServiceProvider extends
 
                     public void processSchema(InputSource input) {
                         
-                        // Assume that the stream is a buffered stream at this point
+/*                        // Assume that the stream is a buffered stream at this point
                         // and mark a position
                         InputStream is = input.getByteStream();
                         is.mark(8192);
@@ -107,11 +98,11 @@ public class WadlServiceProvider extends
                         else { //if (peakContent==null || peakContent.contains("<?xml") || peakContent.startsWith("<")) {
                             s2j.parseSchema(input);
                         } 
-                    
+ */                   
                     }
 
                     public void processSchema(String uri, Element node) {
-                        s2j.parseSchema(uri, node);
+/*                        s2j.parseSchema(uri, node);*/
                     }
                 },
                 new MessageListener() {
