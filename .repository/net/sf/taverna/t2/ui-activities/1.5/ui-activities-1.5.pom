@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>taverna-parent</artifactId>
+		<groupId>net.sf.taverna</groupId>
+		<version>2.5.0</version>
+        <relativePath>../../taverna-parent/pom.xml</relativePath>
+	</parent>
+
+	<groupId>net.sf.taverna.t2</groupId>
+	<artifactId>ui-activities</artifactId>
+	<version>1.5</version>
+	<packaging>pom</packaging>
+
+	<name>Taverna 2 Activities UI</name>
+	<description>UI for Taverna 2 activities</description>
+
+	<modules>
+		<module>all-activity-uis</module>
+		<module>apiconsumer-activity-ui</module>
+		<module>beanshell-activity-ui</module>
+		<module>biomart-activity-ui</module>
+		<module>biomoby-activity-ui</module>
+		<module>component-activity-ui</module>
+		<module>dataflow-activity-ui</module>
+		<module>disabled-activity-ui</module>
+		<module>external-tool-activity-ui</module>
+		<module>interaction-activity-ui</module>
+		<module>localworker-activity-ui</module>
+		<module>rest-activity-ui</module>
+		<module>rshell-activity-ui</module>
+		<module>soaplab-activity-ui</module>
+		<module>spreadsheet-import-activity-ui</module>
+		<module>stringconstant-activity-ui</module>
+		<module>unrecognized-activity-ui</module>
+		<module>webdav-activity-ui</module>
+		<module>wsdl-activity-ui</module>
+		<module>xpath-activity-ui</module>
+		<module>common-activity-uis</module>
+		<module>bioinformatics-activity-uis</module>
+	</modules>
+	<repositories>
+		<repository>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>mygrid-repository</id>
+			<name>myGrid Repository</name>
+			<url>http://www.mygrid.org.uk/maven/repository</url>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots />
+			<id>mygrid-snapshot-repository</id>
+			<name>myGrid Snapshot Repository</name>
+			<url>http://www.mygrid.org.uk/maven/snapshot-repository</url>
+		</repository>
+
+	</repositories>
+	<scm>
+		<connection>scm:svn:http://taverna.googlecode.com/svn/taverna/ui/net.sf.taverna.t2.ui-activities/trunk/</connection>
+		<developerConnection>scm:svn:https://taverna.googlecode.com/svn/taverna/ui/net.sf.taverna.t2.ui-activities/trunk/</developerConnection>
+		<url>http://code.google.com/p/taverna/source/browse/#svn/taverna/ui/net.sf.taverna.t2.ui-activities/trunk/</url>
+	</scm>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.help</groupId>
+				<artifactId>javahelp</artifactId>
+				<version>${javahelp.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>uk.org.mygrid.taverna</groupId>
+				<artifactId>osxapplication</artifactId>
+				<version>1.5.1</version>
+			</dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons.io.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>${commons.codec.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-collections</groupId>
+				<artifactId>commons-collections</artifactId>
+				<version>${commons.collections.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>${commons.lang.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.mail</groupId>
+				<artifactId>mail</artifactId>
+				<version>${mail.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jdom</groupId>
+				<artifactId>jdom</artifactId>
+				<version>${jdom.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.openrdf.elmo</groupId>
+		<artifactId>elmo-concepts</artifactId>
+		<version>1.5</version>
+	</parent>
+
+	<artifactId>elmo-rdfs</artifactId>
+
+	<name>RDF(S) Concepts</name>
+	<description>
+The Resource Description Framework (RDF) is a general-purpose language for
+representing information in the Web.
+	</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.openrdf.elmo</groupId>
+			<artifactId>elmo-api</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>

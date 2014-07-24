@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>net.sf.taverna.t2</groupId>
+        <artifactId>core</artifactId>
+        <version>1.5</version>
+    </parent>
+    <groupId>net.sf.taverna.t2.core</groupId>
+    <artifactId>provenanceconnector</artifactId>
+    <name>Database storage and analysis of provenance info</name>
+         
+     <dependencies>
+     <!-- 
+         <dependency>
+            <groupId>com.hp.hpl.jena</groupId>
+            <artifactId>jena</artifactId>
+            <version>${jena.version}</version>
+        </dependency>
+      -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>net.sf.taverna.t2.core</groupId>
+            <artifactId>reference-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+		
+        <dependency>
+            <groupId>net.sf.taverna.t2.core</groupId>
+            <artifactId>workflowmodel-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+                
+        <dependency>
+            <groupId>net.sf.taverna.t2.core</groupId>
+            <artifactId>workflowmodel-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>net.sf.taverna.t2.infrastructure</groupId>
+            <artifactId>spi-discovery-api</artifactId>
+            <version>${t2.infrastructure.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>net.sf.taverna.t2.core</groupId>
+            <artifactId>reference-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
+<!-- 
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+ -->
+
+        <dependency>
+            <groupId>org.tupeloproject</groupId>
+            <artifactId>tupelo-cet</artifactId>
+            <version>${tupelo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.tupeloproject</groupId>
+            <artifactId>tupelo-kernel</artifactId>
+            <version>${tupelo.version}</version>
+        </dependency>
+
+        <!-- 
+        <dependency>
+            <groupId>org.openprovenance</groupId>
+            <artifactId>toolbox</artifactId>
+            <version>${opm.version}</version>
+        </dependency>
+         -->
+         <!-- 
+        <dependency>
+            <groupId>org.openprovenance</groupId>
+            <artifactId>opm-core</artifactId>
+            <version>${opm.version}</version>
+        </dependency>
+          -->
+         <dependency>
+            <groupId>org.openprovenance</groupId>
+            <artifactId>opm-core</artifactId>
+            <version>${opm.version}</version>
+        </dependency>
+        
+
+<!-- 
+
+        <dependency>
+            <groupId>simple-jndi</groupId>
+            <artifactId>simple-jndi</artifactId>
+            <version>0.11.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-dbcp</groupId>
+                    <artifactId>commons-dbcp</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-pool</groupId>
+                    <artifactId>commons-pool</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+ -->
+
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>${commons.dbcp.version}</version>
+        </dependency>
+        
+        
+    </dependencies>
+</project>
+

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>net.sf.taverna</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.1.2008-11-03</version>
+	</parent>
+	<groupId>net.sf.taverna</groupId>
+	<artifactId>raven-parent</artifactId>
+	<version>1.9</version>
+	<packaging>pom</packaging>
+	<name>Raven family</name>
+	<description>
+		The Raven family, including Raven and Zaria.
+	</description>
+	
+	<properties>
+		<raven.version>1.9</raven.version>
+	</properties>
+
+	<organization>
+		<name>European Bioinformatics Institute</name>
+		<url>http://www.ebi.ac.uk</url>
+	</organization>
+	<developers>
+		<developer>
+			<id>mereden</id>
+			<name>Tom Oinn</name>
+			<email>tmo@ebi.ac.uk</email>
+			<url>http://www.ebi.ac.uk/~tmo/</url>
+			<organization>
+				European Bioinformatics Institute
+			</organization>
+			<organizationUrl>http://www.ebi.ac.uk/</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>0</timezone>
+		</developer>
+		<developer>
+			<id>mpocock</id>
+			<name>Matthew Pocock</name>
+			<email>matthew.pocock@ncl.ac.uk</email>
+			<organization>
+				University of Newcastle Upon Tyne
+			</organization>
+			<organizationUrl>http://www.ncl.ac.uk/</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>0</timezone>
+		</developer>
+		<developer>
+			<id>witherd5</id>
+			<name>David Withers</name>
+			<email>david.withers@manchester.ac.uk</email>
+			<url>http://www.cs.man.ac.uk/~witherd5/</url>
+			<organization>University of Manchester</organization>
+			<organizationUrl>
+				http://www.manchester.ac.uk/
+			</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>0</timezone>
+		</developer>
+		<developer>
+			<id>sowen</id>
+			<name>Stuart Owen</name>
+			<email>stuart.owen@manchester.ac.uk</email>
+			<url>http://www.cs.man.ac.uk/~sowen/</url>
+			<organization>University of Manchester</organization>
+			<organizationUrl>
+				http://www.manchester.ac.uk/
+			</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>0</timezone>
+		</developer>
+		<developer>
+			<id>stain</id>
+			<name>Stian Soiland</name>
+			<email>ssoiland@cs.man.ac.uk</email>
+			<url>http://www.cs.man.ac.uk/~ssoiland/</url>
+			<organization>University of Manchester</organization>
+			<organizationUrl>
+				http://www.manchester.ac.uk/
+			</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>0</timezone>
+		</developer>
+	</developers>
+
+	<repositories>
+		<repository>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>mygrid-repository</id>
+			<name>myGrid Repository</name>
+			<url>http://www.mygrid.org.uk/maven/repository</url>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots />
+			<id>mygrid-snapshot-repository</id>
+			<name>myGrid Snapshot Repository</name>
+			<url>
+				http://www.mygrid.org.uk/maven/snapshot-repository
+			</url>
+		</repository>
+
+		<repository>
+			<id>akathist-repository</id>
+			<name>Akathist Repository</name>
+			<url>http://www.9stmaryrd.com/maven</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>akathist-repository</id>
+			<name>Akathist Repository</name>
+			<url>http://www.9stmaryrd.com/maven</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.4</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>1.2</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-httpclient</groupId>
+				<artifactId>commons-httpclient</artifactId>
+				<version>3.1</version>
+			</dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.12</version>
+			</dependency>
+			<dependency>
+				<groupId>jdom</groupId>
+				<artifactId>jdom</artifactId>
+				<version>1.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.xmlbeans</groupId>
+				<artifactId>xmlbeans</artifactId>
+				<version>2.4.0</version>
+			</dependency>
+				
+			<dependency>
+				<groupId>uk.org.mygrid.taverna.raven</groupId>
+				<artifactId>raven</artifactId>
+				<version>${raven.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>uk.org.mygrid.taverna.raven</groupId>
+				<artifactId>raven-log4j</artifactId>
+				<version>${raven.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>uk.org.mygrid.taverna.raven</groupId>
+				<artifactId>plugins-api</artifactId>
+				<version>${raven.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>uk.org.mygrid.taverna.raven</groupId>
+				<artifactId>plugins-impl</artifactId>
+				<version>${raven.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>uk.org.mygrid.taverna.raven</groupId>
+				<artifactId>launcher-api</artifactId>
+				<version>${raven.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>uk.org.mygrid.taverna.raven</groupId>
+				<artifactId>launcher</artifactId>
+				<version>${raven.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>uk.org.mygrid.taverna.raven</groupId>
+				<artifactId>prelauncher</artifactId>
+				<version>${raven.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>uk.org.mygrid.taverna.raven</groupId>
+				<artifactId>appconfig</artifactId>
+				<version>${raven.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>uk.org.mygrid.taverna.raven</groupId>
+				<artifactId>appconfig</artifactId>
+				<version>${raven.version}</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>uk.org.mygrid.taverna.raven</groupId>
+				<artifactId>helloworld</artifactId>
+				<version>${raven.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<modules>
+		<module>raven</module>
+		<module>raven-log4j</module>
+		<module>raven-integration-testing</module>
+		<module>zaria</module>
+		<module>helloworld</module>
+		<module>helloworld-launcher</module>
+		<module>appconfig</module>
+		<module>launcher-api</module>
+		<module>launcher</module>
+		<module>prelauncher</module>
+		<module>plugins-api</module>
+		<module>plugins-impl</module>
+		<module>plugins-gui</module>
+	</modules>
+</project>

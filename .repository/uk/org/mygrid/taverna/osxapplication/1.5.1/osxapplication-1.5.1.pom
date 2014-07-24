@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>uk.org.mygrid.taverna</groupId>
+  <artifactId>osxapplication</artifactId>
+  <version>1.5.1</version>
+  <description>OS X application proxy. By implementing the
+    net.sf.taverna.osx.OSXListener interface (or subclassing the
+    net.sf.taverna.osx.OSXAdapter) and calling
+    net.sf.taverna.osx.OSXApplication.setListener(), an application can
+    migrate with OS X to handle OS X specific features such as "About"
+    and "Quit" in the generated Application menu.
+
+    This is an independant proxy to com.apple.eawt.ApplicationListener
+    to avoid compile problems and class loading problems outside OS X.</description>
+  <developers>
+    <developer>
+      <id>stain</id>
+      <name>Stian Soiland</name>
+      <email>ssoiland@cs.man.ac.uk</email>
+      <url>http://www.cs.man.ac.uk/~ssoiland/</url>
+      <organization>University of Manchester, School of Computer Science</organization>
+      <organizationUrl>http://www.cs.manchester.ac.uk/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>0</timezone>
+    </developer>
+  </developers>
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License</name>
+      <url>http://www.gnu.org/licenses/lgpl.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:cvs:pserver:anonymous@taverna.cvs.sourceforge.net:/cvsroot/taverna:osxapplication</connection>
+    <url>http://taverna.cvs.sourceforge.net/taverna/osxapplication/</url>
+  </scm>
+  <organization>
+    <name>myGrid</name>
+    <url>http://www.mygrid.org.uk/</url>
+  </organization>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <repositories>
+    <repository>
+      <releases />
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>mygrid-repository</id>
+      <name>myGrid Repository</name>
+      <url>http://www.mygrid.org.uk/maven/repository</url>
+    </repository>
+    <repository>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots />
+      <id>mygrid-snapshot-repository</id>
+      <name>myGrid Snapshot Repository</name>
+      <url>http://www.mygrid.org.uk/maven/snapshot-repository</url>
+    </repository>
+  </repositories>
+  <distributionManagement>
+    <repository>
+      <id>mygrid-repository</id>
+      <name>myGrid Repository</name>
+      <url>scpexe://phoebus.cs.man.ac.uk/disk1/maven/repository</url>
+    </repository>
+    <snapshotRepository>
+      <id>mygrid-snapshot-repository</id>
+      <name>myGrid Snapshot Repository</name>
+      <url>scpexe://phoebus.cs.man.ac.uk/disk1/maven/snapshot-repository</url>
+    </snapshotRepository>
+    <status>deployed</status>
+  </distributionManagement>
+</project>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.openrdf.elmo</groupId>
+		<artifactId>elmo</artifactId>
+		<version>1.5</version>
+	</parent>
+
+	<artifactId>elmo-concepts</artifactId>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>dc</module>
+		<module>doap</module>
+		<module>foaf</module>
+		<module>owl</module>
+		<module>owls</module>
+		<module>rdfs</module>
+		<module>rss</module>
+		<module>skos</module>
+		<module>swrl</module>
+		<module>voc</module>
+		<module>webarch</module>
+	</modules>
+
+	<name>Concepts</name>
+	<description>
+A concept is a JavaBean interface with an @rdf annotations describing the
+subject type of the interface and the predicates of each mapped Bean property.
+Elmo ships with a collection of popular ontologies defined as Elmo concepts.
+They can be found in this elmo-concepts module.
+
+By placing one or more of the concept jars into the class-path of the
+elmo-module the concepts can then be used with the elmo-manager. Concept jars
+can also be created from other ontologies using the ontology converter.
+	</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.openrdf.elmo</groupId>
+			<artifactId>elmo-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+</project>

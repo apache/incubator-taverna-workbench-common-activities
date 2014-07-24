@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+        <parent>
+		<groupId>net.sf.taverna</groupId>
+		<artifactId>taverna-parent</artifactId>
+		<version>2.5.0</version>
+		<relativePath>../../taverna-parent/pom.xml</relativePath>
+	</parent>
+	<groupId>net.sf.taverna.t2.results</groupId>
+	<artifactId>results</artifactId>
+	<version>1.5</version>
+
+	<name>Common Results handling utilities</name>
+	<description>Common utilities for handling results, in particular Baclava document handling and de-referencing T2References</description>
+	<dependencies>
+		<dependency>
+			<groupId>uk.org.mygrid.taverna.baclava</groupId>
+			<artifactId>baclava-core</artifactId>
+			<version>${taverna.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.org.mygrid.taverna.baclava</groupId>
+			<artifactId>baclava-core</artifactId>
+			<version>${taverna.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.core</groupId>
+			<artifactId>reference-api</artifactId>
+			<version>${t2.core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.core</groupId>
+			<artifactId>workflowmodel-api</artifactId>
+			<version>${t2.core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.org.mygrid.resources.mimeutil</groupId>
+			<artifactId>mime-util</artifactId>
+			<version>${mimeutil.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.org.mygrid.resources.clapper</groupId>
+			<artifactId>ocutil</artifactId>
+			<version>2.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+        <repositories>
+                <repository>
+                        <releases />
+                        <snapshots>
+                                <enabled>false</enabled>
+                        </snapshots>
+                        <id>mygrid-repository</id>
+                        <name>myGrid Repository</name>
+                        <url>http://www.mygrid.org.uk/maven/repository</url>
+                </repository>
+                <repository>
+                        <releases>
+                                <enabled>false</enabled>
+                        </releases>
+                        <snapshots />
+                        <id>mygrid-snapshot-repository</id>
+                        <name>myGrid Snapshot Repository</name>
+                        <url>http://www.mygrid.org.uk/maven/snapshot-repository</url>
+                </repository>
+        </repositories>
+        <scm>
+                <connection>scm:svn:http://taverna.googlecode.com/svn/taverna/engine/net.sf.taverna.t2.results/tags/results-1.5</connection>
+                <developerConnection>scm:svn:https://taverna.googlecode.com/svn/taverna/engine/net.sf.taverna.t2.results/tags/results-1.5</developerConnection>
+                <url>http://code.google.com/p/taverna/source/browse/#svn/taverna/engine/net.sf.taverna.t2.results/tags/results-1.5</url>
+        </scm>
+</project>

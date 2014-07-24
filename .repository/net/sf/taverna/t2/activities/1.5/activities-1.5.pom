@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>taverna-parent</artifactId>
+		<groupId>net.sf.taverna</groupId>
+		<version>2.5.0</version>
+        <relativePath>../../taverna-parent/pom.xml</relativePath>
+	</parent>
+
+	<groupId>net.sf.taverna.t2</groupId>
+	<artifactId>activities</artifactId>
+	<version>1.5</version>
+	<packaging>pom</packaging>
+
+	<name>Taverna 2 Activities</name>
+	<description>
+		A collection of Taverna 2 Activities. These are the core
+		activities required to cover the functionality of Taverna 1, and
+		includes translators to translate processors from SCUFL
+		workflows.
+	</description>
+
+	<modules>
+		<module>activity-test-utils</module>
+		<module>all-activities</module>
+		<module>apiconsumer-activity</module>
+		<module>beanshell-activity</module>
+		<module>biomart-activity</module>
+		<module>biomoby-activity</module>
+		<module>component-activity</module>
+		<module>dataflow-activity</module>
+		<module>dependency-activity</module>
+		<module>external-tool-activity</module>
+		<module>interaction-activity</module>
+		<module>localworker-activity</module>
+		<module>rest-activity</module>
+		<module>rshell-activity</module>
+		<module>soaplab-activity</module>
+		<module>spreadsheet-import-activity</module>
+		<module>stringconstant-activity</module>
+		<module>usecase-activity</module>
+		<module>webdav-activity</module>
+		<module>wsdl-activity</module>
+		<module>xpath-activity</module>
+		<module>common-activities</module>
+		<module>bioinformatics-activities</module>
+	</modules>	
+	<repositories>
+		<repository>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>mygrid-repository</id>
+			<name>myGrid Repository</name>
+			<url>http://www.mygrid.org.uk/maven/repository</url>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots />
+			<id>mygrid-snapshot-repository</id>
+			<name>myGrid Snapshot Repository</name>
+			<url>http://www.mygrid.org.uk/maven/snapshot-repository</url>
+		</repository>		
+	</repositories>
+	<scm>
+		<connection>scm:svn:http://taverna.googlecode.com/svn/taverna/engine/net.sf.taverna.t2.activities/branches/maintenance/</connection>
+		<developerConnection>scm:svn:https://taverna.googlecode.com/svn/taverna/engine/net.sf.taverna.t2.activities/branches/maintenance/</developerConnection>
+		<url>http://code.google.com/p/taverna/source/browse/#svn/taverna/engine/net.sf.taverna.t2.activities/branches/maintenance</url>
+	</scm>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.help</groupId>
+				<artifactId>javahelp</artifactId>
+				<version>${javahelp.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons.io.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>${commons.codec.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.mail</groupId>
+				<artifactId>mail</artifactId>
+				<version>${mail.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jdom</groupId>
+				<artifactId>jdom</artifactId>
+				<version>${jdom.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>
+

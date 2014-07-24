@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>net.sf.taverna</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.2.2014-03-19</version>
+		<relativePath>../parent/pom.xml</relativePath>
+	</parent>
+	<groupId>net.sf.taverna</groupId>
+	<artifactId>taverna-parent</artifactId>
+	<version>2.5.0</version>
+	<packaging>pom</packaging>
+	<name>Taverna Maven parent</name>
+	<description>
+		General POM-file parent for Taverna workbench etc. 
+	</description>
+	<properties>
+		<antlr.version>2.7.7</antlr.version>
+		<axis.version>1.4</axis.version>
+		<axis.jaxrpc.version>1.4</axis.jaxrpc.version>
+		<axis.sggj.version>1.4</axis.sggj.version>
+		<axis.wsdl4j.version>1.5.1</axis.wsdl4j.version>
+		<axis.wss4j.version>1.4-1.5.4-2</axis.wss4j.version>
+		<bcprov.jdk16.version>140</bcprov.jdk16.version>
+		<jaxp.ri.version>1.4</jaxp.ri.version>
+		<xstream.version>1.4.1</xstream.version>
+		<commons.beanutils.version>1.8.3</commons.beanutils.version>
+		<commons.cli.version>1.2</commons.cli.version>
+		<commons.codec.version>1.4</commons.codec.version>
+		<commons.collections.version>3.2.1</commons.collections.version>
+		<commons.configuration.version>1.6</commons.configuration.version>
+		<commons.dbcp.version>1.4</commons.dbcp.version>
+		<commons.httpclient.version>3.1</commons.httpclient.version>
+		<apache.httpclient.version>4.0.1</apache.httpclient.version>
+		<commons.io.version>1.4</commons.io.version>
+		<commons.net.version>2.0</commons.net.version>
+		<commons.lang.version>2.5</commons.lang.version>
+		<commons.logging.version>1.1.1</commons.logging.version>
+		<dom4j.version>1.6.1</dom4j.version>
+		<geronimo.spec.jta.version>1.0-M1</geronimo.spec.jta.version>
+		<activation.version>1.1.1</activation.version>
+		<javahelp.version>2.0.02</javahelp.version>
+		<mail.version>1.4.1</mail.version>
+		<jaxws.api.version>2.1</jaxws.api.version>
+		<jaxen.version>1.1.1</jaxen.version>
+		<jdom.version>1.1</jdom.version>
+		<slf4j.version>1.7.5</slf4j.version>
+		<jmimemagic.version>0.1.2</jmimemagic.version>
+		<junit.version>4.8.1</junit.version>
+		<log4j.version>1.2.16</log4j.version>
+		<mysql.connector.java.version>5.1.13</mysql.connector.java.version>
+		<jai.imageio.core.standalone.version>1.2-pre-dr-b04-2010-04-30</jai.imageio.core.standalone.version>
+		<json.lib.version>2.3</json.lib.version>
+		<opencsv.version>2.1</opencsv.version>
+		<javacsv.version>2.0</javacsv.version>
+		<derby.version>10.6.1.0</derby.version>
+		<derbyclient.version>${derby.version}</derbyclient.version>
+		<derbynet.version>${derby.version}</derbynet.version>
+		<derbytools.version>${derby.version}</derbytools.version>
+		<poi.version>3.6</poi.version>
+		<poi.ooxml.version>3.6</poi.ooxml.version>
+		<xmlbeans.version>2.4.0</xmlbeans.version>
+		<batik.version>1.7</batik.version>
+		<aspectj.version>1.6.9</aspectj.version>
+		<bsh.version>2.0b4</bsh.version>
+		<martj.version>0.6</martj.version>
+		<jmoby.version>1.1.5-taverna</jmoby.version>
+		<hibernate.version>3.2.5.ga.raven</hibernate.version>
+		<servletapi.version>2.5</servletapi.version>
+		<jetty.version>6.1.24</jetty.version>
+		<opm.version>1.1.8</opm.version>
+		<tupelo.version>2.6</tupelo.version>
+		<org.xhtmlrenderer.core-renderer.version>R8pre2</org.xhtmlrenderer.core-renderer.version>
+		<gson.version>1.4</gson.version>
+		<xalan.version>2.7.1</xalan.version>
+		<saxpath.version>1.0-FCS</saxpath.version>
+		<stax.version>1.0</stax.version>
+		<xerces.version>2.9.1</xerces.version>
+		<jsch.version>0.1.42</jsch.version>
+		<jena.version>2.6.4</jena.version>
+		<jena.core.version>2.7.4</jena.core.version>
+		<jena.arq.version>2.8.7</jena.arq.version>
+		<!--  to match Jena -->
+		<icu4j.version>3.4.4</icu4j.version>
+
+		<spring.version>2.5.4</spring.version>
+
+		<!-- Taverna versions -->
+		<wsdl.generic.version>1.10</wsdl.generic.version>
+		<org.biomart.martservice.version>1.5</org.biomart.martservice.version>
+		<org.fife.ui.hexeditor.version>1.0.2011-07-04</org.fife.ui.hexeditor.version>
+		<org.icepdf.version>4.1.1-taverna</org.icepdf.version>
+		<mimeutil.version>2.1.2-6</mimeutil.version>
+
+		<t2.activities.version>1.5</t2.activities.version>
+		<t2.compatibility.version>1.5</t2.compatibility.version>
+		<t2.core.provenanceconnector.version>1.5</t2.core.provenanceconnector.version>
+		<t2.core.provenance.derby.version>1.5</t2.core.provenance.derby.version>
+		<t2.core.provenance.mysql.version>1.5</t2.core.provenance.mysql.version>
+		<t2.core.version>1.5</t2.core.version>
+		<t2.infrastructure.version>2.5</t2.infrastructure.version>
+		<t2.lang.version>1.5</t2.lang.version>
+		<t2.results.version>1.5</t2.results.version>
+		<t2.provenance-client.version>1.5</t2.provenance-client.version>
+		<t2.tavernaprov.version>2.2.0</t2.tavernaprov.version>
+		<t2.reference-core-extensions.version>1.5</t2.reference-core-extensions.version>
+		<t2.security.version>1.5</t2.security.version>
+		<!--  see https://github.com/myGrid/taverna-prov/tree/maintenance  -->
+		<t2.taverna.workbench.version>${project.version}</t2.taverna.workbench.version>
+		<t2.taverna-commandline.version>1.5</t2.taverna-commandline.version>
+		<t2.translators.version>1.5</t2.translators.version>
+		<t2.ui.api.version>1.5</t2.ui.api.version>
+		<t2.ui.impl.version>1.5</t2.ui.impl.version>
+		<t2.ui.components.version>1.5</t2.ui.components.version>
+		<t2.ui.exts.version>1.5</t2.ui.exts.version>
+		<t2.ui.activities.version>1.5</t2.ui.activities.version>
+		<taverna.version>1.7.2.2</taverna.version>
+
+	</properties>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.atlassian.maven.plugins</groupId>
+				<artifactId>maven-clover2-plugin</artifactId>
+				<version>2.3.1</version>
+				<configuration>
+					<jdk>1.6</jdk>
+					<targetPercentage>50%</targetPercentage>
+					<failOnViolation>false</failOnViolation>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>pre-site</phase>
+						<goals>
+							<goal>instrument</goal>
+							<goal>aggregate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+		</plugins>
+	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>com.atlassian.maven.plugins</groupId>
+				<artifactId>maven-clover2-plugin</artifactId>
+				<version>2.3.1</version>
+				<configuration>
+					<generatePdf>true</generatePdf>
+					<generateXml>true</generateXml>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<configLocation>
+						${basedir}/Rcheckstyle.xml
+					</configLocation>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<minmemory>128m</minmemory>
+					<maxmemory>512</maxmemory>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.7.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>2.2</version>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<repositories>
+		<repository>
+			<id>mygrid-repository</id>
+			<name>myGrid Repository</name>
+			<url>http://www.mygrid.org.uk/maven/repository</url>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>mygrid-snapshot-repository</id>
+			<name>myGrid Snapshot Repository</name>
+			<url>http://www.mygrid.org.uk/maven/snapshot-repository</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots />
+		</repository>
+		<repository>
+			<id>central-uk</id>
+			<name>UK mirror of central</name>
+			<url>http://uk.maven.org/maven2/</url>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+		<!-- 
+		<repository>
+			<id>jboss</id>
+			<name>JBoss repository</name>
+			-  <url>http://repository.jboss.org/maven2/</url>-
+			<url>https://repository.jboss.org/nexus/</url>
+			<releases>
+				<checksumPolicy>fail</checksumPolicy>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		 -->
+		<repository>
+			<id>javanet</id>
+			<name>java.net</name>
+			<url>http://download.java.net/maven/2/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>			
+		</repository>
+
+
+		<repository>
+			<id>inab-repository</id>
+			<name>INAB Moby Repository mirror</name>
+			<url>http://www.mygrid.org.uk/maven/biomoby/moby-dev.inab.org/m2/</url>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>opm</id>
+			<name>Open Provenance (OPM)</name>
+			<url>http://openprovenance.org/java/maven-releases</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>akathist-repository</id>
+			<!-- disable broken http://9stmaryrd.com/maven/ referenced by raven 1.9 -->
+			<url>http://build.mygrid.org.uk/maven/404</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>			
+		</repository>
+		<repository>
+			<id>aduna-opensource.releases</id>
+			<name>Aduna Software mirror</name>
+			<!--
+			<url>http://repo.aduna-software.org/maven2/releases/</url>
+			-->
+			<url>http://build.mygrid.org.uk/maven/aduna</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+
+
+	</repositories>
+</project>
+  

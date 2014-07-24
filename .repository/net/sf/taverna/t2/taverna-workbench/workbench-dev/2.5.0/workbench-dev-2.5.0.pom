@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>net.sf.taverna.t2</groupId>
+		<artifactId>taverna-workbench</artifactId>
+		<version>2.5.0</version>
+	</parent>
+	<groupId>net.sf.taverna.t2.taverna-workbench</groupId>
+	<artifactId>workbench-dev</artifactId>
+	<name>Taverna workbench development distribution</name>
+	<dependencies>
+		<dependency>
+			<groupId>net.sf.taverna.t2.taverna-workbench</groupId>
+			<artifactId>taverna-product-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+                        <groupId>net.sf.taverna.t2.ui-activities</groupId>
+                        <artifactId>common-activity-uis</artifactId>
+                        <version>${t2.ui.activities.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>axis-wss4j</artifactId>
+					<groupId>axis</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.taverna-workbench</groupId>
+			<artifactId>workbench-plugin</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.taverna.t2.ui-components</groupId>
+			<artifactId>results-view</artifactId>
+			<version>${t2.ui.components.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun</groupId>
+					<artifactId>tools</artifactId>
+				</exclusion>
+				<exclusion>
+				    <artifactId>slf4j-api</artifactId>
+				    <groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+				    <artifactId>slf4j-log4j12</artifactId>
+				    <groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jena</artifactId>
+					<groupId>com.hp.hpl.jena</groupId>
+				</exclusion>				
+			</exclusions>
+		</dependency>
+		
+	</dependencies>
+</project>

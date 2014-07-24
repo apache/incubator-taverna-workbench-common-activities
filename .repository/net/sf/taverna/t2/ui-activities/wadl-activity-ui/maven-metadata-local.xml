@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>net.sf.taverna.t2.ui-activities</groupId>
+  <artifactId>wadl-activity-ui</artifactId>
+  <versioning>
+    <release>0.0.5</release>
+    <versions>
+      <version>0.0.4-SNAPSHOT</version>
+      <version>0.0.5-SNAPSHOT</version>
+      <version>0.0.5</version>
+    </versions>
+    <lastUpdated>20140724150316</lastUpdated>
+  </versioning>
+</metadata>

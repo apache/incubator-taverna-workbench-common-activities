@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>info.aduna.commons</groupId>
+		<artifactId>aduna-commons</artifactId>
+		<version>5</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>aduna-commons-platform</artifactId>
+	<version>2.2</version>
+	<packaging>pom</packaging>
+
+	<name>Aduna Commons: Platform</name>
+	<description>Platform integration functionality.</description>
+	<url>https://wiki.aduna-software.org/confluence/display/COM/Platform</url>
+
+	<modules>
+		<module>info</module>
+		<module>desktop</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>info.aduna.commons</groupId>
+				<artifactId>aduna-commons-platform-info</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>info.aduna.commons</groupId>
+				<artifactId>aduna-commons-net</artifactId>
+				<version>2.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.semanticdesktop.aperture</groupId>
+				<artifactId>aperture</artifactId>
+				<version>1.0.1-beta-rev1067</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.semweb4j</groupId>
+						<artifactId>rdf2go.api.impl.base</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>commons-logging</groupId>
+						<artifactId>commons-logging</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<issueManagement>
+		<system>jira</system>
+		<url>https://issues.aduna-software.org/jira/browse/COMPLAT</url>
+	</issueManagement>
+
+	<scm>
+		<connection>scm:svn:http://repo.aduna-software.org/svn/info.aduna/commons/platform/tags/2.2</connection>
+		<developerConnection>scm:svn:https://repo.aduna-software.org/svn/info.aduna/commons/platform/tags/2.2</developerConnection>
+		<url>http://repo.aduna-software.org/viewvc/info.aduna/commons/platform/tags/2.2</url>
+	</scm>
+
+</project>
