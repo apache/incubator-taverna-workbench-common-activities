@@ -34,6 +34,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+import org.apache.commons.lang.StringUtils;
+
 import net.sf.taverna.t2.activities.rest.RESTActivity;
 import net.sf.taverna.t2.activities.rest.RESTActivity.DATA_FORMAT;
 import net.sf.taverna.t2.activities.rest.RESTActivity.HTTP_METHOD;
@@ -48,6 +50,8 @@ public class RESTActivityConfigurationPanel extends
 		ActivityConfigurationPanel<RESTActivity, RESTActivityConfigurationBean> {
 	private static final Icon infoIcon = new ImageIcon(
 			RESTActivityConfigurationPanel.class.getResource("information.png"));
+	
+	private static final String VALID_NAME_REGEX = "[\\p{L}\\p{Digit}_]+";
 
 	private RESTActivity activity;
 	private RESTActivityConfigurationBean configBean;
@@ -635,6 +639,32 @@ public class RESTActivityConfigurationPanel extends
 					return false;
 				}
 			}
+			
+			List<String> placeholders = URISignatureHandler
+					.extractPlaceholders(candidateURLSignature);
+			List<String> invalidPlaceHolders = new ArrayList<String>();
+			for (String placeHolder : placeholders) {
+				if (!placeHolder.matches(VALID_NAME_REGEX)) {
+					invalidPlaceHolders.add(placeHolder);
+				}
+			}
+			for (String headerValue : httpHeadersTableModel.getHTTPHeaderValues()) {
+				List<String> placeHolders = URISignatureHandler
+				.extractPlaceholders(headerValue);
+				for (String placeHolder : placeHolders) {
+				if (!placeHolder.matches(VALID_NAME_REGEX)) {
+					invalidPlaceHolders.add(placeHolder);
+				}
+				}
+			}
+			if (!invalidPlaceHolders.isEmpty()) {
+				String invalidPlaceHoldersString = StringUtils.join(invalidPlaceHolders, "\n");
+				JOptionPane.showMessageDialog(MainWindow.getMainWindow(),
+						"The following placeholders are invalid:\n" + invalidPlaceHoldersString,
+						"REST Activity Configuration - Error",
+						JOptionPane.ERROR_MESSAGE);
+				return false;				
+			}
 		}
 
 		// check if Accept header value is at least not empty
@@ -673,6 +703,7 @@ public class RESTActivityConfigurationPanel extends
 		// All valid, return true
 		return true;
 	}
+
 
 	/**
 	 * Return configuration bean generated from user interface last time
