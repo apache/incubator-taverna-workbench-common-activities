@@ -1,6 +1,6 @@
 <activity  xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap><map from="outputText" to="outputText" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
   <script>if ((id == void) || (id == null) || id.equals("")) {
-	throw new RunTimeException("port id must have a non-empty value");
+	throw new RuntimeException("port id must have a non-empty value");
 }
 
 URL url = new URL ("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?rettype=gbc&amp;db=protein&amp;retmode=xml&amp;id=" + id);
