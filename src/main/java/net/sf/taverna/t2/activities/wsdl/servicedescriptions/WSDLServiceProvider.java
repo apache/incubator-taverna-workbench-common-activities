@@ -118,7 +118,7 @@ public class WSDLServiceProvider extends
 					item.setUse(use);
 					item.setStyle(style);
 					item.setURI(wsdl);
-					item.setDescription(parser.getOperationDocumentation(name));
+					item.setDescription(shortenDocumentation(parser.getOperationDocumentation(name)));
 					items.add(item);
 				} catch (UnknownOperationException e) {
 					String message = "Encountered an unexpected operation name:"
@@ -150,6 +150,40 @@ public class WSDLServiceProvider extends
 			String message = "There was an error with the wsdl: " + wsdl;
 			callBack.fail(message, e);
 		}
+	}
+
+	/**
+	 * Maximum number of characters to show from an operation description
+	 * string.
+	 */
+	private static final int MAX_LENGTH = 40;
+	/**
+	 * Characters that may not appear in an operation description string. The
+	 * order matters; more strictly prohibited things should come first.
+	 */
+	private static final char[] PROHIBITED_CHARS = new char[] { '\u0000', '\n',
+			'\r', '\f' };
+
+	/**
+	 * Create a shortened version of an operation description string.
+	 * 
+	 * @param doc
+	 *            The string to trim if necessary.
+	 * @return The possibly-shortened string. An ellipsis may be added if
+	 *         trimming has happened earlier.
+	 */
+	private String shortenDocumentation(String doc) {
+		if (doc.matches(".*\\<\\s*[a-zA-Z].*"))
+			doc = doc.replaceAll("\\<.*?\\>", "");
+		for (char c : PROHIBITED_CHARS) {
+			int idx = doc.indexOf(c);
+			if (idx >= 0)
+				doc = doc.substring(0, idx - 1);
+		}
+		doc = doc.trim().replaceAll("\\s+", " ");
+		if (doc.length() > MAX_LENGTH)
+			doc = doc.substring(0, MAX_LENGTH - 1) + "\u2026";
+		return doc;
 	}
 
 	@Override
