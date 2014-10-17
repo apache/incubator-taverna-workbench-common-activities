@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.naming.Name;
 import javax.swing.Icon;
 import javax.wsdl.Operation;
 import javax.wsdl.WSDLException;
@@ -37,6 +38,7 @@ public class WSDLServiceProvider extends
 	
 	public static class FlushWSDLCacheOnRemovalObserver implements
 			Observer<ServiceDescriptionRegistryEvent> {
+		@Override
 		public void notify(
 				Observable<ServiceDescriptionRegistryEvent> registry,
 				ServiceDescriptionRegistryEvent event) throws Exception {
@@ -63,6 +65,7 @@ public class WSDLServiceProvider extends
 		super(new WSDLServiceProviderConfig("http://somehost/service?wsdl"));
 	}
 
+	@Override
 	public String getName() {
 		return WSDL_SERVICE;
 	}
@@ -91,6 +94,7 @@ public class WSDLServiceProvider extends
 		return defaults;
 	}*/
 
+	@Override
 	public void findServiceDescriptionsAsync(
 			FindServiceDescriptionsCallBack callBack) {
 		
@@ -118,7 +122,7 @@ public class WSDLServiceProvider extends
 					item.setUse(use);
 					item.setStyle(style);
 					item.setURI(wsdl);
-					item.setDescription(shortenDocumentation(parser.getOperationDocumentation(name)));
+					item.setDescription(shortenDocumentation(name, parser.getOperationDocumentation(name)));
 					items.add(item);
 				} catch (UnknownOperationException e) {
 					String message = "Encountered an unexpected operation name:"
@@ -156,7 +160,7 @@ public class WSDLServiceProvider extends
 	 * Maximum number of characters to show from an operation description
 	 * string.
 	 */
-	private static final int MAX_LENGTH = 40;
+	private static final int MAX_LENGTH = 80;
 	/**
 	 * Characters that may not appear in an operation description string. The
 	 * order matters; more strictly prohibited things should come first.
@@ -166,23 +170,30 @@ public class WSDLServiceProvider extends
 
 	/**
 	 * Create a shortened version of an operation description string.
+	 * {@value #IS_HTML}
 	 * 
+	 * @param name
+	 *            The name of the operation, to be taken into account when
+	 *            calculating how much space to allow for the description.
 	 * @param doc
 	 *            The string to trim if necessary.
 	 * @return The possibly-shortened string. An ellipsis may be added if
 	 *         trimming has happened earlier.
 	 */
-	private String shortenDocumentation(String doc) {
-		if (doc.matches(".*\\<\\s*[a-zA-Z].*"))
-			doc = doc.replaceAll("\\<.*?\\>", "");
+	private String shortenDocumentation(String name, String doc) {
+		if (doc.matches(".*<\\s*[a-zA-Z].*"))
+			doc = doc.replaceAll("<.*?>", "");
 		for (char c : PROHIBITED_CHARS) {
 			int idx = doc.indexOf(c);
 			if (idx >= 0)
 				doc = doc.substring(0, idx - 1);
 		}
 		doc = doc.trim().replaceAll("\\s+", " ");
-		if (doc.length() > MAX_LENGTH)
-			doc = doc.substring(0, MAX_LENGTH - 1) + "\u2026";
+		int lenLimit = MAX_LENGTH - name.length();
+		if (lenLimit < 1)
+			return "\u2026";
+		if (doc.length() > lenLimit)
+			doc = doc.substring(0, lenLimit - 1) + "\u2026";
 		return doc;
 	}
 
@@ -191,6 +202,7 @@ public class WSDLServiceProvider extends
 		return getName() + " " + getConfiguration().getURI();
 	}
 
+	@Override
 	public Icon getIcon() {
 		return WSDLActivityIcon.getWSDLIcon();
 	}
@@ -217,6 +229,7 @@ public class WSDLServiceProvider extends
 		}
 	}
 
+	@Override
 	@SuppressWarnings("serial")
 	public void createCustomizedConfigurePanel(final CustomizedConfigureCallBack<WSDLServiceProviderConfig> callBack) {
 			
@@ -231,6 +244,7 @@ public class WSDLServiceProvider extends
 			addWSDLServiceDialog.setVisible(true);		
 	}
 
+	@Override
 	public String getId() {
 		return providerId.toString();
 	}
