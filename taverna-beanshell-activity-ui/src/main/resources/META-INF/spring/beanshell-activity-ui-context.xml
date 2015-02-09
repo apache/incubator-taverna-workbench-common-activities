@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                      http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="BeanshellActivityIcon" class="net.sf.taverna.t2.activities.beanshell.servicedescriptions.BeanshellActivityIcon" />
+
+	<bean id="BeanshellTemplateService" class="net.sf.taverna.t2.activities.beanshell.servicedescriptions.BeanshellTemplateService" />
+
+	<bean id="AddBeanshellTemplateAction" class="net.sf.taverna.t2.activities.beanshell.menu.AddBeanshellTemplateAction">
+			<property name="editManager" ref="editManager" />
+			<property name="menuManager" ref="menuManager" />
+			<property name="selectionManager" ref="selectionManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+			<property name="serviceRegistry" ref="serviceRegistry" />
+	</bean>
+	<bean id="AddBeanshellTemplateMenuAction" class="net.sf.taverna.t2.activities.beanshell.menu.AddBeanshellTemplateMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="menuManager" ref="menuManager" />
+			<property name="selectionManager" ref="selectionManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+			<property name="serviceRegistry" ref="serviceRegistry" />
+	</bean>
+	<bean id="ConfigureBeanshellMenuAction" class="net.sf.taverna.t2.activities.beanshell.menu.ConfigureBeanshellMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+			<property name="applicationConfiguration" ref="applicationConfiguration" />
+	</bean>
+
+	<bean id="BeanshellActivityViewFactory" class="net.sf.taverna.t2.activities.beanshell.views.BeanshellActivityViewFactory">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="colourManager" ref="colourManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+			<property name="applicationConfiguration" ref="applicationConfiguration" />
+	</bean>
+
+</beans>

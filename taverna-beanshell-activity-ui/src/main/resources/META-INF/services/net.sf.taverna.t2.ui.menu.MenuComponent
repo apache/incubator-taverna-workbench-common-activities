@@ -1,0 +1,3 @@
+net.sf.taverna.t2.activities.beanshell.menu.AddBeanshellTemplateAction
+net.sf.taverna.t2.activities.beanshell.menu.AddBeanshellTemplateMenuAction
+net.sf.taverna.t2.activities.beanshell.menu.ConfigureBeanshellMenuAction
