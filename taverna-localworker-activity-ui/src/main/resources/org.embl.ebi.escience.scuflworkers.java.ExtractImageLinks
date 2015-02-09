@@ -1,0 +1,41 @@
+<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
+  <script>String lowerCaseContent = document.toLowerCase();
+int index = 0;
+List imagelinks = new ArrayList();
+while ((index = lowerCaseContent.indexOf("&lt;img", index)) != -1) {
+	if ((index = lowerCaseContent.indexOf("src", index)) == -1)
+		break;
+	if ((index = lowerCaseContent.indexOf("=", index)) == -1)
+		break;
+	index++;
+	String remaining = document.substring(index);
+	StringTokenizer st = new StringTokenizer(remaining, "\t\n\r\"&gt;#");
+	String strLink = st.nextToken();
+	imagelinks.add(strLink);
+}
+
+</script>
+  <dependencies />
+  <inputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <handledReferenceSchemes />
+      <translatedElementType>java.lang.String</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+      <name>document</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/html'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+  </inputs>
+  <outputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+      <granularDepth>1</granularDepth>
+      <name>imagelinks</name>
+      <depth>1</depth>
+      <mimeTypes>
+        <string>l('text/x-taverna-web-url')</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+  </outputs>
+</net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean></configBean></activity>

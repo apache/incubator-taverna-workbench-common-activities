@@ -1,0 +1,229 @@
+<activity  xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap><map from="password" to="password" /><map from="userid" to="userid" /><map from="params" to="params" /><map from="url" to="url" /><map from="provideXml" to="provideXml" /><map from="driver" to="driver" /><map from="sql" to="sql" /></inputMap><outputMap><map from="resultList" to="resultList" /><map from="xmlresults" to="xmlresults" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
+
+  <script>import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+if ((driver == void) || (driver == null) || driver.equals("")) {
+	throw new RuntimeException("The driver must be specified");
+}
+
+if ((url == void) || (url == null) || url.equals("")) {
+	throw new RuntimeException("The url must be specified");
+}
+
+if ((params == void) || (params == null)) {
+   params = new ArrayList();
+}
+
+if ((sql == void) || (sql == null) || sql.equals("")) {
+	throw new RuntimeException("The sql must be specified");
+}
+
+Class c = Thread.currentThread().getContextClassLoader().loadClass(driver);
+
+if (c == null) {
+	throw new RuntimeException("Class " + driver + " not found");
+}
+
+Driver d = c.newInstance();
+if (d == null) {
+	throw new RuntimeException("Could not create instance of driver");
+}
+
+Properties p = new Properties();
+
+if ((userid == void) || (userid == null)) {
+	userid = "";
+}
+
+p.setProperty("user", userid);
+
+if ((password == void) || (password == null)) {
+	password = "";
+}
+
+p.setProperty("password", password);
+
+Connection con = null;
+PreparedStatement ps = null;
+
+try {
+	con = d.connect(url, p);
+	ps = con.prepareStatement(sql);
+
+	int paramsSize = params.size();
+	for (int i = 0; i &lt; paramsSize; i++) {
+		ps.setObject(i + 1, params.get(i));
+	}
+
+	ps.executeUpdate();
+
+	resultList = "update successful";
+}
+finally {
+	if (ps != null) {
+		ps.close();
+	}
+	if (con != null) {
+		con.close();
+	}
+}
+
+</script>
+
+  <dependencies />
+
+  <classLoaderSharing>system</classLoaderSharing>
+    <localDependencies />
+
+  <artifactDependencies />
+
+  <inputs>
+
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+
+      <handledReferenceSchemes />
+
+      <translatedElementType>java.lang.String</translatedElementType>
+
+      <allowsLiteralValues>true</allowsLiteralValues>
+
+      <name>driver</name>
+
+      <depth>0</depth>
+
+      <mimeTypes>
+
+        <string>text/plain</string>
+
+      </mimeTypes>
+
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+
+      <handledReferenceSchemes />
+
+      <translatedElementType>java.lang.String</translatedElementType>
+
+      <allowsLiteralValues>true</allowsLiteralValues>
+
+      <name>password</name>
+
+      <depth>0</depth>
+
+      <mimeTypes>
+
+        <string>text/plain</string>
+
+      </mimeTypes>
+
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+
+      <handledReferenceSchemes />
+
+      <translatedElementType>java.lang.String</translatedElementType>
+
+      <allowsLiteralValues>true</allowsLiteralValues>
+
+      <name>userid</name>
+
+      <depth>0</depth>
+
+      <mimeTypes>
+
+        <string>text/plain</string>
+
+      </mimeTypes>
+
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+
+      <handledReferenceSchemes />
+
+      <translatedElementType>java.lang.String</translatedElementType>
+
+      <allowsLiteralValues>true</allowsLiteralValues>
+
+      <name>url</name>
+
+      <depth>0</depth>
+
+      <mimeTypes>
+
+        <string>text/plain</string>
+
+      </mimeTypes>
+
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+
+
+
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+
+      <handledReferenceSchemes />
+
+      <translatedElementType>java.lang.String</translatedElementType>
+
+      <allowsLiteralValues>true</allowsLiteralValues>
+
+      <name>sql</name>
+
+      <depth>0</depth>
+
+      <mimeTypes>
+
+        <string>text/plain</string>
+
+      </mimeTypes>
+
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+
+      <handledReferenceSchemes />
+
+      <translatedElementType>java.lang.String</translatedElementType>
+
+      <allowsLiteralValues>true</allowsLiteralValues>
+
+      <name>params</name>
+
+      <depth>1</depth>
+
+      <mimeTypes>
+
+        <string>text/plain</string>
+
+      </mimeTypes>
+
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+
+  </inputs>
+
+  <outputs>
+
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+
+      <granularDepth>0</granularDepth>
+
+      <name>resultList</name>
+
+      <depth>0</depth>
+
+      <mimeTypes>
+
+        <string>text/plain</string>
+
+      </mimeTypes>
+
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+
+  </outputs>
+
+</net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean></configBean><annotations /></activity>
