@@ -1,0 +1,2 @@
+net.sf.taverna.t2.activities.externaltool.manager.local.LocalInvocationMechanismEditor
+net.sf.taverna.t2.activities.externaltool.manager.ssh.SshInvocationMechanismEditor
