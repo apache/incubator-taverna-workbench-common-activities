@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://webservice.gominer.lmp.nci.nih.gov" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://webservice.gominer.lmp.nci.nih.gov">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://webservice.gominer.lmp.nci.nih.gov" elementFormDefault="qualified" attributeFormDefault="qualified">
+      <xsd:complexType name="ArrayOfString">
+        <xsd:sequence>
+          <xsd:element name="string" type="xsd:string" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="getReport">
+
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="in0" type="tns:ArrayOfString" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="in1" type="tns:ArrayOfString" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="in2" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="in3" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="in4" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="in5" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="in6" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+
+            <xsd:element name="in7" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getReportResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="out" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+          </xsd:sequence>
+
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="getReportResponse">
+    <wsdl:part element="tns:getReportResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getReportRequest">
+    <wsdl:part element="tns:getReport" name="parameters"/>
+
+  </wsdl:message>
+  <wsdl:portType name="GOMinerWSPortType">
+    <wsdl:operation name="getReport">
+      <wsdl:input message="tns:getReportRequest" name="getReportRequest"/>
+      <wsdl:output message="tns:getReportResponse" name="getReportResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GOMinerWSHttpBinding" type="tns:GOMinerWSPortType">
+    <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <wsdl:operation name="getReport">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="getReportRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getReportResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+  </wsdl:binding>
+  <wsdl:service name="GOMinerWS">
+    <wsdl:port binding="tns:GOMinerWSHttpBinding" name="GOMinerWSHttpPort">
+      <wsdlsoap:address location="http://discover.nci.nih.gov/gominer/xfire/GMService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

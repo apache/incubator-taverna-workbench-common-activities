@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                      http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="WSDLActivityIcon" class="net.sf.taverna.t2.activities.wsdl.servicedescriptions.WSDLActivityIcon" />
+	<bean id="XMLInputSplitterActivityIcon" class="net.sf.taverna.t2.activities.wsdl.servicedescriptions.XMLInputSplitterActivityIcon" />
+	<bean id="XMLOutputSplitterActivityIcon" class="net.sf.taverna.t2.activities.wsdl.servicedescriptions.XMLOutputSplitterActivityIcon" />
+
+	<bean id="WSDLServiceProvider" class="net.sf.taverna.t2.activities.wsdl.servicedescriptions.WSDLServiceProvider">
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+			<property name="credentialManager" ref="credentialManager" />
+	</bean>
+
+	<bean id="AddXMLInputSplitterForWSDLActivityMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.AddXMLInputSplitterForWSDLActivityMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="selectionManager" ref="selectionManager" />
+	</bean>
+	<bean id="AddXMLInputSplitterForXMLInputSplitterMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.AddXMLInputSplitterForXMLInputSplitterMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="selectionManager" ref="selectionManager" />
+	</bean>
+	<bean id="AddXMLOutputSplitterForWSDLActivityMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.AddXMLOutputSplitterForWSDLActivityMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="selectionManager" ref="selectionManager" />
+	</bean>
+	<bean id="AddXMLOutputSplitterForXMLOutputSplitterMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.AddXMLOutputSplitterForXMLOutputSplitterMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="selectionManager" ref="selectionManager" />
+	</bean>
+	<bean id="ConfigureWSDLMenuAction" class="net.sf.taverna.t2.activities.wsdl.menu.ConfigureWSDLMenuAction">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+			<property name="credentialManager" ref="credentialManager" />
+	</bean>
+
+	<bean id="WSDLActivityViewFactory" class="net.sf.taverna.t2.activities.wsdl.views.WSDLActivityViewFactory">
+			<property name="editManager" ref="editManager" />
+			<property name="fileManager" ref="fileManager" />
+			<property name="activityIconManager" ref="activityIconManager" />
+			<property name="colourManager" ref="colourManager" />
+			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
+			<property name="credentialManager" ref="credentialManager" />
+	</bean>
+	<bean id="XMLSplitterViewFactory" class="net.sf.taverna.t2.activities.wsdl.views.XMLSplitterViewFactory">
+			<property name="editManager" ref="editManager" />
+			<property name="selectionManager" ref="selectionManager" />
+			<property name="colourManager" ref="colourManager" />
+	</bean>
+
+</beans>
