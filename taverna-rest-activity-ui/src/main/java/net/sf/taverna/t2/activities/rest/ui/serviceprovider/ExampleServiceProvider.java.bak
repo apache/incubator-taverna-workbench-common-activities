@@ -1,0 +1,106 @@
+package net.sf.taverna.t2.activities.rest.ui.serviceprovider;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
+import net.sf.taverna.t2.servicedescriptions.AbstractConfigurableServiceProvider;
+import net.sf.taverna.t2.servicedescriptions.ConfigurableServiceProvider;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider;
+import net.sf.taverna.t2.workflowmodel.ConfigurationException;
+
+public class ExampleServiceProvider extends AbstractConfigurableServiceProvider<ExampleServiceProviderConfig>
+                                    implements ConfigurableServiceProvider<ExampleServiceProviderConfig>
+{
+	public ExampleServiceProvider()
+	{
+    super(new ExampleServiceProviderConfig());
+  }
+
+  /**
+	 * Do the actual search for services. Return using the callBack parameter.
+	 */
+	@SuppressWarnings("unchecked")
+	public void findServiceDescriptionsAsync(
+			FindServiceDescriptionsCallBack callBack) {
+		// Use callback.status() for long-running searches
+		// callBack.status("Resolving example services");
+
+		List<ServiceDescription> results = new ArrayList<ServiceDescription>();
+
+		// FIXME: Implement the actual service search/lookup instead
+		// of dummy for-loop
+		for (int i = 1; i <= getConfiguration().getNumberOfServices(); i++) {
+			ExampleServiceDesc service = new ExampleServiceDesc();
+			// Populate the service description bean
+			service.setExampleString("Example " + i);
+			service.setExampleUri(getConfiguration().getUri());
+
+			// Optional: set description
+			service.setDescription("Service example number " + i);
+			results.add(service);
+		}
+		
+		// partialResults() can also be called several times from inside
+		// for-loop if the full search takes a long time
+		callBack.partialResults(results);
+
+		// No more results will be coming
+		callBack.finished();
+	}
+	
+	
+//	@Override
+//	/**
+//	 * This allows to have a few configured service providers in the Service Panel at startup;
+//	 * useful if there are some prototypical ones that are useful + need to allow users to add their own
+//	 * through manual config.
+//	 */
+//	public List<ExampleServiceProviderConfig> getDefaultConfigurations() {
+//	  ExampleServiceProviderConfig a = new ExampleServiceProviderConfig();
+//	  a.setUri(URI.create("http://localhost:8181/serviceA"));
+//	  ExampleServiceProviderConfig b = new ExampleServiceProviderConfig();
+//	  b.setUri(URI.create("http://fish.com/serviceB"));
+//	  b.setNumberOfServices(2);
+//	  return Arrays.asList(a, b);
+//	}
+
+	
+
+	/**
+	 * Icon for service provider
+	 */
+	public Icon getIcon() {
+		return null;
+	}
+
+	
+	/**
+	 * Appears in "Import new services..." in Service Panel
+	 */
+	public String getName() {
+		return "My example service";
+	}
+	
+	@Override
+	/**
+   * Name of service provider, appears in right click for 'Remove service
+   * provider'
+   */
+	public String toString() {
+		return getName() + " " + getConfiguration().getUri();
+	}
+
+  @Override
+  protected List<? extends Object> getIdentifyingData() {
+    return Arrays.asList(getConfiguration().getUri());
+  }
+
+
+}

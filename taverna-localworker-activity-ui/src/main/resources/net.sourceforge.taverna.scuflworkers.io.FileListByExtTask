@@ -1,0 +1,73 @@
+<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
+  <script>class FileExtFilter implements FileFilter {
+
+	public FileExtFilter(String ext) {
+		this.ext = ext;
+	}
+
+	public boolean accept(File file) {
+		return file.getName().endsWith(ext);
+	}
+
+	String ext = null;
+}
+
+if (extension == void || extension.equals("")) {
+	throw new RuntimeException(
+			"The 'extension' parameter cannot be null.  Please enter a valid file extension.");
+}
+
+if (directory == void || directory.equals("")) {
+	throw new RuntimeException(
+			"The 'directory' parameter cannot be null.  Please enter a valid file directory.");
+}
+
+File dirObj = new File(directory);
+
+if (!dirObj.exists()) {
+	throw new RuntimeException("The 'directory' parameter specified:" + directory
+			+ "does not exist.  Please enter a valid file directory.");
+}
+
+File[] fileObjList = dirObj.listFiles(new FileExtFilter(extension));
+List filelist = new ArrayList();
+for (int i = 0; i &lt; fileObjList.length; i++) {
+	filelist.add(fileObjList[i].getAbsolutePath());
+}
+
+
+</script>
+  <dependencies />
+  <inputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <handledReferenceSchemes />
+      <translatedElementType>java.lang.String</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+      <name>directory</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/plain'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <handledReferenceSchemes />
+      <translatedElementType>java.lang.String</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+      <name>extension</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/plain'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+  </inputs>
+  <outputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+      <granularDepth>1</granularDepth>
+      <name>filelist</name>
+      <depth>1</depth>
+      <mimeTypes>
+        <string>l('text/plain')</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+  </outputs>
+</net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean></configBean></activity>

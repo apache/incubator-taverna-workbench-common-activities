@@ -1,0 +1,100 @@
+<activity xmlns="http://taverna.sf.net/2008/xml/t2flow">
+  <class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class>
+  <inputMap>
+    <map from="xsltString" to="xsltString" />
+    <map from="paramList" to="paramList" />
+    <map from="sourceString" to="sourceString" />
+  </inputMap>
+  <outputMap>
+    <map from="outputString" to="outputString" />
+  </outputMap>
+  <configBean encoding="xstream">
+    <net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
+  <inputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <name>sourceString</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>text/plain</string>
+      </mimeTypes>
+      <handledReferenceSchemes />
+      <translatedElementType>java.lang.String</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <name>xsltString</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>text/plain</string>
+      </mimeTypes>
+      <handledReferenceSchemes />
+      <translatedElementType>java.lang.String</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <name>paramList</name>
+      <depth>1</depth>
+      <mimeTypes>
+        <string>text/plain</string>
+      </mimeTypes>
+      <handledReferenceSchemes />
+      <translatedElementType>java.lang.String</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+  </inputs>
+  <outputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+      <name>outputString</name>
+      <depth>0</depth>
+      <mimeTypes />
+      <granularDepth>0</granularDepth>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+  </outputs>
+  <classLoaderSharing>workflow</classLoaderSharing>
+  <localDependencies />
+  <artifactDependencies />
+  <script>//From a proposal by Mikolaj Rybinski
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+param(paramstr) {
+    nameAndValue = paramstr.split("=");
+    if (nameAndValue.length != 2) {
+        throw new RuntimeException("Wrong parameter format: \"" + paramstr + "\".");
+    }
+    name = nameAndValue[0].trim();
+    value = nameAndValue[1].trim();
+    return this;
+}
+
+if ((sourceString == void) || (sourceString == null)) {
+        throw new RuntimeException("sourceString must be specified");
+}
+
+if ((xsltString == void) || (xsltString == null)) {
+        throw new RuntimeException("xsltString must be specified");
+}
+
+Source inSource = new StreamSource(new StringReader(sourceString));
+Source xslSource = new StreamSource(new StringReader(xsltString));
+
+// the factory pattern supports different XSLT processors
+// e.g. set the "javax.xml.transform.TransformerFactory" system property
+TransformerFactory tnfFact = TransformerFactory.newInstance();
+Transformer tnf = tnfFact.newTransformer(xslSource);
+
+if (paramList != void) {
+  for (String paramstr : paramList) {
+    p = param(paramstr);
+    tnf.setParameter(p.name, p.value);
+  }
+}
+
+Writer outputWriter = new StringWriter();
+tnf.transform(inSource, new StreamResult(outputWriter));
+outputString = outputWriter.toString();</script>
+  <dependencies />
+</net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean></configBean><annotations /></activity>

@@ -1,0 +1,3 @@
+net.sf.taverna.t2.activities.xpath.ui.contextualview.ConfigureXPathActivityMenuAction
+net.sf.taverna.t2.activities.xpath.ui.menu.AddXPathTemplateAction
+net.sf.taverna.t2.activities.xpath.ui.menu.AddXPathTemplateMenuAction

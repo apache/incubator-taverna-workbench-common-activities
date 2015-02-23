@@ -1,0 +1,80 @@
+<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
+  <script>if (command == void || command.equals("")) {
+	throw new RuntimeException("The 'command' port cannot be null.");
+}
+Process proc = null;
+Runtime rt = Runtime.getRuntime();
+
+String osName = System.getProperty("os.name");
+String[] cmdArray = null;
+if (osName.contains("Windows")) {
+	cmdArray = new String[] { "cmd.exe", "/c", command };
+} else {// TODO: investigate if this will work in Linux and OSX
+	cmdArray = new String[] { command };
+}
+
+// concatenate the arrays
+if ((args == void) || (args == null)) {
+	args = new ArrayList();
+}
+
+int argSize = cmdArray.length + args.size();
+ArrayList appArray = new ArrayList(argSize);
+for (int i = 0; i &lt; cmdArray.length; i++) {
+	appArray.add(cmdArray[i]);
+}
+
+for (int i = 0; i &lt; args.size(); i++) {
+	appArray.add(args.get(i));
+}
+
+String[] applist = new String[argSize];
+appArray.toArray(applist);
+proc = rt.exec(applist);
+
+// Get the input stream and read from it
+InputStream in = proc.getInputStream();
+
+int c;
+StringBuffer sb = new StringBuffer();
+while ((c = in.read()) != -1) {
+	sb.append((char) c);
+}
+in.close();
+result = sb.toString();
+  
+</script>
+  <dependencies />
+  <inputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <handledReferenceSchemes />
+      <translatedElementType>java.lang.String</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+      <name>command</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/plain'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+      <handledReferenceSchemes />
+      <translatedElementType>java.lang.String</translatedElementType>
+      <allowsLiteralValues>true</allowsLiteralValues>
+      <name>args</name>
+      <depth>1</depth>
+      <mimeTypes>
+        <string>l('text/plain')</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+  </inputs>
+  <outputs>
+    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+      <granularDepth>0</granularDepth>
+      <name>result</name>
+      <depth>0</depth>
+      <mimeTypes>
+        <string>'text/plain'</string>
+      </mimeTypes>
+    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+  </outputs>
+</net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean></configBean></activity>
