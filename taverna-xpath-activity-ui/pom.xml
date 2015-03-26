@@ -2,46 +2,57 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>net.sf.taverna</groupId>
-		<artifactId>taverna-parent</artifactId>
-		<version>3.0.1-SNAPSHOT</version>
+		<groupId>org.apache.taverna.workbench.commonactivities</groupId>
+		<artifactId>taverna-workbench-commonactivities</artifactId>
+		<version>3.1.0-incubating-SNAPSHOT</version>
 	</parent>
-	<groupId>net.sf.taverna.t2.ui-activities</groupId>
-	<artifactId>xpath-activity-ui</artifactId>
-	<version>2.0-SNAPSHOT</version>
+	<groupId>org.apache.taverna.ui-activities</groupId>
+	<artifactId>taverna-xpath-activity-ui</artifactId>
 	<packaging>bundle</packaging>
 	<name>XPath Activity - UI bindings</name>
+
 	<dependencies>
 		<dependency>
-			<groupId>net.sf.taverna.t2.activities</groupId>
-			<artifactId>xpath-activity</artifactId>
-			<version>${t2.activities.version}</version>
+			<groupId>org.apache.taverna.language</groupId>
+			<artifactId>taverna-scufl2-api</artifactId>
+			<version>${taverna.language.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.taverna.t2.ui-api</groupId>
-			<artifactId>activity-icons-api</artifactId>
-			<version>${t2.ui.api.version}</version>
+			<groupId>org.apache.taverna.engine</groupId>
+			<artifactId>taverna-services-api</artifactId>
+			<version>${taverna.engine.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.taverna.t2.ui-api</groupId>
-			<artifactId>contextual-views-api</artifactId>
-			<version>${t2.ui.api.version}</version>
+			<groupId>org.apache.taverna.workbench</groupId>
+			<artifactId>taverna-workbench-api</artifactId>
+			<version>${taverna.workbench.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.taverna.t2.ui-api</groupId>
-			<artifactId>menu-api</artifactId>
-			<version>${t2.ui.api.version}</version>
+			<groupId>org.apache.taverna.workbench</groupId>
+			<artifactId>taverna-contextual-views-api</artifactId>
+			<version>${taverna.workbench.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.taverna.t2.ui-api</groupId>
-			<artifactId>report-api</artifactId>
-			<version>${t2.ui.api.version}</version>
+			<groupId>org.apache.taverna.workbench</groupId>
+			<artifactId>taverna-menu-api</artifactId>
+			  <version>${taverna.workbench.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.taverna.t2.ui-components</groupId>
-			<artifactId>workflow-view</artifactId>
-			<version>${t2.ui.components.version}</version>
+			<groupId>org.apache.taverna.workbench</groupId>
+			<artifactId>taverna-workflow-view</artifactId>
+			<version>${taverna.workbench.version}</version>
 		</dependency>
+                <dependency>
+                    <groupId>org.apache.taverna.commonactivities</groupId>
+                    <artifactId>taverna-xpath-activity</artifactId>
+                    <version>${taverna.commonactivities.version}</version>
+                </dependency>
+	 <dependency>
+	  <groupId>org.apache.taverna.workbench</groupId>
+	  <artifactId>taverna-activity-tools</artifactId>
+	  <version>3.1.0-incubating-SNAPSHOT</version>
+	  <type>jar</type>
+	 </dependency>
 	</dependencies>
 
 	<repositories>

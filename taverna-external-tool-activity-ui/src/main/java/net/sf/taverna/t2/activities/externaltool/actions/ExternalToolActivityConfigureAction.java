@@ -27,8 +27,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.Action;
 
-import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
-import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
+import org.apache.taverna.activities.externaltool.ExternalToolActivity;
+import org.apache.taverna.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.views.ExternalToolConfigView;
 import net.sf.taverna.t2.workbench.activityicons.ActivityIconManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
@@ -45,7 +45,7 @@ import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityCon
  */
 @SuppressWarnings("serial")
 public class ExternalToolActivityConfigureAction extends
-		ActivityConfigurationAction<ExternalToolActivity, ExternalToolActivityConfigurationBean> {
+		ActivityConfigurationAction {// <ExternalToolActivity, ExternalToolActivityConfigurationBean> {
 
 	private final Frame owner;
 	private final EditManager editManager;

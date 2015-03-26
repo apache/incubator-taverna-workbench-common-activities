@@ -58,7 +58,7 @@ import javax.swing.event.CaretListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
 
-import net.sf.taverna.t2.activities.xpath.XPathActivityConfigurationBean;
+import org.apache.taverna.activities.xpath.XPathActivityConfigurationBean;
 import net.sf.taverna.t2.activities.xpath.ui.config.xmltree.TableCellListener;
 import net.sf.taverna.t2.activities.xpath.ui.config.xmltree.XPathActivityXMLTree;
 import net.sf.taverna.t2.activities.xpath.ui.servicedescription.XPathActivityIcon;

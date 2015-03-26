@@ -25,7 +25,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -37,9 +36,8 @@ import net.sf.taverna.t2.activities.externaltool.ExternalToolActivity;
 import net.sf.taverna.t2.activities.externaltool.ExternalToolActivityConfigurationBean;
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManager;
 import net.sf.taverna.t2.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
-import net.sf.taverna.t2.activities.externaltool.views.ExternalToolConfigView;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
+import org.apache.taverna.workflowmodel.processor.activity.Activity;
 import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
 
 /**

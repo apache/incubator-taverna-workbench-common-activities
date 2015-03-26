@@ -26,7 +26,7 @@ import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
-import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetUtils;
+import org.apache.taverna.activities.spreadsheet.SpreadsheetUtils;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
 
 /**

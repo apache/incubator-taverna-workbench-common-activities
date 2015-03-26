@@ -6,7 +6,8 @@ import javax.swing.Icon;
 
 import net.sf.taverna.t2.servicedescriptions.AbstractTemplateService;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
-import uk.org.taverna.scufl2.api.configurations.Configuration;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider;
+import org.apache.taverna.scufl2.api.configurations.Configuration;
 
 public class BeanshellTemplateService extends AbstractTemplateService {
 
@@ -53,5 +54,10 @@ public class BeanshellTemplateService extends AbstractTemplateService {
 	public String getId() {
 		return providerId.toString();
 	}
+
+    @Override
+    public ServiceDescriptionProvider newInstance() {
+        return new BeanshellTemplateService();
+    }
 
 }

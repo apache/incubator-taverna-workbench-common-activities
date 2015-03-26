@@ -30,16 +30,16 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-import net.sf.taverna.t2.activities.rest.RESTActivity;
-import net.sf.taverna.t2.activities.rest.RESTActivity.DATA_FORMAT;
-import net.sf.taverna.t2.activities.rest.RESTActivity.HTTP_METHOD;
-import net.sf.taverna.t2.activities.rest.RESTActivityConfigurationBean;
-import net.sf.taverna.t2.activities.rest.URISignatureHandler;
-import net.sf.taverna.t2.activities.rest.URISignatureHandler.URISignatureParsingException;
+import org.apache.taverna.activities.rest.RESTActivity;
+import org.apache.taverna.activities.rest.RESTActivity.DATA_FORMAT;
+import org.apache.taverna.activities.rest.RESTActivity.HTTP_METHOD;
+import org.apache.taverna.activities.rest.RESTActivityConfigurationBean;
+import org.apache.taverna.activities.rest.URISignatureHandler;
+import org.apache.taverna.activities.rest.URISignatureHandler.URISignatureParsingException;
 import net.sf.taverna.t2.workbench.MainWindow;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.MultiPageActivityConfigurationPanel;
-import uk.org.taverna.commons.services.ServiceRegistry;
-import uk.org.taverna.scufl2.api.activity.Activity;
+import org.apache.taverna.commons.services.ServiceRegistry;
+import org.apache.taverna.scufl2.api.activity.Activity;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;

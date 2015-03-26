@@ -12,8 +12,8 @@ import javax.swing.JOptionPane;
 
 import net.sf.taverna.t2.activities.xpath.XPathActivityConfigurationBean;
 import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
-import uk.org.taverna.commons.services.ServiceRegistry;
-import uk.org.taverna.scufl2.api.activity.Activity;
+import org.apache.taverna.commons.services.ServiceRegistry;
+import org.apache.taverna.scufl2.api.activity.Activity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;

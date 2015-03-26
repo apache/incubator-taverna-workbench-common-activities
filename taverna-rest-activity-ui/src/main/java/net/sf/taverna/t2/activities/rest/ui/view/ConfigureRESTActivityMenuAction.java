@@ -2,7 +2,7 @@ package net.sf.taverna.t2.activities.rest.ui.view;
 
 import javax.swing.Action;
 
-import uk.org.taverna.commons.services.ServiceRegistry;
+import org.apache.taverna.commons.services.ServiceRegistry;
 
 import net.sf.taverna.t2.activities.rest.ui.config.RESTActivityConfigureAction;
 import net.sf.taverna.t2.activities.rest.ui.servicedescription.GenericRESTTemplateService;

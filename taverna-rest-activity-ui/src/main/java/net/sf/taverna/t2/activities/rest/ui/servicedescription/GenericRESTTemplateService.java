@@ -7,10 +7,11 @@ import javax.swing.Icon;
 import net.sf.taverna.t2.activities.rest.RESTActivity;
 import net.sf.taverna.t2.servicedescriptions.AbstractTemplateService;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
-import uk.org.taverna.scufl2.api.configurations.Configuration;
+import org.apache.taverna.scufl2.api.configurations.Configuration;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider;
 
 /**
  * @author Sergejs Aleksejevs
@@ -72,5 +73,10 @@ public class GenericRESTTemplateService extends AbstractTemplateService {
 	public String getId() {
 		return "http://www.taverna.org.uk/2010/services/rest";
 	}
+
+    @Override
+    public ServiceDescriptionProvider newInstance() {
+        return new GenericRESTTemplateService();
+    }
 
 }

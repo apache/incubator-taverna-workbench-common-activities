@@ -22,7 +22,7 @@ package net.sf.taverna.t2.activities.spreadsheet.menu;
 
 import javax.swing.Action;
 
-import uk.org.taverna.commons.services.ServiceRegistry;
+import org.apache.taverna.commons.services.ServiceRegistry;
 
 import net.sf.taverna.t2.activities.spreadsheet.actions.SpreadsheetImportActivityConfigurationAction;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;

@@ -38,7 +38,7 @@ import net.sf.taverna.t2.workbench.configuration.colour.ColourManager;
 import net.sf.taverna.t2.workbench.edits.EditManager;
 import net.sf.taverna.t2.workbench.file.FileManager;
 import net.sf.taverna.t2.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
+import org.apache.taverna.workflowmodel.processor.activity.Activity;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInput;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptInputStatic;
 import de.uni_luebeck.inb.knowarc.usecases.ScriptOutput;

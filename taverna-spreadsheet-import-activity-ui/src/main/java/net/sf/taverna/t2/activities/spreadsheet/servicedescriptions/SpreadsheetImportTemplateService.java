@@ -29,7 +29,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
 import net.sf.taverna.t2.servicedescriptions.AbstractTemplateService;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
-import uk.org.taverna.scufl2.api.configurations.Configuration;
+import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider;
+import org.apache.taverna.scufl2.api.configurations.Configuration;
 
 /**
  * Definition of the SpreadsheetImport spreadsheet import template service.
@@ -92,4 +93,9 @@ public class SpreadsheetImportTemplateService extends AbstractTemplateService {
 	public String getId() {
 		return providerId.toString();
 	}
+
+    @Override
+    public ServiceDescriptionProvider newInstance() {
+        return new SpreadsheetImportTemplateService();
+    }
 }

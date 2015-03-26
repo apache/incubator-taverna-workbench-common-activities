@@ -22,7 +22,7 @@ package net.sf.taverna.t2.activities.localworker.views;
 
 import net.sf.taverna.t2.activities.beanshell.views.BeanshellConfigurationPanel;
 import uk.org.taverna.configuration.app.ApplicationConfiguration;
-import uk.org.taverna.scufl2.api.activity.Activity;
+import org.apache.taverna.scufl2.api.activity.Activity;
 
 @SuppressWarnings("serial")
 public class LocalworkerActivityConfigView extends BeanshellConfigurationPanel {

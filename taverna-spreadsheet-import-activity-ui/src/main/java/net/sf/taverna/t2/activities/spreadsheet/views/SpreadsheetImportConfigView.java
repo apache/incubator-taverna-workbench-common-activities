@@ -67,8 +67,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.PlainDocument;
 
-import net.sf.taverna.t2.activities.spreadsheet.Range;
-import net.sf.taverna.t2.activities.spreadsheet.SpreadsheetUtils;
+import org.apache.taverna.activities.spreadsheet.Range;
+import org.apache.taverna.activities.spreadsheet.SpreadsheetUtils;
 import net.sf.taverna.t2.activities.spreadsheet.il8n.SpreadsheetImportUIText;
 import net.sf.taverna.t2.lang.ui.DialogTextArea;
 import net.sf.taverna.t2.lang.ui.icons.Icons;
@@ -77,8 +77,8 @@ import net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ActivityCon
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
-import uk.org.taverna.commons.services.ServiceRegistry;
-import uk.org.taverna.scufl2.api.activity.Activity;
+import org.apache.taverna.commons.services.ServiceRegistry;
+import org.apache.taverna.scufl2.api.activity.Activity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;

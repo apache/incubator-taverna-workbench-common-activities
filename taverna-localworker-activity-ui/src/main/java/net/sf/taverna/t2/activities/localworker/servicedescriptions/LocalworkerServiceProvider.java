@@ -14,7 +14,7 @@ import javax.swing.Icon;
 
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
+import org.apache.taverna.workflowmodel.processor.activity.Activity;
 
 import org.apache.log4j.Logger;
 
@@ -224,6 +224,11 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 		callBack.finished();
 
 	}
+
+    @Override
+    public ServiceDescriptionProvider newInstance() {
+        return new LocalworkerServiceProvider();
+    }
 
 	@SuppressWarnings("serial")
 	public class ItemCreationException extends Exception {

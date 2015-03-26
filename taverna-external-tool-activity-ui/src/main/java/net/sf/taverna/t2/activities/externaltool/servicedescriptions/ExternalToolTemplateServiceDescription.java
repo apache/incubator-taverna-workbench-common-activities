@@ -16,7 +16,7 @@ import net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManager;
 import net.sf.taverna.t2.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
 import net.sf.taverna.t2.servicedescriptions.AbstractTemplateService;
 import net.sf.taverna.t2.servicedescriptions.ServiceDescription;
-import net.sf.taverna.t2.workflowmodel.processor.activity.Activity;
+import org.apache.taverna.workflowmodel.processor.activity.Activity;
 
 /**
  * @author alanrw

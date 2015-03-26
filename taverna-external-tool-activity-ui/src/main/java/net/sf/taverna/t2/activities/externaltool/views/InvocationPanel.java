@@ -39,8 +39,8 @@ import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismAdde
 import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismRemovedEvent;
 import net.sf.taverna.t2.activities.externaltool.manager.ToolInvocationConfigurationPanel;
 import net.sf.taverna.t2.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
-import net.sf.taverna.t2.lang.observer.Observable;
-import net.sf.taverna.t2.lang.observer.Observer;
+import org.apache.taverna.lang.observer.Observable;
+import org.apache.taverna.lang.observer.Observer;
 import net.sf.taverna.t2.lang.ui.DeselectingButton;
 import net.sf.taverna.t2.workbench.ui.impl.configuration.ui.T2ConfigurationFrame;
 

@@ -41,8 +41,8 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
  * 
  * @author Hajo Nils Krabbenhoeft
  */
-public class ExternalToolServiceProvider extends AbstractConfigurableServiceProvider<ExternalToolServiceProviderConfig>  implements
-CustomizedConfigurePanelProvider<ExternalToolServiceProviderConfig>{
+public class ExternalToolServiceProvider extends AbstractConfigurableServiceProvider<ExternalToolServiceProviderConfig> 
+                                        implements CustomizedConfigurePanelProvider<ExternalToolServiceProviderConfig> {
 
 	private static final URI providerId = URI
 	.create("http://taverna.sf.net/2010/service-provider/externaltool");
