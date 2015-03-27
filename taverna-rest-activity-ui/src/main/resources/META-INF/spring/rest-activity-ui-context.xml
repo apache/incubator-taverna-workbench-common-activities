@@ -5,15 +5,15 @@
                       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="RESTActivityIcon"
-		class="net.sf.taverna.t2.activities.rest.ui.servicedescription.RESTActivityIcon">
+		class="org.apache.taverna.activities.rest.ui.servicedescription.RESTActivityIcon">
 		<property name="colourManager" ref="colourManager" />
 	</bean>
 
 	<bean id="GenericRESTTemplateService"
-		class="net.sf.taverna.t2.activities.rest.ui.servicedescription.GenericRESTTemplateService" />
+		class="org.apache.taverna.activities.rest.ui.servicedescription.GenericRESTTemplateService" />
 
 	<bean id="ConfigureRESTActivityMenuAction"
-		class="net.sf.taverna.t2.activities.rest.ui.view.ConfigureRESTActivityMenuAction">
+		class="org.apache.taverna.activities.rest.ui.view.ConfigureRESTActivityMenuAction">
 		<property name="editManager" ref="editManager" />
 		<property name="fileManager" ref="fileManager" />
 		<property name="activityIconManager" ref="activityIconManager" />
@@ -21,7 +21,7 @@
 		<property name="serviceRegistry" ref="serviceRegistry" />
 	</bean>
 	<bean id="AddRESTTemplateAction"
-		class="net.sf.taverna.t2.activities.rest.ui.menu.AddRESTTemplateAction">
+		class="org.apache.taverna.activities.rest.ui.menu.AddRESTTemplateAction">
 		<property name="editManager" ref="editManager" />
 		<property name="menuManager" ref="menuManager" />
 		<property name="selectionManager" ref="selectionManager" />
@@ -29,7 +29,7 @@
 		<property name="serviceRegistry" ref="serviceRegistry" />
 	</bean>
 	<bean id="AddRESTTemplateMenuAction"
-		class="net.sf.taverna.t2.activities.rest.ui.menu.AddRESTTemplateMenuAction">
+		class="org.apache.taverna.activities.rest.ui.menu.AddRESTTemplateMenuAction">
 		<property name="editManager" ref="editManager" />
 		<property name="menuManager" ref="menuManager" />
 		<property name="selectionManager" ref="selectionManager" />
@@ -38,7 +38,7 @@
 	</bean>
 
 	<bean id="RESTActivityMainContextViewFactory"
-		class="net.sf.taverna.t2.activities.rest.ui.view.RESTActivityMainContextViewFactory">
+		class="org.apache.taverna.activities.rest.ui.view.RESTActivityMainContextViewFactory">
 		<property name="editManager" ref="editManager" />
 		<property name="fileManager" ref="fileManager" />
 		<property name="activityIconManager" ref="activityIconManager" />

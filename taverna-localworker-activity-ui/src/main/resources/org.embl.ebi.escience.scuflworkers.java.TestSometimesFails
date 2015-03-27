@@ -1,4 +1,4 @@
-<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
+<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>org.apache.taverna.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><org.apache.taverna.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
   <script>import java.util.Random;
 
 Random r = new Random();
@@ -10,7 +10,7 @@ if ((r.nextInt() % 4) == 0) {
 out = in;</script>
   <dependencies />
   <inputs>
-    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    <org.apache.taverna.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
       <handledReferenceSchemes />
       <translatedElementType>java.lang.String</translatedElementType>
       <allowsLiteralValues>true</allowsLiteralValues>
@@ -19,16 +19,16 @@ out = in;</script>
       <mimeTypes>
         <string>'text/plain'</string>
       </mimeTypes>
-    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    </org.apache.taverna.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
   </inputs>
   <outputs>
-    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+    <org.apache.taverna.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
       <granularDepth>0</granularDepth>
       <name>out</name>
       <depth>0</depth>
       <mimeTypes>
         <string>'text/plain'</string>
       </mimeTypes>
-    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+    </org.apache.taverna.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
   </outputs>
-</net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean></configBean></activity>
+</org.apache.taverna.activities.localworker.LocalworkerActivityConfigurationBean></configBean></activity>

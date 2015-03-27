@@ -1,4 +1,4 @@
-<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
+<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>org.apache.taverna.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><org.apache.taverna.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
   <script>import org.biojava.bio.seq.Sequence;
 import org.biojava.bio.seq.SequenceIterator;
 import org.biojava.bio.seq.io.SeqIOTools;
@@ -48,7 +48,7 @@ ps.close();
     <element class="string">uk.org.mygrid.resources:biojava:1.4pre1</element>
   </dependencies>
   <inputs>
-    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    <org.apache.taverna.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
       <handledReferenceSchemes />
       <translatedElementType>java.lang.String</translatedElementType>
       <allowsLiteralValues>true</allowsLiteralValues>
@@ -57,16 +57,16 @@ ps.close();
       <mimeTypes>
         <string>'text/plain</string>
       </mimeTypes>
-    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    </org.apache.taverna.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
   </inputs>
   <outputs>
-    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+    <org.apache.taverna.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
       <granularDepth>0</granularDepth>
       <name>results</name>
       <depth>0</depth>
       <mimeTypes>
         <string>'text/plain'</string>
       </mimeTypes>
-    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+    </org.apache.taverna.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
   </outputs>
-</net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean></configBean></activity>
+</org.apache.taverna.activities.localworker.LocalworkerActivityConfigurationBean></configBean></activity>

@@ -8,32 +8,32 @@
 
 	<service ref="ToolInvocationConfigurationUIFactory" interface="uk.org.taverna.configuration.ConfigurationUIFactory" />
 
-	<service ref="InvocationGroupManagerStartupHook" interface="net.sf.taverna.t2.workbench.StartupSPI" />
+	<service ref="InvocationGroupManagerStartupHook" interface="org.apache.taverna.workbench.StartupSPI" />
 
-	<service ref="ExternalToolActivityIcon" interface="net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI" />
+	<service ref="ExternalToolActivityIcon" interface="org.apache.taverna.workbench.activityicons.ActivityIconSPI" />
 
-	<service ref="LocalInvocationMechanismEditor" interface="net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismEditor" />
-	<service ref="SshInvocationMechanismEditor" interface="net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismEditor" />
+	<service ref="LocalInvocationMechanismEditor" interface="org.apache.taverna.activities.externaltool.manager.InvocationMechanismEditor" />
+	<service ref="SshInvocationMechanismEditor" interface="org.apache.taverna.activities.externaltool.manager.InvocationMechanismEditor" />
 
-	<service ref="ExternalToolServiceProvider" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider" />
-	<service ref="ExternalToolTemplateServiceDescription" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider" />
+	<service ref="ExternalToolServiceProvider" interface="org.apache.taverna.servicedescriptions.ServiceDescriptionProvider" />
+	<service ref="ExternalToolTemplateServiceDescription" interface="org.apache.taverna.servicedescriptions.ServiceDescriptionProvider" />
 
 	<service ref="ConfigureExternalToolMenuAction" auto-export="interfaces" />
 	<service ref="AddExternalToolContextualMenuAction" auto-export="interfaces" />
 	<service ref="AddExternalToolMenuAction" auto-export="interfaces" />
 
-	<service ref="InvocationGroupManagerShutdownHook" interface="net.sf.taverna.t2.workbench.ShutdownSPI" />
+	<service ref="InvocationGroupManagerShutdownHook" interface="org.apache.taverna.workbench.ShutdownSPI" />
 
-	<service ref="ExternalToolActivityViewFactory" interface="net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
+	<service ref="ExternalToolActivityViewFactory" interface="org.apache.taverna.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
 
-	<list id="mechanismCreators" interface="net.sf.taverna.t2.activities.externaltool.manager.MechanismCreator" cardinality="0..N" />
-	<list id="invocationMechanismEditors" interface="net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanismEditor" cardinality="0..N" />
+	<list id="mechanismCreators" interface="org.apache.taverna.activities.externaltool.manager.MechanismCreator" cardinality="0..N" />
+	<list id="invocationMechanismEditors" interface="org.apache.taverna.activities.externaltool.manager.InvocationMechanismEditor" cardinality="0..N" />
 
-	<reference id="editManager" interface="net.sf.taverna.t2.workbench.edits.EditManager" />
-	<reference id="fileManager" interface="net.sf.taverna.t2.workbench.file.FileManager" />
-	<reference id="menuManager" interface="net.sf.taverna.t2.ui.menu.MenuManager" />
-	<reference id="selectionManager" interface="net.sf.taverna.t2.workbench.selection.SelectionManager" />
-	<reference id="activityIconManager" interface="net.sf.taverna.t2.workbench.activityicons.ActivityIconManager" />
-	<reference id="colourManager" interface="net.sf.taverna.t2.workbench.configuration.colour.ColourManager" />
+	<reference id="editManager" interface="org.apache.taverna.workbench.edits.EditManager" />
+	<reference id="fileManager" interface="org.apache.taverna.workbench.file.FileManager" />
+	<reference id="menuManager" interface="org.apache.taverna.ui.menu.MenuManager" />
+	<reference id="selectionManager" interface="org.apache.taverna.workbench.selection.SelectionManager" />
+	<reference id="activityIconManager" interface="org.apache.taverna.workbench.activityicons.ActivityIconManager" />
+	<reference id="colourManager" interface="org.apache.taverna.workbench.configuration.colour.ColourManager" />
 
 </beans:beans>

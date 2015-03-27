@@ -1,0 +1,4 @@
+org.apache.taverna.activities.externaltool.menu.ConfigureExternalToolMenuAction
+# org.apache.taverna.activities.externaltool.menu.FeedbackMenuAction
+org.apache.taverna.activities.externaltool.menu.AddExternalToolContextualMenuAction
+org.apache.taverna.activities.externaltool.menu.AddExternalToolMenuAction

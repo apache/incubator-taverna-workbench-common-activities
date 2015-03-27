@@ -1,0 +1,3 @@
+org.apache.taverna.activities.spreadsheet.menu.SpreadsheetImportAddTemplateAction
+org.apache.taverna.activities.spreadsheet.menu.SpreadsheetImportConfigureMenuAction
+org.apache.taverna.activities.spreadsheet.menu.SpreadsheetImportAddTemplateMenuAction

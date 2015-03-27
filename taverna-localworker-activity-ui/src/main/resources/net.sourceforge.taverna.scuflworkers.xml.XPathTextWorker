@@ -1,4 +1,4 @@
-<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>net.sf.taverna.t2.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
+<activity xmlns="http://taverna.sf.net/2008/xml/t2flow"><class>org.apache.taverna.activities.localworker.LocalworkerActivity</class><inputMap /><outputMap /><configBean encoding="xstream"><org.apache.taverna.activities.localworker.LocalworkerActivityConfigurationBean xmlns="">
   <script>import org.dom4j.Document;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
@@ -33,7 +33,7 @@ List nodelistAsXML=outputXmlList;</script>
     <string>dom4j:dom4j:1.6</string>
   </dependencies>
   <inputs>
-    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    <org.apache.taverna.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
       <handledReferenceSchemes />
       <translatedElementType>java.lang.String</translatedElementType>
       <allowsLiteralValues>true</allowsLiteralValues>
@@ -42,8 +42,8 @@ List nodelistAsXML=outputXmlList;</script>
       <mimeTypes>
         <string>'text/plain'</string>
       </mimeTypes>
-    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
-    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    </org.apache.taverna.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    <org.apache.taverna.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
       <handledReferenceSchemes />
       <translatedElementType>java.lang.String</translatedElementType>
       <allowsLiteralValues>true</allowsLiteralValues>
@@ -52,24 +52,24 @@ List nodelistAsXML=outputXmlList;</script>
       <mimeTypes>
         <string>'text/xml'</string>
       </mimeTypes>
-    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
+    </org.apache.taverna.workflowmodel.processor.activity.config.ActivityInputPortDefinitionBean>
   </inputs>
   <outputs>
-    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+    <org.apache.taverna.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
       <granularDepth>1</granularDepth>
       <name>nodelist</name>
       <depth>1</depth>
       <mimeTypes>
         <string>l('text/plain')</string>
       </mimeTypes>
-    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
-    <net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+    </org.apache.taverna.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+    <org.apache.taverna.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
       <granularDepth>1</granularDepth>
       <name>nodelistAsXML</name>
       <depth>1</depth>
       <mimeTypes>
         <string>l('text/plain')</string>
       </mimeTypes>
-    </net.sf.taverna.t2.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
+    </org.apache.taverna.workflowmodel.processor.activity.config.ActivityOutputPortDefinitionBean>
   </outputs>
-</net.sf.taverna.t2.activities.localworker.LocalworkerActivityConfigurationBean></configBean></activity>
+</org.apache.taverna.activities.localworker.LocalworkerActivityConfigurationBean></configBean></activity>

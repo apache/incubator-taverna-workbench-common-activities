@@ -1,0 +1,2 @@
+org.apache.taverna.activities.wsdl.views.WSDLActivityViewFactory
+org.apache.taverna.activities.wsdl.views.XMLSplitterViewFactory

@@ -3,13 +3,13 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
                       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="SpreadsheetImportActivityIcon" class="net.sf.taverna.t2.activities.spreadsheet.servicedescriptions.SpreadsheetImportActivityIcon">
+	<bean id="SpreadsheetImportActivityIcon" class="org.apache.taverna.activities.spreadsheet.servicedescriptions.SpreadsheetImportActivityIcon">
 			<property name="colourManager" ref="colourManager" />
 	</bean>
 
-	<bean id="SpreadsheetImportTemplateService" class="net.sf.taverna.t2.activities.spreadsheet.servicedescriptions.SpreadsheetImportTemplateService" />
+	<bean id="SpreadsheetImportTemplateService" class="org.apache.taverna.activities.spreadsheet.servicedescriptions.SpreadsheetImportTemplateService" />
 
-	<bean id="SpreadsheetImportAddTemplateAction" class="net.sf.taverna.t2.activities.spreadsheet.menu.SpreadsheetImportAddTemplateAction">
+	<bean id="SpreadsheetImportAddTemplateAction" class="org.apache.taverna.activities.spreadsheet.menu.SpreadsheetImportAddTemplateAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
 			<property name="selectionManager" ref="selectionManager" />
@@ -17,7 +17,7 @@
 			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
 			<property name="serviceRegistry" ref="serviceRegistry" />
 	</bean>
-	<bean id="SpreadsheetImportAddTemplateMenuAction" class="net.sf.taverna.t2.activities.spreadsheet.menu.SpreadsheetImportAddTemplateMenuAction">
+	<bean id="SpreadsheetImportAddTemplateMenuAction" class="org.apache.taverna.activities.spreadsheet.menu.SpreadsheetImportAddTemplateMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
 			<property name="selectionManager" ref="selectionManager" />
@@ -25,7 +25,7 @@
 			<property name="serviceDescriptionRegistry" ref="serviceDescriptionRegistry" />
 			<property name="serviceRegistry" ref="serviceRegistry" />
 	</bean>
-	<bean id="SpreadsheetImportConfigureMenuAction" class="net.sf.taverna.t2.activities.spreadsheet.menu.SpreadsheetImportConfigureMenuAction">
+	<bean id="SpreadsheetImportConfigureMenuAction" class="org.apache.taverna.activities.spreadsheet.menu.SpreadsheetImportConfigureMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
@@ -33,7 +33,7 @@
 			<property name="serviceRegistry" ref="serviceRegistry" />
 	</bean>
 
-	<bean id="SpreadsheetImportContextualViewFactory" class="net.sf.taverna.t2.activities.spreadsheet.views.SpreadsheetImportContextualViewFactory">
+	<bean id="SpreadsheetImportContextualViewFactory" class="org.apache.taverna.activities.spreadsheet.views.SpreadsheetImportContextualViewFactory">
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
 			<property name="activityIconManager" ref="activityIconManager" />

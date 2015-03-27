@@ -1,0 +1,3 @@
+org.apache.taverna.activities.rest.ui.view.ConfigureRESTActivityMenuAction
+org.apache.taverna.activities.rest.ui.menu.AddRESTTemplateAction
+org.apache.taverna.activities.rest.ui.menu.AddRESTTemplateMenuAction

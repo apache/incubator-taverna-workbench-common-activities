@@ -3,44 +3,44 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
                       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="ToolInvocationConfigurationUIFactory" class="net.sf.taverna.t2.activities.externaltool.manager.ToolInvocationConfigurationUIFactory">
+	<bean id="ToolInvocationConfigurationUIFactory" class="org.apache.taverna.activities.externaltool.manager.ToolInvocationConfigurationUIFactory">
 		<property name="mechanismCreators" ref="mechanismCreators" />
 		<property name="invocationMechanismEditors" ref="invocationMechanismEditors" />
 	</bean>
 
-	<bean id="InvocationGroupManagerStartupHook" class="net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManagerStartupHook" />
+	<bean id="InvocationGroupManagerStartupHook" class="org.apache.taverna.activities.externaltool.manager.InvocationGroupManagerStartupHook" />
 
-	<bean id="ExternalToolActivityIcon" class="net.sf.taverna.t2.activities.externaltool.servicedescriptions.ExternalToolActivityIcon">
+	<bean id="ExternalToolActivityIcon" class="org.apache.taverna.activities.externaltool.servicedescriptions.ExternalToolActivityIcon">
 			<property name="colourManager" ref="colourManager" />
 	</bean>
 
-	<bean id="LocalInvocationMechanismEditor" class="net.sf.taverna.t2.activities.externaltool.manager.local.LocalInvocationMechanismEditor" />
-	<bean id="SshInvocationMechanismEditor" class="net.sf.taverna.t2.activities.externaltool.manager.ssh.SshInvocationMechanismEditor" />
+	<bean id="LocalInvocationMechanismEditor" class="org.apache.taverna.activities.externaltool.manager.local.LocalInvocationMechanismEditor" />
+	<bean id="SshInvocationMechanismEditor" class="org.apache.taverna.activities.externaltool.manager.ssh.SshInvocationMechanismEditor" />
 
-	<bean id="ExternalToolServiceProvider" class="net.sf.taverna.t2.activities.externaltool.servicedescriptions.ExternalToolServiceProvider" />
-	<bean id="ExternalToolTemplateServiceDescription" class="net.sf.taverna.t2.activities.externaltool.servicedescriptions.ExternalToolTemplateServiceDescription" />
+	<bean id="ExternalToolServiceProvider" class="org.apache.taverna.activities.externaltool.servicedescriptions.ExternalToolServiceProvider" />
+	<bean id="ExternalToolTemplateServiceDescription" class="org.apache.taverna.activities.externaltool.servicedescriptions.ExternalToolTemplateServiceDescription" />
 
-	<bean id="ConfigureExternalToolMenuAction" class="net.sf.taverna.t2.activities.externaltool.menu.ConfigureExternalToolMenuAction">
+	<bean id="ConfigureExternalToolMenuAction" class="org.apache.taverna.activities.externaltool.menu.ConfigureExternalToolMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
-	<bean id="AddExternalToolContextualMenuAction" class="net.sf.taverna.t2.activities.externaltool.menu.AddExternalToolContextualMenuAction">
+	<bean id="AddExternalToolContextualMenuAction" class="org.apache.taverna.activities.externaltool.menu.AddExternalToolContextualMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
 			<property name="selectionManager" ref="selectionManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
-	<bean id="AddExternalToolMenuAction" class="net.sf.taverna.t2.activities.externaltool.menu.AddExternalToolMenuAction">
+	<bean id="AddExternalToolMenuAction" class="org.apache.taverna.activities.externaltool.menu.AddExternalToolMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="menuManager" ref="menuManager" />
 			<property name="selectionManager" ref="selectionManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 
-	<bean id="InvocationGroupManagerShutdownHook" class="net.sf.taverna.t2.activities.externaltool.manager.InvocationGroupManagerShutdownHook" />
+	<bean id="InvocationGroupManagerShutdownHook" class="org.apache.taverna.activities.externaltool.manager.InvocationGroupManagerShutdownHook" />
 
-	<bean id="ExternalToolActivityViewFactory" class="net.sf.taverna.t2.activities.externaltool.views.ExternalToolActivityViewFactory">
+	<bean id="ExternalToolActivityViewFactory" class="org.apache.taverna.activities.externaltool.views.ExternalToolActivityViewFactory">
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
 			<property name="activityIconManager" ref="activityIconManager" />

@@ -6,14 +6,14 @@
                       http://www.springframework.org/schema/osgi
                       http://www.springframework.org/schema/osgi/spring-osgi.xsd">
 
-	<service ref="WSDLActivityIcon" interface="net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI" />
-	<service ref="XMLInputSplitterActivityIcon" interface="net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI" />
-	<service ref="XMLOutputSplitterActivityIcon" interface="net.sf.taverna.t2.workbench.activityicons.ActivityIconSPI" />
+	<service ref="WSDLActivityIcon" interface="org.apache.taverna.workbench.activityicons.ActivityIconSPI" />
+	<service ref="XMLInputSplitterActivityIcon" interface="org.apache.taverna.workbench.activityicons.ActivityIconSPI" />
+	<service ref="XMLOutputSplitterActivityIcon" interface="org.apache.taverna.workbench.activityicons.ActivityIconSPI" />
 
 	<service ref="WSDLServiceProvider">
 		<interfaces>
-			<beans:value>net.sf.taverna.t2.servicedescriptions.ServiceDescriptionProvider</beans:value>
-			<beans:value>net.sf.taverna.t2.servicedescriptions.ConfigurableServiceProvider</beans:value>
+			<beans:value>org.apache.taverna.servicedescriptions.ServiceDescriptionProvider</beans:value>
+			<beans:value>org.apache.taverna.servicedescriptions.ConfigurableServiceProvider</beans:value>
 		</interfaces>
 	</service>
 
@@ -23,15 +23,15 @@
 	<service ref="AddXMLOutputSplitterForXMLOutputSplitterMenuAction" auto-export="interfaces" />
 	<service ref="ConfigureWSDLMenuAction" auto-export="interfaces" />
 
-	<service ref="WSDLActivityViewFactory" interface="net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
-	<service ref="XMLSplitterViewFactory" interface="net.sf.taverna.t2.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
+	<service ref="WSDLActivityViewFactory" interface="org.apache.taverna.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
+	<service ref="XMLSplitterViewFactory" interface="org.apache.taverna.workbench.ui.views.contextualviews.activity.ContextualViewFactory" />
 
-	<reference id="editManager" interface="net.sf.taverna.t2.workbench.edits.EditManager" />
-	<reference id="fileManager" interface="net.sf.taverna.t2.workbench.file.FileManager" />
-	<reference id="activityIconManager" interface="net.sf.taverna.t2.workbench.activityicons.ActivityIconManager" />
-	<reference id="colourManager" interface="net.sf.taverna.t2.workbench.configuration.colour.ColourManager" />
-	<reference id="serviceDescriptionRegistry" interface="net.sf.taverna.t2.servicedescriptions.ServiceDescriptionRegistry" />
-	<reference id="credentialManager" interface="net.sf.taverna.t2.security.credentialmanager.CredentialManager" />
-	<reference id="selectionManager" interface="net.sf.taverna.t2.workbench.selection.SelectionManager" />
+	<reference id="editManager" interface="org.apache.taverna.workbench.edits.EditManager" />
+	<reference id="fileManager" interface="org.apache.taverna.workbench.file.FileManager" />
+	<reference id="activityIconManager" interface="org.apache.taverna.workbench.activityicons.ActivityIconManager" />
+	<reference id="colourManager" interface="org.apache.taverna.workbench.configuration.colour.ColourManager" />
+	<reference id="serviceDescriptionRegistry" interface="org.apache.taverna.servicedescriptions.ServiceDescriptionRegistry" />
+	<reference id="credentialManager" interface="org.apache.taverna.security.credentialmanager.CredentialManager" />
+	<reference id="selectionManager" interface="org.apache.taverna.workbench.selection.SelectionManager" />
 
 </beans:beans>

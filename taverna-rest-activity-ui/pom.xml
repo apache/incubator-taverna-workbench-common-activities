@@ -16,14 +16,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.taverna.commonactivities</groupId>
-            <artifactId>taverna-rest-activity</artifactId>
-            <version>${taverna.commonactivities.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.taverna.engine</groupId>
             <artifactId>taverna-services-api</artifactId>
             <version>${taverna.engine.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.taverna.commonactivities</groupId>
+            <artifactId>taverna-rest-activity</artifactId>
+            <version>${taverna.commonactivities.version}</version>
         </dependency>
 	 <dependency>
             <groupId>org.apache.taverna.workbench</groupId>

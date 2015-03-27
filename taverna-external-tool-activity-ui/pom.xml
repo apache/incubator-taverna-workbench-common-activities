@@ -67,6 +67,24 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.taverna.workbench</groupId>
+            <artifactId>taverna-activity-tools</artifactId>
+            <version>3.1.0-incubating-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>javax.help</groupId>
+            <artifactId>javahelp</artifactId>
+            <version>2.0.02</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.taverna.workbench</groupId>
+            <artifactId>renderers-impl</artifactId>
+            <version>3.1.0-incubating-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>

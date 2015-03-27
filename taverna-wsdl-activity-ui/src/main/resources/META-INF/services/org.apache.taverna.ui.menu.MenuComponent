@@ -1,0 +1,5 @@
+org.apache.taverna.activities.wsdl.menu.AddXMLInputSplitterForWSDLActivityMenuAction
+org.apache.taverna.activities.wsdl.menu.AddXMLInputSplitterForXMLInputSplitterMenuAction
+org.apache.taverna.activities.wsdl.menu.AddXMLOutputSplitterForWSDLActivityMenuAction
+org.apache.taverna.activities.wsdl.menu.AddXMLOutputSplitterForXMLOutputSplitterMenuAction
+org.apache.taverna.activities.wsdl.menu.ConfigureWSDLMenuAction

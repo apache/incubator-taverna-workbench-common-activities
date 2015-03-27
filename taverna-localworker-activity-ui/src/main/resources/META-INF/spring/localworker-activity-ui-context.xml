@@ -3,11 +3,11 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
                       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="LocalworkerActivityIcon" class="net.sf.taverna.t2.activities.localworker.servicedescriptions.LocalworkerActivityIcon" />
+	<bean id="LocalworkerActivityIcon" class="org.apache.taverna.activities.localworker.servicedescriptions.LocalworkerActivityIcon" />
 
-	<bean id="LocalworkerServiceProvider" class="net.sf.taverna.t2.activities.localworker.servicedescriptions.LocalworkerServiceProvider" />
+	<bean id="LocalworkerServiceProvider" class="org.apache.taverna.activities.localworker.servicedescriptions.LocalworkerServiceProvider" />
 
-	<bean id="ConfigureLocalworkerMenuAction" class="net.sf.taverna.t2.activities.localworker.menu.ConfigureLocalworkerMenuAction">
+	<bean id="ConfigureLocalworkerMenuAction" class="org.apache.taverna.activities.localworker.menu.ConfigureLocalworkerMenuAction">
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
@@ -15,7 +15,7 @@
 			<property name="applicationConfiguration" ref="applicationConfiguration" />
 	</bean>
 
-	<bean id="LocalworkerActivityViewFactory" class="net.sf.taverna.t2.activities.localworker.views.LocalworkerActivityViewFactory">
+	<bean id="LocalworkerActivityViewFactory" class="org.apache.taverna.activities.localworker.views.LocalworkerActivityViewFactory">
 			<property name="editManager" ref="editManager" />
 			<property name="fileManager" ref="fileManager" />
 			<property name="activityIconManager" ref="activityIconManager" />
