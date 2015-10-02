@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.apache.taverna</groupId>
 		<artifactId>taverna-parent</artifactId>
-		<version>1-incubating</version>
+		<version>2-incubating-SNAPSHOT</version>
 	</parent>
 	<groupId>org.apache.taverna.workbench.commonactivities</groupId>
 	<artifactId>taverna-workbench-commonactivities</artifactId>
@@ -13,7 +13,7 @@
 	<name>Apache Taverna Workbench Common Activities</name>
   <description>User interface and Workbench integration for common activities</description>
   <properties>
-    <taverna.language.version>0.15.0-incubating</taverna.language.version>
+    <taverna.language.version>0.15.1-incubating-SNAPSHOT</taverna.language.version>
     <taverna.osgi.version>0.2.0-incubating-SNAPSHOT</taverna.osgi.version>
     <taverna.engine.version>3.1.0-incubating-SNAPSHOT</taverna.engine.version>
     <taverna.commonactivities.version>2.1.0-incubating-SNAPSHOT</taverna.commonactivities.version>
