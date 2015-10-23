@@ -21,10 +21,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.CompoundBorder;
 
-import net.sf.taverna.t2.activities.externaltool.manager.InvocationMechanism;
+import org.apache.taverna.activities.externaltool.manager.InvocationMechanism;
 import org.apache.taverna.activities.externaltool.manager.InvocationMechanismEditor;
-import net.sf.taverna.t2.activities.externaltool.ssh.ExternalToolSshInvocationMechanism;
-import net.sf.taverna.t2.lang.ui.DeselectingButton;
+import org.apache.taverna.activities.externaltool.ssh.ExternalToolSshInvocationMechanism;
+import org.apache.taverna.lang.ui.DeselectingButton;
 import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNode;
 import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNodeFactory;
 

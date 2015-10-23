@@ -3,7 +3,8 @@
  */
 package org.apache.taverna.activities.externaltool.manager;
 
-import net.sf.taverna.t2.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
+import org.apache.taverna.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
+
 import org.apache.taverna.workbench.ShutdownSPI;
 
 /**

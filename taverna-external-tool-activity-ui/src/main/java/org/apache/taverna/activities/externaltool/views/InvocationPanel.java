@@ -36,11 +36,11 @@ import org.apache.taverna.activities.externaltool.manager.InvocationMechanism;
 import org.apache.taverna.activities.externaltool.manager.InvocationMechanismAddedEvent;
 import org.apache.taverna.activities.externaltool.manager.InvocationMechanismRemovedEvent;
 import org.apache.taverna.activities.externaltool.manager.ToolInvocationConfigurationPanel;
-import net.sf.taverna.t2.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
+import org.apache.taverna.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
 import org.apache.taverna.lang.observer.Observable;
 import org.apache.taverna.lang.observer.Observer;
 import org.apache.taverna.lang.ui.DeselectingButton;
-import net.sf.taverna.t2.workbench.ui.impl.configuration.ui.T2ConfigurationFrame;
+//import net.sf.taverna.t2.workbench.ui.impl.configuration.ui.T2ConfigurationFrame;
 
 import org.apache.log4j.Logger;
 
