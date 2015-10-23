@@ -83,6 +83,11 @@
             <version>2.0.02</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.apache.taverna.workbench</groupId>
+            <artifactId>taverna-graph-view</artifactId>
+            <version>3.1.0-incubating-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
