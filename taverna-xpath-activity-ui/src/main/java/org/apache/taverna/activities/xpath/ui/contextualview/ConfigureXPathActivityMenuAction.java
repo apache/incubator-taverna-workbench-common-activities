@@ -9,7 +9,7 @@ import org.apache.taverna.workbench.activityicons.ActivityIconManager;
 import org.apache.taverna.workbench.activitytools.AbstractConfigureActivityMenuAction;
 import org.apache.taverna.workbench.edits.EditManager;
 import org.apache.taverna.workbench.file.FileManager;
-import org.apache.taverna.commons.services.ServiceRegistry;
+import org.apache.taverna.services.ServiceRegistry;
 
 /**
  * This action is responsible for enabling the contextual menu entry on processors that perform

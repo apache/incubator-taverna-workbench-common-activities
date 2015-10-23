@@ -27,7 +27,7 @@ import org.apache.taverna.workbench.activityicons.ActivityIconManager;
 import org.apache.taverna.workbench.edits.EditManager;
 import org.apache.taverna.workbench.file.FileManager;
 import org.apache.taverna.workbench.ui.views.contextualviews.ContextualView;
-import org.apache.taverna.commons.services.ServiceRegistry;
+import org.apache.taverna.services.ServiceRegistry;
 import org.apache.taverna.scufl2.api.activity.Activity;
 import org.apache.taverna.scufl2.api.common.Scufl2Tools;
 import org.apache.taverna.scufl2.api.configurations.Configuration;

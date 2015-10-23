@@ -57,7 +57,7 @@ import org.apache.taverna.activities.rest.URISignatureHandler;
 import org.apache.taverna.activities.rest.URISignatureHandler.URISignatureParsingException;
 import org.apache.taverna.workbench.MainWindow;
 import org.apache.taverna.workbench.ui.views.contextualviews.activity.MultiPageActivityConfigurationPanel;
-import org.apache.taverna.commons.services.ServiceRegistry;
+import org.apache.taverna.services.ServiceRegistry;
 import org.apache.taverna.scufl2.api.activity.Activity;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;

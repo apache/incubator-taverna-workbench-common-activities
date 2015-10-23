@@ -21,7 +21,7 @@ package org.apache.taverna.activities.spreadsheet.menu;
 
 import javax.swing.Action;
 
-import org.apache.taverna.commons.services.ServiceRegistry;
+import org.apache.taverna.services.ServiceRegistry;
 
 import org.apache.taverna.activities.spreadsheet.actions.SpreadsheetImportActivityConfigurationAction;
 import org.apache.taverna.activities.spreadsheet.il8n.SpreadsheetImportUIText;

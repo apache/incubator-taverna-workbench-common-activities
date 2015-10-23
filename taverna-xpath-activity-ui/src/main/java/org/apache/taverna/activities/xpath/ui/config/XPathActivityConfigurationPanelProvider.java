@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 
 import org.apache.taverna.activities.xpath.XPathActivityConfigurationBean;
 import org.apache.taverna.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
-import org.apache.taverna.commons.services.ServiceRegistry;
+import org.apache.taverna.services.ServiceRegistry;
 import org.apache.taverna.scufl2.api.activity.Activity;
 
 import com.fasterxml.jackson.databind.JsonNode;
