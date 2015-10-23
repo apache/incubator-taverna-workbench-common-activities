@@ -33,7 +33,7 @@ import org.apache.taverna.workbench.edits.EditManager;
 import org.apache.taverna.workbench.file.FileManager;
 import org.apache.taverna.workbench.ui.actions.activity.ActivityConfigurationAction;
 import org.apache.taverna.workbench.ui.views.contextualviews.activity.ActivityConfigurationDialog;
-import uk.org.taverna.configuration.app.ApplicationConfiguration;
+import org.apache.taverna.configuration.app.ApplicationConfiguration;
 import org.apache.taverna.scufl2.api.activity.Activity;
 import org.apache.taverna.scufl2.api.common.Scufl2Tools;
 import org.apache.taverna.scufl2.api.configurations.Configuration;

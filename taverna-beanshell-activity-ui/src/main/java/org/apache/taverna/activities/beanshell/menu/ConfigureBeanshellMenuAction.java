@@ -31,7 +31,7 @@ import org.apache.taverna.workbench.file.FileManager;
 
 import javax.swing.Action;
 
-import uk.org.taverna.configuration.app.ApplicationConfiguration;
+import org.apache.taverna.configuration.app.ApplicationConfiguration;
 import org.apache.taverna.scufl2.api.activity.Activity;
 
 public class ConfigureBeanshellMenuAction extends AbstractConfigureActivityMenuAction {

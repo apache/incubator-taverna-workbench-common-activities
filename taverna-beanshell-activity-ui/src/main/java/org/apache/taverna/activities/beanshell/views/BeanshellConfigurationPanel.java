@@ -46,7 +46,7 @@ import org.apache.taverna.workbench.ui.views.contextualviews.activity.MultiPageA
 import org.apache.taverna.workbench.ui.views.contextualviews.activity.ScriptConfigurationComponent;
 import org.apache.taverna.workbench.ui.views.contextualviews.activity.ValidatingTextField;
 import org.apache.taverna.workbench.ui.views.contextualviews.activity.ValidatingTextGroup;
-import uk.org.taverna.configuration.app.ApplicationConfiguration;
+import org.apache.taverna.configuration.app.ApplicationConfiguration;
 import org.apache.taverna.scufl2.api.activity.Activity;
 import org.apache.taverna.scufl2.api.port.InputActivityPort;
 import org.apache.taverna.scufl2.api.port.OutputActivityPort;

@@ -6,7 +6,7 @@ package org.apache.taverna.activities.externaltool.configuration;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.org.taverna.configuration.AbstractConfigurable;
+import org.apache.taverna.configuration.AbstractConfigurable;
 
 
 /**

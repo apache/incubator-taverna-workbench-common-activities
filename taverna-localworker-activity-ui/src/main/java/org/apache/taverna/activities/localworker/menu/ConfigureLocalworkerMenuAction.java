@@ -2,7 +2,7 @@ package org.apache.taverna.activities.localworker.menu;
 
 import javax.swing.Action;
 
-import uk.org.taverna.configuration.app.ApplicationConfiguration;
+import org.apache.taverna.configuration.app.ApplicationConfiguration;
 
 import org.apache.taverna.activities.beanshell.actions.BeanshellActivityConfigurationAction;
 import org.apache.taverna.activities.localworker.actions.LocalworkerActivityConfigurationAction;

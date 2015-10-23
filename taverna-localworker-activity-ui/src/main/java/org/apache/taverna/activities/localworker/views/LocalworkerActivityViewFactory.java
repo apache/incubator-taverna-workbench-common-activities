@@ -31,7 +31,7 @@ import org.apache.taverna.workbench.edits.EditManager;
 import org.apache.taverna.workbench.file.FileManager;
 import org.apache.taverna.workbench.ui.views.contextualviews.ContextualView;
 import org.apache.taverna.workbench.ui.views.contextualviews.activity.ContextualViewFactory;
-import uk.org.taverna.configuration.app.ApplicationConfiguration;
+import org.apache.taverna.configuration.app.ApplicationConfiguration;
 import org.apache.taverna.scufl2.api.activity.Activity;
 
 public class LocalworkerActivityViewFactory implements ContextualViewFactory<Activity> {

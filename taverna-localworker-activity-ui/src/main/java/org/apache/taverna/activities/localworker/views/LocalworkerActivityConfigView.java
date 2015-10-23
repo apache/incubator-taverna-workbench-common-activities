@@ -21,7 +21,7 @@
 package org.apache.taverna.activities.localworker.views;
 
 import org.apache.taverna.activities.beanshell.views.BeanshellConfigurationPanel;
-import uk.org.taverna.configuration.app.ApplicationConfiguration;
+import org.apache.taverna.configuration.app.ApplicationConfiguration;
 import org.apache.taverna.scufl2.api.activity.Activity;
 
 @SuppressWarnings("serial")
