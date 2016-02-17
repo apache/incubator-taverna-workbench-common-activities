@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.apache.taverna.workbench.commonactivities</groupId>
-        <artifactId>taverna-workbench-commonactivities</artifactId>
+        <artifactId>apache-taverna-workbench-commonactivities</artifactId>
         <version>3.1.0-incubating-SNAPSHOT</version>
     </parent>
 
