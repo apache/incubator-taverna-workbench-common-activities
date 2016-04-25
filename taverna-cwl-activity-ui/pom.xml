@@ -11,8 +11,29 @@
     <packaging>bundle</packaging>
     <name>Apache Taverna CWL Activity UI</name>
 
+    <properties>
+<!-- Temporary Taverna 2.5 dependencies -->
+	<t2.lang.version>1.5</t2.lang.version>
+	<t2.ui.api.version>1.5</t2.ui.api.version>
+	<t2.ui.impl.version>1.5</t2.ui.impl.version>
+    </properties>
     <dependencies>
-<!-- Taverna 3 dependencies -->
+<!-- START CWL dependencies -->
+<!--
+        <dependency>
+            <groupId>?</groupId>
+            <artifactId>?</artifactId>
+            <version>?</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.taverna.common-activities</groupId>
+            <artifactId>taverna-cwl-activity</artifactId>
+            <version>${taverna.commonactivities.version}</version>
+        </dependency>
+-->
+<!-- END CWL dependencies -->
+
+<!-- START Taverna 3 dependencies -->
         <dependency>
             <groupId>org.apache.taverna.language</groupId>
             <artifactId>taverna-scufl2-api</artifactId>
@@ -23,6 +44,7 @@
             <artifactId>taverna-services-api</artifactId>
             <version>${taverna.engine.version}</version>
         </dependency>
+<!-- Temporarily disabled to avoid confusion with Taverna 2 deps below
         <dependency>
             <groupId>org.apache.taverna.workbench</groupId>
             <artifactId>taverna-workbench-api</artifactId>
@@ -48,6 +70,43 @@
             <artifactId>taverna-activity-tools</artifactId>
             <version>${taverna.workbench.version}</version>
         </dependency>
+-->
+<!-- END Taverna 3 dependencies -->
+
+<!-- START Taverna 2 dependencies -->
+
+        <dependency>
+            <groupId>net.sf.taverna.t2.ui-api</groupId>
+            <artifactId>activity-palette-api</artifactId>
+            <version>${t2.ui.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.taverna.t2.ui-api</groupId>
+            <artifactId>activity-icons-api</artifactId>
+            <version>${t2.ui.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.taverna.t2.ui-api</groupId>
+            <artifactId>menu-api</artifactId>
+            <version>${t2.ui.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.taverna.t2.ui-impl</groupId>
+            <artifactId>contextual-views-impl</artifactId>
+            <version>${t2.ui.impl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.taverna.t2.ui-impl</groupId>
+            <artifactId>activity-tools</artifactId>
+            <version>${t2.ui.impl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.taverna.t2.lang</groupId>
+            <artifactId>ui</artifactId>
+            <version>${t2.lang.version}</version>
+        </dependency>
+<!-- END Taverna 2 dependencies -->
+
     </dependencies>
 
     <repositories>
@@ -62,6 +121,7 @@
             <url>http://www.mygrid.org.uk/maven/repository
             </url>
         </repository>
+<!--
         <repository>
             <releases>
                 <enabled>false</enabled>
@@ -71,5 +131,6 @@
             <name>myGrid Snapshot Repository</name>
             <url>http://www.mygrid.org.uk/maven/snapshot-repository</url>
         </repository>
+-->
     </repositories>
 </project>
