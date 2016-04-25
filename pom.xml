@@ -20,6 +20,8 @@
     <taverna.workbench.version>3.1.0-incubating-SNAPSHOT</taverna.workbench.version>
   </properties>
 	<modules>
+    <module>taverna-cwl-activity-ui</module>
+<!--
     <module>taverna-beanshell-activity-ui</module>
     <module>taverna-external-tool-activity-ui</module>
     <module>taverna-localworker-activity-ui</module>
@@ -27,6 +29,7 @@
     <module>taverna-spreadsheet-import-activity-ui</module>
     <module>taverna-wsdl-activity-ui</module>
     <module>taverna-xpath-activity-ui</module>
+-->
   </modules>
   <scm>
     <connection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-taverna-workbench-common-activities.git</connection>
