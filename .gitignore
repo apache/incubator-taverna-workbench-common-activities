@@ -1,7 +1,5 @@
-/target/
-/taverna-beanshell-activity-ui/target/
-/taverna-spreadsheet-import-activity-ui/target/
-/taverna-external-tool-activity-ui/target/
-/taverna-localworker-activity-ui/target/
-/taverna-xpath-activity-ui/target/
-/taverna-rest-activity-ui/target/
+.project
+.settings
+.classpath
+target
+.gitignore
