@@ -32,8 +32,8 @@ import javax.swing.Icon;
 import org.apache.taverna.servicedescriptions.AbstractConfigurableServiceProvider;
 import org.apache.taverna.servicedescriptions.CustomizedConfigurePanelProvider;
 import org.apache.taverna.servicedescriptions.ServiceDescriptionRegistry;
-import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
-import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
+import org.apache.taverna.activities.externaltool.desc.ToolDescription;
+import org.apache.taverna.activities.externaltool.desc.ToolDescriptionParser;
 
 /**
  * ExternalToolServiceProvider searches an use case repository XML for use case
@@ -67,22 +67,22 @@ public class ExternalToolServiceProvider extends AbstractConfigurableServiceProv
 		callBack.status("Parsing use case repository:" + repositoryUrl);
 			// prepare a list of all use case descriptions which are stored in
 			// the given repository URL
-			List<UseCaseDescription> usecases = new ArrayList<UseCaseDescription> ();
+			List<ToolDescription> usecases = new ArrayList<UseCaseDescription> ();
 			try {
-				usecases = UseCaseEnumeration.readDescriptionsFromUrl(
+				usecases = ToolDescriptionParser.readDescriptionsFromUrl(
 						repositoryUrl);
 			} catch (IOException e) {
 				callBack.fail("Unable to read tool descriptions", e);
 			}
 			callBack.status("Found " + usecases.size() + " use cases:" + repositoryUrl);
-			// convert all the UseCaseDescriptions in the XML file into
+			// convert all the ToolDescriptions in the XML file into
 			// ExternalToolServiceDescription items
 			List<ExternalToolServiceDescription> items = new ArrayList<ExternalToolServiceDescription>();
-			for (UseCaseDescription usecase : usecases) {
+			for (ToolDescription usecase : usecases) {
 				ExternalToolServiceDescription item = new ExternalToolServiceDescription();
 				item.setRepositoryUrl(repositoryUrl);
 				item.setExternaltoolid(usecase.getUsecaseid());
-				item.setUseCaseDescription(usecase);
+				item.setToolDescription(usecase);
 				items.add(item);
 			}
 			// we dont have streaming data loading or partial results, so return

@@ -26,8 +26,8 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
-import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
+import org.apache.taverna.activities.externaltool.desc.ToolDescription;
+import org.apache.taverna.activities.externaltool.desc.ToolDescriptionParser;
 
 final class SaveDescriptionAction extends AbstractAction {
 	/**
@@ -47,7 +47,7 @@ final class SaveDescriptionAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		UseCaseDescription currentDescription = view.makeConfiguration().getUseCaseDescription();
+		ToolDescription currentDescription = view.makeConfiguration().getUseCaseDescription();
 		String usecaseid = currentDescription.getUsecaseid();
 		String description = currentDescription.getDescription();
 		String group = currentDescription.getGroup();
@@ -60,7 +60,7 @@ final class SaveDescriptionAction extends AbstractAction {
 		}
 	}
 	
-	public static boolean saveStringToFile(Component parent, String dialogTitle, String extension, UseCaseDescription description) {
+	public static boolean saveStringToFile(Component parent, String dialogTitle, String extension, ToolDescription description) {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle(dialogTitle);
 
@@ -89,14 +89,14 @@ final class SaveDescriptionAction extends AbstractAction {
 
 				// TODO: Open in separate thread to avoid hanging UI
 				try {
-					List<UseCaseDescription> currentDescriptions;
+					List<ToolDescription> currentDescriptions;
 					if (file.exists()) {
-						currentDescriptions = UseCaseEnumeration.readDescriptionsFromStream(new FileInputStream(file));
+						currentDescriptions = ToolDescriptionParser.readDescriptionsFromStream(new FileInputStream(file));
 					} else {
-						currentDescriptions = new ArrayList<UseCaseDescription>();
+						currentDescriptions = new ArrayList<ToolDescription>();
 					}
 					Element overallElement = new Element("usecases");
-					for (UseCaseDescription ud : currentDescriptions) {
+					for (ToolDescription ud : currentDescriptions) {
 						if (!ud.getUsecaseid().equals(description.getUsecaseid())) {
 							overallElement.addContent(ud.writeToXMLElement());
 						}

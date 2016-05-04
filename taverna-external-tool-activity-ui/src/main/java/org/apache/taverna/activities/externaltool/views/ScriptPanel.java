@@ -26,8 +26,8 @@ import org.apache.taverna.lang.ui.LineEnabledTextPanel;
 
 import org.jdom.input.SAXBuilder;
 
-import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
-import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
+import org.apache.taverna.activities.externaltool.desc.ToolDescription;
+import org.apache.taverna.activities.externaltool.desc.ToolDescriptionParser;
 
 
 /**
@@ -59,7 +59,7 @@ public class ScriptPanel extends JPanel {
 				BorderLayout.CENTER);
 		
 
-		UseCaseDescription useCaseDescription = view.getConfiguration().getUseCaseDescription();
+		ToolDescription useCaseDescription = view.getConfiguration().getUseCaseDescription();
 		stdInCheckBox.setSelected(useCaseDescription.isIncludeStdIn());
 		stdOutCheckBox.setSelected(useCaseDescription.isIncludeStdOut());
 		stdErrCheckBox.setSelected(useCaseDescription.isIncludeStdErr());
@@ -84,16 +84,16 @@ public class ScriptPanel extends JPanel {
 					ExternalToolActivityConfigurationBean bean = view.makeConfiguration();
 					String repositoryUrl = bean.getRepositoryUrl();
 					String id = bean.getExternaltoolid();
-					UseCaseDescription usecase = null;
+					ToolDescription usecase = null;
 					try {
-						usecase = UseCaseEnumeration.readDescriptionFromUrl(
+						usecase = ToolDescriptionParser.readDescriptionFromUrl(
 							repositoryUrl, id);
 					}
 					catch (IOException ex) {
 						// Already logged
 					}
 					if (usecase != null) {
-						bean.setUseCaseDescription(usecase);
+						bean.setToolDescription(usecase);
 						view.setEditable(false, bean);
 					} else {
 						JOptionPane.showMessageDialog(view, "Unable to find tool description " + id, "Missing tool description", JOptionPane.ERROR_MESSAGE);

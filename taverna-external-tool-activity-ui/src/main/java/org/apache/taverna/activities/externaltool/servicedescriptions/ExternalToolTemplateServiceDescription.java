@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import javax.swing.Icon;
 
-import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
+import org.apache.taverna.activities.externaltool.desc.ToolDescription;
 
 import org.apache.taverna.activities.externaltool.ExternalToolActivity;
 import org.apache.taverna.activities.externaltool.ExternalToolActivityConfigurationBean;
@@ -41,7 +41,7 @@ public class ExternalToolTemplateServiceDescription extends
 	public ExternalToolActivityConfigurationBean getActivityConfiguration() {
 		ExternalToolActivityConfigurationBean result = new ExternalToolActivityConfigurationBean();
 		result.setExternaltoolid(UUID.randomUUID().toString());
-		result.setUseCaseDescription(new UseCaseDescription(""));
+		result.setToolDescription(new UseCaseDescription(""));
 		result.setMechanism(manager.getDefaultMechanism());
 		return result;
 	}

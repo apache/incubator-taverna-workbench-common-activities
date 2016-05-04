@@ -39,10 +39,10 @@ import org.apache.taverna.workbench.edits.EditManager;
 import org.apache.taverna.workbench.file.FileManager;
 import org.apache.taverna.workbench.ui.actions.activity.HTMLBasedActivityContextualView;
 import org.apache.taverna.workflowmodel.processor.activity.Activity;
-import de.uni_luebeck.inb.knowarc.usecases.ScriptInput;
-import de.uni_luebeck.inb.knowarc.usecases.ScriptInputStatic;
-import de.uni_luebeck.inb.knowarc.usecases.ScriptOutput;
-import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
+import org.apache.taverna.activities.externaltool.desc.ScriptInput;
+import org.apache.taverna.activities.externaltool.desc.ScriptInputStatic;
+import org.apache.taverna.activities.externaltool.desc.ScriptOutput;
+import org.apache.taverna.activities.externaltool.desc.ToolDescription;
 
 /**
  * ExternalToolActivityContextualView displays the use case information in a HTML table. Currently,
@@ -81,7 +81,7 @@ public class ExternalToolActivityContextualView extends
 		}
 		html += "<tr><td>Id</td><td>" + id + "</td></tr>";
 
-		UseCaseDescription useCaseDescription = bean.getUseCaseDescription();
+		ToolDescription useCaseDescription = bean.getUseCaseDescription();
 		String name = useCaseDescription.getUsecaseid();
 		if ((name == null) || name.isEmpty()) {
 			name = "<b>Not specified</b>";

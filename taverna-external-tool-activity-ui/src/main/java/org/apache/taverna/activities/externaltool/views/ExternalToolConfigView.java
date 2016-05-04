@@ -59,11 +59,11 @@ import org.apache.taverna.workbench.ui.views.contextualviews.activity.ActivityCo
 
 import org.apache.log4j.Logger;
 
-import de.uni_luebeck.inb.knowarc.usecases.ScriptInput;
-import de.uni_luebeck.inb.knowarc.usecases.ScriptInputStatic;
-import de.uni_luebeck.inb.knowarc.usecases.ScriptInputUser;
-import de.uni_luebeck.inb.knowarc.usecases.ScriptOutput;
-import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
+import org.apache.taverna.activities.externaltool.desc.ScriptInput;
+import org.apache.taverna.activities.externaltool.desc.ScriptInputStatic;
+import org.apache.taverna.activities.externaltool.desc.ScriptInputUser;
+import org.apache.taverna.activities.externaltool.desc.ScriptOutput;
+import org.apache.taverna.activities.externaltool.desc.ToolDescription;
 
 /**
  * Provides the configurable view for a {@link ExternalToolActivity} through
@@ -172,7 +172,7 @@ public class ExternalToolConfigView
 		
 
 		if (!isFromRepository()) {
-			UseCaseDescription ucd = newConfiguration.getUseCaseDescription();
+			ToolDescription ucd = newConfiguration.getUseCaseDescription();
 
 			ucd.setUsecaseid(nameField.getText());
 			if (groupField.getText().isEmpty()) {
@@ -303,8 +303,8 @@ public class ExternalToolConfigView
 		}
 
 		if (!isFromRepository()) {
-			UseCaseDescription useCaseDescription = configuration
-					.getUseCaseDescription();
+			ToolDescription useCaseDescription = configuration
+					.getToolDescription();
 
 			nameField.setText(useCaseDescription.getUsecaseid());
 			if (useCaseDescription.getGroup() != null) {
@@ -494,14 +494,14 @@ public class ExternalToolConfigView
 							"in", FILE_LIST_DESCRIPTION, "Add file list"));
 			annotationPanel = new AnnotationPanel(nameField, descriptionArea, groupField);
 			advancedTab.addTab("Annotation", annotationPanel);
-			final ToolXMLPanel toolXMLPanel = new ToolXMLPanel(configuration.getUseCaseDescription());
+			final ToolXMLPanel toolXMLPanel = new ToolXMLPanel(configuration.getToolDescription());
 			advancedTab.addTab("XML", toolXMLPanel);
 			advancedTab.addChangeListener(new ChangeListener() {
 
 				@Override
 				public void stateChanged(ChangeEvent e) {
 					if (advancedTab.getSelectedComponent() == toolXMLPanel) {
-						toolXMLPanel.regenerateTree(makeConfiguration().getUseCaseDescription());
+						toolXMLPanel.regenerateTree(makeConfiguration().getToolDescription());
 					}
 				}});
 			tabbedPane.addChangeListener(new ChangeListener() {
@@ -510,7 +510,7 @@ public class ExternalToolConfigView
 				public void stateChanged(ChangeEvent e) {
 					if ((tabbedPane.getSelectedComponent() == advancedPanel) &&
 							(advancedTab.getSelectedComponent() == toolXMLPanel)) {
-						toolXMLPanel.regenerateTree(makeConfiguration().getUseCaseDescription());						
+						toolXMLPanel.regenerateTree(makeConfiguration().getToolDescription());						
 					}
 				}
 				

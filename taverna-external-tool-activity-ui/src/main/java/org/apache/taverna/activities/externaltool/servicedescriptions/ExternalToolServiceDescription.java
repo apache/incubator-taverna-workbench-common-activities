@@ -38,7 +38,7 @@ import org.apache.taverna.activities.externaltool.manager.InvocationGroupManager
 import org.apache.taverna.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
 import org.apache.taverna.servicedescriptions.ServiceDescription;
 import org.apache.taverna.workflowmodel.processor.activity.Activity;
-import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
+import org.apache.taverna.activities.externaltool.desc.ToolDescription;
 
 /**
  * ExternalToolServiceDescription stores the repository URL and the use case id so
@@ -56,7 +56,7 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 
 	private String repositoryUrl;
 	private String externaltoolid;
-	private UseCaseDescription useCaseDescription;
+	private ToolDescription useCaseDescription;
 
 	public String getRepositoryUrl() {
 		return repositoryUrl;
@@ -98,7 +98,7 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 		ExternalToolActivityConfigurationBean bean = new ExternalToolActivityConfigurationBean();
 		bean.setRepositoryUrl(repositoryUrl);
 		bean.setExternaltoolid(externaltoolid);
-		bean.setUseCaseDescription(useCaseDescription);
+		bean.setToolDescription(useCaseDescription);
 		bean.setMechanism(manager.getDefaultMechanism());
 
 		return bean;
@@ -140,7 +140,7 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 		return "";
 	}
 
-	public void setUseCaseDescription(UseCaseDescription usecase) {
+	public void setToolDescription(UseCaseDescription usecase) {
 		this.useCaseDescription = usecase;
 	}
 

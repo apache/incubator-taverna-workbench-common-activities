@@ -7,9 +7,9 @@ import javax.swing.JComboBox;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import de.uni_luebeck.inb.knowarc.usecases.ScriptInput;
-import de.uni_luebeck.inb.knowarc.usecases.ScriptInputStatic;
-import de.uni_luebeck.inb.knowarc.usecases.ScriptInputUser;
+import org.apache.taverna.activities.externaltool.desc.ScriptInput;
+import org.apache.taverna.activities.externaltool.desc.ScriptInputStatic;
+import org.apache.taverna.activities.externaltool.desc.ScriptInputUser;
 
 /**
  * @author alanrw

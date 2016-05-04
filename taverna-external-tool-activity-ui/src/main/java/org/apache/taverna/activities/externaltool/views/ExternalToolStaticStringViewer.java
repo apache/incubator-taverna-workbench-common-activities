@@ -6,7 +6,8 @@ package org.apache.taverna.activities.externaltool.views;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import de.uni_luebeck.inb.knowarc.usecases.ScriptInputStatic;
+import org.apache.taverna.activities.externaltool.desc.ScriptInputStatic;
+
 
 /**
  * @author alanrw

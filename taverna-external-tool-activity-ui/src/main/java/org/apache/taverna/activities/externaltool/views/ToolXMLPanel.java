@@ -10,7 +10,7 @@ import javax.swing.JScrollPane;
 
 import org.apache.taverna.renderers.impl.XMLTree;
 
-import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
+import org.apache.taverna.activities.externaltool.desc.ToolDescription;
 
 /**
  * @author alanrw
@@ -18,13 +18,13 @@ import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
  */
 public class ToolXMLPanel extends JPanel {
 
-	public ToolXMLPanel(UseCaseDescription useCaseDescription) {
+	public ToolXMLPanel(ToolDescription useCaseDescription) {
 		super(new BorderLayout());
 		XMLTree xmlTree = new XMLTree(useCaseDescription.writeToXMLElement());
 		this.add(new JScrollPane(xmlTree), BorderLayout.CENTER);
 	}
 
-	public void regenerateTree(UseCaseDescription useCaseDescription) {
+	public void regenerateTree(ToolDescription useCaseDescription) {
 		this.removeAll();
 		XMLTree xmlTree = new XMLTree(useCaseDescription.writeToXMLElement());
 		this.add(new JScrollPane(xmlTree), BorderLayout.CENTER);		

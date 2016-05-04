@@ -19,8 +19,8 @@ import org.apache.taverna.lang.ui.FileTools;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 
-import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
-import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
+import org.apache.taverna.activities.externaltool.desc.ToolDescription;
+import org.apache.taverna.activities.externaltool.desc.ToolDescriptionParser;
 
 final class LoadDescriptionAction extends AbstractAction {
 	/**
@@ -43,29 +43,29 @@ final class LoadDescriptionAction extends AbstractAction {
 			try {
 				Document doc = ScriptPanel.builder
 						.build(new StringReader(descriptionsString));
-				List<UseCaseDescription> descriptions = UseCaseEnumeration.readDescriptionsFromStream(new StringBufferInputStream(descriptionsString));
+				List<ToolDescription> descriptions = ToolDescriptionParser.readDescriptionsFromStream(new StringBufferInputStream(descriptionsString));
 				if (descriptions.isEmpty()) {
 					JOptionPane.showMessageDialog(this.scriptPanel, "No tool descriptions found", "File content", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				
 				if (descriptions.size() == 1) {
-					view.getConfiguration().setUseCaseDescription(descriptions.get(0));
+					view.getConfiguration().setToolDescription(descriptions.get(0));
 					view.refreshConfiguration(view.getConfiguration());
 					return;
 				}
 				
 				List<String> descriptionNames = new ArrayList();
-				for (UseCaseDescription ud : descriptions) {
+				for (ToolDescription ud : descriptions) {
 					descriptionNames.add(ud.getUsecaseid());
 				}
 				Collections.sort(descriptionNames);
 				String chosenName = (String) JOptionPane.showInputDialog(this.scriptPanel, "Please select a tool description",
 						"Select tool description", JOptionPane.PLAIN_MESSAGE, null, descriptionNames.toArray(), descriptionNames.get(0));
 				if (chosenName != null) {
-					for (UseCaseDescription ud : descriptions) {
+					for (ToolDescription ud : descriptions) {
 						if (ud.getUsecaseid().equals(chosenName)) {
-							view.getConfiguration().setUseCaseDescription(ud);
+							view.getConfiguration().setToolDescription(ud);
 							view.refreshConfiguration(view.getConfiguration());
 							return;
 							

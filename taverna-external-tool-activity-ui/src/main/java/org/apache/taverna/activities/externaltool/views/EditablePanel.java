@@ -12,8 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import de.uni_luebeck.inb.knowarc.usecases.UseCaseDescription;
-import de.uni_luebeck.inb.knowarc.usecases.UseCaseEnumeration;
+import org.apache.taverna.activities.externaltool.desc.ToolDescription;
+import org.apache.taverna.activities.externaltool.desc.ToolDescriptionParser;
 
 import org.apache.taverna.activities.externaltool.ExternalToolActivityConfigurationBean;
 import org.apache.taverna.activities.externaltool.utils.Tools;
@@ -35,16 +35,16 @@ public class EditablePanel extends JPanel {
 				ExternalToolActivityConfigurationBean bean = view.getConfiguration();
 				String repositoryUrl = bean.getRepositoryUrl();
 				String id = bean.getExternaltoolid();
-				UseCaseDescription usecase = null;
+				ToolDescription usecase = null;
 				try {
-					usecase = UseCaseEnumeration.readDescriptionFromUrl(
+					usecase = ToolDescriptionParser.readDescriptionFromUrl(
 						repositoryUrl, id);
 				}
 				catch (IOException ex) {
 					// Already logged
 				}
 				if (usecase != null) {
-					bean.setUseCaseDescription(usecase);
+					bean.setToolDescription(usecase);
 					view.refreshConfiguration(bean);
 				} else {
 					JOptionPane.showMessageDialog(view, "Unable to find tool description " + id, "Missing tool description", JOptionPane.ERROR_MESSAGE);
@@ -63,7 +63,7 @@ public class EditablePanel extends JPanel {
 			}
 		});
 		makeEditable.setToolTipText("Edit the tool description");
-		if (Tools.areAllUnderstood(view.getConfiguration().getUseCaseDescription().getInputs())) {
+		if (Tools.areAllUnderstood(view.getConfiguration().getToolDescription().getInputs())) {
 		this.add(makeEditable);
 		}
 		

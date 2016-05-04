@@ -7,8 +7,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
 import org.apache.taverna.activities.externaltool.manager.InvocationMechanism;
+import org.apache.taverna.activities.externaltool.ssh.SshNode;
 
-import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNode;
 
 
 

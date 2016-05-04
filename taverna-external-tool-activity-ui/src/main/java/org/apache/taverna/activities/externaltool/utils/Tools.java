@@ -19,8 +19,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.CompoundBorder;
 
-import de.uni_luebeck.inb.knowarc.usecases.ScriptInput;
-import de.uni_luebeck.inb.knowarc.usecases.ScriptInputUser;
+import org.apache.taverna.activities.externaltool.desc.ScriptInput;
+import org.apache.taverna.activities.externaltool.desc.ScriptInputUser;
 
 import org.apache.taverna.lang.ui.DeselectingButton;
 

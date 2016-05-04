@@ -25,8 +25,8 @@ import org.apache.taverna.activities.externaltool.manager.InvocationMechanism;
 import org.apache.taverna.activities.externaltool.manager.InvocationMechanismEditor;
 import org.apache.taverna.activities.externaltool.ssh.ExternalToolSshInvocationMechanism;
 import org.apache.taverna.lang.ui.DeselectingButton;
-import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNode;
-import de.uni_luebeck.inb.knowarc.usecases.invocation.ssh.SshNodeFactory;
+import org.apache.taverna.activities.externaltool.ssh.SshNode;
+import org.apache.taverna.activities.externaltool.ssh.SshNodeFactory;
 
 /**
  * @author alanrw
