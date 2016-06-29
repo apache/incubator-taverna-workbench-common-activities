@@ -34,7 +34,7 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.taverna.engine</groupId>
-            <artifactId>taverna-credential-manager</artifactId>
+            <artifactId>taverna-credential-manager-api</artifactId>
             <version>${taverna.engine.version}</version>
         </dependency>
 <!--
