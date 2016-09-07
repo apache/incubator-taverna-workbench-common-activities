@@ -1,5 +1,3 @@
-/*******************************************************************************
- ******************************************************************************/
 package org.apache.taverna.activities.externaltool.manager;
 
 import java.awt.GridBagConstraints;

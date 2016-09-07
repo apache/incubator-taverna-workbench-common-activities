@@ -1,5 +1,3 @@
-/*******************************************************************************
- ******************************************************************************/
 package org.apache.taverna.activities.localworker.servicedescriptions;
 
 import java.net.URI;

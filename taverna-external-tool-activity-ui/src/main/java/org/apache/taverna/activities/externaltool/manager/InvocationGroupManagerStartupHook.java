@@ -1,5 +1,3 @@
-/*******************************************************************************
- ******************************************************************************/
 package org.apache.taverna.activities.externaltool.manager;
 
 import org.apache.taverna.activities.externaltool.manager.impl.InvocationGroupManagerImpl;

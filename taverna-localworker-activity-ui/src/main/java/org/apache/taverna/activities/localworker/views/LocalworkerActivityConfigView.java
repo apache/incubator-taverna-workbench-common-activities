@@ -1,5 +1,3 @@
-/*******************************************************************************
- ******************************************************************************/
 package org.apache.taverna.activities.localworker.views;
 
 import org.apache.taverna.activities.beanshell.views.BeanshellConfigurationPanel;
