@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>org.apache.taverna.workbench.commonactivities</groupId>
 	<artifactId>apache-taverna-workbench-commonactivities</artifactId>
-	<version>3.1.0-incubating-SNAPSHOT</version>
+	<version>3.1.0-incubating</version>
 	<packaging>pom</packaging>
 	<name>Apache Taverna Workbench Common Activities</name>
   <description>User interface and Workbench integration for common activities</description>
