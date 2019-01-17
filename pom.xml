@@ -19,7 +19,7 @@
     <taverna.commonactivities.version>2.1.0-incubating</taverna.commonactivities.version>
     <taverna.workbench.version>3.1.0-incubating-SNAPSHOT</taverna.workbench.version>
   </properties>
-	<modules>
+  <modules>
     <module>taverna-beanshell-activity-ui</module>
     <module>taverna-external-tool-activity-ui</module>
     <module>taverna-localworker-activity-ui</module>
@@ -29,8 +29,8 @@
     <module>taverna-xpath-activity-ui</module>
   </modules>
   <scm>
-    <connection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-taverna-workbench-common-activities.git</connection>
-    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-taverna-workbench-common-activities.git</developerConnection>
+    <connection>scm:git:https://gitbox.apache.org/repos/asf/incubator-taverna-workbench-common-activities.git</connection>
+    <developerConnection>scm:git:git@github.com:apache/incubator-taverna-workbench-common-activities.git</developerConnection>
     <url>https://github.com/apache/incubator-taverna-workbench-common-activities</url>
     <tag>HEAD</tag>
   </scm>
