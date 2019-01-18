@@ -22,11 +22,9 @@
         <artifactId>apache-taverna-workbench-commonactivities</artifactId>
         <version>3.1.0-incubating-SNAPSHOT</version>
     </parent>
-    
-    <groupId>org.apache.taverna.ui-activities</groupId>
     <artifactId>taverna-spreadsheet-import-activity-ui</artifactId>
     <packaging>bundle</packaging>
-    <name>Taverna 2 Spreadsheet Import Activity UI</name>
+    <name>Apache Taverna Spreadsheet Import Activity UI</name>
     
     <dependencies>
 <!--
