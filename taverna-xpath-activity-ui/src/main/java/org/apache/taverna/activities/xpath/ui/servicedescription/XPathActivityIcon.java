@@ -33,27 +33,29 @@ public class XPathActivityIcon implements ActivityIconSPI {
 
 	// --- LOCATIONS OF ICONS USED IN THE XPath ACTIVITY ---
 
-	private static final String FAMFAMFAM_SILK_PATH = "famfamfam_silk/";
-	private static final String FOLDS_PATH = "folds/";
+	/* from famfamfam-silk webjar
+	 * http://www.famfamfam.com/lab/icons/silk/
+	 */
+	private static final String FAMFAMFAM_SILK_PATH = "/META-INF/resources/webjars/famfamfam-silk/1.3/icons/";
 
 	public static final String XPATH_ACTIVITY_ICON = FAMFAMFAM_SILK_PATH + "page_white_code.png";
-	public static final String XPATH_ACTIVITY_CONFIGURATION_PARSE_XML_ICON = "arrow_right.png";
+	public static final String XPATH_ACTIVITY_CONFIGURATION_PARSE_XML_ICON = FAMFAMFAM_SILK_PATH + "arrow_right.png";
 
 	public static final String XML_TREE_ROOT_ICON = FAMFAMFAM_SILK_PATH + "page_white_code.png";
 	public static final String XML_TREE_NODE_ICON = FAMFAMFAM_SILK_PATH + "tag.png";
-	public static final String XML_TREE_ATTRIBUTE_ICON = "xpath_attribute.png";
+	public static final String XML_TREE_ATTRIBUTE_ICON = FAMFAMFAM_SILK_PATH +  "textfield.png";
 
 	public static final String XML_TREE_EXPAND_ALL_ICON = FAMFAMFAM_SILK_PATH
-			+ "text_linespacing.png";
+			+ "folder_explore.png";
 	public static final String XML_TREE_COLLAPSE_ALL_ICON = FAMFAMFAM_SILK_PATH
-			+ "text_linespacing (collapse).png";
+			+ "folder.png"; 
 
 	public static final String XPATH_STATUS_OK_ICON = FAMFAMFAM_SILK_PATH + "accept.png";
 	public static final String XPATH_STATUS_ERROR_ICON = FAMFAMFAM_SILK_PATH + "exclamation.png";
 	public static final String XPATH_STATUS_UNKNOWN_ICON = FAMFAMFAM_SILK_PATH + "help.png";
 
-	public static final String FOLD_ICON = FOLDS_PATH + "fold.png";
-	public static final String UNFOLD_ICON = FOLDS_PATH + "unfold.png";
+	public static final String FOLD_ICON = FAMFAMFAM_SILK_PATH + "text_indent.png";
+	public static final String UNFOLD_ICON = FAMFAMFAM_SILK_PATH + "text_indent_remove.png";
 
 	// ------
 
