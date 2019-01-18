@@ -220,6 +220,8 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 				if (line.startsWith("category")) {
 					String[] split = line.split(":");
 					category = split[1];
+				} else if (line.startsWith("#")) {
+					continue; // comments
 				} else {
 					LocalworkerServiceDescription createItem;
 					try {
@@ -229,7 +231,7 @@ public class LocalworkerServiceProvider implements ServiceDescriptionProvider {
 						continue;
 					}
 					createItem.setCategory(category);
-					createItem.setProvider("myGrid");
+					createItem.setProvider("Taverna");
 					items.add(createItem);
 				}
 			}
