@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>org.apache.taverna</groupId>
 		<artifactId>apache-taverna-parent</artifactId>
-		<version>2-incubating</version>
+		<version>4-incubating-SNAPSHOT</version>
 	</parent>
 	<groupId>org.apache.taverna.workbench.commonactivities</groupId>
 	<artifactId>apache-taverna-workbench-commonactivities</artifactId>
-	<version>3.1.0-incubating</version>
+	<version>3.1.0-incubating-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Apache Taverna Workbench Common Activities</name>
   <description>User interface and Workbench integration for common activities</description>
