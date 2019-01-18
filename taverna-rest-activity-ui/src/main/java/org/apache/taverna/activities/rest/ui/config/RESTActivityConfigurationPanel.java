@@ -512,7 +512,10 @@ public class RESTActivityConfigurationPanel extends MultiPageActivityConfigurati
 			// media types must be ASCII and can't have whitespace
 			Scanner scanner = new Scanner(typesStream, "ascii");
 			while (scanner.hasNext()) {
-				types.add(scanner.next());
+				String line = scanner.next();
+				if (! line.startsWith("#")) { 
+					types.add(line);
+				}
 			}
 			scanner.close();
 		} finally {
