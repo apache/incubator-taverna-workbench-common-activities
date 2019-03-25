@@ -63,11 +63,11 @@ final class SaveDescriptionAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		ToolDescription currentDescription = view.makeConfiguration().getUseCaseDescription();
-		String usecaseid = currentDescription.getUsecaseid();
+		ToolDescription currentDescription = view.makeConfiguration().getToolDescription();
+		String tooldescid = currentDescription.getTooldescid();
 		String description = currentDescription.getDescription();
 		String group = currentDescription.getGroup();
-		if ((usecaseid == null) || usecaseid.isEmpty() || (description == null) || description.isEmpty() || (group == null) || group.isEmpty()) {
+		if ((tooldescid == null) || tooldescid.isEmpty() || (description == null) || description.isEmpty() || (group == null) || group.isEmpty()) {
 			JOptionPane.showMessageDialog(view, "Please fill in the tool annotation and\nthen re-export the description", "Missing annotation", JOptionPane.PLAIN_MESSAGE, null);
 			view.showAnnotationPanel();
 		} else {
@@ -111,9 +111,9 @@ final class SaveDescriptionAction extends AbstractAction {
 					} else {
 						currentDescriptions = new ArrayList<ToolDescription>();
 					}
-					Element overallElement = new Element("usecases");
+					Element overallElement = new Element("tooldescs");
 					for (ToolDescription ud : currentDescriptions) {
-						if (!ud.getUsecaseid().equals(description.getUsecaseid())) {
+						if (!ud.getTooldescid().equals(description.getTooldescid())) {
 							overallElement.addContent(ud.writeToXMLElement());
 						}
 					}

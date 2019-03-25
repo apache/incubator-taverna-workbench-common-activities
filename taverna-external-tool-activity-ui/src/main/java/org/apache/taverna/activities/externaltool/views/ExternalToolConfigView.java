@@ -168,9 +168,9 @@ public class ExternalToolConfigView
 		
 
 		if (!isFromRepository()) {
-			ToolDescription ucd = newConfiguration.getUseCaseDescription();
+			ToolDescription ucd = newConfiguration.getToolDescription();
 
-			ucd.setUsecaseid(nameField.getText());
+			ucd.setTooldescid(nameField.getText());
 			if (groupField.getText().isEmpty()) {
 				ucd.setGroup(null);
 			} else {
@@ -299,14 +299,14 @@ public class ExternalToolConfigView
 		}
 
 		if (!isFromRepository()) {
-			ToolDescription useCaseDescription = configuration
+			ToolDescription toolDescription = configuration
 					.getToolDescription();
 
-			nameField.setText(useCaseDescription.getUsecaseid());
-			if (useCaseDescription.getGroup() != null) {
-				groupField.setText(useCaseDescription.getGroup());
+			nameField.setText(toolDescription.getTooldescid());
+			if (toolDescription.getGroup() != null) {
+				groupField.setText(toolDescription.getGroup());
 			}
-			descriptionArea.setText(useCaseDescription.getDescription());
+			descriptionArea.setText(toolDescription.getDescription());
 			stringReplacementViewList = new ArrayList<ExternalToolStringReplacementViewer>();
 			inputFileViewList = new ArrayList<ExternalToolFileViewer>();
 			fileListViewList = new ArrayList<ExternalToolFileViewer>();
@@ -315,7 +315,7 @@ public class ExternalToolConfigView
 			staticStringViewList = new ArrayList<ExternalToolStaticStringViewer>();
 /*			runtimeEnvironmentViewList = new ArrayList<ExternalToolRuntimeEnvironmentViewer>();*/
 
-			for (Entry<String, ScriptInput> entry : useCaseDescription
+			for (Entry<String, ScriptInput> entry : toolDescription
 					.getInputs().entrySet()) {
 				String name = entry.getKey();
 				ScriptInputUser si = (ScriptInputUser) entry.getValue();
@@ -337,7 +337,7 @@ public class ExternalToolConfigView
 						}
 					});
 
-			for (Entry<String, ScriptInput> entry : useCaseDescription
+			for (Entry<String, ScriptInput> entry : toolDescription
 					.getInputs().entrySet()) {
 				String name = entry.getKey();
 				ScriptInputUser si = (ScriptInputUser) entry.getValue();
@@ -358,7 +358,7 @@ public class ExternalToolConfigView
 						}
 					});
 
-			for (Entry<String, ScriptInput> entry : useCaseDescription
+			for (Entry<String, ScriptInput> entry : toolDescription
 					.getInputs().entrySet()) {
 				String name = entry.getKey();
 				ScriptInputUser si = (ScriptInputUser) entry.getValue();
@@ -379,7 +379,7 @@ public class ExternalToolConfigView
 						}
 					});
 
-			for (Entry<String, ScriptOutput> entry : useCaseDescription
+			for (Entry<String, ScriptOutput> entry : toolDescription
 					.getOutputs().entrySet()) {
 				ScriptOutput so = entry.getValue();
 				final ExternalToolFileViewer outputView = new ExternalToolFileViewer(
@@ -396,7 +396,7 @@ public class ExternalToolConfigView
 						}
 					});
 
-			for (ScriptInputStatic siss : useCaseDescription.getStatic_inputs()) {
+			for (ScriptInputStatic siss : toolDescription.getStatic_inputs()) {
 				if ((siss.getUrl() == null) && siss.isFile()) {
 					final ExternalToolStaticStringViewer staticView = new ExternalToolStaticStringViewer(
 							siss);
@@ -413,7 +413,7 @@ public class ExternalToolConfigView
 						}
 					});
 
-			for (ScriptInputStatic sis : useCaseDescription.getStatic_inputs()) {
+			for (ScriptInputStatic sis : toolDescription.getStatic_inputs()) {
 				if ((sis.getUrl() != null) && sis.isFile()) {
 					final ExternalToolStaticUrlViewer staticView = new ExternalToolStaticUrlViewer(
 							sis);
@@ -430,7 +430,7 @@ public class ExternalToolConfigView
 						}
 					});
 
-/*			for (RuntimeEnvironmentConstraint rec : useCaseDescription.getREs()) {
+/*			for (RuntimeEnvironmentConstraint rec : toolDescription.getREs()) {
 				final ExternalToolRuntimeEnvironmentViewer newView = new ExternalToolRuntimeEnvironmentViewer(
 						rec.getID(), rec.getRelation());
 				runtimeEnvironmentViewList.add(newView);
@@ -455,7 +455,7 @@ public class ExternalToolConfigView
 			scriptTextArea.setEditorKit(new NoWrapEditorKit());
 			scriptTextArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
 			scriptTextArea.setDocument(doc);
-			scriptTextArea.setText(useCaseDescription.getCommand());
+			scriptTextArea.setText(toolDescription.getCommand());
 			scriptTextArea.setCaretPosition(0);
 			scriptTextArea.setPreferredSize(new Dimension(200, 100));
 

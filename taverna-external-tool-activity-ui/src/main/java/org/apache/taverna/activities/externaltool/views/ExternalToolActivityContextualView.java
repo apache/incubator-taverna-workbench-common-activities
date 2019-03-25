@@ -77,8 +77,8 @@ public class ExternalToolActivityContextualView extends
 		}
 		html += "<tr><td>Id</td><td>" + id + "</td></tr>";
 
-		ToolDescription useCaseDescription = bean.getUseCaseDescription();
-		String name = useCaseDescription.getUsecaseid();
+		ToolDescription toolDescription = bean.getToolDescription();
+		String name = toolDescription.getTooldescid();
 		if ((name == null) || name.isEmpty()) {
 			name = "<b>Not specified</b>";
 		}
@@ -87,7 +87,7 @@ public class ExternalToolActivityContextualView extends
 		Map<String, ScriptInput> stringReplacements = new TreeMap<String, ScriptInput>();
 		Map<String, ScriptInput> fileInputs = new TreeMap<String, ScriptInput>();
 
-		for (Entry<String, ScriptInput> entry : useCaseDescription.getInputs().entrySet()) {
+		for (Entry<String, ScriptInput> entry : toolDescription.getInputs().entrySet()) {
 			String key = entry.getKey();
 			ScriptInput value = entry.getValue();
 			if (value.isFile()) {
@@ -123,7 +123,7 @@ public class ExternalToolActivityContextualView extends
 			}
 		}
 
-		List<ScriptInputStatic> staticInputs = useCaseDescription.getStatic_inputs();
+		List<ScriptInputStatic> staticInputs = toolDescription.getStatic_inputs();
 		if (!staticInputs.isEmpty()) {
 			html += "<tr><td colspan=2 align=center><b>Static inputs</b></td></tr>";
 			html += "<tr><td><b>Type</b></td><td><b>To file</b></td></tr>";
@@ -139,7 +139,7 @@ public class ExternalToolActivityContextualView extends
 				html += "</tr>";
 			}
 		}
-		Map<String, ScriptOutput> outputs = useCaseDescription.getOutputs();
+		Map<String, ScriptOutput> outputs = toolDescription.getOutputs();
 		if (!outputs.isEmpty()) {
 			html += "<tr><td colspan=2 align=center><b>File outputs</b></td></tr>";
 			html += "<tr><td><b>Port name</b></td><td><b>From file</b></td></tr>";

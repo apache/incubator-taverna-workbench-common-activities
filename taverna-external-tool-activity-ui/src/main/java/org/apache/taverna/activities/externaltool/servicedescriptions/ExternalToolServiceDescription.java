@@ -52,7 +52,7 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 
 	private String repositoryUrl;
 	private String externaltoolid;
-	private ToolDescription useCaseDescription;
+	private ToolDescription toolDescription;
 
 	public String getRepositoryUrl() {
 		return repositoryUrl;
@@ -71,8 +71,8 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 	}
 
 	public Icon getIcon() {
-		if (useCaseDescription != null) {
-			String icon_url = useCaseDescription.getIcon_url();
+		if (toolDescription != null) {
+			String icon_url = toolDescription.getIcon_url();
 			if ((icon_url != null) && !icon_url.isEmpty() && !icon_url.endsWith(".ico"))
 				try {
 					ImageIcon result = new ImageIcon(new URL(icon_url));
@@ -94,7 +94,7 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 		ExternalToolActivityConfigurationBean bean = new ExternalToolActivityConfigurationBean();
 		bean.setRepositoryUrl(repositoryUrl);
 		bean.setExternaltoolid(externaltoolid);
-		bean.setToolDescription(useCaseDescription);
+		bean.setToolDescription(toolDescription);
 		bean.setMechanism(manager.getDefaultMechanism());
 
 		return bean;
@@ -108,7 +108,7 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 	public List<? extends Comparable> getPath() {
 		List<String> result = new ArrayList<String>();
 		result.add("Tools decribed @ " + repositoryUrl);
-		String group = useCaseDescription.getGroup();
+		String group = toolDescription.getGroup();
 		if ((group != null) && !group.isEmpty()) {
 			String[] groups = group.split(":");
 			for (String g : groups) {
@@ -126,8 +126,8 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 	}
 	
 	public String getDescription() {
-		if (useCaseDescription != null) {
-			String description = useCaseDescription.getDescription();
+		if (toolDescription != null) {
+			String description = toolDescription.getDescription();
 			if (description == null) {
 				return "";
 			}
@@ -136,8 +136,8 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 		return "";
 	}
 
-	public void setToolDescription(UseCaseDescription usecase) {
-		this.useCaseDescription = usecase;
+	public void setToolDescription(ToolDescription tooldesc) {
+		this.toolDescription = tooldesc;
 	}
 
 }

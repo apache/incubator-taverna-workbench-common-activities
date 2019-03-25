@@ -73,14 +73,14 @@ final class LoadDescriptionAction extends AbstractAction {
 				
 				List<String> descriptionNames = new ArrayList();
 				for (ToolDescription ud : descriptions) {
-					descriptionNames.add(ud.getUsecaseid());
+					descriptionNames.add(ud.getTooldescid());
 				}
 				Collections.sort(descriptionNames);
 				String chosenName = (String) JOptionPane.showInputDialog(this.scriptPanel, "Please select a tool description",
 						"Select tool description", JOptionPane.PLAIN_MESSAGE, null, descriptionNames.toArray(), descriptionNames.get(0));
 				if (chosenName != null) {
 					for (ToolDescription ud : descriptions) {
-						if (ud.getUsecaseid().equals(chosenName)) {
+						if (ud.getTooldescid().equals(chosenName)) {
 							view.getConfiguration().setToolDescription(ud);
 							view.refreshConfiguration(view.getConfiguration());
 							return;

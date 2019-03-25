@@ -51,16 +51,16 @@ public class EditablePanel extends JPanel {
 				ExternalToolActivityConfigurationBean bean = view.getConfiguration();
 				String repositoryUrl = bean.getRepositoryUrl();
 				String id = bean.getExternaltoolid();
-				ToolDescription usecase = null;
+				ToolDescription tooldesc = null;
 				try {
-					usecase = ToolDescriptionParser.readDescriptionFromUrl(
+					tooldesc = ToolDescriptionParser.readDescriptionFromUrl(
 						repositoryUrl, id);
 				}
 				catch (IOException ex) {
 					// Already logged
 				}
-				if (usecase != null) {
-					bean.setToolDescription(usecase);
+				if (tooldesc != null) {
+					bean.setToolDescription(tooldesc);
 					view.refreshConfiguration(bean);
 				} else {
 					JOptionPane.showMessageDialog(view, "Unable to find tool description " + id, "Missing tool description", JOptionPane.ERROR_MESSAGE);

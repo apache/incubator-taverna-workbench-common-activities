@@ -32,8 +32,8 @@ import org.apache.taverna.workbench.ui.views.contextualviews.activity.ActivityCo
 
 /**
  * This class implements an ActivityConfigurationAction to configure the ExternalToolActivity
- * plugin. The configuration action is called "Configure UseCase invocation" and is implemented in
- * the KnowARCConfigurationDialog inside the knowarc-usecases maven artifact.
+ * plugin. The configuration action is called "Configure ToolDesc invocation" and is implemented in
+ * the KnowARCConfigurationDialog inside the knowarc-tooldescs maven artifact.
  *
  * @author Hajo Nils Krabbenhoeft
  */

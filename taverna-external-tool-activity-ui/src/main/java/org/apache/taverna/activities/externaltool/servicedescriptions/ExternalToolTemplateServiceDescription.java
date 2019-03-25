@@ -57,7 +57,7 @@ public class ExternalToolTemplateServiceDescription extends
 	public ExternalToolActivityConfigurationBean getActivityConfiguration() {
 		ExternalToolActivityConfigurationBean result = new ExternalToolActivityConfigurationBean();
 		result.setExternaltoolid(UUID.randomUUID().toString());
-		result.setToolDescription(new UseCaseDescription(""));
+		result.setToolDescription(new ToolDescription(""));
 		result.setMechanism(manager.getDefaultMechanism());
 		return result;
 	}

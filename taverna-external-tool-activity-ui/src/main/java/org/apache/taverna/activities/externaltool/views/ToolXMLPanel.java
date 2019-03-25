@@ -34,15 +34,15 @@ import org.apache.taverna.activities.externaltool.desc.ToolDescription;
  */
 public class ToolXMLPanel extends JPanel {
 
-	public ToolXMLPanel(ToolDescription useCaseDescription) {
+	public ToolXMLPanel(ToolDescription toolDescription) {
 		super(new BorderLayout());
-		XMLTree xmlTree = new XMLTree(useCaseDescription.writeToXMLElement());
+		XMLTree xmlTree = new XMLTree(toolDescription.writeToXMLElement());
 		this.add(new JScrollPane(xmlTree), BorderLayout.CENTER);
 	}
 
-	public void regenerateTree(ToolDescription useCaseDescription) {
+	public void regenerateTree(ToolDescription toolDescription) {
 		this.removeAll();
-		XMLTree xmlTree = new XMLTree(useCaseDescription.writeToXMLElement());
+		XMLTree xmlTree = new XMLTree(toolDescription.writeToXMLElement());
 		this.add(new JScrollPane(xmlTree), BorderLayout.CENTER);		
 	}
 

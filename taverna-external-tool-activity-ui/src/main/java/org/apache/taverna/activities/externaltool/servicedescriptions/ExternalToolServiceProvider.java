@@ -63,22 +63,22 @@ public class ExternalToolServiceProvider extends AbstractConfigurableServiceProv
 		callBack.status("Parsing use case repository:" + repositoryUrl);
 			// prepare a list of all use case descriptions which are stored in
 			// the given repository URL
-			List<ToolDescription> usecases = new ArrayList<UseCaseDescription> ();
+			List<ToolDescription> tooldescs = new ArrayList<ToolDescription> ();
 			try {
-				usecases = ToolDescriptionParser.readDescriptionsFromUrl(
+				tooldescs = ToolDescriptionParser.readDescriptionsFromUrl(
 						repositoryUrl);
 			} catch (IOException e) {
 				callBack.fail("Unable to read tool descriptions", e);
 			}
-			callBack.status("Found " + usecases.size() + " use cases:" + repositoryUrl);
+			callBack.status("Found " + tooldescs.size() + " use cases:" + repositoryUrl);
 			// convert all the ToolDescriptions in the XML file into
 			// ExternalToolServiceDescription items
 			List<ExternalToolServiceDescription> items = new ArrayList<ExternalToolServiceDescription>();
-			for (ToolDescription usecase : usecases) {
+			for (ToolDescription tooldesc : tooldescs) {
 				ExternalToolServiceDescription item = new ExternalToolServiceDescription();
 				item.setRepositoryUrl(repositoryUrl);
-				item.setExternaltoolid(usecase.getUsecaseid());
-				item.setToolDescription(usecase);
+				item.setExternaltoolid(tooldesc.getTooldescid());
+				item.setToolDescription(tooldesc);
 				items.add(item);
 			}
 			// we dont have streaming data loading or partial results, so return

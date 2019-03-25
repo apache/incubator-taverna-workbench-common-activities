@@ -75,11 +75,11 @@ public class ScriptPanel extends JPanel {
 				BorderLayout.CENTER);
 		
 
-		ToolDescription useCaseDescription = view.getConfiguration().getUseCaseDescription();
-		stdInCheckBox.setSelected(useCaseDescription.isIncludeStdIn());
-		stdOutCheckBox.setSelected(useCaseDescription.isIncludeStdOut());
-		stdErrCheckBox.setSelected(useCaseDescription.isIncludeStdErr());
-		returnCodesField.setText(useCaseDescription.getReturnCodesAsText());
+		ToolDescription toolDescription = view.getConfiguration().getToolDescription();
+		stdInCheckBox.setSelected(toolDescription.isIncludeStdIn());
+		stdOutCheckBox.setSelected(toolDescription.isIncludeStdOut());
+		stdErrCheckBox.setSelected(toolDescription.isIncludeStdErr());
+		returnCodesField.setText(toolDescription.getReturnCodesAsText());
 		
 		JPanel codesPanel = new JPanel(new FlowLayout());
 		codesPanel.add(new JLabel("Valid return codes:"));
@@ -100,16 +100,16 @@ public class ScriptPanel extends JPanel {
 					ExternalToolActivityConfigurationBean bean = view.makeConfiguration();
 					String repositoryUrl = bean.getRepositoryUrl();
 					String id = bean.getExternaltoolid();
-					ToolDescription usecase = null;
+					ToolDescription tooldesc = null;
 					try {
-						usecase = ToolDescriptionParser.readDescriptionFromUrl(
+						tooldesc = ToolDescriptionParser.readDescriptionFromUrl(
 							repositoryUrl, id);
 					}
 					catch (IOException ex) {
 						// Already logged
 					}
-					if (usecase != null) {
-						bean.setToolDescription(usecase);
+					if (tooldesc != null) {
+						bean.setToolDescription(tooldesc);
 						view.setEditable(false, bean);
 					} else {
 						JOptionPane.showMessageDialog(view, "Unable to find tool description " + id, "Missing tool description", JOptionPane.ERROR_MESSAGE);
