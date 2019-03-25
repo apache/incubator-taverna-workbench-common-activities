@@ -37,7 +37,9 @@
   </properties>
   <modules>
     <module>taverna-beanshell-activity-ui</module>
+    <!-- Not yet updated to Taverna 3
     <module>taverna-external-tool-activity-ui</module>
+    -->
     <module>taverna-localworker-activity-ui</module>
     <module>taverna-rest-activity-ui</module>
     <module>taverna-spreadsheet-import-activity-ui</module>
