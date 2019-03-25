@@ -28,7 +28,14 @@ import org.apache.taverna.workbench.ShutdownSPI;
  *
  */
 public class InvocationGroupManagerShutdownHook implements ShutdownSPI {
+	
+	private final InvocationGroupManager manager;
 
+	public InvocationGroupManagerShutdownHook(InvocationGroupManager manager) {
+		this.manager = manager;
+		
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sf.taverna.t2.workbench.ShutdownSPI#positionHint()
 	 */
@@ -42,7 +49,6 @@ public class InvocationGroupManagerShutdownHook implements ShutdownSPI {
 	 */
 	@Override
 	public boolean shutdown() {
-		InvocationGroupManager manager = InvocationGroupManagerImpl.getInstance();
 		manager.saveConfiguration();
 		manager.persistInvocations();
 		return true;

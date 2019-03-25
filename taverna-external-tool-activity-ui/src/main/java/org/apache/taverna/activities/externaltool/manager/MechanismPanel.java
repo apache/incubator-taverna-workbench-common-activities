@@ -37,9 +37,9 @@ public class MechanismPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private JTextField mechanismNameField;
+	private final JTextField mechanismNameField;
 
-	private JComboBox mechanismTypeSelector;
+	private final JComboBox mechanismTypeSelector;
 
 	public MechanismPanel(List<InvocationMechanismEditor<?>> invocationMechanismEditors) {
 		super(new GridBagLayout());

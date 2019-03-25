@@ -31,12 +31,18 @@ import org.apache.taverna.workbench.StartupSPI;
  */
 public class InvocationGroupManagerStartupHook implements StartupSPI {
 
+	private final InvocationGroupManager manager;
+
+	InvocationGroupManagerStartupHook(InvocationGroupManager manager) {
+		this.manager = manager; 		
+	}
+	
 	public int positionHint() {
 		return 900;
 	}
 
 	public boolean startup() {
-		InvocationGroupManagerImpl.getInstance().loadInvocations();
+		manager.loadInvocations();
 		return true;
 	}
 

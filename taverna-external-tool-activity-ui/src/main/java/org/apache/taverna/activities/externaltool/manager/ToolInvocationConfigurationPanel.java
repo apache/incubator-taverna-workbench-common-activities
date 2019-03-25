@@ -70,16 +70,16 @@ public class ToolInvocationConfigurationPanel extends JPanel implements
 
 	public static final String HEADER_TEXT = "A tool can be set to run at an explicit location (e.g. on a specificic machine or one of a set of machines). Alternatively, it can be set to run at a symbolic location, which means the tool will then be run at the explicit location pointed to by the symbolic location.";
 
-	private static InvocationGroupManagerImpl manager = InvocationGroupManagerImpl.getInstance();
+	private final InvocationGroupManager manager;
 
 	private final List<InvocationMechanismEditor<?>> invocationMechanismEditors;
 
-	private JTextArea headerText;
+	private final JTextArea headerText;
 
 	private static String EXPLICIT_LOCATIONS = "explicit locations";
 	private static String SYMBOLIC_LOCATIONS = "symbolic locations";
 
-	private List<MechanismCreator> mechanismCreators;
+	private final List<MechanismCreator> mechanismCreators;
 
 	JList locationList = new JList();
 
@@ -89,10 +89,11 @@ public class ToolInvocationConfigurationPanel extends JPanel implements
 			SYMBOLIC_LOCATIONS });
 
 	public ToolInvocationConfigurationPanel(List<MechanismCreator> mechanismCreators,
-			List<InvocationMechanismEditor<?>> invocationMechanismEditors) {
+			List<InvocationMechanismEditor<?>> invocationMechanismEditors, InvocationGroupManager manager) {
 		super();
 		this.mechanismCreators = mechanismCreators;
 		this.invocationMechanismEditors = invocationMechanismEditors;
+		this.manager = manager;
 		manager.addObserver(this);
 
 		this.setLayout(new GridBagLayout());
@@ -241,7 +242,7 @@ public class ToolInvocationConfigurationPanel extends JPanel implements
 						usedGroupNames.add(g.getName());
 					}
 
-					GroupPanel inputPanel = new GroupPanel(mechanismListModel.toArray());
+					GroupPanel inputPanel = new GroupPanel(mechanismListModel.toArray(), manager);
 
 					ValidatingUserInputDialog vuid = new ValidatingUserInputDialog(
 							"Add symbolic location", inputPanel);
@@ -291,7 +292,7 @@ public class ToolInvocationConfigurationPanel extends JPanel implements
 								JOptionPane.PLAIN_MESSAGE, null);
 						if (answer == JOptionPane.OK_OPTION) {
 							ime.updateInvocationMechanism();
-							InvocationGroupManagerImpl.getInstance().mechanismChanged(newMechanism);
+							manager.mechanismChanged(newMechanism);
 						}
 						locationList.setSelectedValue(newMechanism, true);
 					}
@@ -356,7 +357,7 @@ public class ToolInvocationConfigurationPanel extends JPanel implements
 								JOptionPane.PLAIN_MESSAGE, null);
 						if (answer == JOptionPane.OK_OPTION) {
 							ime.updateInvocationMechanism();
-							InvocationGroupManagerImpl.getInstance().mechanismChanged(toEdit);
+							manager.mechanismChanged(toEdit);
 						}
 					}
 				}

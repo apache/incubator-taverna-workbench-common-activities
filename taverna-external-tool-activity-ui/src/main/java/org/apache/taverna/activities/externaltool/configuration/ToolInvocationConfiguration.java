@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.taverna.configuration.AbstractConfigurable;
+import org.apache.taverna.configuration.ConfigurationManager;
 
 
 /**
@@ -31,16 +32,11 @@ import org.apache.taverna.configuration.AbstractConfigurable;
  */
 public class ToolInvocationConfiguration extends AbstractConfigurable {
 
-	private static ToolInvocationConfiguration instance;
+	public ToolInvocationConfiguration(ConfigurationManager configurationManager) {
+		super(configurationManager);
+	}
 
 	private Map<String, String> defaultPropertyMap;
-
-	public static ToolInvocationConfiguration getInstance() {
-		if (instance == null) {
-			instance = new ToolInvocationConfiguration();
-		}
-		return instance;
-	}
 
 	@Override
 	public String getCategory() {

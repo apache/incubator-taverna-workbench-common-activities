@@ -32,14 +32,16 @@ import org.apache.taverna.activities.externaltool.manager.InvocationGroupManager
 import org.apache.taverna.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
 import org.apache.taverna.servicedescriptions.AbstractTemplateService;
 import org.apache.taverna.servicedescriptions.ServiceDescription;
+import org.apache.taverna.servicedescriptions.ServiceDescriptionProvider;
 import org.apache.taverna.workflowmodel.processor.activity.Activity;
+import static org.apache.taverna.activities.externaltool.servicedescriptions.ExternalToolServiceDescription.TOOL_ACTIVITY_URI;
 
 /**
  * @author alanrw
  *
  */
 public class ExternalToolTemplateServiceDescription extends
-		AbstractTemplateService<ExternalToolActivityConfigurationBean> {
+		AbstractTemplateService {
 	
 	private static final URI providerId = URI
 	.create("http://taverna.sf.net/2010/service-provider/external-tool");
@@ -88,6 +90,11 @@ public class ExternalToolTemplateServiceDescription extends
 	@Override
 	public String getName() {
 		return EXTERNAL_TOOL;
+	}
+
+	@Override
+	public ServiceDescriptionProvider newInstance() {
+		return new ExternalToolTemplateServiceDescription();
 	}
 
 }

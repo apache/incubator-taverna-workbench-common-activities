@@ -21,11 +21,13 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.net.URI;
 
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 
-import org.apache.taverna.activities.externaltool.ExternalToolActivity;
-import org.apache.taverna.activities.externaltool.servicedescriptions.ExternalToolTemplateServiceDescription;
+import org.apache.log4j.Logger;
+import org.apache.taverna.servicedescriptions.ServiceDescriptionRegistry;
+import org.apache.taverna.services.ServiceRegistry;
 import org.apache.taverna.ui.menu.AbstractMenuAction;
 import org.apache.taverna.ui.menu.DesignOnlyAction;
 import org.apache.taverna.ui.menu.MenuManager;
@@ -34,9 +36,7 @@ import org.apache.taverna.workbench.edits.EditManager;
 import org.apache.taverna.workbench.selection.SelectionManager;
 import org.apache.taverna.workbench.ui.workflowview.WorkflowView;
 import org.apache.taverna.workbench.views.graph.menu.InsertMenu;
-
-import org.apache.log4j.Logger;
-
+import static org.apache.taverna.activities.externaltool.servicedescriptions.ExternalToolServiceDescription.TOOL_ACTIVITY_URI;
 /**
  * An action to add a externaltool activity + a wrapping processor to the workflow.
  *
@@ -46,7 +46,7 @@ import org.apache.log4j.Logger;
  */
 @SuppressWarnings("serial")
 public class AddExternalToolMenuAction extends AbstractMenuAction {
-
+	
 	private static final String ADD_EXTERNAL_TOOL = "Tool";
 
 	private static final URI ADD_EXTERNAL_TOOL_URI = URI
@@ -58,6 +58,8 @@ public class AddExternalToolMenuAction extends AbstractMenuAction {
 	private EditManager editManager;
 	private MenuManager menuManager;
 	private SelectionManager selectionManager;
+	private ServiceDescriptionRegistry serviceDescriptionRegistry;
+	private ServiceRegistry serviceRegistry;
 
 	private ActivityIconManager activityIconManager;
 
@@ -71,11 +73,13 @@ public class AddExternalToolMenuAction extends AbstractMenuAction {
 		return new AddExternalToolAction();
 	}
 
-	protected class AddExternalToolAction extends DesignOnlyAction {
+	protected class AddExternalToolAction extends AbstractAction implements DesignOnlyAction {
+
+
 		AddExternalToolAction () {
 			super ();
 			putValue(SMALL_ICON, activityIconManager.iconForActivity(
-					new ExternalToolActivity()));
+					TOOL_ACTIVITY_URI));
 			putValue(NAME, ADD_EXTERNAL_TOOL);
 			putValue(SHORT_DESCRIPTION, "Tool");
 			putValue(Action.ACCELERATOR_KEY,
@@ -83,8 +87,11 @@ public class AddExternalToolMenuAction extends AbstractMenuAction {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			WorkflowView.importServiceDescription(ExternalToolTemplateServiceDescription.getServiceDescription(),
-			false, editManager, menuManager, selectionManager);
+			
+			getServiceDescriptionRegistry().getServiceDescription(TOOL_ACTIVITY_URI);			
+			WorkflowView.importServiceDescription(getServiceDescriptionRegistry()
+					.getServiceDescription(TOOL_ACTIVITY_URI), false,
+					editManager, menuManager, selectionManager, getServiceRegistry());
 		}
 	}
 
@@ -102,6 +109,22 @@ public class AddExternalToolMenuAction extends AbstractMenuAction {
 
 	public void setActivityIconManager(ActivityIconManager activityIconManager) {
 		this.activityIconManager = activityIconManager;
+	}
+
+	public ServiceDescriptionRegistry getServiceDescriptionRegistry() {
+		return serviceDescriptionRegistry;
+	}
+
+	public void setServiceDescriptionRegistry(ServiceDescriptionRegistry serviceDescriptionRegistry) {
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
+	}
+
+	public ServiceRegistry getServiceRegistry() {
+		return serviceRegistry;
+	}
+
+	public void setServiceRegistry(ServiceRegistry serviceRegistry) {
+		this.serviceRegistry = serviceRegistry;
 	}
 
 }

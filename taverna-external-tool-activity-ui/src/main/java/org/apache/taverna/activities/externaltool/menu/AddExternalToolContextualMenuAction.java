@@ -22,8 +22,9 @@ import java.net.URI;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
-import org.apache.taverna.activities.externaltool.ExternalToolActivity;
+import org.apache.log4j.Logger;
 import org.apache.taverna.activities.externaltool.servicedescriptions.ExternalToolTemplateServiceDescription;
+import org.apache.taverna.services.ServiceRegistry;
 import org.apache.taverna.ui.menu.AbstractContextualMenuAction;
 import org.apache.taverna.ui.menu.MenuManager;
 import org.apache.taverna.workbench.activityicons.ActivityIconManager;
@@ -31,9 +32,7 @@ import org.apache.taverna.workbench.edits.EditManager;
 import org.apache.taverna.workbench.selection.SelectionManager;
 import org.apache.taverna.workbench.ui.workflowview.WorkflowView;
 import org.apache.taverna.workflowmodel.Dataflow;
-
-import org.apache.log4j.Logger;
-
+import static org.apache.taverna.activities.externaltool.servicedescriptions.ExternalToolServiceDescription.TOOL_ACTIVITY_URI;
 /**
  * An action to add an external tool + a wrapping processor to the workflow.
  *
@@ -43,7 +42,7 @@ import org.apache.log4j.Logger;
  */
 @SuppressWarnings("serial")
 public class AddExternalToolContextualMenuAction extends AbstractContextualMenuAction {
-
+	
 	private static final String ADD_EXTERNAL_TOOL = "Tool";
 
 	private static final URI insertSection = URI
@@ -58,6 +57,8 @@ public class AddExternalToolContextualMenuAction extends AbstractContextualMenuA
 	private SelectionManager selectionManager;
 
 	private ActivityIconManager activityIconManager;
+
+	private ServiceRegistry serviceRegistry;
 
 	public AddExternalToolContextualMenuAction() {
 		super(insertSection, 900);
@@ -75,15 +76,17 @@ public class AddExternalToolContextualMenuAction extends AbstractContextualMenuA
 	}
 
 	protected class AddExternalToolAction extends AbstractAction {
-		AddExternalToolAction() {
-			super(ADD_EXTERNAL_TOOL, activityIconManager.iconForActivity(
-					new ExternalToolActivity()));
+
+
+		AddExternalToolAction() {			
+			super(ADD_EXTERNAL_TOOL, 
+					activityIconManager.iconForActivity(TOOL_ACTIVITY_URI));
 		}
 
 		public void actionPerformed(ActionEvent e) {
 			WorkflowView.importServiceDescription(
 					ExternalToolTemplateServiceDescription.getServiceDescription(), false,
-					editManager, menuManager, selectionManager);
+					editManager, menuManager, selectionManager, getServiceRegistry());
 		}
 	}
 
@@ -101,6 +104,14 @@ public class AddExternalToolContextualMenuAction extends AbstractContextualMenuA
 
 	public void setActivityIconManager(ActivityIconManager activityIconManager) {
 		this.activityIconManager = activityIconManager;
+	}
+
+	public ServiceRegistry getServiceRegistry() {
+		return serviceRegistry;
+	}
+
+	public void setServiceRegistry(ServiceRegistry serviceRegistry) {
+		this.serviceRegistry = serviceRegistry;
 	}
 
 }

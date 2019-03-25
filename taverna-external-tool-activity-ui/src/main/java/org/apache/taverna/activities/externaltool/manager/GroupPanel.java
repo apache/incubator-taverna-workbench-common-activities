@@ -39,14 +39,13 @@ public class GroupPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private JTextField groupNameField;
+	private final JTextField groupNameField;
+	private final JComboBox mechanismComboBox;
+	private final InvocationGroupManager manager;
 
-	private JComboBox mechanismComboBox;
-
-	private static InvocationGroupManager manager = InvocationGroupManagerImpl.getInstance();
-
-	public GroupPanel(Object[] mechanisms) {
+	public GroupPanel(Object[] mechanisms, InvocationGroupManager manager) {		
 		super(new GridBagLayout());
+		this.manager = manager;
 
 		groupNameField = new JTextField();
 

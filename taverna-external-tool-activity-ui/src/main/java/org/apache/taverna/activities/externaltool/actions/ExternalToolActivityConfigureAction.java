@@ -24,6 +24,8 @@ import javax.swing.Action;
 import org.apache.taverna.activities.externaltool.ExternalToolActivity;
 import org.apache.taverna.activities.externaltool.ExternalToolActivityConfigurationBean;
 import org.apache.taverna.activities.externaltool.views.ExternalToolConfigView;
+import org.apache.taverna.scufl2.api.activity.Activity;
+import org.apache.taverna.servicedescriptions.ServiceDescriptionRegistry;
 import org.apache.taverna.workbench.activityicons.ActivityIconManager;
 import org.apache.taverna.workbench.edits.EditManager;
 import org.apache.taverna.workbench.file.FileManager;
@@ -45,9 +47,9 @@ public class ExternalToolActivityConfigureAction extends
 	private final EditManager editManager;
 	private final FileManager fileManager;
 
-	public ExternalToolActivityConfigureAction(ExternalToolActivity activity, Frame owner,
-			EditManager editManager, FileManager fileManager, ActivityIconManager activityIconManager) {
-		super(activity, activityIconManager);
+	public ExternalToolActivityConfigureAction(Activity activity, Frame owner,
+			EditManager editManager, FileManager fileManager, ActivityIconManager activityIconManager, ServiceDescriptionRegistry serviceDescriptionRegistry) {
+		super(activity, activityIconManager, serviceDescriptionRegistry);
 		this.editManager = editManager;
 		this.fileManager = fileManager;
 		putValue(Action.NAME, "Configure tool invocation");
@@ -65,11 +67,11 @@ public class ExternalToolActivityConfigureAction extends
 			if (currentDialog != null) {
 				currentDialog.toFront();
 				return;
-			}
+			}			
 			final ExternalToolConfigView externalToolConfigView = new ExternalToolConfigView(
-					(ExternalToolActivity) getActivity());
-			final ActivityConfigurationDialog<ExternalToolActivity, ExternalToolActivityConfigurationBean> dialog = new ActivityConfigurationDialog<ExternalToolActivity, ExternalToolActivityConfigurationBean>(
-					getActivity(), externalToolConfigView, editManager, fileManager);
+					getActivity());
+			
+			final ActivityConfigurationDialog dialog = new ActivityConfigurationDialog(getActivity(), externalToolConfigView, editManager);
 
 			ActivityConfigurationAction.setDialog(getActivity(), dialog, fileManager);
 		}

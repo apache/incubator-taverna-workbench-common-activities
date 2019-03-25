@@ -41,11 +41,13 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import org.apache.log4j.Logger;
 import org.apache.taverna.activities.externaltool.ExternalToolActivityConfigurationBean;
 import org.apache.taverna.activities.externaltool.ExternalToolActivityHealthChecker;
 import org.apache.taverna.activities.externaltool.configuration.ToolInvocationConfiguration;
 import org.apache.taverna.activities.externaltool.manager.InvocationGroup;
 import org.apache.taverna.activities.externaltool.manager.InvocationGroupAddedEvent;
+import org.apache.taverna.activities.externaltool.manager.InvocationGroupManager;
 import org.apache.taverna.activities.externaltool.manager.InvocationGroupRemovedEvent;
 import org.apache.taverna.activities.externaltool.manager.InvocationManagerEvent;
 import org.apache.taverna.activities.externaltool.manager.InvocationMechanism;
@@ -53,12 +55,11 @@ import org.apache.taverna.activities.externaltool.manager.InvocationMechanismAdd
 import org.apache.taverna.activities.externaltool.manager.InvocationMechanismRemovedEvent;
 import org.apache.taverna.activities.externaltool.manager.ToolInvocationConfigurationPanel;
 import org.apache.taverna.activities.externaltool.manager.impl.InvocationGroupManagerImpl;
+import org.apache.taverna.configuration.ConfigurationManager;
 import org.apache.taverna.lang.observer.Observable;
 import org.apache.taverna.lang.observer.Observer;
 import org.apache.taverna.lang.ui.DeselectingButton;
-//import net.sf.taverna.t2.workbench.ui.impl.configuration.ui.T2ConfigurationFrame;
-
-import org.apache.log4j.Logger;
+import org.apache.taverna.workbench.configuration.workbench.ui.T2ConfigurationFrame;
 
 /**
  * @author alanrw
@@ -73,7 +74,7 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 	private DefaultComboBoxModel mechanismSelectionModel = new DefaultComboBoxModel();
 	private DefaultComboBoxModel groupSelectionModel = new DefaultComboBoxModel();
 
-	private static InvocationGroupManagerImpl manager = InvocationGroupManagerImpl.getInstance();
+	private InvocationGroupManager manager;
 	
 	private static Logger logger = Logger
 	.getLogger(InvocationPanel.class);
@@ -84,13 +85,18 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 	private JButton manageInvocation;
 	private ButtonGroup mechanismOrGroup;
 	private ExternalToolActivityConfigurationBean configuration;
+	private T2ConfigurationFrame t2ConfigurationFrame;
+	
 	
 	private ActionListener radioChangeListener;
 	
 	boolean unmanagedShown = false;
+	protected ConfigurationManager configManager;
 
-	public InvocationPanel(ExternalToolActivityConfigurationBean configuration) {
+	public InvocationPanel(ExternalToolActivityConfigurationBean configuration, InvocationGroupManager manager, T2ConfigurationFrame t2ConfigurationFrame) {
 		super();
+		this.manager = manager;
+		this.t2ConfigurationFrame = t2ConfigurationFrame;
 		manager.addObserver(this);
 		
 		mechanismSelection = new JComboBox();
@@ -137,7 +143,7 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 	
 	private void populateMechanismList() {
 		InvocationMechanism currentSelection = (InvocationMechanism) mechanismSelection.getSelectedItem();
-		InvocationMechanism[] mechanisms = InvocationGroupManagerImpl.getInstance()
+		InvocationMechanism[] mechanisms = manager
 				.getMechanisms().toArray(new InvocationMechanism[] {});
 		Arrays.sort(mechanisms, new Comparator<InvocationMechanism>() {
 
@@ -160,7 +166,7 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 
 	private void populateGroupList() {
 		InvocationGroup currentSelection = (InvocationGroup) groupSelection.getSelectedItem();
-		InvocationGroup[] groups = InvocationGroupManagerImpl.getInstance()
+		InvocationGroup[] groups = manager
 				.getInvocationGroups().toArray(new InvocationGroup[] {});
 		Arrays.sort(groups, new Comparator<InvocationGroup>() {
 
@@ -224,7 +230,8 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 
 	private boolean isUnmanaged(
 			ExternalToolActivityConfigurationBean configuration2) {
-		return (!ExternalToolActivityHealthChecker.updateLocation(configuration2));
+		ExternalToolActivityHealthChecker healthChecker = new ExternalToolActivityHealthChecker();
+		return (!healthChecker.updateLocation(configuration2));
 	}
 
 	private void initializeSelectability() {
@@ -343,8 +350,8 @@ public class InvocationPanel extends JPanel implements Observer<InvocationManage
 				new AbstractAction() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				T2ConfigurationFrame.showConfiguration(ToolInvocationConfiguration.getInstance().getDisplayName());
+			public void actionPerformed(ActionEvent e) {				
+				t2ConfigurationFrame.showConfiguration(new ToolInvocationConfiguration(configManager).getDisplayName());
 			}});
 		buttonPanel.add(manageInvocation); 
 		return buttonPanel;		

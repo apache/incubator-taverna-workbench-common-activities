@@ -18,6 +18,7 @@ package org.apache.taverna.activities.externaltool.servicedescriptions;
  */
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +36,7 @@ import org.apache.taverna.activities.externaltool.manager.impl.InvocationGroupMa
 import org.apache.taverna.servicedescriptions.ServiceDescription;
 import org.apache.taverna.workflowmodel.processor.activity.Activity;
 import org.apache.taverna.activities.externaltool.desc.ToolDescription;
+import static org.apache.taverna.activities.externaltool.servicedescriptions.ExternalToolServiceDescription.TOOL_ACTIVITY_URI;
 
 /**
  * ExternalToolServiceDescription stores the repository URL and the use case id so
@@ -42,13 +44,13 @@ import org.apache.taverna.activities.externaltool.desc.ToolDescription;
  * 
  * @author Hajo Nils Krabbenhoeft
  */
-public class ExternalToolServiceDescription extends ServiceDescription<ExternalToolActivityConfigurationBean> {
-	
+public class ExternalToolServiceDescription extends ServiceDescription {
+
 	private static Logger logger = Logger
 	.getLogger(ExternalToolServiceDescription.class);
 
 	
-	private static InvocationGroupManager manager = InvocationGroupManagerImpl.getInstance();
+	private InvocationGroupManager invocationGroupManager;
 
 	private String repositoryUrl;
 	private String externaltoolid;
@@ -95,7 +97,7 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 		bean.setRepositoryUrl(repositoryUrl);
 		bean.setExternaltoolid(externaltoolid);
 		bean.setToolDescription(toolDescription);
-		bean.setMechanism(manager.getDefaultMechanism());
+		bean.setMechanism(getInvocationGroupManager().getDefaultMechanism());
 
 		return bean;
 	}
@@ -138,6 +140,19 @@ public class ExternalToolServiceDescription extends ServiceDescription<ExternalT
 
 	public void setToolDescription(ToolDescription tooldesc) {
 		this.toolDescription = tooldesc;
+	}
+
+	@Override
+	public URI getActivityType() {
+		return TOOL_ACTIVITY_URI;
+	}
+
+	public InvocationGroupManager getInvocationGroupManager() {
+		return invocationGroupManager;
+	}
+
+	public void setInvocationGroupManager(InvocationGroupManager invocationGroupManager) {
+		this.invocationGroupManager = invocationGroupManager;
 	}
 
 }

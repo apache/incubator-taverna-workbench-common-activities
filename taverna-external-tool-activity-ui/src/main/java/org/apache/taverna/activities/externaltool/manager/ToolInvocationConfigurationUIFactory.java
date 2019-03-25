@@ -24,6 +24,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import org.apache.taverna.configuration.Configurable;
+import org.apache.taverna.configuration.ConfigurationManager;
 import org.apache.taverna.configuration.ConfigurationUIFactory;
 
 import org.apache.taverna.activities.externaltool.configuration.ToolInvocationConfiguration;
@@ -37,8 +38,9 @@ public class ToolInvocationConfigurationUIFactory implements ConfigurationUIFact
 
 	private List<MechanismCreator> mechanismCreators;
 	private List<InvocationMechanismEditor<?>> invocationMechanismEditors;
-
 	private ToolInvocationConfigurationPanel configPanel;
+	private ConfigurationManager configurationManager;
+	private InvocationGroupManager invocationGroupManager;
 
 	@Override
 	public boolean canHandle(String uuid) {
@@ -47,14 +49,14 @@ public class ToolInvocationConfigurationUIFactory implements ConfigurationUIFact
 
 	@Override
 	public Configurable getConfigurable() {
-		return ToolInvocationConfiguration.getInstance();
+		return new ToolInvocationConfiguration(configurationManager);
 	}
 
 	@Override
 	public JPanel getConfigurationPanel() {
 		if (configPanel == null) {
 			configPanel = new ToolInvocationConfigurationPanel(mechanismCreators,
-					invocationMechanismEditors);
+					invocationMechanismEditors, getInvocationGroupManager());
 		}
 		return configPanel;
 	}
@@ -66,6 +68,22 @@ public class ToolInvocationConfigurationUIFactory implements ConfigurationUIFact
 	public void setInvocationMechanismEditors(
 			List<InvocationMechanismEditor<?>> invocationMechanismEditors) {
 		this.invocationMechanismEditors = invocationMechanismEditors;
+	}
+
+	public ConfigurationManager getConfigurationManager() {
+		return configurationManager;
+	}
+
+	public void setConfigurationManager(ConfigurationManager configurationManager) {
+		this.configurationManager = configurationManager;
+	}
+
+	public InvocationGroupManager getInvocationGroupManager() {
+		return invocationGroupManager;
+	}
+
+	public void setInvocationGroupManager(InvocationGroupManager invocationGroupManager) {
+		this.invocationGroupManager = invocationGroupManager;
 	}
 
 }

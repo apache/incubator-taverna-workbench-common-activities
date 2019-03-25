@@ -17,10 +17,13 @@ package org.apache.taverna.activities.externaltool.menu;
  * limitations under the License.
  */
 
+import java.net.URI;
+
 import javax.swing.Action;
 
 import org.apache.taverna.activities.externaltool.ExternalToolActivity;
 import org.apache.taverna.activities.externaltool.actions.ExternalToolActivityConfigureAction;
+import org.apache.taverna.servicedescriptions.ServiceDescriptionRegistry;
 import org.apache.taverna.workbench.activityicons.ActivityIconManager;
 import org.apache.taverna.workbench.activitytools.AbstractConfigureActivityMenuAction;
 import org.apache.taverna.workbench.edits.EditManager;
@@ -32,20 +35,22 @@ import org.apache.taverna.workbench.file.FileManager;
  * @author Hajo Nils Krabbenhoeft
  */
 public class ConfigureExternalToolMenuAction extends
-		AbstractConfigureActivityMenuAction<ExternalToolActivity> {
+		AbstractConfigureActivityMenuAction {
 
 	private EditManager editManager;
 	private FileManager fileManager;
 	private ActivityIconManager activityIconManager;
-
+	private ServiceDescriptionRegistry serviceDescriptionRegistry;
+	public static final URI TOOL_ACTIVITY_URI = URI.create("http://ns.taverna.org.uk/2010/activity/tool");
+	
 	public ConfigureExternalToolMenuAction() {
-		super(ExternalToolActivity.class);
+		super(TOOL_ACTIVITY_URI);
 	}
 
 	@Override
 	protected Action createAction() {
 		ExternalToolActivityConfigureAction configAction = new ExternalToolActivityConfigureAction(
-				findActivity(), getParentFrame(), editManager, fileManager, activityIconManager);
+				findActivity(), getParentFrame(), editManager, fileManager, activityIconManager, serviceDescriptionRegistry);
 		addMenuDots(configAction);
 		return configAction;
 	}
@@ -60,6 +65,10 @@ public class ConfigureExternalToolMenuAction extends
 
 	public void setActivityIconManager(ActivityIconManager activityIconManager) {
 		this.activityIconManager = activityIconManager;
+	}
+
+	public void setServiceDescriptionRegistry(ServiceDescriptionRegistry serviceDescriptionRegistry) {
+		this.serviceDescriptionRegistry = serviceDescriptionRegistry;
 	}
 
 }

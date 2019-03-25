@@ -51,6 +51,7 @@ import org.apache.taverna.activities.externaltool.utils.Tools;
 import org.apache.taverna.lang.ui.KeywordDocument;
 import org.apache.taverna.lang.ui.LinePainter;
 import org.apache.taverna.lang.ui.NoWrapEditorKit;
+import org.apache.taverna.scufl2.api.activity.Activity;
 import org.apache.taverna.workbench.ui.views.contextualviews.activity.ActivityConfigurationPanel;
 
 import org.apache.log4j.Logger;
@@ -76,7 +77,7 @@ import org.apache.taverna.activities.externaltool.desc.ToolDescription;
 @SuppressWarnings("serial")
 public class ExternalToolConfigView
 		extends
-		ActivityConfigurationPanel<ExternalToolActivity, ExternalToolActivityConfigurationBean> {
+		ActivityConfigurationPanel {
 	
 	private static final Color LINE_COLOR = new Color(225,225,225);
 
@@ -146,10 +147,10 @@ public class ExternalToolConfigView
 	 * {@link ExternalToolActivityConfigurationBean}, sets the layout and calls
 	 * {@link #initialise()} to get the view going
 	 * 
-	 * @param activity
+	 * @param activity2
 	 *            the {@link ExternalToolActivity} that the view is over
 	 */
-	public ExternalToolConfigView(ExternalToolActivity activity) {
+	public ExternalToolConfigView(Activity activity) {
 		this.activity = activity;
 		ExternalToolActivityHealthChecker.updateLocation(activity.getConfiguration());
 		configuration = (ExternalToolActivityConfigurationBean) cloneBean(activity

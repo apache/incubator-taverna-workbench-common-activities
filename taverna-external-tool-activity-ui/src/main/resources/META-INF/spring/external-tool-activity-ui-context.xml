@@ -24,9 +24,13 @@
 	<bean id="ToolInvocationConfigurationUIFactory" class="org.apache.taverna.activities.externaltool.manager.ToolInvocationConfigurationUIFactory">
 		<property name="mechanismCreators" ref="mechanismCreators" />
 		<property name="invocationMechanismEditors" ref="invocationMechanismEditors" />
+		<property name="configurationManager" ref="configurationManager" />
+		<property name="invocationGroupManager" ref="invocationGroupManager" />
 	</bean>
 
-	<bean id="InvocationGroupManagerStartupHook" class="org.apache.taverna.activities.externaltool.manager.InvocationGroupManagerStartupHook" />
+	<bean id="InvocationGroupManagerStartupHook" class="org.apache.taverna.activities.externaltool.manager.InvocationGroupManagerStartupHook">
+		<constructor-arg name="manager" ref="InvocationGroupManager" />
+	</bean>
 
 	<bean id="ExternalToolActivityIcon" class="org.apache.taverna.activities.externaltool.servicedescriptions.ExternalToolActivityIcon">
 			<property name="colourManager" ref="colourManager" />
@@ -56,7 +60,12 @@
 			<property name="activityIconManager" ref="activityIconManager" />
 	</bean>
 
-	<bean id="InvocationGroupManagerShutdownHook" class="org.apache.taverna.activities.externaltool.manager.InvocationGroupManagerShutdownHook" />
+	<bean id="InvocationGroupManagerShutdownHook" class="org.apache.taverna.activities.externaltool.manager.InvocationGroupManagerShutdownHook">
+		<constructor-arg name="manager" ref="InvocationGroupManager" />
+	</bean>
+
+
+
 
 	<bean id="ExternalToolActivityViewFactory" class="org.apache.taverna.activities.externaltool.views.ExternalToolActivityViewFactory">
 			<property name="editManager" ref="editManager" />

@@ -18,6 +18,7 @@ package org.apache.taverna.activities.externaltool.servicedescriptions;
  */
 
 import java.awt.Color;
+import java.net.URI;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -26,6 +27,7 @@ import org.apache.taverna.activities.externaltool.ExternalToolActivity;
 import org.apache.taverna.workbench.activityicons.ActivityIconSPI;
 import org.apache.taverna.workbench.configuration.colour.ColourManager;
 import org.apache.taverna.workflowmodel.processor.activity.Activity;
+import static org.apache.taverna.activities.externaltool.servicedescriptions.ExternalToolServiceDescription.TOOL_ACTIVITY_URI;
 
 /**
  * This class provides an icon for the use case activity.
@@ -33,7 +35,7 @@ import org.apache.taverna.workflowmodel.processor.activity.Activity;
  * @author Hajo Nils Krabbenhoeft
  */
 public class ExternalToolActivityIcon implements ActivityIconSPI {
-
+		
 	private static final String PROCESSOR_COLOUR_STRING = "#F28C55";
 
 	private static Icon icon;
@@ -43,10 +45,6 @@ public class ExternalToolActivityIcon implements ActivityIconSPI {
 			return DEFAULT_ICON + 1;
 		else
 			return NO_ICON;
-	}
-
-	public Icon getIcon(Activity<?> activity) {
-		return getExternalToolIcon();
 	}
 
 	public static Icon getExternalToolIcon() {
@@ -64,6 +62,19 @@ public class ExternalToolActivityIcon implements ActivityIconSPI {
 		// set colour for XPath processors in the workflow diagram
 		colourManager.setPreferredColour(ExternalToolActivity.class.getCanonicalName(),
 				Color.decode(PROCESSOR_COLOUR_STRING));
+	}
+
+	@Override
+	public int canProvideIconScore(URI uri) {
+		if (TOOL_ACTIVITY_URI.equals(uri)) {
+			return DEFAULT_ICON + 1;
+		}
+		return NO_ICON;		
+	}
+
+	@Override
+	public Icon getIcon(URI uri) {
+		return getExternalToolIcon();
 	}
 
 }
